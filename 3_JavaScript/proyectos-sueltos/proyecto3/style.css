@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-family: 'SF Pro Display';
+    font-size: 10px;
+}
+
+.layout{
+    min-height: 100vh;
+    min-width: 100%;
+}
+
+.layout__main{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main__background{
+    /* content: ''; */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-image: url('assets/ardilla.jpg');
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+    filter: blur(3rem);
+}
+
+.main__load{
+    height: 25rem;
+    width: 35rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.load__number{
+    font-size: 7rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 1rem black;
+}
+
+.load__btn{
+    height: 5rem;
+    width: 10rem;
+    background: #2E9955;
+    border: none;
+    border-radius: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: crosshair;
+    color: white;
+    transition: all .3s ease-in-out;
+}
+
+.load__btn:hover{
+    background: #2E7D43;
+}
+
+.load__complete{
+    display: none;
+    font-weight: bold;
+    color: #2E9955;
+    font-size: 3.5rem;
+    text-shadow: 0 0 1rem black;
+}

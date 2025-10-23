@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --clr-orange: #ff3c00;
+    --ff-titles: "Bricolage Grotesque", sans-serif;
+    --ff-texts: "Rubik", sans-serif;
+}
+
+body {
+    background-color: #1c1c1c;
+    color: #f2ebd9;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    border-bottom: 1px solid var(--clr-orange);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    backdrop-filter: blur(10px);
+    background-color: #1c1c1c7e;
+}
+
+.menu-list {
+    display: flex;
+    list-style-type: none;
+    gap: 1rem;
+    font-family: var(--ff-texts);
+}
+
+.logo {
+    font-family: var(--ff-titles);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.hero {
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-intro {
+    display: grid;
+    grid-template-columns: 1fr 3.5fr;
+    gap: 2rem;
+}
+
+.hero-image img {
+    max-width: 100%;
+    border-radius: 1rem;
+}
+
+.hero-title {
+    font-family: var(--ff-titles);
+    font-size: 4rem;
+    line-height: 1;
+}
+
+.hero-text{
+    font-family: var(--ff-texts);
+    font-size: 1.15rem;
+    cursor: pointer;
+}
+
+.hero-stats {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.hero-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-stat.last {
+    align-items: end;
+}
+
+.hero-stat.center {
+    align-items: center;
+}
+
+.hero-stats .number {
+    font-family: var(--ff-titles);
+    font-size: 5rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.hero-stats .text {
+    font-family: var(--ff-texts);
+}
