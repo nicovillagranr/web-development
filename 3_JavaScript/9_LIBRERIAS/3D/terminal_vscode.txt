@@ -1,0 +1,20 @@
+Principales comandos para la Terminal de VsCode:
+
+CD: Para cambiar el directorio actual
+LS: Para enumerar lo que hay en el directorio actual
+PWD: Para mostrar el directorio en el que estamos situados
+../: Retroceder en una carpeta igual que en HTML
+npm init -y: Sirve para instalar y crear el paquete Json inicial
+npm install vite: Para instalar una bibloteca de dependencias de https://www.npmjs.com/
+npm install three; Sirve para instalar las dependencias de Three.js
+Cómo crear un proyecto con la terminal:
+npm init -y
+npm install vite
+Cambias del package Json
+"scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+npm run dev
+
+El comando "build" generará la versión final del sitio web. Es para más tarde

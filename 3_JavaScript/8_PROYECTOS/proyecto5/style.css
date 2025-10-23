@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'SF Pro Display';
+}
+
+html{
+    font-size: 10px;
+}
+
+body{
+    min-width: 100%;
+    min-height: 100vh;
+    background-color: lightblue;
+}
