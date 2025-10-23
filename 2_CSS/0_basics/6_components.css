@@ -1,0 +1,25 @@
+.btn {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--color-secondary);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    padding: var(--space-md);
+}
