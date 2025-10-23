@@ -1,0 +1,22 @@
+body{
+    background: lightblue;
+    font-size: 10px;
+}
+
+.flex__container{
+    display: flex;
+    flex-direction: row;
+}
+
+.caja{
+    border: 1px solid #ccc;
+    background: white;
+    font-weight: bold;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'SF Pro Display';
+    font-size: 1rem;
+}
