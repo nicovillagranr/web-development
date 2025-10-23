@@ -1,0 +1,89 @@
+<!-- 
+Enunciado:
+- Crea un formulario con un campo de tipo textarea, Email, Contraseña, radio select, checkbox, Fichero, Fecha, Numero, Color y Submit.
+- Todos los campos deberán estar dentro de un fieldset y usar el campo legend.
+- Todos los campos deberán tener un label.
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 22 en HTML</title>
+</head>
+<body>
+    
+    <h1>Formulario Completo</h1>
+
+    <form action="">
+        <fieldset>
+            <legend>Descripcion</legend>
+            <label for="despripcion">Introduce una descripcion</label>
+            <br>
+            <textarea name="descripcion" id="descripcion"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>Email</legend>
+            <label for="email">Introduce un Email</label>
+            <br>
+            <textarea name="email" id="email"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>Radio</legend>
+            <label for="edad">Edad:</label>
+
+            <input type="radio" name="edad" id="mayor">
+            <label for="mayor">Mayor de Edad</label>
+
+            <input type="radio" name="edad" id="menor">
+            <label for="menor">Menor de Edad</label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Select</legend>
+            <label for="comidas">Comidas</label>
+            <select name="" id="">
+                <option value="">Pollo frito</option>
+                <option value="">Pizza</option>
+                <option value="">Sushi</option>
+            </select>
+        </fieldset>
+
+        <fieldset>
+            <legend>Vegano</legend>
+            <label for="vegano">Soy Vegano</label>
+            <input type="checkbox">
+        </fieldset>
+
+        <fieldset>
+            <legend>Archivo</legend>
+
+            <label for="archivo">Sube tu archivo:</label>
+            <input type="file" name="archivo" id="archivo">
+        </fieldset>
+
+        <fieldset>
+            <legend>Fecha y Hora:</legend>
+            <label for="fecha">Fecha:</label>
+            <input type="datetime-local">
+        </fieldset>
+
+        <fieldset>
+            <legend>Número y Color:</legend>
+
+            <label for="numero">Número:</label>
+            <input type="number">
+
+            <label for="color">Color:</label>
+            <input type="color">
+
+        </fieldset>
+
+        <input type="submit" value="Enviar Formulario">
+    </form>
+    
+</body>
+</html>
