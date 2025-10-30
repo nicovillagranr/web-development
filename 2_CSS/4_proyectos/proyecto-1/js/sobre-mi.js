@@ -14,18 +14,3 @@ document.addEventListener('visibilitychange', () => {
         document.head.appendChild(favicon);
     }
 });
-
-window.addEventListener('load', () => {
-    const yaEjecutada = sessionStorage.getItem('animacionEjecutada');
-
-    if (!yaEjecutada) {
-        gsap.from(".layout", {
-        delay: 0.5,
-        scale: 0.5,
-        duration: 1.5,
-        opacity: 0,
-        ease: "elastic.out"
-        });
-        sessionStorage.setItem('animacionEjecutada', 'true');
-    }
-});

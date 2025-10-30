@@ -1,0 +1,17 @@
+header,
+footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+nav a {
+    color: #eee;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+nav a:hover {
+    color: #00c3ff;
+}
