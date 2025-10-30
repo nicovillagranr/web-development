@@ -65,7 +65,7 @@ h1,h2,h3,h4,h5,h6{
 .layout__aside{
     grid-area: aside;
     border-radius: 4rem 0 0 4rem;
-    /* overflow: auto; */
+    overflow: auto;
     overflow-x: hidden;
 }
 
@@ -151,8 +151,8 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .user-info__buttons{
-    margin-top: 2rem;
-    margin-bottom: 4rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,7 +178,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .user-info__footer{
-    /* margin-top: 1rem; */
+    margin-top: 1rem;
     font-size: 1.5rem;
     cursor: pointer;
 }
@@ -262,6 +262,20 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .menu__overlay{
+    position: absolute;
+    right:0;
+    margin-top: -3rem;
     opacity: 0;
-    display: none;
+    display: block;
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background: var(--secondary-color);
+    white-space: nowrap;
+    transition: all .3s ease-in-out;
+}
+
+.menu__option:hover .menu__overlay{
+    opacity: 1;
+    right: 100%;
 }
