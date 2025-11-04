@@ -1,0 +1,62 @@
+<!-- 
+Enunciado:
+- Crea un formulario con un campo de tipo búsqueda.
+- Teléfono, hora, URL, Barra de progreso, lista de datos, submit y reset
+
+- Todos los campos deberán tener un Reset
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 23 en HTML</title>
+</head>
+<body>
+    
+    <h1>Formulario</h1>
+
+    <form action="" method="post">
+        <div>
+            <label for="buscar">Buscar:</label>
+            <input type="search" id="buscar">
+        </div>
+
+        <div>
+            <label for="telefono">Telefono:</label>
+            <input type="tel" id="telefono">
+        </div>
+
+        <div>
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora">
+        </div>
+
+        <div>
+            <label for="web">Sitio Web:</label>
+            <input type="url" id="web">
+        </div>
+
+        <div>
+            <label for="progreso">Barra Progreso:</label>
+            <progress max="100"></progress>
+        </div>
+
+        <div>
+            <label for="datos">Lista de datos:</label>
+            <select name="datos" id="datos">
+                <option value="nike">Nike</option>
+                <option value="adiddas">Adiddas</option>
+                <option value="Puma">Puma</option>
+                <option value="Jordan">Jordan</option>
+            </select>
+        </div>
+        
+        <input type="submit" value="Enviar Formulario">
+        <input type="reset" value="Limpiar formulario">
+
+    </form>
+
+</body>
+</html>
