@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Bungee_Hairline';
   src: url('./BungeeHairline-Regular.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 100 400;
   font-style: normal;
   font-display: swap;
 }

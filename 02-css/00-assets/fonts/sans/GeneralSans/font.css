@@ -1,23 +1,7 @@
 @font-face {
   font-family: 'GeneralSans';
-  src: url('./GeneralSans-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
-  src: url('./GeneralSans-BoldItalic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
   src: url('./GeneralSans-Extralight.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 100 400;
   font-style: normal;
   font-display: swap;
 }
@@ -25,31 +9,7 @@
 @font-face {
   font-family: 'GeneralSans';
   src: url('./GeneralSans-ExtralightItalic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
-  src: url('./GeneralSans-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
-  src: url('./GeneralSans-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
-  src: url('./GeneralSans-LightItalic.ttf') format('truetype');
-  font-weight: 300;
+  font-weight: 100 400;
   font-style: italic;
   font-display: swap;
 }
@@ -72,16 +32,8 @@
 
 @font-face {
   font-family: 'GeneralSans';
-  src: url('./GeneralSans-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GeneralSans';
   src: url('./GeneralSans-Semibold.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 600 700;
   font-style: normal;
   font-display: swap;
 }
@@ -89,23 +41,23 @@
 @font-face {
   font-family: 'GeneralSans';
   src: url('./GeneralSans-SemiboldItalic.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 600 700;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'GeneralSans';
-  src: url('./GeneralSans-Variable.ttf') format('truetype');
-  font-weight: 400;
+  src: url('./GeneralSans-Bold.ttf') format('truetype');
+  font-weight: 700 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'GeneralSans';
-  src: url('./GeneralSans-VariableItalic.ttf') format('truetype');
-  font-weight: 400;
+  src: url('./GeneralSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700 900;
   font-style: italic;
   font-display: swap;
 }
