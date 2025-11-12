@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Extrabold.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Extralight.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./CabinetGrotesk-Variable.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

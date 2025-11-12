@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Josefin_Sans';
+  src: url('./JosefinSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Josefin_Sans';
+  src: url('./JosefinSans-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
