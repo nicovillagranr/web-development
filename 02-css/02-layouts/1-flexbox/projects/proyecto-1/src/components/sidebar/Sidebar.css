@@ -1,0 +1,28 @@
+.sidebar {
+    width: 20%;
+    min-height: 100vh;
+    /* min-height: calc(100vh - 10rem); */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar__list {
+    height: 100%;
+    width: 100%;
+
+    padding: 5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    list-style: none;
+}
+
+.sidebar__list-item {
+    color: white;
+    font-size: 2rem;
+}

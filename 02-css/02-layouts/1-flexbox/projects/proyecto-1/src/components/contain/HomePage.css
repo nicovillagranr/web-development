@@ -1,0 +1,25 @@
+.main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+}
+
+.main__container {
+    width: 80%;
+    min-height: 100vh;
+    background-color: #ccc;
+}
+
+.container__cards {
+    width: 100%;
+    min-height: auto;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    flex-wrap: wrap;
+    gap: 2.5rem;
+
+    padding: 2rem;
+}
