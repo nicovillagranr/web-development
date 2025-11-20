@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hola Mundo</title>
+    <style>
+        body{
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    
+
+
+
+    <script>
+        document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            // el usuario cambió de pestaña o minimizó
+            setTimeout(() => {
+                document.title = "👀 ¿Te fuiste?";
+            }, 1500)
+        } else {
+            // volvió a la pestaña
+            document.title = "Hola Mundo";
+        }
+        });
+    </script>
+</body>
+</html>

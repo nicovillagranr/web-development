@@ -1,0 +1,36 @@
+html{
+    font-size: 10px;
+}
+
+body{
+    background: palevioletred;
+    scroll-behavior: smooth;
+}
+
+.seccion{
+    min-width: 100%;
+    min-height: 100vh;
+}
+
+.seccion2{
+    background: lightseagreen;
+    min-height: 100vh;
+    min-width: 100%;
+}
+
+.caja{
+    height: 20rem;
+    width: 20rem;
+    background: yellowgreen;
+}
+
+.caja2{
+    height: 20rem;
+    width: 20rem;
+    background: yellowgreen;
+    margin-top: 40rem;
+}
+
+.red{
+    background: red;
+}
