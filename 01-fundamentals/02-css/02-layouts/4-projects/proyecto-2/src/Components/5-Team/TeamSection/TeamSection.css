@@ -1,0 +1,17 @@
+.team__section {
+    width: 100%;
+    min-height: 90vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container__memberCard {
+    width: 70%;
+    min-height: 60vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

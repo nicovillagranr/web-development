@@ -1,0 +1,52 @@
+.memberCard {
+    width: 22.5%;
+    height: 65vh;
+    /* border: 2px solid black; */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.memberCard__img {
+    height: 50%;
+    object-fit: cover;
+}
+
+.memberCard__name {
+    font-size: 2rem;
+    font-weight: lighter;
+}
+
+.memberCard__position {
+    font-size: 1.5rem;
+    color: tomato;
+    font-weight: lighter;
+}
+
+.memberCard__description {
+    font-size: 1.2rem;
+    font-weight: lighter;
+    line-height: 1.8rem;
+}
+
+.memberCard__list {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+
+}
+
+.memberCard__social-item {
+    height: 3rem;
+    width: 3rem;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.memberCard__social-icon {
+    width: 2rem;
+    height: 2rem;
+}

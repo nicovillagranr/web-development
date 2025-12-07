@@ -8,6 +8,7 @@
     transform: translateX(-50%);
 
     border-bottom: 2px solid gray;
+    background: var(--footer-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
