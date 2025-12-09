@@ -8,9 +8,9 @@ function Header() {
                 <ul className="nav__list">
                     <li className="list__item"><a href="#feature" className="item__link">Features</a></li>
                     <li className="list__item"><a href="#portfolio" className="item__link">Works</a></li>
-                    <li className="list__item"><a href="#" className="item__link">Our Team</a></li>
-                    <li className="list__item"><a href="#" className="item__link">Testimonials</a></li>
-                    <li className="list__item"><a href="#" className="item__link">Download</a></li>
+                    <li className="list__item"><a href="#team" className="item__link">Our Team</a></li>
+                    <li className="list__item"><a href="#testimonial" className="item__link">Testimonials</a></li>
+                    <li className="list__item"><a href="#download" className="item__link">Download</a></li>
                 </ul>
             </nav>
         </header>

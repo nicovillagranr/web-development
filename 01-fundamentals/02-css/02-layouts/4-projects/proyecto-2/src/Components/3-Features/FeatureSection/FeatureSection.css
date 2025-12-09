@@ -1,6 +1,8 @@
 .FeatureSection {
     width: 100%;
-    min-height: 75vh;
+    min-height: 80vh;
+
+    padding: 5rem;
 
     display: flex;
     justify-content: center;
@@ -15,4 +17,26 @@
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 3rem;
+}
+
+@media(width <=770px) {
+    .section__cards {
+        width: 80%;
+
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+}
+
+@media(width <=500px) {
+    .FeatureSection {
+        padding: 2rem;
+    }
+
+    .section__cards {
+        width: 100%;
+
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+    }
 }

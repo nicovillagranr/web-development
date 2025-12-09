@@ -29,7 +29,6 @@
 .hero__content {
     width: 50%;
     min-height: 60vh;
-    /* border: 2px solid black; */
 
     display: flex;
     flex-direction: column;
@@ -58,4 +57,44 @@
     background-color: var(--button-color);
     font-size: 1.8rem;
     color: white;
+}
+
+@media(width <=1550px) {
+    .hero__content {
+        width: 70%;
+    }
+}
+
+@media(width <=1080px) {
+    .hero__title {
+        font-size: 4rem;
+    }
+
+    .hero__text {
+        font-size: 1.6rem;
+    }
+
+    .hero__button {
+        width: 30%;
+        font-size: 1.6rem;
+    }
+}
+
+@media(width <=785px) {
+    .hero__content {
+        width: 90%;
+    }
+}
+
+@media(width <=561px) {
+    .hero__title {
+        font-size: 3rem;
+    }
+}
+
+@media(width <=525px) {
+    .hero__button {
+        width: 50%;
+        font-size: 1.4rem;
+    }
 }

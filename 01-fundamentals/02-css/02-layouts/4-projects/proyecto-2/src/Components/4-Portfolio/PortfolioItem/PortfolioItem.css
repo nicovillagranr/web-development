@@ -11,6 +11,15 @@
     display: block;
 }
 
+.portfolio__item-name {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.portfolio__item-text {
+    font-size: 1.8rem;
+}
+
 .portfolio__item-hover {
     position: absolute;
     inset: 0;

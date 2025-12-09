@@ -24,6 +24,21 @@
 
 .feature__card-text {
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: gray;
+}
+
+@media (width <=770px) {
+    .feature__icon {
+        height: 8rem;
+        width: 8rem;
+    }
+
+    .feature__card-title {
+        font-size: 1.8rem;
+    }
+
+    .feature__card-text {
+        font-size: 1.2rem;
+    }
 }

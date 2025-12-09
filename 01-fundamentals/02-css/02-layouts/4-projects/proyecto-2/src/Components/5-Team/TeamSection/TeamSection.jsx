@@ -9,7 +9,7 @@ import "./TeamSection.css"
 
 function TeamSection() {
     return (
-        <section className="team__section">
+        <section className="team__section" id="team">
             <div className="container__memberCard">
                 <TeamMemberCard
                     photo={member1}
