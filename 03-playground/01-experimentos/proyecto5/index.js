@@ -1,3 +1,5 @@
+// Bibioteca Split https://www.npmjs.com/package/split-type#installation
+
 const text = new SplitType('.hero-title', { types: 'words, chars' });
 
 text.chars.forEach((char , i) => {
