@@ -27,7 +27,7 @@
 }
 
 .cta__button {
-    width: 30%;
+    width: 50rem;
     height: 4rem;
     padding: 0.75rem 2rem;
     font-size: 1.25rem;
@@ -53,7 +53,7 @@
     }
 
     .cta__button {
-        width: 50%;
+        width: 30rem;
         font-size: 1rem;
     }
 }

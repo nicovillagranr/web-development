@@ -1,9 +1,14 @@
+/* ===== Reset del botón ===== */
 .portfolio__item {
+    all: unset;
     position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
     overflow: hidden;
-    height: auto;
 }
 
+/* ===== Imagen ===== */
 .portfolio__item-img {
     width: 100%;
     height: 100%;
@@ -11,6 +16,27 @@
     display: block;
 }
 
+/* ===== Overlay ===== */
+.portfolio__item-hover {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    padding: 1rem;
+    gap: 1rem;
+
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* ===== Texto ===== */
 .portfolio__item-name {
     font-size: 2rem;
     font-weight: bold;
@@ -20,25 +46,23 @@
     font-size: 1.8rem;
 }
 
-.portfolio__item-hover {
-    position: absolute;
-    inset: 0;
-    /* reemplaza top, left, width, height */
-    background: rgba(0, 0, 0, 0.65);
-    color: #fff;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 1rem;
-    gap: 1rem;
-
-    transform: translateY(100%);
-    transition: transform 0.3s ease-in-out;
+/* ===== Interacciones ===== */
+.portfolio__item:hover .portfolio__item-hover,
+.portfolio__item:focus-visible .portfolio__item-hover {
+    transform: translateY(0);
 }
 
-.portfolio__item:hover .portfolio__item-hover {
-    transform: translateY(0);
+/* ===== Accesibilidad: foco visible ===== */
+.portfolio__item:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+}
+
+/* ===== Mobile: sin hover, info siempre visible ===== */
+@media (hover: none) {
+    .portfolio__item-hover {
+        position: static;
+        transform: translateY(0);
+        background: rgba(0, 0, 0, 0.85);
+    }
 }

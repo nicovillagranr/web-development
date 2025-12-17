@@ -1,4 +1,4 @@
-.FeatureSection {
+.feature {
     width: 100%;
     min-height: 80vh;
 
@@ -9,7 +9,7 @@
     align-items: center;
 }
 
-.section__cards {
+.feature__cards {
     min-height: 50vh;
     width: 70%;
 
@@ -20,7 +20,7 @@
 }
 
 @media(width <=770px) {
-    .section__cards {
+    .feature__cards {
         width: 80%;
 
         grid-template-columns: 1fr 1fr;
@@ -29,11 +29,11 @@
 }
 
 @media(width <=500px) {
-    .FeatureSection {
+    .feature {
         padding: 2rem;
     }
 
-    .section__cards {
+    .feature__cards {
         width: 100%;
 
         grid-template-columns: 1fr;

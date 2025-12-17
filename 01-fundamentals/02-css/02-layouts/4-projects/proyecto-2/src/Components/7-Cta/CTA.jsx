@@ -6,7 +6,7 @@ function CTA() {
             <div className="cta__container">
                 <h2 className="cta__title">Are you ready to start? Download now for Free!</h2>
                 <p className="cta__subtitle">Fusce dapibus, tellus ac cursus commodo.</p>
-                <button className="cta__button">Get Started</button>
+                <a href="/download" className="cta__button" role="button">Get Started</a>
             </div>
         </section>
     )

@@ -1,43 +1,41 @@
-.memberCard {
-    width: 22.5%;
-    height: 65vh;
-    /* border: 2px solid black; */
+.member {
+    min-height: 55vh;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.memberCard__img {
+.member__img {
     height: 50%;
     object-fit: cover;
 }
 
-.memberCard__name {
+.member__name {
     font-size: 2rem;
     font-weight: lighter;
 }
 
-.memberCard__position {
+.member__position {
     font-size: 1.5rem;
     color: tomato;
     font-weight: lighter;
 }
 
-.memberCard__description {
+.member__description {
     font-size: 1.4rem;
     font-weight: lighter;
     line-height: 1.8rem;
 }
 
-.memberCard__list {
+.member__list {
     display: flex;
     flex-direction: row;
     gap: .5rem;
 
 }
 
-.memberCard__social-item {
+.member__social {
     height: 3rem;
     width: 3rem;
     border: 1px solid #ccc;
@@ -46,20 +44,20 @@
     align-items: center;
 }
 
-.memberCard__social-icon {
+.member__social-icon {
     width: 2rem;
     height: 2rem;
 }
 
 @media (width <=1050px) {
-    .memberCard {
+    .member {
         width: 100%;
         height: auto;
     }
 }
 
 @media (width <=600px) {
-    .memberCard {
+    .member {
         justify-content: space-evenly;
     }
 }

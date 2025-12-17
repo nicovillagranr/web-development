@@ -11,8 +11,8 @@ import "./FeatureSection.css"
 
 function FeatureSection() {
     return (
-        <section className="FeatureSection" id="feature">
-            <div className="section__cards">
+        <section className="feature" id="feature">
+            <div className="feature__cards">
                 <FeatureCard icon={penRulerIcon} title="Easily Customized" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus veritatis soluta quas distinctio dolores alias. Quasi molestias iure fugit provident." />
                 <FeatureCard icon={responsiveIcon} title="Responsive Ready" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus veritatis soluta quas distinctio dolores alias. Quasi molestias iure fugit provident." />
                 <FeatureCard icon={lightIcon} title="Modern Design" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus veritatis soluta quas distinctio dolores alias. Quasi molestias iure fugit provident." />

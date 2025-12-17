@@ -1,6 +1,6 @@
-.team__section {
+.team {
     width: 100%;
-    min-height: 90vh;
+    min-height: 80vh;
 
     display: flex;
     justify-content: center;
@@ -9,17 +9,18 @@
     padding: 5rem;
 }
 
-.container__memberCard {
-    width: 70%;
-    min-height: 60vh;
+.team__list {
+    width: 80%;
+    min-height: 50vh;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 3rem;
 }
 
 @media (width <=1050px) {
-    .container__memberCard {
+    .team__list {
         width: 90%;
 
         display: grid;
@@ -32,11 +33,11 @@
 }
 
 @media (width <=600px) {
-    .team__section {
+    .team {
         padding: 2rem;
     }
 
-    .container__memberCard {
+    .team__list {
         width: 100%;
 
         grid-template-rows: repeat(4, 1fr);

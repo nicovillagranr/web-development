@@ -9,8 +9,8 @@ import "./TeamSection.css"
 
 function TeamSection() {
     return (
-        <section className="team__section" id="team">
-            <div className="container__memberCard">
+        <section className="team" id="team">
+            <div className="team__list" role="list">
                 <TeamMemberCard
                     photo={member1}
                     name="Ruth Woods"
