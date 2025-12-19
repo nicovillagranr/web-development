@@ -3,8 +3,12 @@ export default {
         "./index.html",
         "./src/**/*.{js,jsx,ts,tsx}",
     ],
+
+    plugins: [],
+
     theme: {
         screens: {
+            xxs: "320px",
             xs: "360px",
             sm: "640px",
             md: "768px",
@@ -13,5 +17,4 @@ export default {
             "2xl": "1536px",
         },
     },
-    plugins: [],
 }

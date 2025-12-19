@@ -1,4 +1,5 @@
-import TitleWatcher from "./Components/TitleWatcher"
+import TitleWatcher from "./Components/TitleWatcher/TitleWatcher"
+
 import Header from "./Components/1-Header/Header"
 import Main from "./Components/2-Main/Main"
 import Footer from "./Components/4-Footer/Footer"
