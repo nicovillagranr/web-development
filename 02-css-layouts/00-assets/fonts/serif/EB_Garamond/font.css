@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-Regular.ttf') format('truetype');
+  font-weight: 100 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-SemiBold.ttf') format('truetype');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-Bold.ttf') format('truetype');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB_Garamond';
+  src: url('./static/EBGaramond-BoldItalic.ttf') format('truetype');
+  font-weight: 700 900;
+  font-style: italic;
+  font-display: swap;
+}

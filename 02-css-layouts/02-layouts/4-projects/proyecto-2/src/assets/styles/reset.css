@@ -1,0 +1,90 @@
+/* RESET BASE AMPLIADO */
+/* Normaliza márgenes, paddings y box model */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Configuración raíz */
+html {
+    font-size: 62.5%;
+    /* Para usar rem con mentalidad decimal: 1rem = 10px */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: sans-serif;
+    font-size: 10px;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* Imágenes y medios */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Inputs */
+button,
+input,
+textarea,
+select {
+    font: inherit;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+/* Botones */
+button {
+    cursor: pointer;
+}
+
+/* Quitar estilos de listas */
+ul,
+ol {
+    list-style: none;
+}
+
+/* Enlaces */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Tablas */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Formularios y elementos de texto */
+textarea {
+    resize: vertical;
+}
+
+/* Quita animaciones si el usuario las desactiva */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

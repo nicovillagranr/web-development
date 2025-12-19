@@ -1,0 +1,175 @@
+/* =========================================================
+   11_advanced-selectors.css
+   ---------------------------------------------------------
+   Archivo de estudio.
+   Aquí se documentan patrones avanzados de selectores,
+   nesting y relaciones entre elementos.
+   NO es un archivo de estilos finales.
+   ========================================================= */
+
+
+/* =========================================================
+   1. CSS NESTING BÁSICO
+   ---------------------------------------------------------
+   Problema:
+   Repetir el mismo selector genera ruido mental.
+
+   Solución:
+   Usar nesting y el selector & (selector padre).
+   ========================================================= */
+
+.card {
+    background: var(--color-gray-100);
+
+    /* & representa a .card */
+    &:hover {
+        background: var(--color-gray-200);
+    }
+}
+
+/*
+  CSS clásico equivalente:
+
+  .card {
+    background: var(--color-gray-100);
+  }
+
+  .card:hover {
+    background: var(--color-gray-200);
+  }
+*/
+
+
+/* =========================================================
+   2. RELACIONES ENTRE HERMANOS
+   ---------------------------------------------------------
+   Selectores de hermanos:
+   +  hermano inmediato
+   ~  cualquier hermano posterior
+   ========================================================= */
+
+
+/* =========================================================
+   2.1 HERMANO INMEDIATO (+)
+   ---------------------------------------------------------
+   Solo aplica si el elemento está justo después.
+   ========================================================= */
+
+/*
+  HTML mental:
+
+  <button class="peer"></button>
+  <div class="card"></div>
+*/
+
+.peer:hover+.card {
+    background-color: var(--color-red-400);
+}
+
+
+/* =========================================================
+   2.2 HERMANO GENERAL (~)
+   ---------------------------------------------------------
+   Aplica aunque haya elementos entre medio.
+   ========================================================= */
+
+/*
+  HTML mental:
+
+  <button class="peer"></button>
+  <span></span>
+  <div class="card"></div>
+*/
+
+.peer:hover~.card {
+    background-color: var(--color-blue reopening-400);
+}
+
+
+/* =========================================================
+   3. PATRÓN PEER + NESTING
+   ---------------------------------------------------------
+   Problema:
+   Un componente debe reaccionar al estado de otro.
+
+   En vez de definir el estilo desde afuera,
+   lo definimos desde el propio componente.
+   ========================================================= */
+
+.card {
+    background: var(--color-gray-100);
+    padding: 1rem;
+
+    /*
+    Lectura:
+    Cuando un hermano anterior con clase .peer
+    esté en hover, esta .card cambia de fondo
+  */
+    .peer:hover~& {
+        background-color: var(--color-blue-400);
+    }
+}
+
+/*
+  CSS clásico equivalente:
+
+  .peer:hover ~ .card {
+    background-color: var(--color-blue-400);
+  }
+*/
+
+
+/* =========================================================
+   4. COMPOSICIÓN DE ESTADOS
+   ---------------------------------------------------------
+   Un componente puede reaccionar:
+   - a su propio estado
+   - al estado de otros elementos
+   ========================================================= */
+
+.card {
+    padding: 1rem;
+    background: var(--color-gray-100);
+    transition: background 0.2s ease, outline 0.2s ease;
+
+    /* Estado propio */
+    &:hover {
+        outline: 2px solid var(--color-blue-500);
+    }
+
+    /* Estado externo */
+    .peer:hover~& {
+        background: var(--color-blue-400);
+    }
+}
+
+/*
+  Lectura mental correcta:
+  “La card tiene su comportamiento propio,
+   pero también reacciona al contexto del DOM.”
+*/
+
+
+/* =========================================================
+   5. CONCEPTO CLAVE (NO TÉCNICO)
+   ---------------------------------------------------------
+   CSS NO funciona como if / else.
+
+   No pienses:
+   "Si pasa A, entonces pasa B"
+
+   Piensa:
+   "Cuando el DOM está en este estado,
+    este estilo es válido"
+   ========================================================= */
+
+
+/* =========================================================
+   6. USO CORRECTO DE ESTE ARCHIVO
+   ---------------------------------------------------------
+   - Este archivo es documentación viva
+   - Se comenta más de lo que se estiliza
+   - Los patrones aprendidos se copian luego
+     a layout, components o themes
+   - No se importa a producción a ciegas
+   ========================================================= */

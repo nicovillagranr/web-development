@@ -1,0 +1,39 @@
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.m-auto {
+    margin: auto;
+}
+
+.mt-lg {
+    margin-top: var(--space-lg);
+}
+
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+
+.p-md {
+    padding: var(--space-md);
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.shadow {
+    box-shadow: var(--shadow-md);
+}
