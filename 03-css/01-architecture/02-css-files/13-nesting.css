@@ -1,0 +1,171 @@
+/*
+  =========================================================
+  GUÍA PRÁCTICA DE CSS NESTING (CSS NATIVO)
+  ---------------------------------------------------------
+  Objetivo:
+  - Servir como referencia real para proyectos
+  - Mostrar patrones correctos de nesting
+  - Combinar nesting con BEM sin romper arquitectura
+
+  NOTA:
+  - El nesting NO reemplaza BEM
+  - El nesting NO debe exceder 2–3 niveles
+  - El HTML sigue siendo explícito
+  =========================================================
+*/
+
+/* =========================================================
+   1. NESTING BÁSICO
+   ========================================================= */
+
+/* HTML esperado:
+   <div class="card">
+     <h2>Título</h2>
+     <p>Texto</p>
+   </div>
+*/
+
+.card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: #666;
+  }
+}
+
+/* =========================================================
+   2. NESTING + ESTADOS (uso de &)
+   ========================================================= */
+
+/* HTML esperado:
+   <button class="button">Aceptar</button>
+*/
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* =========================================================
+   3. NESTING CON BEM (PATRÓN RECOMENDADO)
+   ========================================================= */
+
+/* HTML esperado:
+   <article class="card">
+     <h2 class="card__title">Título</h2>
+     <p class="card__text">Texto</p>
+     <button class="card__button card__button--primary">
+       Comprar
+     </button>
+   </article>
+*/
+
+.card {
+  padding: 1rem;
+  border: 1px solid #ddd;
+
+  &__title {
+    font-size: 1.5rem;
+  }
+
+  &__text {
+    color: #444;
+  }
+
+  &__button {
+    padding: 0.5rem 1rem;
+
+    &--primary {
+      background-color: blue;
+      color: white;
+    }
+  }
+}
+
+/* =========================================================
+   4. NESTING CON COMBINADORES
+   ========================================================= */
+
+/* HTML esperado:
+   <input class="input" />
+   <label class="label">Nombre</label>
+*/
+
+.input {
+  border: 1px solid #ccc;
+
+  &:focus + .label {
+    color: blue;
+  }
+}
+
+/* =========================================================
+   5. NESTING CON :has() (CSS MODERNO)
+   ========================================================= */
+
+/* HTML esperado:
+   <div class="field">
+     <input type="checkbox" />
+     <span>Opción</span>
+   </div>
+*/
+
+.field {
+  display: flex;
+  gap: 0.5rem;
+
+  &:has(input:checked) {
+    color: green;
+  }
+}
+
+/* =========================================================
+   6. MAL USO (EVITAR)
+   ========================================================= */
+
+/* ❌ Evitar nesting profundo */
+
+/*
+.card {
+  div {
+    ul {
+      li {
+        span {
+          color: red;
+        }
+      }
+    }
+  }
+}
+*/
+
+/* Motivo:
+   - Acopla estilos a estructura
+   - Difícil de mantener
+   - Rompe reutilización
+*/
+
+/* =========================================================
+   7. REGLAS FINALES
+   ========================================================= */
+
+/* ✔ Máximo 2–3 niveles de nesting
+   ✔ Usar & para BEM y estados
+   ✔ Mantener HTML explícito
+   ✔ Nesting mejora escritura, no arquitectura
+*/

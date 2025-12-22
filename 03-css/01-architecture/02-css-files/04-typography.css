@@ -1,0 +1,79 @@
+body {
+    font-family: var(--font-main);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    line-height: var(--line-height-base);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--space-sm);
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+small {
+    font-size: 0.875rem;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-secondary);
+}
+
+/* Clamp */
+
+/* ### Qué resuelve */
+/* - Tipografía fluida */
+/* - Espaciado fluido */
+/* - Eliminación de media queries innecesarias */
+
+/* ### Sintaxis */
+/* clamp(min, preferred, max) */
+
+/* ### Regla del repo */
+/* - clamp se usa para escalas, no valores arbitrarios */
+/* - Nunca mezclar clamp + media queries para lo mismo */
+/* - Siempre documentar el rango visual esperado */
+
+/* ### Cuándo NO usarlo */
+/* - Valores fijos críticos */
+/* - Borders */
+/* - Z-index */
+
+:root {
+    /* Fluid typography */
+    --fs-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+    --fs-base: clamp(1rem, 0.95rem + 0.4vw, 1.125rem);
+    --fs-lg: clamp(1.25rem, 1.1rem + 0.8vw, 1.5rem);
+    --fs-xl: clamp(2rem, 1.6rem + 1.5vw, 2.5rem);
+
+    /* Fluid spacing */
+    --space-fluid-sm: clamp(0.75rem, 0.5rem + 1vw, 1rem);
+    --space-fluid-md: clamp(1rem, 0.75rem + 1.5vw, 2rem);
+}
