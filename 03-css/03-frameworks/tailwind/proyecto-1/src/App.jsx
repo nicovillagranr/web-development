@@ -1,19 +1,12 @@
-import TitleWatcher from "./components/TitleWatcher/TitleWatcher"
-
-import Header from "./components/1-Header/Header"
-
 import './assets/styles/App.css'
-import "./assets/styles/reset.css"
 
+import Header from "./Components/1-Header/Header.jsx"
 
 function App() {
-
-  return (
-    <>
-      <TitleWatcher />
-      <Header />
-    </>
-  )
+    return (
+        <>
+            <Header />
+        </>
+    )
 }
 export default App
-

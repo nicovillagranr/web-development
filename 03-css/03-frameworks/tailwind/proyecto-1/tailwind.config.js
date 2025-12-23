@@ -12,9 +12,16 @@ export default {
             xs: "360px",
             sm: "640px",
             md: "768px",
-            lg: "1024px",
+            lg: "1025px",
             xl: "1280px",
             "2xl": "1536px",
+        },
+        extend: {
+            colors: {
+                primary: '#ff5959',
+                secondary: '#e8e8e8',
+                footer: '#b6b6b6',
+            },
         },
     },
 }
