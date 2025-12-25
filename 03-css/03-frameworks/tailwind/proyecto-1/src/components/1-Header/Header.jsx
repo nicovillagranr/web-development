@@ -1,37 +1,62 @@
-// Import de Icons
+// Importamos Hooks de React
+import { useState } from "react"
+
+// Importamos íconos
 import HouseIcon from "../../assets/icons/house-solid-full.svg"
 
-// Import de Components
+// Importamos componentes
 import NavItem from "./NavItem.jsx"
 
 function Header() {
+    const [isOpen, setIsOpen] = useState(false)
+
     return (
-        <>
-            <header className="min-h-[10vh] w-full bg-[#ff5959] flex items-center justify-center">
+        <header className="relative w-full bg-[#ff5959] flex justify-center">
+            <nav className="w-[90%] min-h-[10vh] flex items-center justify-between md:w-[85%]">
 
-                <nav className=" flex items-center justify-between min-h-[5vh] w-[85%] lg:w-[75%]">
-                    <div className="flex flex-col">
-                        <a className="flex items-center text-center text-2xl text-white px-6 tracking-widest" href="#hero">
-                            <img src={HouseIcon} alt="Home" className="w-5 h-5" />
-                            Projex
-                        </a>
-                        <a className="text-white font-bold text-sm" href="#hero">
-                            One Page Business Team
-                        </a>
-                    </div>
+                {/* Logo */}
+                <div className="flex flex-col">
+                    <a href="#hero" className="flex items-center gap-2 text-white text-xl tracking-widest">
+                        <img src={HouseIcon} alt="Home" className="w-5 h-5" />
+                        Projex
+                    </a>
+                    <span className="text-white text-xs font-bold">
+                        One Page Business Team
+                    </span>
+                </div>
 
-                    <ul className="text-white flex gap-15 lg:gap-10">
-                        <NavItem href="#hero" text="Home" />
-                        <NavItem href="#services" text="Services" />
-                        <NavItem href="#portfolio" text="Portfolio" />
-                        <NavItem href="#team" text="Our Team" />
-                        <NavItem href="#blog" text="Blog" />
-                        <NavItem href="#contact" text="Contact Us" />
-                    </ul>
-                </nav>
+                {/* Hamburger button (mobile only) */}
+                <button
+                    className="md:hidden text-white text-2xl"
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label="Open menu"
+                >
+                    ☰
+                </button>
 
-            </header>
-        </>
+                {/* Desktop menu */}
+                <ul className="hidden md:flex gap-6 lg:gap-15 text-white">
+                    <NavItem href="#hero" text="Home" />
+                    <NavItem href="#services" text="Services" />
+                    <NavItem href="#portfolio" text="Portfolio" />
+                    <NavItem href="#team" text="Our Team" />
+                    <NavItem href="#blog" text="Blog" />
+                    <NavItem href="#contact" text="Contact Us" />
+                </ul>
+            </nav>
+
+            {/* Mobile menu */}
+            {isOpen && (
+                <ul className="md:hidden absolute top-[10vh] left-0 w-full bg-[#ff5959] flex flex-col items-center gap-6 py-6 text-white">
+                    <NavItem href="#hero" text="Home" />
+                    <NavItem href="#services" text="Services" />
+                    <NavItem href="#portfolio" text="Portfolio" />
+                    <NavItem href="#team" text="Our Team" />
+                    <NavItem href="#blog" text="Blog" />
+                    <NavItem href="#contact" text="Contact Us" />
+                </ul>
+            )}
+        </header>
     )
 }
 
