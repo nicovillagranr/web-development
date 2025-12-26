@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript HTML DOM</h2>
+<img id="image" src="smiley.gif" width="160" height="120">
+
+<a href="#" onclick="cambiarimagen()">cambiar imagen</a>
+<script>
+function cambiarimagen(){
+    document.getElementById("image").src = "landscape.jpeg";
+}
+</script>
+
+<p>La imagen original es smiley.gif, pero el script la modificará porta landscape.jpg</p>
+
+</body>
+</html>
