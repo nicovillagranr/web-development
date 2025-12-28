@@ -1,0 +1,112 @@
+/* Definimos las propiedades globales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 10px;
+    font-family: Poppins;
+    background: #10121a;
+}
+
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+
+/* Definimos las propiedades de la card usando Nesting por primera vez (No es nada del otro mundo) */
+.card {
+    width: 300px;
+    height: 300px;
+    background: #1c1f2b;
+    border-radius: 1rem;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    color: white;
+
+    p {
+        font-size: .8rem;
+    }
+}
+
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes spin {
+    to {
+        --angle: 360deg;
+    }
+}
+
+
+/* Ahora si, aplicamos los pseudo elementos */
+.card::after,
+.card::before {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    content: '';
+
+    border-radius: 1rem;
+
+    top: 50%;
+    left: 50%;
+
+    translate: -50% -50%;
+
+    z-index: -1;
+
+    background-image: conic-gradient(from var(--angle),
+            #5AC8FA,
+            /* azul claro */
+            #7D7AFF,
+            /* violeta azulado */
+            #BF5AF2,
+            /* violeta */
+            #FF9FEE,
+            /* rosa suave */
+            #FFB7B2,
+            /* coral claro */
+            #7DFFB2,
+            /* verde menta */
+            #5AC8FA);
+
+
+    animation: spin 5s linear infinite;
+    animation-play-state: paused;
+
+
+    padding: .2rem;
+
+    animation: spin 3s linear infinite;
+    animation-play-state: paused;
+
+    scale: .85;
+
+    transition: scale .45s ease, opacity .45s ease, filter .45s ease;
+}
+
+.card::before {
+    scale: 0.5;
+    filter: blur(1.5rem);
+    opacity: .6;
+}
+
+.card:hover::after,
+.card:hover::before {
+    animation-play-state: running;
+    scale: 1;
+}
