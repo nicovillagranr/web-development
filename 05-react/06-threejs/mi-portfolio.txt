@@ -1,0 +1,11 @@
+Proyecto hecho con ThreeJS en React.
+Un mapa circular rodeado de montañas nevadas
+Una base de nubes que estén flotando hacían una dirección en concreto
+Cielo reactivo a la hora en vivo de Santiago de Chile
+Clima reactivo al clima en tiempo real de Santiago de Chile
+Al centro irá la parte superior del costanera center modelada en 3D
+Por dentro deberá tener una habitación que simulará mi propia habitación
+
+En la esquina del proyecto de forma fija deberá ir un cartel dinámico con la hora en tiempo real de Santiago de Chile con su clima, estos 2 deberán ser consumidos por apis
+
+Deberá haber aviones volando en el fondo para que el sitio se sienta vivo
