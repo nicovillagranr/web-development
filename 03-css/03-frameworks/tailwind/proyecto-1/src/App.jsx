@@ -1,5 +1,9 @@
 // Importamos React Router DOM para actualización de contenido dinámico
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+
+// Importamos Framer Motion para animar flujo de contenido
+import { AnimatePresence, motion } from "framer-motion"
+
 
 // Importamos estilos
 import './assets/styles/App.css'
@@ -14,27 +18,45 @@ import News from "./Components/6-News/News.jsx"
 import Contact from "./Components/8-Contact/Contact.jsx"
 import Footer from "./Components/9-Footer/Footer.jsx"
 
-function App() {
+
+function AnimatedRoutes() {
+    const location = useLocation()
+
     return (
-        <>
-            <HashRouter>
-
-                <Header />
-                <main>
-                    <Routes>
-                        <Route path="/" element={<Hero />} />
-                        <Route path="/services" element={<Services />} />
-                        <Route path="/portfolio" element={<Portfolio />} />
-                        <Route path="/team" element={<Team />} />
-                        <Route path="/news" element={<News />} />
-                        <Route path="/contact" element={<Contact />} />
-                    </Routes>
-                </main>
-
-                <Footer />
-
-            </HashRouter>
-        </>
+        <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Page><Hero /></Page>} />
+                <Route path="/services" element={<Page><Services /></Page>} />
+                <Route path="/portfolio" element={<Page><Portfolio /></Page>} />
+                <Route path="/team" element={<Page><Team /></Page>} />
+                <Route path="/news" element={<Page><News /></Page>} />
+                <Route path="/contact" element={<Page><Contact /></Page>} />
+            </Routes>
+        </AnimatePresence>
     )
 }
+
+function Page({ children }) {
+    return (
+        <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}>
+            {children}
+        </motion.main>
+    )
+}
+
+
+function App() {
+    return (
+        <HashRouter>
+            <Header />
+            <AnimatedRoutes />
+            <Footer />
+        </HashRouter>
+    )
+}
+
 export default App

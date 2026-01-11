@@ -1,6 +1,30 @@
+import { Link } from "react-router-dom"
+
+// Importamos íconos
+import HouseIcon from "../../assets/icons/house-solid-full.svg"
+
 function Footer() {
     return (
-        <footer className="w-full min-h-[10vh] bg-[#B6B6B6] z-9">Projex</footer>
+        <footer className="w-full min-h-[15vh] bg-[#B6B6B6] flex flex-col items-center justify-around sm:flex-row">
+
+            {/*Logo*/}
+            <div className="flex flex-col items-center">
+                <Link to="/" className="flex items-center text-white text-xl tracking-widest">
+                    <img src={HouseIcon} alt="Home" className="w-5 h-5" />
+                    <span className="text-md">Projex</span>
+                </Link>
+                <span className="text-white text-xs cursor-pointer">
+                    One Page Business Team
+                </span>
+            </div>
+
+
+            {/* Copyright */}
+            <div className="text-white text-xs cursor-pointer">
+                &copy; {new Date().getFullYear()} Nico Villagran. All rights reserved.
+            </div>
+
+        </footer>
     )
 }
 export default Footer
