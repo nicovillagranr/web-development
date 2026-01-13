@@ -7,7 +7,7 @@ function Hero() {
         // Hero | Background corporativo de la empresa
         <section
             style={{ backgroundImage: `url(${HeroImg})` }}
-            className="relative w-full min-h-[90vh] bg-cover bg-center flex items-center justify-center">
+            className="relative w-full min-h-[75vh] bg-cover bg-center flex items-center justify-center">
 
             <div className="absolute inset-0 bg-black/25 backdrop-blur-sm w-full flex items-center justify-center">
 

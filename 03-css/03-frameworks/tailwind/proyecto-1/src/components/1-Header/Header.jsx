@@ -30,7 +30,7 @@ function Header() {
                     </span>
                 </div>
 
-                {/* Hamburger button (mobile only)*/}
+                {/* Menú Hamburguesa: Móvil */}
                 <button
                     className="md:hidden text-white text-2xl"
                     onClick={() => setIsOpen(!isOpen)}
