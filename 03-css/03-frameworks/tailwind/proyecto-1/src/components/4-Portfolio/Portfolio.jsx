@@ -3,6 +3,7 @@ import portfolioImg2 from "../../assets/images/3-Portfolio/portfolio-2.webp";
 import portfolioImg3 from "../../assets/images/3-Portfolio/portfolio-3.webp";
 import portfolioImg4 from "../../assets/images/3-Portfolio/portfolio-4.webp";
 import portfolioImg5 from "../../assets/images/3-Portfolio/portfolio-5.webp";
+import portfolioImg6 from "../../assets/images/3-Portfolio/portfolio-6.webp";
 
 
 /* =========================
@@ -14,8 +15,8 @@ const portfolioItems = [
     { id: 3, image: portfolioImg3, title: "Project Three" },
     { id: 4, image: portfolioImg4, title: "Project Four" },
     { id: 5, image: portfolioImg5, title: "Project Five" },
-    { id: 6, image: portfolioImg3, title: "Project Six" },
-];
+    { id: 6, image: portfolioImg6, title: "Project Six" }
+]
 
 /* =========================
    ITEM (1 sola tarjeta)
@@ -50,7 +51,7 @@ function PortfolioItem({ image, title, big }) {
 ========================= */
 function Portfolio() {
     return (
-        <section className="w-full bg-[#ff5959] flex flex-col items-center py-10">
+        <section className="w-full min-h-[75vh] bg-[#ff5959] flex flex-col items-center py-10">
 
             {/* Título */}
             <h2 className="text-xl md:text-3xl text-white">Our Portfolio</h2>

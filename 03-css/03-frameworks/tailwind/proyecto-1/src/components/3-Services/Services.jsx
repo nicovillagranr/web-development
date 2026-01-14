@@ -28,7 +28,7 @@ const services = [
 
 function Services() {
     return (
-        <section className="w-full min-h-[75vh] bg-white flex flex-col items-center justify-center p-5">
+        <section className="w-full min-h-[90vh] bg-[#E8E8E8] flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
             <h2 className="text-xl md:text-3xl cursor-pointer">Our Services</h2>
