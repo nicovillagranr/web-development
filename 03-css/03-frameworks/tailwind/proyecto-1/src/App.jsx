@@ -1,5 +1,8 @@
 // Importamos React Router DOM para actualización de contenido dinámico
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+// HashRouter usado por compatibilidad con hosting estático (GitHub Pages).
+// En entorno productivo con control de servidor se usaría BrowserRouter.
+
 
 // Importamos Framer Motion para animar flujo de contenido
 import { AnimatePresence, motion } from "framer-motion"
@@ -58,5 +61,4 @@ function App() {
         </HashRouter>
     )
 }
-
 export default App

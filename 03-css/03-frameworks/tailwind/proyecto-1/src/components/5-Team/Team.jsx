@@ -13,6 +13,7 @@ import linkedinIcon from "../../assets/icons/Team/linkedin.svg"
 
 const members = [
     {
+        id: 1,
         img: member1img,
         name: "Elisa Mendoza",
         role: "CEO Founder",
@@ -26,6 +27,7 @@ const members = [
         ]
     },
     {
+        id: 2,
         img: member2img,
         name: "Carlos Ramirez",
         role: "CTO Co-Founder",
@@ -39,6 +41,7 @@ const members = [
         ]
     },
     {
+        id: 3,
         img: member3img,
         name: "Ana Gutierrez",
         role: "Lead Designer",
@@ -52,6 +55,7 @@ const members = [
         ]
     },
     {
+        id: 4,
         img: member4img,
         name: "Erika Fernandez",
         role: "Marketing Head",
@@ -83,8 +87,8 @@ function Team() {
             <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-10">
 
                 {members.map((member) => (
-                    <article key={member.name} className="flex flex-col items-center text-center p-6 rounded-lg shadow-md">
-                        <img src={member.img} alt={member.name} className=" rounded-full object-cover border-2 border-[#ff5959]" />
+                    <article key={member.id} className="flex flex-col items-center text-center p-6 rounded-lg shadow-md">
+                        <img src={member.img} alt={member.name} className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-2 border-[#ff5959]" />
                         <h3 className="mt-4 text-lg font-semibold md:text-xl">{member.name}</h3>
                         <h4 className="text-sm text-gray-600 md:text-base">{member.role}</h4>
                         <p className="mt-3 text-xs text-gray-700">{member.description}</p>
