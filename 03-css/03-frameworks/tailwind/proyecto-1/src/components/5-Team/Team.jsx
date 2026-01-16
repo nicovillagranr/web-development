@@ -5,11 +5,11 @@ import member3img from "../../assets/images/4-Team/team__member-3.webp"
 import member4img from "../../assets/images/4-Team/team__member-4.webp"
 
 // Importamos los Icons de las redes sociales
-import twitterIcon from "../../assets/icons/Team/twitter.svg"
-import pinterestIcon from "../../assets/icons/Team/pinterest.svg"
-import facebookIcon from "../../assets/icons/Team/facebook.svg"
-import googleIcon from "../../assets/icons/Team/google.svg"
-import linkedinIcon from "../../assets/icons/Team/linkedin.svg"
+import twitterIcon from "../../assets/icons/2-Team/twitter.svg"
+import pinterestIcon from "../../assets/icons/2-Team/pinterest.svg"
+import facebookIcon from "../../assets/icons/2-Team/facebook.svg"
+import googleIcon from "../../assets/icons/2-Team/google.svg"
+import linkedinIcon from "../../assets/icons/2-Team/linkedin.svg"
 
 const members = [
     {
@@ -73,7 +73,7 @@ const members = [
 
 function Team() {
     return (
-        <section className="w-full min-h-[90vh] bg-[#E8E8E8] py-10 px-4 flex flex-col items-center justify-center">
+        <section className="w-full min-h-[75vh] bg-[#E8E8E8] py-10 px-4 flex flex-col items-center justify-center">
 
             {/* Title */}
             <h2 className="text-xl font-semibold text-center md:text-3xl">Our Wonderful Team</h2>
@@ -84,7 +84,7 @@ function Team() {
             </div>
 
             {/* Members */}
-            <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-10">
+            <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-8">
 
                 {members.map((member) => (
                     <article key={member.id} className="flex flex-col items-center text-center p-6 rounded-lg shadow-md">

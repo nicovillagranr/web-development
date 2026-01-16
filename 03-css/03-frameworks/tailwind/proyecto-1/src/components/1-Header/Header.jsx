@@ -6,9 +6,9 @@ import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 
 // Importamos íconos
-import HouseIcon from "../../assets/icons/house-solid-full.svg"
-import MenuIcon from "../../assets/icons/bars-staggered-solid-full.svg"
-import CloseIcon from "../../assets/icons/xmark-solid-full.svg"
+import HouseIcon from "../../assets/icons/1-Header/house.svg"
+import MenuIcon from "../../assets/icons/1-Header/bars.svg"
+import CloseIcon from "../../assets/icons/1-Header/x.svg"
 
 // Importamos componentes
 import NavItem from "./NavItem.jsx"

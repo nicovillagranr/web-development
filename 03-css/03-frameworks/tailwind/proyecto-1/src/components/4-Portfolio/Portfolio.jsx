@@ -62,7 +62,7 @@ function Portfolio() {
             </div>
 
             {/* Grid */}
-            <div className="w-[80%] grid grid-cols-1 gap-6 mt-12 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="w-[80%] grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-4">
                 {portfolioItems.map(item => (
                     <PortfolioItem
                         key={item.id}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 
 // Importamos íconos
-import HouseIcon from "../../assets/icons/house-solid-full.svg"
+import HouseIcon from "../../assets/icons/1-Header/house.svg"
 
 function Footer() {
     return (

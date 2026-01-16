@@ -4,3 +4,13 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 10px;
 }
+
+/* scroll invisible */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
