@@ -14,7 +14,7 @@ function Contact() {
             </div>
 
             {/* Contact Form */}
-            <div className="w-full flex flex-col px-5 md:px-0 mt-10 md:flex-row md:px-60 gap-10">
+            <div className="w-full flex flex-col px-5 md:px-60 mt-10 md:flex-row gap-10">
 
                 <section className="w-full md:w-[50%]">
                     <form className="flex flex-col gap-4" id="contact-form">
@@ -32,11 +32,13 @@ function Contact() {
                     <p className="text-[.8rem] font-medium">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit iure vel eveniet. Asperiores rerum pariatur laboriosam enim sunt repellendus in nulla, nam fuga iste voluptate dolorem amet aliquid, eum ut nisi quibusdam quidem esse facilis. Modi non, consequatur doloremque consequuntur nostrum repellat eveniet voluptas nulla ab perferendis ipsam, quo assumenda error ex est! Omnis quo nisi consequuntur vitae, esse quam.</p>
 
                     <p className="flex items-center gap-2">
-                        <img src={locationIcon} alt="Location Icon" className="w-5 h-5" />Alonso de Córdova 1234, Vitacura, Santiago
+                        <img src={locationIcon} alt="Location Icon" className="w-5 h-5 " />
+                        <span className="text-lg">Alonso de Córdova 1234, Vitacura, Santiago</span>
                     </p>
 
                     <p className="flex items-center gap-2">
-                        <img src={phoneIcon} alt="Phone Icon" className="w-5 h-5" />(+56) 9 1234 5678
+                        <img src={phoneIcon} alt="Phone Icon" className="w-5 h-5" />
+                        <span className="text-lg">(+56) 9 1234 5678</span>
                     </p>
 
                     <div className="flex flex-row gap-5">
