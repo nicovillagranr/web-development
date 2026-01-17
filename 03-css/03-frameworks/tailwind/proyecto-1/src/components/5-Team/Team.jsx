@@ -87,8 +87,8 @@ function Team() {
             <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-8">
 
                 {members.map((member) => (
-                    <article key={member.id} className="flex flex-col items-center text-center p-6 rounded-lg shadow-md">
-                        <img src={member.img} alt={member.name} className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-2 border-[#ff5959]" />
+                    <article key={member.id} className="flex flex-col items-center text-center p-6 rounded-lg shadow-md hover:transform  hover:transition-all  hover:ease-in-out hover:-translate-y-2 hover:duration-500">
+                        <img src={member.img} alt={member.name} className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-3 border-[#ff5959]" />
                         <h3 className="mt-4 text-lg font-semibold md:text-xl">{member.name}</h3>
                         <h4 className="text-sm text-gray-600 md:text-base">{member.role}</h4>
                         <p className="mt-3 text-xs text-gray-700">{member.description}</p>

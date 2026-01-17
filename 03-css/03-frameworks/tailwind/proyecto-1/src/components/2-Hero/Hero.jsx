@@ -25,16 +25,15 @@ function Hero() {
                         <div className="flex flex-col gap-5 sm:w-sm md:flex-row">
                             <Link
                                 to="/team"
-                                className="h-8 w-full bg-[#ff5959] font-bold text-white rounded-md
-                                hover:bg-transparent hover:border-2 hover:border-[#ff5959]
-                                transition-all duration-150 ease flex items-center justify-center">
+                                className="h-8 w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md
+                                hover:bg-transparent transition-all duration-300 ease-in-out flex items-center justify-center">
                                 Our Team
                             </Link>
 
                             <Link
                                 to="/contact"
                                 className="h-8 w-full border-2 border-[#ff5959] font-bold text-white rounded-md
-                            hover:bg-[#ff5959] transition-all duration-150 ease
+                            hover:bg-[#ff5959] transition-all duration-300 ease-in-out
                                 flex items-center justify-center">
                                 Contact Us
                             </Link>

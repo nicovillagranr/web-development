@@ -30,8 +30,7 @@ function PortfolioItem({ image, title, big }) {
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102" />
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-[#ff5959]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center
-                    gap-4">
+            <div className="absolute inset-0 bg-[#ff5959]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4">
 
                 <p className="text-white text-lg font-semibold">{title}</p>
 

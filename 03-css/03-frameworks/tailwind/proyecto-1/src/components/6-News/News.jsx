@@ -1,5 +1,5 @@
 // Importamos useRef para manejar el scroll
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 
 // Importamos las imágenes de noticias
 import newsImage1 from "../../assets/images/5-News/news-1.webp"
@@ -60,11 +60,12 @@ function News() {
         // Solo intercepta si existe overflow horizontal real
         if (el.scrollWidth <= el.clientWidth) return
 
+        // Desplazamiento
         el.scrollLeft += e.deltaY
     }
 
     return (
-        <section className="w-full min-h-[75vh] py-8 bg-[#ff5959] flex flex-col items-center justify-center">
+        <section className="w-full min-h-[75vh] py-6 bg-[#ff5959] flex flex-col items-center justify-center">
 
             {/* Services Title */}
             <h2 className="text-xl md:text-3xl cursor-pointer text-white">The Latest News</h2>
@@ -81,7 +82,7 @@ function News() {
                 className="w-[75%] mt-8 mb-8 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
 
                 {news.map((newItem) => (
-                    <article key={newItem.id} className="shrink-0 w-75 md:w-87.5 flex flex-col">
+                    <article key={newItem.id} className="shrink-0 w-75 md:w-90 flex flex-col">
 
                         {/* Card */}
                         <div className="w-full h-48 overflow-hidden">
