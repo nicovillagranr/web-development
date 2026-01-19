@@ -20,6 +20,7 @@ import Team from "./Components/5-Team/Team.jsx"
 import News from "./Components/6-News/News.jsx"
 import Contact from "./Components/8-Contact/Contact.jsx"
 import Footer from "./Components/9-Footer/Footer.jsx"
+import NotFound from "./Components/10-NotFound/404.jsx"
 
 
 function AnimatedRoutes() {
@@ -28,6 +29,7 @@ function AnimatedRoutes() {
     return (
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
+                <Route path="*" element={<NotFound />} />
                 <Route path="/" element={<Page><Hero /></Page>} />
                 <Route path="/services" element={<Page><Services /></Page>} />
                 <Route path="/portfolio" element={<Page><Portfolio /></Page>} />
