@@ -106,8 +106,8 @@ function Team() {
                     </article>
                 ))}
             </section>
-
         </section>
+
     )
 }
 
