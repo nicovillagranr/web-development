@@ -20,7 +20,7 @@ function Footer() {
 
 
             {/* Copyright */}
-            <div className="text-white text-xs cursor-pointer">
+            <div className="text-white text-xs">
                 &copy; {new Date().getFullYear()} Nico Villagran. All rights reserved.
             </div>
 

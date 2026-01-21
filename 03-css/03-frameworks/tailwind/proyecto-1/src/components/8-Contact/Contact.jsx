@@ -18,11 +18,11 @@ function Contact() {
 
                 <section className="w-full md:w-[50%]">
                     <form className="flex flex-col gap-4" id="contact-form">
-                        <input type="text" placeholder="Nombre" className="w-full p-3 font-bold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
+                        <input type="text" placeholder="Nombre" className="w-full p-3 font-bold border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
 
-                        <input type="email" placeholder="Email" className="w-full p-3 font-bold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
+                        <input type="email" placeholder="Email" className="w-full p-3 font-bold border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
 
-                        <textarea placeholder="Mensaje" rows={6} className="w-full p-3 border font-bold border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg"></textarea>
+                        <textarea placeholder="Mensaje" rows={6} className="w-full p-3 border font-bold border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg"></textarea>
                     </form>
                 </section>
 
