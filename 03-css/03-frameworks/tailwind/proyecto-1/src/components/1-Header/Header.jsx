@@ -41,6 +41,15 @@ const mobileMenuVariants = {
     },
 }
 
+// Items de navegación
+const navItems = [
+    { to: "/", text: "Home" },
+    { to: "/services", text: "Services" },
+    { to: "/portfolio", text: "Portfolio" },
+    { to: "/team", text: "Our Team" },
+    { to: "/news", text: "News" },
+    { to: "/contact", text: "Contact Us" },
+]
 
 function Header({ theme, setTheme }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -50,15 +59,6 @@ function Header({ theme, setTheme }) {
     useEffect(() => {
         setIsOpen(false)
     }, [location.pathname])
-
-    const navItems = [
-        { to: "/", text: "Home" },
-        { to: "/services", text: "Services" },
-        { to: "/portfolio", text: "Portfolio" },
-        { to: "/team", text: "Our Team" },
-        { to: "/news", text: "News" },
-        { to: "/contact", text: "Contact Us" },
-    ]
 
     return (
         <header className="relative w-full bg-[#ff5959] flex justify-center z-10">
@@ -80,7 +80,7 @@ function Header({ theme, setTheme }) {
                     <div className="flex-1" />
 
                     {/*Desktop menu*/}
-                    <ul className="hidden md:flex gap-6 lg:gap-10 text-white text-sm">
+                    <ul className="hidden md:flex gap-6 lg:gap-10 text-white text-sm font-medium">
                         {navItems.map(item => (
                             <NavItem
                                 key={item.to}

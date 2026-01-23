@@ -1,3 +1,7 @@
+// Importamos SectionTitle
+import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+
+// Importamos las imágenes de los proyectos
 import portfolioImg1 from "../../assets/images/3-Portfolio/portfolio-1.webp";
 import portfolioImg2 from "../../assets/images/3-Portfolio/portfolio-2.webp";
 import portfolioImg3 from "../../assets/images/3-Portfolio/portfolio-3.webp";
@@ -53,12 +57,7 @@ function Portfolio() {
         <section className="w-full min-h-[75vh] bg-[#ff5959] flex flex-col items-center py-10">
 
             {/* Título */}
-            <h2 className="text-xl md:text-3xl text-white">Our Portfolio</h2>
-            <div className="flex items-center justify-center gap-3 mt-4">
-                <span className="w-32 h-px bg-gray-400"></span>
-                <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                <span className="w-32 h-px bg-gray-400"></span>
-            </div>
+            <SectionTitle className="text-white" title="Our Portfolio" />
 
             {/* Grid */}
             <div className="w-[80%] grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-4">

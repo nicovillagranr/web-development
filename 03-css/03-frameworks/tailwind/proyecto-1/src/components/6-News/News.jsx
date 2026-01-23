@@ -1,6 +1,9 @@
 // Importamos useRef para manejar el scroll
 import { useRef } from "react"
 
+// Importamos SectionTitle
+import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+
 // Importamos las imágenes de noticias
 import newsImage1 from "../../assets/images/5-News/news-1.webp"
 import newsImage2 from "../../assets/images/5-News/news-2.webp"
@@ -68,12 +71,7 @@ function News() {
         <section className="w-full min-h-[75vh] py-6 bg-[#ff5959] flex flex-col items-center justify-center">
 
             {/* Services Title */}
-            <h2 className="text-xl md:text-3xl cursor-pointer text-white">The Latest News</h2>
-            <div className="flex items-center justify-center gap-3 mt-4">
-                <span className="block w-30 md:w-40 h-px bg-gray-400"></span>
-                <span className="block w-2 h-2 bg-gray-400 rounded-full"></span>
-                <span className="block w-30 md:w-40 h-px bg-gray-400"></span>
-            </div>
+            <SectionTitle className="text-white" title="Our Latest News" />
 
             {/* News Content */}
             <section

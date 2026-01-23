@@ -12,7 +12,7 @@ function Hero() {
 
             {/* Video background */}
             <video aria-hidden="true"
-                poster="/images/hero.webp"
+                poster={HeroImg}
                 className="hidden md:block absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={HeroVideo} autoPlay loop muted playsInline />
 
             {/* Image background (mobile) */}
@@ -25,7 +25,7 @@ function Hero() {
             <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
 
             {/* Contenido */}
-            <div className="relative z-10 min-h-[50vh] px-5 gap-0 flex flex-col items-center justify-between sm:flex-row sm:gap-10">
+            <div className="relative z-5 min-h-[50vh] px-5 gap-0 flex flex-col items-center justify-between sm:flex-row sm:gap-10">
 
                 <div className="w-full min-h-full mt-15">
                     <h1 className="text-white text-5xl font-bold">One Page</h1>

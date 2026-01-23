@@ -1,3 +1,6 @@
+// Importamos SectionTitle
+import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+
 // Importamos las imágenes de los miembros del equipo
 import member1img from "../../assets/images/4-Team/team__member-1.webp"
 import member2img from "../../assets/images/4-Team/team__member-2.webp"
@@ -76,12 +79,7 @@ function Team() {
         <section className="w-full min-h-[75vh] bg-[#E8E8E8] py-10 px-4 flex flex-col items-center justify-center">
 
             {/* Title */}
-            <h2 className="text-xl font-semibold text-center md:text-3xl">Our Wonderful Team</h2>
-            <div className="flex items-center gap-3 mt-4">
-                <span className="w-24 h-px bg-gray-400 md:w-40" />
-                <span className="w-2 h-2 bg-gray-400 rounded-full" />
-                <span className="w-24 h-px bg-gray-400 md:w-40" />
-            </div>
+            <SectionTitle className="text-black" title="Our Wonderful Team" />
 
             {/* Members */}
             <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-8">

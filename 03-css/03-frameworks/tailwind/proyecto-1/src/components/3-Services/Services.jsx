@@ -1,6 +1,11 @@
+// Importamos SectionTitle
+import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+
+// Importamos las imágenes de los servicios
 import service1Img from "../../assets/images/2-Services/idea.webp"
 import service2Img from "../../assets/images/2-Services/seo.webp"
 import service3Img from "../../assets/images/2-Services/graphic-design.webp"
+
 
 const services = [
     {
@@ -31,12 +36,7 @@ function Services() {
         <section className="w-full min-h-[75vh] bg-[#E8E8E8] flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
-            <h2 className="text-xl md:text-3xl cursor-pointer">Our Services</h2>
-            <div className="flex items-center justify-center gap-3 mt-4">
-                <span className="block w-40 h-px bg-gray-400"></span>
-                <span className="block w-2 h-2 bg-gray-400 rounded-full"></span>
-                <span className="block w-40 h-px bg-gray-400"></span>
-            </div>
+            <SectionTitle className="text-black" title="Our Services" />
 
             {/* Services Cards */}
             <div className="w-[90%] mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">

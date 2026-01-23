@@ -1,7 +1,6 @@
 // Importamos NavLink de React Router DOM
 import { NavLink } from "react-router-dom"
 
-
 function NavItem({ to, text, onClick }) {
     return (
         <li>
@@ -24,5 +23,4 @@ function NavItem({ to, text, onClick }) {
         </li>
     )
 }
-
 export default NavItem
