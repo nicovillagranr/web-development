@@ -17,10 +17,10 @@ const news = [
     {
         id: 1,
         image: newsImage1,
-        title: "News Title 1",
+        title: "Why performance matters more than features in early products",
         Date: "August 20, 2023",
-        text: "lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        author: "Author 1",
+        text: "Speed, accessibility and clarity are often ignored in early stages. We explain why getting the basics right saves time, money and rewrites later.",
+        author: "Projex Team",
         comments: 5,
     },
     {
@@ -71,7 +71,7 @@ function News() {
         <section className="w-full min-h-[75vh] py-6 bg-[#ff5959] flex flex-col items-center justify-center">
 
             {/* Services Title */}
-            <SectionTitle className="text-white" title="Our Latest News" />
+            <SectionTitle className="text-white" title="Insights & Updates" />
 
             {/* News Content */}
             <section
@@ -88,7 +88,7 @@ function News() {
                         </div>
                         <h3 className="text-xl font-bold mt-4 mb-2 text-white">{newItem.title}</h3>
                         <time className="text-sm text-gray-300 mb-4">{newItem.Date}</time>
-                        <p className="text-gray-200">{newItem.text}</p>
+                        <p className="text-gray-200 text-xs">{newItem.text}</p>
                         {/* Card */}
 
                         {/* Author and Comments */}

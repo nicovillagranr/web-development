@@ -14,7 +14,7 @@ function Footer() {
                     <span className="text-md">Projex</span>
                 </Link>
                 <span className="text-white text-xs cursor-pointer">
-                    One Page Business Team
+                    Building scalable web products
                 </span>
             </div>
 

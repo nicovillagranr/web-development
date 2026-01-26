@@ -73,7 +73,7 @@ function Header({ theme, setTheme }) {
                             <img src={HouseIcon} alt="Home" className="w-5 h-5" />
                             <p>Projex</p>
                         </NavLink>
-                        <span className="text-white text-xs font-bold">One Page Business Team</span>
+                        <span className="text-white text-xs font-md">Scalable Web Products</span>
                     </div>
 
                     {/* Spacer */}

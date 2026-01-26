@@ -96,7 +96,7 @@ function Contact() {
                             placeholder="Nombre"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full p-3 font-bold border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
+                            className="w-full p-3 font-md border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
 
                         {errors.name && (
                             <span className="text-red-600 text-sm">{errors.name}</span>
@@ -108,7 +108,7 @@ function Contact() {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full p-3 font-bold border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
+                            className="w-full p-3 font-md border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
 
                         {errors.email && (
                             <span className="text-red-600 text-sm">{errors.email}</span>
@@ -120,7 +120,7 @@ function Contact() {
                             rows={6}
                             value={formData.message}
                             onChange={handleChange}
-                            className="w-full p-3 border font-bold border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
+                            className="w-full p-3 border font-md border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
 
                         {errors.message && (
                             <span className="text-red-600 text-sm">{errors.message}</span>
@@ -132,7 +132,8 @@ function Contact() {
                 <section className="w-full md:w-[50%] flex flex-col justify-between">
                     <h3 className="text-2xl">Information</h3>
 
-                    <p className="text-[.8rem] font-medium">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores rerum pariatur laboriosam enim sunt repellendus.</p>
+                    <p className="text-xl font-light">Have a project in mind or just an idea you want to validate?
+                        Let’s talk and see how we can turn it into a solid digital product.</p>
 
                     <p className="flex items-center gap-2">
                         <img src={locationIcon} alt="Location Icon" className="w-5 h-5" />

@@ -14,7 +14,7 @@ import portfolioImg6 from "../../assets/images/3-Portfolio/portfolio-6.webp";
    DATA (fuente de verdad)
 ========================= */
 const portfolioItems = [
-    { id: 1, image: portfolioImg1, title: "Project One", big: true },
+    { id: 1, image: portfolioImg1, title: "Landing for a SaaS Startup", big: true },
     { id: 2, image: portfolioImg2, title: "Project Two", big: true },
     { id: 3, image: portfolioImg3, title: "Project Three" },
     { id: 4, image: portfolioImg4, title: "Project Four" },
@@ -39,8 +39,8 @@ function PortfolioItem({ image, title, big }) {
                 <p className="text-white text-lg font-semibold">{title}</p>
 
                 <div className="flex gap-4">
-                    <button className="px-4 py-2 bg-white text-black text-sm font-medium hover:bg-gray-200 transition">View</button>
-                    <button className="px-4 py-2 border border-white text-white text-sm font-medium hover:bg-white hover:text-black transition">Code</button>
+                    <button className="px-4 py-2 bg-white text-black text-sm font-medium hover:bg-gray-200 transition">View Demo</button>
+                    <button className="px-4 py-2 border border-white text-white text-sm font-medium hover:bg-white hover:text-black transition">View Code</button>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@ function Portfolio() {
         <section className="w-full min-h-[75vh] bg-[#ff5959] flex flex-col items-center py-10">
 
             {/* Título */}
-            <SectionTitle className="text-white" title="Our Portfolio" />
+            <SectionTitle className="text-white" title="Selected Work" />
 
             {/* Grid */}
             <div className="w-[80%] grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-4">

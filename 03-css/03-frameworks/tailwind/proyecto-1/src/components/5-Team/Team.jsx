@@ -20,7 +20,7 @@ const members = [
         img: member1img,
         name: "Elisa Mendoza",
         role: "CEO Founder",
-        description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.",
+        description: "Focused on product vision, business strategy and long-term scalability.",
         socials: [
             { platform: "Twitter", url: "#", bg: "#1DA1F2", icon: twitterIcon },
             { platform: "Pinterest", url: "#", bg: "#E60023", icon: pinterestIcon },
@@ -34,7 +34,7 @@ const members = [
         img: member2img,
         name: "Carlos Ramirez",
         role: "CTO Co-Founder",
-        description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.",
+        description: "Front-end architecture, performance optimization and technical decisions that scale.",
         socials: [
             { platform: "Twitter", url: "#", bg: "#1DA1F2", icon: twitterIcon },
             { platform: "Pinterest", url: "#", bg: "#E60023", icon: pinterestIcon },
@@ -48,7 +48,7 @@ const members = [
         img: member3img,
         name: "Ana Gutierrez",
         role: "Lead Designer",
-        description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.",
+        description: "User-centered design, accessibility and visual consistency across the product.",
         socials: [
             { platform: "Twitter", url: "#", bg: "#1DA1F2", icon: twitterIcon },
             { platform: "Pinterest", url: "#", bg: "#E60023", icon: pinterestIcon },
@@ -62,7 +62,7 @@ const members = [
         img: member4img,
         name: "Erika Fernandez",
         role: "Marketing Head",
-        description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.",
+        description: "Communication, positioning and growth strategies based on real user behavior.",
         socials: [
             { platform: "Twitter", url: "#", bg: "#1DA1F2", icon: twitterIcon },
             { platform: "Pinterest", url: "#", bg: "#E60023", icon: pinterestIcon },
@@ -79,7 +79,7 @@ function Team() {
         <section className="w-full min-h-[75vh] bg-[#E8E8E8] py-10 px-4 flex flex-col items-center justify-center">
 
             {/* Title */}
-            <SectionTitle className="text-black" title="Our Wonderful Team" />
+            <SectionTitle className="text-black" title="People Behind the Product" />
 
             {/* Members */}
             <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-8">

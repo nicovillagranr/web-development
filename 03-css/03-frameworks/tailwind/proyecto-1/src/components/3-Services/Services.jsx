@@ -11,22 +11,22 @@ const services = [
     {
         id: 1,
         img: service1Img,
-        title: "HTML 5 & CSS3",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        title: "HTML & CSS Architecture",
+        text: "Clean, semantic and accessible layouts designed to scale.We build interfaces that are easy to maintain, fast to load and friendly for users and search engines."
     },
 
     {
         id: 2,
         img: service2Img,
         title: "SEO Optimization",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        text: "Performance is not optional. We optimize loading times, structure and metadata so your product is visible and fast from the start."
     },
 
     {
         id: 3,
         img: service3Img,
-        title: "Graphic Design",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        title: "UI Systems & Design Consistency",
+        text: "We create reusable components and visual systems that keep your product consistent as it grows — no redesign every six months."
     }
 ]
 
@@ -36,7 +36,7 @@ function Services() {
         <section className="w-full min-h-[75vh] bg-[#E8E8E8] flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
-            <SectionTitle className="text-black" title="Our Services" />
+            <SectionTitle className="text-black" title="What We Do" />
 
             {/* Services Cards */}
             <div className="w-[90%] mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">

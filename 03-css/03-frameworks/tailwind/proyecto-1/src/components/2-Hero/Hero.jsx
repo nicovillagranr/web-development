@@ -4,13 +4,13 @@ import { Link } from "react-router-dom"
 // Importamos los assets necesarios
 import HeroVideo from "../../assets/images/1-Hero/bg-video.mp4"
 import HeroImg from "../../assets/images/1-Hero/hero.webp"
-import LaptopsImg from "../../assets/images/1-Hero/laptops.webp"
+import businessImg from "../../assets/images/1-Hero/business.webp"
 
 function Hero() {
     return (
         <section className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center" aria-label="Hero Section">
 
-            {/* Video background */}
+            {/* Video background tablet + desktop */}
             <video aria-hidden="true"
                 poster={HeroImg}
                 className="hidden md:block absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={HeroVideo} autoPlay loop muted playsInline />
@@ -25,36 +25,32 @@ function Hero() {
             <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
 
             {/* Contenido */}
-            <div className="relative z-5 min-h-[50vh] px-5 gap-0 flex flex-col items-center justify-between sm:flex-row sm:gap-10">
+            <div className="w-[80%] relative z-5 min-h-[50vh] flex flex-col items-center justify-center mb-5 md:mb-0 sm:flex-row sm:gap-10">
 
-                <div className="w-full min-h-full mt-15">
-                    <h1 className="text-white text-5xl font-bold">One Page</h1>
+                <div className="w-full md:w-[50%] min-h-full mt-10 sm:mt-0">
+                    <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">Digital products built to grow with your business</h1>
 
-                    <h2 className="text-white text-2xl">Is all that you need</h2>
+                    <h2 className="text-white text-lg sm:text-xl lg:text-2xl mt-3 leading-snug">Design, performance and scalability — from day one.</h2>
 
-                    <p className="mt-3 mb-3 text-white sm:text-lg sm:w-sm">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                        Accusantium, atque a fugit quasi soluta optio dolores ut temporibus
-                        cum. Possimus consequuntur ab vero repellat! Quo.
+                    <p className="mt-4 mb-5 text-white text-base sm:text-lg max-w-md">
+                        We help startups and small teams turn ideas into fast, accessible and scalable web products.
+                        No bloated features. No shortcuts. Just solid foundations.
                     </p>
 
                     <div className="flex flex-col gap-5 sm:w-sm md:flex-row">
                         <Link to="/team"
-                            className="min-h-10 w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md
-                            hover:bg-transparent transition-all duration-300 ease-in-out flex items-center justify-center">
+                            className="min-h-12 text-sm sm:text-base w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center">
                             Our Team
                         </Link>
 
-                        <Link to="/contact" className="min-h-10 w-full border-2 border-[#ff5959] font-bold text-white rounded-md
-                        hover:bg-[#ff5959] transition-all duration-300 ease-in-out
-                            flex items-center justify-center">
+                        <Link to="/contact" className="min-h-12 text-sm sm:text-base w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center">
                             Contact Us
                         </Link>
                     </div>
                 </div>
 
-                <div className="w-full flex items-center justify-center">
-                    <img draggable="false" className="w-sm" src={LaptopsImg} alt="Dispositivos Compatibles" />
+                <div className="hidden sm:flex w-[40%] items-center justify-center">
+                    <img draggable="false" className="w-sm" src={businessImg} alt="Dispositivos Compatibles" />
                 </div>
 
             </div>
