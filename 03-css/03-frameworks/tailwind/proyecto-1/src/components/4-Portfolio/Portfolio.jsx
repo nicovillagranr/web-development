@@ -14,12 +14,12 @@ import portfolioImg6 from "../../assets/images/3-Portfolio/portfolio-6.webp";
    DATA (fuente de verdad)
 ========================= */
 const portfolioItems = [
-    { id: 1, image: portfolioImg1, title: "Landing for a SaaS Startup", big: true },
-    { id: 2, image: portfolioImg2, title: "Project Two", big: true },
-    { id: 3, image: portfolioImg3, title: "Project Three" },
-    { id: 4, image: portfolioImg4, title: "Project Four" },
-    { id: 5, image: portfolioImg5, title: "Project Five" },
-    { id: 6, image: portfolioImg6, title: "Project Six" }
+    { id: 1, image: portfolioImg1, title: "Landing Page for a SaaS Productivity Platform", big: true },
+    { id: 2, image: portfolioImg2, title: "Marketing Website for a Digital Consulting Agency", big: true },
+    { id: 3, image: portfolioImg3, title: "E-commerce Front-End for a Retail Brand" },
+    { id: 4, image: portfolioImg4, title: "Dashboard UI for a Web Analytics Tool" },
+    { id: 5, image: portfolioImg5, title: "Corporate Website for a Financial Services Company" },
+    { id: 6, image: portfolioImg6, title: "Portfolio Website for a Creative Professional" }
 ]
 
 /* =========================
@@ -28,15 +28,15 @@ const portfolioItems = [
 function PortfolioItem({ image, title, big }) {
     return (
 
-        <div className={`group relative overflow-hidden ${big ? "aspect-video lg:col-span-2" : "aspect-square"}`}>
+        <div className={`group relative overflow-hidden ${big ? "aspect-4/3 sm:aspect-video lg:col-span-2" : "aspect-square"}`}>
 
             {/* Imagen */}
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102" />
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-[#ff5959]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4">
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-black/20 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 px-5">
 
-                <p className="text-white text-lg font-semibold">{title}</p>
+                <p className="text-white text-lg font-semibold text-center leading-snug max-w-[90%] cursor-pointer">{title}</p>
 
                 <div className="flex gap-4">
                     <button className="px-4 py-2 bg-white text-black text-sm font-medium hover:bg-gray-200 transition">View Demo</button>

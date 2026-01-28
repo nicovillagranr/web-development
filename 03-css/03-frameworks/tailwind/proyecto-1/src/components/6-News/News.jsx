@@ -17,38 +17,38 @@ const news = [
     {
         id: 1,
         image: newsImage1,
-        title: "Why performance matters more than features in early products",
+        title: "Why performance matters more than features in early-stage products",
         Date: "August 20, 2023",
-        text: "Speed, accessibility and clarity are often ignored in early stages. We explain why getting the basics right saves time, money and rewrites later.",
+        text: "In early products, speed, accessibility and clarity are often sacrificed for features. We explain why prioritizing fundamentals reduces technical debt and accelerates real growth.",
         author: "Projex Team",
         comments: 5,
     },
     {
         id: 2,
         image: newsImage2,
-        title: "News Title 2",
-        Date: "August 21, 2023",
-        text: "lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        author: "Author 2",
+        title: "How we approach front-end architecture for scalable projects",
+        Date: "August 28, 2023",
+        text: "From component structure to data separation, we share the principles we follow to keep front-end projects maintainable as they grow.",
+        author: "Projex Team",
         comments: 3,
     },
     {
         id: 3,
         image: newsImage3,
-        title: "News Title 3",
-        Date: "August 22, 2023",
-        text: "lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        author: "Author 3",
+        title: "Good UX is invisible: lessons from real client projects",
+        Date: "September 3, 2023",
+        text: "Users rarely notice good UX, but they immediately feel when it’s missing. Here are practical insights we apply to avoid friction and confusion.",
+        author: "Projex Team",
         comments: 7,
     },
     {
         id: 4,
         image: newsImage3,
-        title: "News Title 3",
-        Date: "August 22, 2023",
-        text: "lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        author: "Author 3",
-        comments: 7,
+        title: "Why most websites fail before users read the content",
+        Date: "September 10, 2023",
+        text: "Slow load times, poor hierarchy and unclear messaging cause users to leave before engaging. We break down the most common mistakes and how to avoid them.",
+        author: "Projex Team",
+        comments: 4,
     }
 ]
 
@@ -77,7 +77,7 @@ function News() {
             <section
                 onWheel={handleWheel}
                 ref={scrollRef}
-                className="w-[75%] mt-8 mb-8 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
+                className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
 
                 {news.map((newItem) => (
                     <article key={newItem.id} className="shrink-0 w-75 md:w-90 flex flex-col">
