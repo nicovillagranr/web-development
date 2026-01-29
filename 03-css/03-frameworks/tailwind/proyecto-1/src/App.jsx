@@ -50,7 +50,7 @@ function AnimatedRoutes() {
     return (
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-                <Route path="*" element={<NotFound />} />
+                <Route path="*" element={<Page><NotFound /></Page>} />
                 <Route path="/" element={<Page><Hero /></Page>} />
                 <Route path="/services" element={<Page><Services /></Page>} />
                 <Route path="/portfolio" element={<Page><Portfolio /></Page>} />
@@ -82,7 +82,6 @@ function App() {
     }, [theme])
 
     useEffect(() => {
-        console.log("Theme actual:", theme)
     }, [theme])
 
     return (

@@ -93,7 +93,7 @@ function Contact() {
                         <input
                             type="text"
                             name="name"
-                            placeholder="Nombre"
+                            placeholder="Name"
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full p-3 font-md border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff5959] text-md md:text-lg" />
@@ -116,7 +116,7 @@ function Contact() {
 
                         <textarea
                             name="message"
-                            placeholder="Mensaje"
+                            placeholder="Message"
                             rows={6}
                             value={formData.message}
                             onChange={handleChange}
@@ -129,35 +129,37 @@ function Contact() {
                 </section>
 
                 {/* CONTACT INFO */}
-                <section className="w-full md:w-[50%] flex flex-col justify-between">
+                <section className="w-full md:w-[50%] flex flex-col gap-6 md:justify-between">
                     <h3 className="text-2xl">Information</h3>
 
-                    <p className="text-xl font-light">Have a project in mind or just an idea you want to validate?
-                        Let’s talk and see how we can turn it into a solid digital product.</p>
+                    <p className="text-xl font-light">
+                        Have a project in mind or just an idea you want to validate?
+                        Let’s talk and see how we can turn it into a solid digital product.
+                    </p>
 
-                    <p className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <img src={locationIcon} alt="Location Icon" className="w-5 h-5" />
                         <span className="text-lg">Alonso de Córdova 1234, Vitacura, Santiago</span>
-                    </p>
+                    </div>
 
-                    <p className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <img src={phoneIcon} alt="Phone Icon" className="w-5 h-5" />
                         <span className="text-lg">(+56) 9 1234 5678</span>
-                    </p>
+                    </div>
 
                     <div className="flex flex-row gap-5">
                         <button
                             form="contact-form"
                             type="submit"
                             disabled={status === "submitting"}
-                            className="w-full py-3 border-2 border-[#ff5959] bg-[#ff5959] text-white font-bold rounded-md hover:bg-transparent hover:text-black transition disabled:opacity-60">
+                            className="w-full py-3 border-2 border-[#ff5959] bg-[#ff5959] text-white font-bold rounded-md hover:bg-transparent hover:text-black transition disabled:opacity-60 text-sm">
                             {status === "submitting" ? "Enviando..." : "Send Message"}
                         </button>
 
                         <button
                             type="button"
                             onClick={() => setIsMapOpen(true)}
-                            className="w-full py-3 border-2 border-[#ff5959] text-black font-bold rounded-md hover:bg-[#ff5959] hover:text-white transition">
+                            className="w-full py-3 border-2 border-[#ff5959] text-black font-bold rounded-md hover:bg-[#ff5959] hover:text-white transition text-sm">
                             View Map
                         </button>
                     </div>
@@ -178,7 +180,7 @@ function Contact() {
                         <button
                             type="button"
                             onClick={() => setIsMapOpen(false)}
-                            className="absolute right-3 top-3 font-bold text-sm"
+                            className="absolute right-3 top-3 font-bold text-xl"
                             aria-label="Close map">
                             ✕
                         </button>

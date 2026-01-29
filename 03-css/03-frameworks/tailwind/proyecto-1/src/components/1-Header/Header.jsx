@@ -61,7 +61,7 @@ function Header({ theme, setTheme }) {
     }, [location.pathname])
 
     return (
-        <header className="relative w-full bg-[#ff5959] flex justify-center z-10">
+        <header className="relative z-50 w-full bg-[#ff5959] flex justify-center">
             <nav className="w-[90%] min-h-[10vh] flex items-center gap-10 md:w-[80%]">
 
                 {/* Contenedor Izquierdo */}
@@ -73,7 +73,7 @@ function Header({ theme, setTheme }) {
                             <img src={HouseIcon} alt="Home" className="w-5 h-5" />
                             <p>Projex</p>
                         </NavLink>
-                        <span className="text-white text-xs font-md">Scalable Web Products</span>
+                        <span className="text-white text-xs font-md md:text-sm">Scalable Web Products</span>
                     </div>
 
                     {/* Spacer */}
@@ -131,7 +131,7 @@ function Header({ theme, setTheme }) {
                             exit="exit"
                             className="
                                 md:hidden absolute top-[10vh] left-0 w-full
-                                bg-[#ff5959] flex flex-col items-center gap-6 py-6 text-white">
+                                bg-[#ff5959] flex flex-col items-center gap-6 py-6 text-white text-sm">
 
                             {navItems.map(item => (
                                 <NavItem
