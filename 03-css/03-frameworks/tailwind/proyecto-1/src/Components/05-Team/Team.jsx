@@ -1,5 +1,5 @@
 // Importamos SectionTitle
-import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.jsx"
 
 // Importamos las imágenes de los miembros del equipo
 import member1img from "../../assets/images/4-Team/team__member-1.webp"
@@ -75,7 +75,7 @@ const members = [
 
 function Team() {
     return (
-        <section className="w-full min-h-[75vh] bg-[#E8E8E8] flex flex-col items-center justify-center px-4 py-4">
+        <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center px-4 py-4">
 
             {/* Title */}
             <SectionTitle className="text-black" title="People Behind the Product" />
@@ -86,25 +86,17 @@ function Team() {
                 {members.map((member) => (
                     <article
                         key={member.id}
-                        className="flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white"
-                    >
+                        className="flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white">
                         <img
                             src={member.img}
                             alt={member.name}
-                            className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-4 border-[#ff5959]"
-                        />
+                            className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-4 border-primary" />
 
                         {/* Contenido flexible */}
                         <div className="flex flex-col flex-1">
-                            <h3 className="mt-4 text-lg font-semibold md:text-xl">
-                                {member.name}
-                            </h3>
-                            <h4 className="text-sm text-gray-600 md:text-base">
-                                {member.role}
-                            </h4>
-                            <p className="mt-3 text-xs text-gray-700">
-                                {member.description}
-                            </p>
+                            <h3 className="mt-4 text-lg font-semibold md:text-xl">{member.name}</h3>
+                            <h4 className="text-sm text-gray-600 md:text-base">{member.role}</h4>
+                            <p className="mt-3 text-xs text-gray-700">{member.description}</p>
                         </div>
 
                         {/* Social Media */}
@@ -115,19 +107,16 @@ function Team() {
                                     href={social.url}
                                     aria-label={social.platform}
                                     className="
-                w-9 h-9 md:w-7 md:h-7
-                flex items-center justify-center
-                rounded-full
-                transition-transform
-                hover:scale-110
-            "
-                                    style={{ backgroundColor: social.bg }}
-                                >
+                                    w-9 h-9 md:w-7 md:h-7
+                                    flex items-center justify-center
+                                    rounded-full
+                                    transition-transform
+                                    hover:scale-110"
+                                    style={{ backgroundColor: social.bg }}>
                                     <img
                                         src={social.icon}
                                         alt={social.platform}
-                                        className="w-5 h-5 md:w-4 md:h-4"
-                                    />
+                                        className="w-5 h-5 md:w-4 md:h-4" />
                                 </a>
                             ))}
                         </div>
@@ -137,5 +126,4 @@ function Team() {
         </section>
     )
 }
-
 export default Team

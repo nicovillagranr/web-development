@@ -5,7 +5,7 @@ import HouseIcon from "../../assets/icons/1-Header/house.svg"
 
 function Footer() {
     return (
-        <footer className="w-full min-h-[15vh] bg-[#3C3C3C] flex flex-col items-center justify-around sm:flex-row">
+        <footer className="w-full min-h-[15vh] bg-dark flex flex-col items-center justify-around sm:flex-row">
 
             {/*Logo*/}
             <div className="flex flex-col items-center">

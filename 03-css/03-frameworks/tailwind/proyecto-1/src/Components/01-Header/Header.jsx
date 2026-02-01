@@ -1,6 +1,6 @@
 // Importamos Hooks de React
-import { NavLink, useLocation } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom"
+import { useState } from "react"
 
 // Importamos Framer Motion
 import { motion, AnimatePresence } from "framer-motion"
@@ -9,9 +9,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import HouseIcon from "../../assets/icons/1-Header/house.svg"
 import MenuIcon from "../../assets/icons/1-Header/bars.svg"
 import CloseIcon from "../../assets/icons/1-Header/x.svg"
-// Iconos para Dark Mode (opcional)
-import SunIcon from "../../assets/icons/5-Theme/sun.svg"
-import MoonIcon from "../../assets/icons/5-Theme/moon.svg"
 
 // Componentes
 import NavItem from "./NavItem.jsx"
@@ -51,17 +48,11 @@ const navItems = [
     { to: "/contact", text: "Contact Us" },
 ]
 
-function Header({ theme, setTheme }) {
+function Header() {
     const [isOpen, setIsOpen] = useState(false)
-    const location = useLocation()
-
-    // Cerrar menú al cambiar de ruta
-    useEffect(() => {
-        setIsOpen(false)
-    }, [location.pathname])
 
     return (
-        <header className="relative z-50 w-full bg-[#ff5959] flex justify-center">
+        <header className="relative z-50 w-full bg-primary flex justify-center">
             <nav className="w-[90%] min-h-[10vh] flex items-center gap-10 md:w-[80%]">
 
                 {/* Contenedor Izquierdo */}
@@ -95,18 +86,6 @@ function Header({ theme, setTheme }) {
                 {/* Contenedor Derecho */}
                 <div className="flex items-center gap-4">
 
-                    {/* Theme Button */}
-                    <button
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        aria-label="Toggle theme"
-                        className="rounded-full p-2 transition hover:bg-white/10">
-
-                        <img
-                            src={theme === "dark" ? SunIcon : MoonIcon}
-                            alt={theme === "dark" ? "Light mode" : "Dark mode"}
-                            className="w-5 h-5" />
-                    </button>
-
                     {/* Menú Hamburguesa: Móvil */}
                     <button
                         className="md:hidden text-white text-2xl"
@@ -131,7 +110,7 @@ function Header({ theme, setTheme }) {
                             exit="exit"
                             className="
                                 md:hidden absolute top-[10vh] left-0 w-full
-                                bg-[#ff5959] flex flex-col items-center gap-6 py-6 text-white text-sm">
+                                bg-primary flex flex-col items-center gap-6 py-6 text-white text-sm">
 
                             {navItems.map(item => (
                                 <NavItem

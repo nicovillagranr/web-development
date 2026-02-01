@@ -10,8 +10,7 @@ function Hero() {
     return (
         <section
             className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center"
-            aria-label="Hero Section"
-        >
+            aria-label="Hero Section">
             {/* Video background tablet + desktop */}
             <video
                 aria-hidden="true"
@@ -28,8 +27,7 @@ function Hero() {
             <img
                 src={HeroImg}
                 alt="Hero background"
-                className="absolute inset-0 h-full w-full md:hidden object-cover"
-            />
+                className="absolute inset-0 h-full w-full md:hidden object-cover" />
 
             {/* Overlay + blur */}
             <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
@@ -42,10 +40,7 @@ function Hero() {
                         w-full
                         md:w-[50%]
                         mt-10
-                        sm:mt-0
-                        /* 🔧 CAMBIO 3: eliminado min-h-full */
-                    "
-                >
+                        sm:mt-0">
                     <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
                         Digital products built to grow with your business
                     </h1>
@@ -62,15 +57,13 @@ function Hero() {
                     <div className="flex flex-col gap-5 sm:w-sm md:flex-row">
                         <Link
                             to="/team"
-                            className="min-h-12 text-sm sm:text-base w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center"
-                        >
+                            className="min-h-12 text-sm sm:text-base w-full bg-primary border-2 border-primary font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center">
                             Our Team
                         </Link>
 
                         <Link
                             to="/contact"
-                            className="min-h-12 text-sm sm:text-base w-full bg-[#ff5959] border-2 border-[#ff5959] font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center"
-                        >
+                            className="min-h-12 text-sm sm:text-base w-full bg-primary border-2 border-primary font-bold text-white rounded-md hover:bg-transparent transition-all flex items-center justify-center">
                             Contact Us
                         </Link>
                     </div>

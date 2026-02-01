@@ -2,7 +2,7 @@
 import { useRef } from "react"
 
 // Importamos SectionTitle
-import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.jsx"
 
 // Importamos las imágenes de noticias
 import newsImage1 from "../../assets/images/5-News/news-1.webp"
@@ -68,7 +68,7 @@ function News() {
     }
 
     return (
-        <section className="w-full min-h-[75vh] py-6 bg-[#ff5959] flex flex-col items-center justify-center">
+        <section className="w-full min-h-[75vh] py-6 bg-primary flex flex-col items-center justify-center">
 
             {/* Services Title */}
             <SectionTitle className="text-white" title="Insights & Updates" />

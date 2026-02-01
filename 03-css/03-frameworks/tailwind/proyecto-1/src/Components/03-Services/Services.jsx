@@ -1,5 +1,5 @@
 // Importamos SectionTitle
-import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.jsx"
 
 // Importamos las imágenes de los servicios
 import service1Img from "../../assets/images/2-Services/idea.webp"
@@ -33,7 +33,7 @@ const services = [
 
 function Services() {
     return (
-        <section className="w-full min-h-[75vh] bg-[#E8E8E8] flex flex-col items-center justify-center p-5">
+        <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
             <SectionTitle className="text-black" title="What We Do" />

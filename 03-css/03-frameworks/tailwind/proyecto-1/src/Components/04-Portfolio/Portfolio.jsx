@@ -1,5 +1,5 @@
 // Importamos SectionTitle
-import SectionTitle from "../11-SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.jsx"
 
 // Importamos las imágenes de los proyectos
 import portfolioImg1 from "../../assets/images/3-Portfolio/portfolio-1.webp";
@@ -40,7 +40,7 @@ function PortfolioItem({ image, title, big }) {
 
                 <div className="flex gap-4">
                     <button className="px-4 py-2 bg-white text-black text-sm font-medium hover:bg-gray-200 transition">View Demo</button>
-                    <button className="px-4 py-2 border border-white text-white text-sm font-medium hover:bg-white hover:text-black transition">View Code</button>
+                    <button className="px-4 py-2 border border-white text-white text-sm font-medium hover:bg-white hover:text-black transition">Project Details</button>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@ function PortfolioItem({ image, title, big }) {
 ========================= */
 function Portfolio() {
     return (
-        <section className="w-full min-h-[75vh] bg-[#ff5959] flex flex-col items-center py-10">
+        <section className="w-full min-h-[75vh] bg-primary flex flex-col items-center py-10">
 
             {/* Título */}
             <SectionTitle className="text-white" title="Selected Work" />
