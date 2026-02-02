@@ -19,7 +19,6 @@ function NavItem({ to, text, onClick }) {
                     </span>
                 )}
             </NavLink>
-
         </li>
     )
 }

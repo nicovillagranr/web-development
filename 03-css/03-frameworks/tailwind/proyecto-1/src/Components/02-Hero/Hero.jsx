@@ -9,8 +9,8 @@ import businessImg from "../../assets/images/1-Hero/business.webp"
 function Hero() {
     return (
         <section
-            className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center"
-            aria-label="Hero Section">
+            className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center" aria-label="Hero Section">
+
             {/* Video background tablet + desktop */}
             <video
                 aria-hidden="true"
@@ -20,14 +20,10 @@ function Hero() {
                 autoPlay
                 loop
                 muted
-                playsInline
-            />
+                playsInline />
 
             {/* Image background (mobile) */}
-            <img
-                src={HeroImg}
-                alt="Hero background"
-                className="absolute inset-0 h-full w-full md:hidden object-cover" />
+            <img src={HeroImg} alt="Hero background" className="absolute inset-0 h-full w-full md:hidden object-cover" />
 
             {/* Overlay + blur */}
             <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
@@ -35,17 +31,10 @@ function Hero() {
             {/* CONTENIDO */}
             <div className="w-[80%] relative z-10 flex flex-col items-center justify-start min-h-auto sm:flex-row sm:gap-10 mb-5 md:mb-0">
                 {/* BLOQUE TEXTO */}
-                <div
-                    className="
-                        w-full
-                        md:w-[50%]
-                        mt-10
-                        sm:mt-0">
-                    <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-                        Digital products built to grow with your business
-                    </h1>
+                <div className="w-full md:w-[50%] mt-10 sm:mt-0">
+                    <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">Digital products built to grow with your business</h1>
 
-                    <h2 className="text-white text-lg sm:text-xl lg:text-2xl mt-3 leading-snug">
+                    <h2 role="doc-subtitle" className="text-white text-lg sm:text-xl lg:text-2xl mt-3 leading-snug">
                         Design, performance and scalability — from day one.
                     </h2>
 
@@ -71,12 +60,7 @@ function Hero() {
 
                 {/* BLOQUE IMAGEN */}
                 <div className="hidden sm:flex w-[40%] items-center justify-center">
-                    <img
-                        draggable="false"
-                        className="w-sm"
-                        src={businessImg}
-                        alt="Dispositivos Compatibles"
-                    />
+                    <img draggable="false" className="w-sm" src={businessImg} alt="Dispositivos Compatibles" />
                 </div>
             </div>
         </section>

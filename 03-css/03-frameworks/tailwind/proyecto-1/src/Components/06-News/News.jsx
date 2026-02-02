@@ -13,6 +13,7 @@ import newsImage3 from "../../assets/images/5-News/news-3.webp"
 import calendarIcon from "../../assets/icons/3-News/calendar.svg"
 import userIcon from "../../assets/icons/3-News/user.svg"
 
+// Creamos el array de noticias para recorrerlo con un .map()
 const news = [
     {
         id: 1,
@@ -37,7 +38,7 @@ const news = [
         image: newsImage3,
         title: "Good UX is invisible: lessons from real client projects",
         Date: "September 3, 2023",
-        text: "Users rarely notice good UX, but they immediately feel when it’s missing. Here are practical insights we apply to avoid friction and confusion.",
+        text: "Users rarely notice good UX, but they immediately feel when it’s missing. Here are practical insights we apply to avoid friction and confusion",
         author: "Projex Team",
         comments: 7,
     },
@@ -56,6 +57,7 @@ function News() {
 
     const scrollRef = useRef(null)
 
+    // Función para manejar el scroll
     const handleWheel = (e) => {
         const el = scrollRef.current
         if (!el) return
@@ -73,25 +75,22 @@ function News() {
             {/* Services Title */}
             <SectionTitle className="text-white" title="Insights & Updates" />
 
-            {/* News Content */}
-            <section
-                onWheel={handleWheel}
-                ref={scrollRef}
-                className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
+            {/* Cards */}
+            <section onWheel={handleWheel} ref={scrollRef} className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
 
                 {news.map((newItem) => (
-                    <article key={newItem.id} className="shrink-0 w-75 md:w-90 flex flex-col">
+                    <article key={newItem.id} className="shrink-0 w-[85vw] sm:w-75 md:w-90 flex flex-col">
 
-                        {/* Card */}
+                        {/* Tarjeta */}
                         <div className="w-full h-48 overflow-hidden">
                             <img src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
                         </div>
                         <h3 className="text-xl font-bold mt-4 mb-2 text-white">{newItem.title}</h3>
                         <time className="text-sm text-gray-300 mb-4">{newItem.Date}</time>
                         <p className="text-gray-200 text-xs">{newItem.text}</p>
-                        {/* Card */}
+                        {/* Tarjeta */}
 
-                        {/* Author and Comments */}
+                        {/* Autor y Comentarios */}
                         <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-200">
                             <div className="flex items-center gap-2">
                                 <img src={userIcon} alt="Author" className="w-5 h-5" />
@@ -103,14 +102,11 @@ function News() {
                                 <span>{newItem.comments} Comments</span>
                             </div>
                         </div>
-                        {/* Author and Comments */}
-
+                        {/* Autor y Comentarios */}
 
                     </article>
                 ))}
             </section>
-
-
         </section >
     )
 }

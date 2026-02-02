@@ -1,3 +1,4 @@
+// Importamos Link para que el logo del footer redirija al home
 import { Link } from "react-router-dom"
 
 // Importamos íconos

@@ -2,7 +2,7 @@
 import { NavLink } from "react-router-dom"
 import { useState } from "react"
 
-// Importamos Framer Motion
+// Importamos Framer Motion para animar el cambio de estado del menú móvil
 import { motion, AnimatePresence } from "framer-motion"
 
 // Importamos íconos
@@ -10,11 +10,11 @@ import HouseIcon from "../../assets/icons/1-Header/house.svg"
 import MenuIcon from "../../assets/icons/1-Header/bars.svg"
 import CloseIcon from "../../assets/icons/1-Header/x.svg"
 
-// Componentes
+// Componentes NavItem para los items de navegación
 import NavItem from "./NavItem.jsx"
 
 
-// Animaciones Mobile Menu
+// Animaciones Mobile Menu al cerrar/abrir
 const mobileMenuVariants = {
     hidden: {
         opacity: 0,

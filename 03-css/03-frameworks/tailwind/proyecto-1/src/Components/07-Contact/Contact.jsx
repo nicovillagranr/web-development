@@ -1,9 +1,13 @@
 // Contact.jsx
 import { useState } from "react"
 
+// Importamos SectionTitle
 import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+// Importamos ContactForm
 import ContactForm from "./ContactForm.jsx"
+// Importamos ContactInfo
 import ContactInfo from "./ContactInfo.jsx"
+// Importamos MapModal
 import MapModal from "./MapModal.jsx"
 
 function Contact() {
@@ -25,5 +29,4 @@ function Contact() {
         </section>
     )
 }
-
 export default Contact

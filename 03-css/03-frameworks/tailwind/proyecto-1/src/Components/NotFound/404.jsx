@@ -1,5 +1,7 @@
+// Importamos Link para que el usuario pueda volver a la página principal
 import { Link } from "react-router-dom";
 
+// Este componente muestra un mensaje de error 404 cuando la página no se encuentra
 function NotFound() {
     return (
         <section className="min-h-[75vh] flex flex-col items-center justify-center gap-5 not-found bg-surface">
