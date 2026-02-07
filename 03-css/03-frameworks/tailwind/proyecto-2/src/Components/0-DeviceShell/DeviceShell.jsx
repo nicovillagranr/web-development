@@ -7,7 +7,7 @@ import Header from "../1-StatusBar/Header.jsx"
 
 function Device() {
     return (
-        <section className="w-120 h-180 rounded-md bg-white overflow-hidden">
+        <section className="w-120 h-190 rounded-md bg-white">
             <Header />
         </section>
 

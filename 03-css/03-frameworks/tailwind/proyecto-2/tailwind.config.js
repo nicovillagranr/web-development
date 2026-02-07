@@ -19,6 +19,9 @@ module.exports = {
             width: {
                 '500': '500px',
             },
+            fontFamily: {
+                sans: ['Poppins', 'ui-sans-serif', 'system-ui'],
+            },
         },
     },
     plugins: [],
