@@ -3,11 +3,11 @@
 // Incluirá uso de APIs y manejo de inventario para gestionar el stock de productos.
 
 // Imports de Componentes
-import Header from "../1-StatusBar/Header.jsx"
+import Header from "../1-Header/Header.jsx"
 
 function Device() {
     return (
-        <section className="w-120 h-190 rounded-md bg-white">
+        <section className="w-120 h-190 rounded-md bg-[#D9D9D9]">
             <Header />
         </section>
 

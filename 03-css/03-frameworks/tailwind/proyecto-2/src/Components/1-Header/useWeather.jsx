@@ -22,6 +22,5 @@ export function useWeather() {
                 setWeather(null);
             });
     }, []);
-
     return weather;
 }
