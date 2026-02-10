@@ -1,4 +1,4 @@
-import { WeatherIcon } from "./weatherIcon";
+import { WeatherIcon } from "../3-ui/weatherIcon";
 
 function TopBar({ time, date, weather }) {
     return (

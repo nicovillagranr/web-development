@@ -1,19 +1,25 @@
-// Con este hook obtenemos la fecha y hora actual Santiago de Chile
-
+// hooks/useDateTime.js
 import { useEffect, useState } from "react";
 
 const TIMEZONE = "America/Santiago";
 
-export function useDateTime() {
-    const [now, setNow] = useState(new Date());
+export function useDateTime({ autoTime, manualDate }) {
+    const [now, setNow] = useState(
+        autoTime ? new Date() : manualDate
+    );
 
     useEffect(() => {
+        if (!autoTime) {
+            setNow(manualDate);
+            return;
+        }
+
         const interval = setInterval(() => {
             setNow(new Date());
         }, 1000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [autoTime, manualDate]);
 
     const formatterDate = new Intl.DateTimeFormat("es-CL", {
         weekday: "long",
@@ -32,5 +38,6 @@ export function useDateTime() {
     return {
         date: formatterDate.format(now),
         time: formatterTime.format(now),
+        rawDate: now, // 🔹 clave para editar luego
     };
 }
