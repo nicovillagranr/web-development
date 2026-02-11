@@ -1,9 +1,16 @@
-// Con este hook obtenemos el clima actual Santiago de Chile
 import { useEffect, useState } from "react";
 
+// Coordenadas de Santiago de Chile
 const LAT = -33.45;
 const LON = -70.66;
 
+/**
+ * Hook que obtiene el clima actual.
+ *
+ * - Llama a la API de Open-Meteo
+ * - Normaliza los datos
+ * - Maneja errores básicos
+ */
 export function useWeather() {
     const [weather, setWeather] = useState(null);
 
@@ -22,5 +29,6 @@ export function useWeather() {
                 setWeather(null);
             });
     }, []);
+
     return weather;
 }
