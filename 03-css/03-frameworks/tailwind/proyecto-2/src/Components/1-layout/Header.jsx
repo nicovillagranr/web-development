@@ -1,5 +1,5 @@
-import { useDateTime } from "../../hooks/useDateTime";
-import { useWeather } from "../../hooks/useWeather";
+import { useDateTime } from "../2-time/useDateTime.jsx";
+import { useWeather } from "../3-weather/useWeather.jsx";
 
 import TopBar from "./TopBar";
 import Nav from "./Nav";

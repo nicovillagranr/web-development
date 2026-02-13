@@ -2,11 +2,11 @@
 import { useState } from "react";
 
 // Hook de configuración global del sistema
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../2-time/useSettings.jsx";
 
 // Componentes principales del dispositivo
-import Header from "../1-Header/Header.jsx";
-import TimeSettings from "../3-ui/TimeSettings.jsx";
+import Header from "./Header.jsx";
+import TimeSettings from "../2-time/TimeSettings.jsx";
 
 /**
  * DeviceShell representa el "dispositivo físico".
@@ -40,8 +40,7 @@ function DeviceShell() {
                 autoTime={settings.autoTime}
                 manualDate={settings.manualDate}
                 is24hFormat={settings.is24hFormat}
-                onOpenTimeSettings={() => setActiveScreen("time")}
-            />
+                onOpenTimeSettings={() => setActiveScreen("time")} />
 
             {/* Panel deslizable de ajustes de fecha y hora */}
             <TimeSettings

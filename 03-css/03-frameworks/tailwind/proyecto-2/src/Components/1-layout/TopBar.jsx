@@ -1,4 +1,4 @@
-import { WeatherIcon } from "../3-ui/weatherIcon";
+import WeatherIconMini from "../3-weather/weatherIconMini.jsx";
 
 /**
  * Barra superior informativa.
@@ -23,15 +23,17 @@ function TopBar({ time, date, weather }) {
             <div className="flex items-center min-w-12 justify-end tracking-wide font-light">
                 {weather ? (
                     <>
-                        <WeatherIcon code={weather.code} size={18} />
-                        <span className="font-light">{weather.temperature}°</span>
+                        <WeatherIconMini code={weather.code} size={20} />
+                        <span>{weather.temperature}°</span>
                     </>
                 ) : (
-                    <span className="opacity-0">0°</span>
+                    <div className="flex items-center gap-1 animate-pulse">
+                        <div className="w-4 h-6 bg-gray-300 rounded-full"></div>
+                        <div className="w-6 h-4 bg-gray-300 rounded"></div>
+                    </div>
                 )}
             </div>
         </div>
     );
 }
-
 export default TopBar;

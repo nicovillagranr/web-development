@@ -2,7 +2,7 @@
 import './assets/styles/App.css'
 
 // Importamos el contenedor principal del dispositivo
-import DeviceShell from "./Components/0-DeviceShell/DeviceShell.jsx"
+import DeviceShell from "./Components/1-layout/DeviceShell.jsx"
 
 /**
  * App es el componente raíz de la UI.

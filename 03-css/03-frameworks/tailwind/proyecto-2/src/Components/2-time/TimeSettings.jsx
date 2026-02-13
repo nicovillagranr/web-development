@@ -97,10 +97,9 @@ function TimeSettings({
                 <div
                     onClick={() => setActiveEditor("date")}
                     className={`h-14 rounded-lg bg-gray-100 flex items-center px-4 ${autoTime
-                            ? "opacity-40 pointer-events-none"
-                            : "cursor-pointer hover:bg-gray-200"
-                        }`}
-                >
+                        ? "opacity-40 pointer-events-none"
+                        : "cursor-pointer hover:bg-gray-200"
+                        }`}>
                     Ajustar Fecha
                 </div>
 
@@ -108,25 +107,18 @@ function TimeSettings({
                 <div
                     onClick={() => setActiveEditor("time")}
                     className={`h-14 rounded-lg bg-gray-100 flex items-center px-4 ${autoTime
-                            ? "opacity-40 pointer-events-none"
-                            : "cursor-pointer hover:bg-gray-200"
-                        }`}
-                >
+                        ? "opacity-40 pointer-events-none"
+                        : "cursor-pointer hover:bg-gray-200"
+                        }`}>
                     Ajustar Hora
                 </div>
 
                 {/* Switch: Formato 24h */}
                 <div className="h-14 rounded-lg bg-gray-100 flex items-center justify-between px-4 mt-2">
                     <span>Formato 24 horas</span>
-                    <button
-                        onClick={() => setIs24hFormat(!is24hFormat)}
-                        className={`relative w-11 h-6 rounded-full transition ${is24hFormat ? "bg-green-500" : "bg-gray-300"
-                            }`}
-                    >
-                        <span
-                            className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${is24hFormat ? "translate-x-5" : ""
-                                }`}
-                        />
+                    <button onClick={() => setIs24hFormat(!is24hFormat)}
+                        className={`relative w-11 h-6 rounded-full transition ${is24hFormat ? "bg-green-500" : "bg-gray-300"}`}>
+                        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${is24hFormat ? "translate-x-5" : ""}`} />
                     </button>
                 </div>
             </div>
@@ -138,8 +130,7 @@ function TimeSettings({
                     manualDate={manualDate}
                     setManualDate={setManualDate}
                     onClose={() => setActiveEditor(null)}
-                />
-            )}
+                />)}
         </section>
     );
 }

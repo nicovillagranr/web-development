@@ -7,9 +7,13 @@
  */
 function Card({ children, className = "", ...props }) {
     return (
-        <div className={`bg-white rounded-lg flex justify-center items-center shadow-md ${className}`} {...props}>
+        <button
+            type="button"
+            className={`bg-white rounded-lg flex justify-center items-center shadow-md active:scale-98
+            transition-transform duration-100 ${className}`}
+            {...props}>
             {children}
-        </div>
+        </button >
     );
 }
 export default Card;
