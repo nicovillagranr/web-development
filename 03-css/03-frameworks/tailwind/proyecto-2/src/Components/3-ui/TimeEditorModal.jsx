@@ -4,7 +4,6 @@ import { FiX } from "react-icons/fi";
  * Modal reutilizable para editar:
  * - fecha
  * - hora
- * - zona horaria
  *
  * NO decide cuándo se abre.
  * SOLO edita datos según el mode recibido.
@@ -13,8 +12,6 @@ function TimeEditorModal({
     mode,
     manualDate,
     setManualDate,
-    timeZone,
-    setTimeZone,
     onClose,
 }) {
 
@@ -23,8 +20,14 @@ function TimeEditorModal({
      *
      * Reemplaza SOLO año, mes y día,
      * manteniendo la hora intacta.
+     *
+     * IMPORTANTE:
+     * - Si el input queda vacío, NO hacemos nada
+     * - manualDate SIEMPRE debe ser un Date válido
      */
     const updateDate = (value) => {
+        if (!value) return;
+
         const [year, month, day] = value.split("-");
         const newDate = new Date(manualDate);
         newDate.setFullYear(year, month - 1, day);
@@ -36,8 +39,14 @@ function TimeEditorModal({
      *
      * Reemplaza SOLO horas y minutos,
      * manteniendo el día intacto.
+     *
+     * IMPORTANTE:
+     * - Si el input queda vacío, NO hacemos nada
+     * - Evitamos estados inválidos
      */
     const updateTime = (value) => {
+        if (!value) return;
+
         const [hours, minutes] = value.split(":");
         const newDate = new Date(manualDate);
         newDate.setHours(hours);
@@ -54,13 +63,11 @@ function TimeEditorModal({
                     <h3 className="text-lg font-medium">
                         {mode === "date" && "Ajustar Fecha"}
                         {mode === "time" && "Ajustar Hora"}
-                        {mode === "timezone" && "Zona Horaria"}
                     </h3>
 
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
-                    >
+                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition">
                         <FiX size={18} />
                     </button>
                 </div>
@@ -82,19 +89,6 @@ function TimeEditorModal({
                         value={manualDate.toTimeString().slice(0, 5)}
                         onChange={(e) => updateTime(e.target.value)}
                     />
-                )}
-
-                {mode === "timezone" && (
-                    <select
-                        className="w-full h-12 px-4 rounded-lg border"
-                        value={timeZone}
-                        onChange={(e) => setTimeZone(e.target.value)}
-                    >
-                        <option value="America/Santiago">Chile</option>
-                        <option value="America/Argentina/Buenos_Aires">Argentina</option>
-                        <option value="America/Mexico_City">México</option>
-                        <option value="Europe/Madrid">España</option>
-                    </select>
                 )}
             </div>
         </div>

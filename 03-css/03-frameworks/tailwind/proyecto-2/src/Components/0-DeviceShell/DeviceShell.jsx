@@ -40,7 +40,6 @@ function DeviceShell() {
                 autoTime={settings.autoTime}
                 manualDate={settings.manualDate}
                 is24hFormat={settings.is24hFormat}
-                timeZone={settings.timeZone}
                 onOpenTimeSettings={() => setActiveScreen("time")}
             />
 
@@ -54,8 +53,6 @@ function DeviceShell() {
                 setIs24hFormat={settings.setIs24hFormat}
                 manualDate={settings.manualDate}
                 setManualDate={settings.setManualDate}
-                timeZone={settings.timeZone}
-                setTimeZone={settings.setTimeZone}
             />
         </section>
     );

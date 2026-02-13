@@ -7,8 +7,12 @@ import { useEffect, useState } from "react";
 const DEFAULT_SETTINGS = {
     autoTime: true,
     is24hFormat: false,
+
+    /**
+     * Fecha manual serializada.
+     * Siempre se guarda como ISO string.
+     */
     manualDate: new Date().toISOString(),
-    timeZone: "America/Santiago",
 };
 
 /**
@@ -18,7 +22,11 @@ const DEFAULT_SETTINGS = {
  * - formato horario
  * - hora automática / manual
  * - fecha manual
- * - zona horaria
+ *
+ * NOTA:
+ * - No maneja lógica de reloj
+ * - No formatea fecha u hora
+ * - Solo guarda estado persistente del sistema
  */
 export function useSettings() {
     const [settings, setSettings] = useState(() => {
@@ -27,6 +35,12 @@ export function useSettings() {
 
         try {
             const parsed = JSON.parse(saved);
+
+            /**
+             * Merge defensivo:
+             * - permite agregar settings nuevos en el futuro
+             * - evita romper versiones anteriores
+             */
             return { ...DEFAULT_SETTINGS, ...parsed };
         } catch {
             return DEFAULT_SETTINGS;
@@ -35,6 +49,7 @@ export function useSettings() {
 
     /**
      * Persistencia automática.
+     * Cada cambio se guarda inmediatamente en localStorage.
      */
     useEffect(() => {
         localStorage.setItem("settings", JSON.stringify(settings));
@@ -46,11 +61,14 @@ export function useSettings() {
 
         /**
          * SIEMPRE exponemos manualDate como Date
+         * para que el resto del sistema no piense en serialización.
          */
         manualDate: new Date(settings.manualDate),
 
-        timeZone: settings.timeZone,
-
+        /**
+         * Setters públicos.
+         * Nunca exponen la estructura interna del estado.
+         */
         setAutoTime: (value) =>
             setSettings(s => ({ ...s, autoTime: value })),
 
@@ -58,12 +76,13 @@ export function useSettings() {
             setSettings(s => ({ ...s, is24hFormat: value })),
 
         /**
-         * SIEMPRE recibimos Date y serializamos aquí
+         * SIEMPRE recibimos Date
+         * y serializamos aquí.
          */
         setManualDate: (date) =>
-            setSettings(s => ({ ...s, manualDate: date.toISOString() })),
-
-        setTimeZone: (zone) =>
-            setSettings(s => ({ ...s, timeZone: zone })),
+            setSettings(s => ({
+                ...s,
+                manualDate: date.toISOString(),
+            })),
     };
 }
