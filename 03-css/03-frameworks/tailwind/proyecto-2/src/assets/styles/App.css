@@ -3,3 +3,8 @@
 html {
     font-family: Poppins, ui-sans-serif, system-ui;
 }
+
+/* tailwind.config.css o un global.css */
+.transition-gradient {
+    transition: background 0.7s ease-in-out;
+}

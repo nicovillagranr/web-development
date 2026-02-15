@@ -1,48 +1,28 @@
-// Hook para manejar navegación interna
 import { useState } from "react";
-
-// Hook de configuración global del sistema
 import { useSettings } from "../2-time/useSettings.jsx";
 
-// Componentes principales del dispositivo
 import Header from "./Header.jsx";
 import TimeSettings from "../2-time/TimeSettings.jsx";
+import WeatherSettings from "../3-weather/WeatherSettings.jsx";
 
-/**
- * DeviceShell representa el "dispositivo físico".
- *
- * Mentalmente:
- * - es la carcasa del refrigerador
- * - decide qué pantallas se ven
- * - NO maneja lógica de negocio
- */
 function DeviceShell() {
 
-    /**
-     * Controla qué pantalla está activa.
-     *
-     * null   → pantalla principal
-     * "time" → panel de ajustes de fecha y hora
-     */
     const [activeScreen, setActiveScreen] = useState(null);
 
-    /**
-     * Configuración global del sistema.
-     * Fuente única de verdad.
-     */
     const settings = useSettings();
 
     return (
         <section className="relative w-120 h-screen rounded-sm bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden">
 
-            {/* Header del dispositivo (hora, fecha, clima, navegación) */}
             <Header
                 autoTime={settings.autoTime}
                 manualDate={settings.manualDate}
                 is24hFormat={settings.is24hFormat}
-                onOpenTimeSettings={() => setActiveScreen("time")} />
+                weatherSettings={settings.weather}
+                onOpenTimeSettings={() => setActiveScreen("time")}
+                onOpenWeatherSettings={() => setActiveScreen("weather")}
+            />
 
-            {/* Panel deslizable de ajustes de fecha y hora */}
             <TimeSettings
                 isActive={activeScreen === "time"}
                 onBack={() => setActiveScreen(null)}
@@ -52,6 +32,13 @@ function DeviceShell() {
                 setIs24hFormat={settings.setIs24hFormat}
                 manualDate={settings.manualDate}
                 setManualDate={settings.setManualDate}
+            />
+
+            <WeatherSettings
+                isActive={activeScreen === "weather"}
+                onBack={() => setActiveScreen(null)}
+                weather={settings.weather}
+                setWeather={settings.setWeather}
             />
         </section>
     );

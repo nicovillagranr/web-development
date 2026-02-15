@@ -1,19 +1,29 @@
-import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
+import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from "react-icons/wi";
+import { parseWeather } from "./weatherParser.jsx";
 
 function WeatherIconMini({ code, className = "" }) {
+    const { category } = parseWeather(code);
 
-    function resolveIcon(code) {
-        if (code === 0) return <WiDaySunny />;
-        if (code === 1) return <WiCloud />;
-        if (code === 2) return <WiRain />;
-        return <WiDaySunny />;
+    function resolveIcon(category) {
+        switch (category) {
+            case "clear":
+                return <WiDaySunny />;
+            case "cloudy":
+                return <WiCloud />;
+            case "rain":
+                return <WiRain />;
+            case "snow":
+                return <WiSnow />;
+            case "storm":
+                return <WiThunderstorm />;
+            case "mist":
+                return <WiFog />;
+            default:
+                return <WiDaySunny />;
+        }
     }
 
-    return (
-        <span className={`text-lg ${className}`}>
-            {resolveIcon(code)}
-        </span>
-    );
+    return <span className={`text-lg ${className}`}>{resolveIcon(category)}</span>;
 }
 
 export default WeatherIconMini;
