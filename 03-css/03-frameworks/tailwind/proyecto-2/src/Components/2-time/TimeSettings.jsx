@@ -68,7 +68,7 @@ function TimeSettings({
                             onBack();
                         }
                     }}
-                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
+                    className="w-8 h-8 flex items-center justify-center rounded-full transition"
                 >
                     <FiChevronLeft size={20} />
                 </button>

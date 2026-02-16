@@ -1,16 +1,10 @@
-/**
- * CardRecipe
- *
- * Tarjeta de recetas / inventario rápido.
- * Solo muestra contenido estático, sin gradientes dinámicos.
- */
-function CardRecipe({ children }) {
+import Card from "./Card.jsx";
+
+function CardRecipe({ onClick }) {
     return (
-        <div className="col-span-1 row-span-2 flex flex-col items-center justify-center text-center p-4 bg-white rounded-lg shadow-md active:scale-98
-            transition-transform duration-100">
-            {children}
-        </div>
+        <Card as="button" className="col-span-1 row-span-2 bg-white flex flex-col text-center" onClick={onClick}>
+            <span className="text-3xl font-light tracking-tight"></span>
+        </Card>
     );
 }
-
 export default CardRecipe;

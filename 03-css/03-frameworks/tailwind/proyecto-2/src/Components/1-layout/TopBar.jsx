@@ -15,9 +15,7 @@ function TopBar({ time, date, weather }) {
         <div className="flex items-center justify-between pointer-events-none">
 
             {/* Fecha y hora */}
-            <div className="text-sm uppercase tracking-wide font-light">
-                {time} | {date}
-            </div>
+            <div className="text-sm uppercase tracking-wide font-light">{time} | {date}</div>
 
             {/* Clima */}
             <div className="flex items-center min-w-12 justify-end tracking-wide font-light">
@@ -28,8 +26,8 @@ function TopBar({ time, date, weather }) {
                     </>
                 ) : (
                     <div className="flex items-center gap-1 animate-pulse">
-                        <div className="w-4 h-6 bg-gray-300 rounded-full"></div>
-                        <div className="w-6 h-4 bg-gray-300 rounded"></div>
+                        <div className="w-4 h-6 backdrop-blur-md bg-white/20 rounded-full"></div>
+                        <div className="w-6 h-4 backdrop-blur-md bg-white/20 rounded"></div>
                     </div>
                 )}
             </div>

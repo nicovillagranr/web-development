@@ -1,5 +1,11 @@
+// Import de Molde Card
+import Card from "./Card.jsx";
+
+// Import de iconos y parser de clima
 import { WeatherIcon } from "../3-weather/weatherIcon.jsx";
 import { FiMapPin } from "react-icons/fi";
+
+// Import de parser de clima para determinar categoría e intensidad del clima
 import { parseWeather } from "../3-weather/weatherParser.jsx";
 
 /**
@@ -39,46 +45,35 @@ const weatherGradients = {
  */
 function CardWeather({ weather, onClick }) {
     if (!weather) {
-        // placeholder skeleton mientras carga
         return (
-            <div className="col-span-1 row-span-1 flex flex-col items-center justify-center w-full h-full bg-gray-200 animate-pulse rounded-lg">
-                <div className="w-10 h-10 bg-gray-300 rounded-full mb-2"></div>
-                <div className="w-12 h-6 bg-gray-300 rounded-md"></div>
-            </div>
+            <Card as="button" className="col-span-1 row-span-1 w-full h-full rounded-lg backdrop-blur-md bg-white/20 shadow-lg animate-pulse flex flex-col items-center justify-center p-2">
+                <div className="w-20 h-10 bg-white/40 rounded-full mb-2 animate-pulse"></div>
+                <div className="w-25 h-6 bg-white/40 rounded-md animate-pulse"></div>
+            </Card>
         );
     }
 
     const { category, intensity } = parseWeather(weather.code);
-
-    // Obtener gradiente según categoría e intensidad
     const gradient =
         typeof weatherGradients[category] === "string"
             ? weatherGradients[category]
             : weatherGradients[category][intensity || "medium"];
 
     return (
-        <button
-            className={`col-span-1 row-span-1 flex flex-col items-center justify-center rounded-lg shadow-md active:scale-98
-            transition-transform duration-100 ${gradient}`}
-            onClick={onClick}>
+        <Card as="button" className={`col-span-1 row-span-1 flex flex-col items-center justify-center ${gradient}`} onClick={onClick}>
 
             {/* Icono + temperatura */}
             <div className="flex items-center h-10">
-                <WeatherIcon code={weather.code} size={60} />
-                <span className="text-3xl font-light text-white">
-                    {weather.temperature}°
-                </span>
+                <WeatherIcon code={weather.code} size={70} />
+                <span className="text-3xl font-light text-white">{weather.temperature}°</span>
             </div>
 
             {/* Ubicación */}
             <div className="flex items-center gap-1 justify-center mt-1">
-                <FiMapPin className="h-3 w-3 shrink-0 text-white drop-shadow-lg" />
-                <p className="text-xs truncate max-w-28 text-white drop-shadow-lg text-center">
-                    {weather.city}, {weather.country}
-                </p>
+                <FiMapPin className="h-3 w-3 text-white" />
+                <p className="text-xs truncate max-w-28 text-white drop-shadow-lg text-center">{weather.city}, {weather.country}</p>
             </div>
-        </button>
+        </Card>
     );
 }
-
 export default CardWeather;

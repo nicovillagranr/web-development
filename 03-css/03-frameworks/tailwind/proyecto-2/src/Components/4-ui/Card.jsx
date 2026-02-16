@@ -1,19 +1,9 @@
-/**
- * Componente Card reutilizable.
- *
- * - Encapsula estilos comunes
- * - Acepta children
- * - Permite extender estilos y eventos vía props
- */
-function Card({ children, className = "", ...props }) {
+function Card({ children, className = "", as = "button", ...props }) {
+    const Component = as; // permite usar <div>, <button>, etc.
     return (
-        <button
-            type="button"
-            className={`bg-white rounded-lg flex justify-center items-center shadow-md active:scale-98
-            transition-transform duration-100 ${className}`}
-            {...props}>
+        <Component className={`flex justify-center items-center rounded-lg shadow-md active:scale-98 transition-transform duration-100 ${className}`} {...props}>
             {children}
-        </button >
+        </Component>
     );
 }
 export default Card;
