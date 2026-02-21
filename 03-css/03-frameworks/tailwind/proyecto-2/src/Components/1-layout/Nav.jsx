@@ -3,7 +3,6 @@ import CardRecipe from "../4-ui/CardRecipe.jsx";
 import CardTime from "../4-ui/CardTime.jsx";
 import CardWeather from "../4-ui/CardWeather.jsx";
 
-
 function Nav({ time, weather, onOpenTimeSettings, onOpenWeatherSettings }) {
     return (
         <nav className="w-full">

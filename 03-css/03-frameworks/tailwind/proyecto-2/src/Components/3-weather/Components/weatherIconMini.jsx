@@ -1,6 +1,10 @@
+// Import de iconos
 import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from "react-icons/wi";
-import { parseWeather } from "./weatherParser.jsx";
 
+// Import de hooks
+import { parseWeather } from "../utils/weatherParser";
+
+// Import de componentes
 function WeatherIconMini({ code, className = "" }) {
     const { category } = parseWeather(code);
 
@@ -22,7 +26,7 @@ function WeatherIconMini({ code, className = "" }) {
                 return <WiDaySunny />;
         }
     }
-
+    // Render
     return <span className={`text-lg ${className}`}>{resolveIcon(category)}</span>;
 }
 

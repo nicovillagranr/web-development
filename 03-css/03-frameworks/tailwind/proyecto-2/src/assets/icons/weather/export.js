@@ -1,10 +1,16 @@
 // Clear
 import day from "./day.svg";
+import night from "./night.svg";
 
-// Clouds
-import cloudyLight from "./cloudy-day-light.svg";
-import cloudyMedium from "./cloudy-day-medium.svg";
-import cloudyHeavy from "./cloudy-day-heavy.svg";
+// Clouds - Day
+import cloudyDayLight from "./cloudy-day-light.svg";
+import cloudyDayMedium from "./cloudy-day-medium.svg";
+import cloudyDayHeavy from "./cloudy-day-heavy.svg";
+
+// Clouds - Night
+import cloudyNightLight from "./cloudy-night-light.svg";
+import cloudyNightMedium from "./cloudy-night-medium.svg";
+import cloudyNightHeavy from "./cloudy-night-heavy.svg";
 
 // Rain
 import rainLight from "./rainy-light.svg";
@@ -21,9 +27,13 @@ import thunder from "./thunder.svg";
 
 export {
     day,
-    cloudyLight,
-    cloudyMedium,
-    cloudyHeavy,
+    night,
+    cloudyDayLight,
+    cloudyDayMedium,
+    cloudyDayHeavy,
+    cloudyNightLight,
+    cloudyNightMedium,
+    cloudyNightHeavy,
     rainLight,
     rainMedium,
     rainHeavy,

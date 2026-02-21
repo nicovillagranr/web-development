@@ -1,66 +1,56 @@
+import { useEffect, useState } from "react";
+
 // Import de Molde Card
 import Card from "./Card.jsx";
 
 // Import de iconos y parser de clima
-import { WeatherIcon } from "../3-weather/weatherIcon.jsx";
+import { WeatherIcon } from "../3-weather/Components/weatherIcon.jsx";
 import { FiMapPin } from "react-icons/fi";
 
-// Import de parser de clima para determinar categoría e intensidad del clima
-import { parseWeather } from "../3-weather/weatherParser.jsx";
+// Import de parser de clima
+import { parseWeather } from "../3-weather/utils/weatherParser.js";
+import { getWeatherGradient } from "../3-weather/utils/getWeatherGradient.js";
 
-/**
- * Gradientes de clima agresivos
- * - Contraste alto para que se note en botones pequeños
- * - Colores hexadecimales directos
- */
-const weatherGradients = {
-    clear: "bg-gradient-to-br from-[#FFD700] via-[#FFB800] to-[#FF7F00]", // dorado → naranja fuerte
-    cloudy: {
-        light: "bg-gradient-to-br from-[#B0B0B0] via-[#888888] to-[#555555]", // gris claro → gris medio → gris oscuro
-        medium: "bg-gradient-to-br from-[#888888] via-[#555555] to-[#222222]",
-        heavy: "bg-gradient-to-br from-[#555555] via-[#333333] to-[#111111]",
-    },
-    rain: {
-        light: "bg-gradient-to-br from-[#4FC3F7] via-[#0288D1] to-[#01579B]", // azul cielo → azul medio → azul oscuro
-        medium: "bg-gradient-to-br from-[#0288D1] via-[#01579B] to-[#002F5F]",
-        heavy: "bg-gradient-to-br from-[#01579B] via-[#002F5F] to-[#001F3F]",
-    },
-    snow: {
-        light: "bg-gradient-to-br from-[#E0F7FA] via-[#B2EBF2] to-[#80DEEA]", // azul muy claro → celeste
-        medium: "bg-gradient-to-br from-[#B2EBF2] via-[#80DEEA] to-[#4DD0E1]",
-        heavy: "bg-gradient-to-br from-[#80DEEA] via-[#4DD0E1] to-[#26C6DA]",
-    },
-    storm: "bg-gradient-to-br from-[#9C27B0] via-[#6A1B9A] to-[#000000]", // púrpura intenso → negro
-    mist: "bg-gradient-to-br from-[#EEEEEE] via-[#CCCCCC] to-[#AAAAAA]", // gris muy claro → medio
-};
 
-/**
- * CardWeather
- *
- * Tarjeta interactiva de clima:
- * - Icono + temperatura
- * - Ubicación
- * - Gradiente dinámico según clima
- * - Animación suave de transición de fondo
- */
 function CardWeather({ weather, onClick }) {
+
+
+    if (weather) {
+        console.log("CardWeather code:", weather.code, typeof weather.code);
+    }
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        if (weather) {
+            const timer = setTimeout(() => setVisible(true), 50);
+            return () => clearTimeout(timer);
+        }
+    }, [weather]);
+
+    // Skeleton mientras carga
     if (!weather) {
         return (
-            <Card as="button" className="col-span-1 row-span-1 w-full h-full rounded-lg backdrop-blur-md bg-white/20 shadow-lg animate-pulse flex flex-col items-center justify-center p-2">
-                <div className="w-20 h-10 bg-white/40 rounded-full mb-2 animate-pulse"></div>
-                <div className="w-25 h-6 bg-white/40 rounded-md animate-pulse"></div>
+            <Card
+                as="button"
+                className="col-span-1 row-span-1 w-full h-full rounded-lg backdrop-blur-md bg-white/20 shadow-lg animate-pulse flex flex-col items-center justify-center p-2"
+            >
+                <div className="w-20 h-10 bg-white/40 rounded-full mb-2"></div>
+                <div className="w-25 h-6 bg-white/40 rounded-md"></div>
             </Card>
         );
     }
 
     const { category, intensity } = parseWeather(weather.code);
-    const gradient =
-        typeof weatherGradients[category] === "string"
-            ? weatherGradients[category]
-            : weatherGradients[category][intensity || "medium"];
+
+    const gradient = getWeatherGradient(category, intensity);
+
 
     return (
-        <Card as="button" className={`col-span-1 row-span-1 flex flex-col items-center justify-center ${gradient}`} onClick={onClick}>
+        // Tarjeta con fondo dinámico según el clima, animación de aparición y onClick para mostrar detalles
+        <Card as="button" onClick={onClick} className={`col-span-1 row-span-1 flex flex-col items-center justify-center ${gradient} transition-all duration-500 ease-out
+        ${visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 scale-95"}`}>
 
             {/* Icono + temperatura */}
             <div className="flex items-center h-10">
