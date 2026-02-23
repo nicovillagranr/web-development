@@ -14,10 +14,6 @@ import { getWeatherGradient } from "../3-weather/utils/getWeatherGradient.js";
 
 function CardWeather({ weather, onClick }) {
 
-
-    if (weather) {
-        console.log("CardWeather code:", weather.code, typeof weather.code);
-    }
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -30,10 +26,7 @@ function CardWeather({ weather, onClick }) {
     // Skeleton mientras carga
     if (!weather) {
         return (
-            <Card
-                as="button"
-                className="col-span-1 row-span-1 w-full h-full rounded-lg backdrop-blur-md bg-white/20 shadow-lg animate-pulse flex flex-col items-center justify-center p-2"
-            >
+            <Card as="button" className="col-span-1 row-span-1 w-full h-full rounded-lg backdrop-blur-md bg-white/20 shadow-lg animate-pulse flex flex-col items-center justify-center p-2">
                 <div className="w-20 h-10 bg-white/40 rounded-full mb-2"></div>
                 <div className="w-25 h-6 bg-white/40 rounded-md"></div>
             </Card>
@@ -55,7 +48,7 @@ function CardWeather({ weather, onClick }) {
             {/* Icono + temperatura */}
             <div className="flex items-center h-10">
                 <WeatherIcon code={weather.code} size={70} />
-                <span className="text-3xl font-light text-white">{weather.temperature}°</span>
+                <span className="text-3xl font-extralight text-white">{weather.temperature}°</span>
             </div>
 
             {/* Ubicación */}

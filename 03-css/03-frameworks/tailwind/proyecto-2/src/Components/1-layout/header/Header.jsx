@@ -1,8 +1,7 @@
-import { useDateTime } from "../2-time/useDateTime.jsx";
+import { useDateTime } from "../../2-time/useDateTime.jsx";
 
 import TopBar from "./TopBar";
 import Nav from "./Nav";
-import WeatherPreview from "../3-weather/test/WeatherPreview.jsx"
 
 // El componente Header es responsable de mostrar la información de fecha, hora y clima en la parte superior de la interfaz del dispositivo. Utiliza el hook personalizado useDateTime para calcular la fecha y hora actuales basándose en las configuraciones de tiempo automático, fecha manual y formato de 24 horas. Además, recibe los datos climáticos a través de props para mostrarlos junto con la fecha y hora. El Header también incluye componentes hijos como TopBar, que muestra la información de tiempo y clima, y Nav, que proporciona botones para acceder a los ajustes de tiempo y clima, permitiendo una navegación fácil entre las diferentes pantallas de configuración.
 function Header({

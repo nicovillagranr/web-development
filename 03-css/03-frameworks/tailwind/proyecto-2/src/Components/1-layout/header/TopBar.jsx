@@ -1,4 +1,4 @@
-import WeatherIconMini from "../3-weather/Components/weatherIconMini.jsx";
+import WeatherIconMini from "../../3-weather/Components/weatherIconMini.jsx";
 
 /**
  * Barra superior informativa.
