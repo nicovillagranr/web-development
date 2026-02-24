@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import SettingsHeader from "../4-ui/SettingsHeader";
+import SettingsHeader from "../../4-ui/SettingsHeader";
 
 
 function TimeEditorModal({ mode, manualDate, setManualDate, onClose }) {
@@ -21,8 +21,7 @@ function TimeEditorModal({ mode, manualDate, setManualDate, onClose }) {
                 <div className="flex justify-end mt-4 space-x-2">
                     <button
                         className="px-4 py-2 bg-[#3B3C4F] text-white rounded-md hover:bg-[#4B4C5F]"
-                        onClick={onClose}
-                    >
+                        onClick={onClose}>
                         Cancelar
                     </button>
                     <button

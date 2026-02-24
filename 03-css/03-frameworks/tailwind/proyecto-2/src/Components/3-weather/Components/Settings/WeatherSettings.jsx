@@ -1,5 +1,3 @@
-// ================= IMPORTACIONES =================
-
 // Hook de React para manejar estado interno
 import { useState } from "react";
 
@@ -13,8 +11,10 @@ import { getWeatherGradient } from "../../utils/getWeatherGradient.js";
 // Componente que renderiza el ícono según código meteorológico
 import { WeatherIcon } from "../weatherIcon.jsx";
 
+// Componente de cabecera de configuración
 import SettingsHeader from "../../../4-ui/SettingsHeader.jsx";
 
+// Componentes específicos de clima
 import HourlyForecast from "./HourlyForecast.jsx"
 
 
@@ -50,13 +50,10 @@ function WeatherSettings({ isActive, onBack, weather }) {
     };
 
     return (
-        <section
-            className={`absolute inset-0 z-20 flex flex-col text-white
-  transition-transform duration-500 ease-out
-  ${gradient}
-  ${isActive ? "translate-x-0" : "-translate-x-full"}`}
-        >
-            <Header onBack={onBack} />
+        <section className={`absolute inset-0 z-20 flex flex-col text-white transition-transform duration-500 ease-out ${gradient} ${isActive ? "translate-x-0" : "-translate-x-full"}`}>
+
+            <SettingsHeader title="Clima y pronóstico" onBack={onBack} />
+
 
             <div className="flex-1 overflow-y-auto overscroll-contain pb-6 no-scrollbar">
                 <CurrentWeather
@@ -86,18 +83,8 @@ export default WeatherSettings;
 
 
 
-// ================= HEADER =================
-
-function Header({ onBack }) {
-    return (
-        <SettingsHeader title="Clima y pronóstico" onBack={onBack} />
-    );
-}
-
-
 
 // ================= CLIMA ACTUAL =================
-
 function CurrentWeather({ weather, parsedWeather, translations }) {
     return (
         <div className="flex flex-col mt-6 px-6">

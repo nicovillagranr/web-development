@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useSettings } from "../../2-time/useSettings.jsx";
+import { useSettings } from "../../2-time/hooks/useSettings.jsx";
 import { useWeather } from "../../3-weather/hooks/useWeather.jsx";
 
 
 import Header from "../header/Header.jsx";
-import TimeSettings from "../../2-time/timeSettings.jsx";
+import TimeSettings from "../../2-time/Components/TimeSettings.jsx";
 import WeatherSettings from "../../3-weather/Components/Settings/WeatherSettings.jsx";
 
 
