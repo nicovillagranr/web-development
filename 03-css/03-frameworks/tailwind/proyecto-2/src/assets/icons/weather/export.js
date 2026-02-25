@@ -1,4 +1,5 @@
 // Clear
+// ================= IMPORTS =================
 import day from "./day.svg";
 import night from "./night.svg";
 

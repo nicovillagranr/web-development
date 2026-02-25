@@ -1,8 +1,9 @@
 // Importamos los estilos globales de la aplicación
+// ================= IMPORTS =================
 import './assets/styles/App.css'
 
 // Importamos el contenedor principal del dispositivo
-import DeviceShell from "./Components/1-layout/hardware/DeviceShell"
+import DeviceShell from "./Components/layout/hardware/DeviceShell.jsx"
 
 /**
  * App es el componente raíz de la UI.
@@ -14,7 +15,11 @@ import DeviceShell from "./Components/1-layout/hardware/DeviceShell"
  * En el proyecto final:
  * - este <main> será reemplazado o envuelto por THREE.JS
  */
+
+// ================= FUNCION =================
+// App: helper/componente interno; parametros: 
 function App() {
+    // Render/retorno del bloque actual
   return (
     <>
       {/* Contenedor principal centrado en pantalla */}
