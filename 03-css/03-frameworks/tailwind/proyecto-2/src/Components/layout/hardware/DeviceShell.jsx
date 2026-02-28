@@ -4,7 +4,7 @@ import { useSettings } from "../../../features/time/hooks/useSettings.jsx";
 import { useWeather } from "../../../features/weather/hooks/useWeather.jsx";
 
 
-import Header from "../header/Header.jsx";
+import HomeScreens from "../screens/HomeScreens.jsx";
 import TimeSettings from "../../../features/time/Components/TimeSettings.jsx";
 import WeatherSettings from "../../../features/weather/Components/Settings/WeatherSettings.jsx";
 import InventorySettings from "../../../features/inventory/Components/InventorySettings.jsx";
@@ -28,7 +28,7 @@ function DeviceShell() {
     return (
         <section className="relative w-120 h-dvh min-h-svh rounded-sm bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden">
 
-            <Header
+            <HomeScreens
                 autoTime={settings.autoTime}
                 manualDate={settings.manualDate}
                 is24hFormat={settings.is24hFormat}

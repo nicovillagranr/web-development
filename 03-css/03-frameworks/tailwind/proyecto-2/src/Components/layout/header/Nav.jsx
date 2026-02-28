@@ -83,14 +83,6 @@ function Nav({ time, weather, onOpenTimeSettings, onOpenWeatherSettings, onOpenI
         localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(normalizedOrder));
     }, [cardOrder]);
 
-    useEffect(() => {
-        setCardOrder((prevOrder) => normalizeMovableOrder(prevOrder));
-    }, []);
-
-    useEffect(() => {
-        if (!isEditMode) setSelectedId(null);
-    }, [isEditMode]);
-
     const handleTapSwap = (cardId) => {
         if (cardId === FIXED_CARD_ID) return;
 
@@ -147,16 +139,6 @@ function Nav({ time, weather, onOpenTimeSettings, onOpenWeatherSettings, onOpenI
     // Render/retorno del bloque actual
     return (
         <nav className="w-full">
-            <div className="h-6 flex items-center justify-end mb-1">
-                <button
-                    type="button"
-                    onClick={() => setIsEditMode((prev) => !prev)}
-                    className="text-[11px] px-2 py-0.5 rounded-full bg-black/10 text-black"
-                >
-                    {isEditMode ? "Listo" : "Editar"}
-                </button>
-            </div>
-
             <section className="grid grid-cols-2 grid-rows-3 gap-3 w-full h-50">
                 {renderOrder.map((cardId, slotIndex) => {
                     const cardConfig = cardsById[cardId];
@@ -176,6 +158,22 @@ function Nav({ time, weather, onOpenTimeSettings, onOpenWeatherSettings, onOpenI
                     );
                 })}
             </section>
+
+            <div className="h-6 flex items-center justify-end mt-1">
+                <button
+                    type="button"
+                    onClick={() =>
+                        setIsEditMode((prev) => {
+                            const nextIsEditMode = !prev;
+                            if (!nextIsEditMode) setSelectedId(null);
+                            return nextIsEditMode;
+                        })
+                    }
+                    className="text-[11px] px-2 py-0.5 rounded-full bg-black/10 text-black"
+                >
+                    {isEditMode ? "Listo" : "Editar"}
+                </button>
+            </div>
         </nav>
     );
 }

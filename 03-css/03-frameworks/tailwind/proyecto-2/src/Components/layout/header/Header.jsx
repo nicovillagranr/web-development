@@ -14,6 +14,9 @@ function Header({
     onOpenWeatherSettings,
     onOpenInventorySettings,
     onOpenMusicSettings,
+    showTopBar = true,
+    showNav = true,
+    className = "",
 }) {
 
     // Manejar fecha y hora utilizando el hook personalizado useDateTime, que toma en cuenta las configuraciones de tiempo automático, fecha manual y formato de 24 horas para calcular la fecha y hora actuales que se mostrarán en la interfaz. Esto permite que el componente Header tenga acceso a la información de fecha y hora actualizada según las preferencias del usuario, y pueda pasar esta información a los componentes hijos como TopBar y Nav para su visualización. Además, al recibir la información del clima a través de props, el Header puede mostrar datos climáticos relevantes junto con la fecha y hora, creando una experiencia de usuario más completa e informativa.
@@ -26,18 +29,20 @@ function Header({
 
     // Render/retorno del bloque actual
     return (
-        <header className="w-full flex flex-col px-4 py-2 gap-2">
+        <header className={`w-full flex flex-col px-4 py-2 gap-2 ${className}`}>
             {/* Barra fina superior | No tiene interactividad */}
-            <TopBar time={time} date={date} weather={weather} />
+            {showTopBar && <TopBar time={time} date={date} weather={weather} />}
             {/* Barra de navegación con 3 Contenedores/Botones | Tiene interactividad | Tiene Menús desplegables */}
-            <Nav
-                time={time}
-                weather={weather}
-                onOpenTimeSettings={onOpenTimeSettings}
-                onOpenWeatherSettings={onOpenWeatherSettings}
-                onOpenInventorySettings={onOpenInventorySettings}
-                onOpenMusicSettings={onOpenMusicSettings}
-            />
+            {showNav && (
+                <Nav
+                    time={time}
+                    weather={weather}
+                    onOpenTimeSettings={onOpenTimeSettings}
+                    onOpenWeatherSettings={onOpenWeatherSettings}
+                    onOpenInventorySettings={onOpenInventorySettings}
+                    onOpenMusicSettings={onOpenMusicSettings}
+                />
+            )}
         </header>
     );
 }

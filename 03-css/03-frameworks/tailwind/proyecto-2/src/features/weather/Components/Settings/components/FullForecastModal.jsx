@@ -13,17 +13,17 @@ export default function FullForecastModal({ forecast, isOpen, onClose }) {
 
     // Render/retorno del bloque actual
     return (
-        <div
-            className={`absolute inset-0 z-30 flex items-center justify-center transition-opacity duration-300
-      ${isOpen ? "bg-black/40 backdrop-blur-md opacity-100" : "opacity-0 pointer-events-none"}`}
-        >
-            <div
-                className={`w-[90%] m-auto bg-slate-900 rounded-3xl p-5 transform transition-all duration-300 ease-out origin-center
-        ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"}`}
-            >
+        // Blur overlay
+        <div onClick={onClose} className={`absolute inset-0 z-30 flex items-center justify-center transition-opacity duration-300
+        ${isOpen ? "bg-black/40 backdrop-blur-sm opacity-100" : "opacity-0 pointer-events-none"}`}>
+
+            {/* Modal */}
+            <div onClick={(e) => e.stopPropagation()} className={`w-[90%] m-auto bg-slate-900 rounded-3xl p-5 transform transition-all duration-300 ease-out origin-center
+                ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"}`}>
+
                 <div className="flex justify-between items-center mb-5">
                     <h2 className="text-lg font-medium">Pronóstico de 5 días</h2>
-                    <button onClick={onClose} className="text-md">
+                    <button type="button" aria-label="Cerrar pronóstico" onClick={onClose} className="text-md">
                         <FiX className="w-7 h-7" />
                     </button>
                 </div>

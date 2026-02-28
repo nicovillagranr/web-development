@@ -16,30 +16,29 @@ import { parseWeather } from "../utils/weatherParser.js";
 function WeatherIconMini({ code, isDay = true, size = 20, className = "" }) {
     const { category } = parseWeather(code, isDay);
 
-    function resolveIcon() {
-        switch (category) {
-            case "clear":
-                return isDay ? WiDaySunny : WiNightClear;
-            case "cloudy":
-                return isDay ? WiCloud : WiNightAltCloudy;
-            case "rain":
-                return WiRain;
-            case "snow":
-                return WiSnow;
-            case "storm":
-                return WiThunderstorm;
-            case "mist":
-            case "fog":
-                return WiFog;
-            default:
-                return isDay ? WiDaySunny : WiNightClear;
-        }
+    switch (category) {
+        case "clear":
+            return isDay
+                ? <WiDaySunny size={size} className={className} />
+                : <WiNightClear size={size} className={className} />;
+        case "cloudy":
+            return isDay
+                ? <WiCloud size={size} className={className} />
+                : <WiNightAltCloudy size={size} className={className} />;
+        case "rain":
+            return <WiRain size={size} className={className} />;
+        case "snow":
+            return <WiSnow size={size} className={className} />;
+        case "storm":
+            return <WiThunderstorm size={size} className={className} />;
+        case "mist":
+        case "fog":
+            return <WiFog size={size} className={className} />;
+        default:
+            return isDay
+                ? <WiDaySunny size={size} className={className} />
+                : <WiNightClear size={size} className={className} />;
     }
-
-    const Icon = resolveIcon();
-
-    // Render/retorno del bloque actual
-    return <Icon size={size} className={className} />;
 }
 
 export default WeatherIconMini;

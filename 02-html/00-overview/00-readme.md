@@ -1,34 +1,42 @@
-# HTML Basics
+﻿# HTML Basics
 
-## Propósito
-Práctica progresiva de HTML semántico y estructura de documentos web,
-enfocada en claridad, accesibilidad base y buenas prácticas.
+## Proposito
+
+Practica progresiva de HTML semantico y estructura de documentos web,
+enfocada en claridad, accesibilidad base y buenas practicas.
 
 ## Alcance
+
 Incluye:
-- HTML5 semántico
+
+- HTML5 semantico
 - estructura de documentos
 - formularios accesibles
 - uso correcto de etiquetas
 
 No incluye:
+
 - CSS
 - JavaScript
 - frameworks
 
+## Estructura real
+
+- `00-overview/`: descripcion general del modulo.
+- `01-intro/`: introduccion y fundamentos iniciales.
+- `02-projects/`: 25 proyectos progresivos.
+
 ## Criterios de dominio
-Considero esta etapa dominada cuando puedo:
-- estructurar un documento usando semántica correcta sin apoyo visual
+
+Se considera dominado cuando puedo:
+
+- estructurar un documento con semantica correcta sin apoyo visual
 - justificar cada etiqueta usada
 - construir formularios accesibles
-- leer HTML ajeno y detectar errores semánticos
-
-## Estructura
-- `00-intro/`: contexto y fundamentos
-- `01-projects/`: mini proyectos progresivos
-- `resources/`: assets reutilizables (si aplica)
+- detectar errores semanticos en HTML de terceros
 
 ## Principios
-- semántica primero
+
+- semantica primero
 - accesibilidad por defecto
-- claridad sobre optimización prematura
+- claridad sobre optimizacion prematura

@@ -117,7 +117,10 @@ export function useRadioPlayer() {
         };
 
         const handleLoading = () => {
-            if (shouldPlayRef.current) setStatus("loading");
+            if (shouldPlayRef.current) {
+                setStatus("loading");
+                setError("");
+            }
         };
 
         const handleError = () => {
@@ -179,17 +182,13 @@ export function useRadioPlayer() {
 
         audio.src = activeStream;
         audio.load();
-        setError("");
 
         if (shouldPlayRef.current) {
-            setStatus("loading");
             audio.play().catch(() => {
                 setShouldPlay(false);
                 setStatus("paused");
                 setError("Playback blocked. Press play again.");
             });
-        } else {
-            setStatus("idle");
         }
     }, [activeStream, reloadToken]);
 
