@@ -16,6 +16,13 @@ Este modulo documenta la evolucion en React desde fundamentos hasta proyectos ap
 - `05-projects/` contiene `proyecto-1` y `proyecto-1-mairala-agency`.
 - Parte de los proyectos esta en refactor y normalizacion de estructura.
 
+## Evidencia aplicada
+
+- Smart Cooler (`03-css/03-frameworks/tailwind/proyecto-2`) se usa como caso real para:
+  - composicion de componentes
+  - custom hooks por feature
+  - integracion de APIs y persistencia local
+
 ## Stack de practica
 
 - React
