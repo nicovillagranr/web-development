@@ -26,13 +26,6 @@ function ScreenRight() {
     // Render/retorno del bloque actual
     return (
         <div className="h-full px-4 py-3 text-white flex flex-col gap-3 overflow-y-auto no-scrollbar">
-            <article className="rounded-2xl bg-black/20 backdrop-blur-md p-4">
-                <p className="text-xs uppercase tracking-wide text-white/70">Screen 2</p>
-                <h3 className="text-lg font-medium mt-1">Ahorro energetico</h3>
-                <p className="text-sm text-white/75 mt-2">
-                    Esta vista concentra metricas y acciones para bajar consumo sin perder rendimiento.
-                </p>
-            </article>
 
             <article className="rounded-2xl bg-black/20 backdrop-blur-md p-4 space-y-3">
                 <div className="flex items-center justify-between">

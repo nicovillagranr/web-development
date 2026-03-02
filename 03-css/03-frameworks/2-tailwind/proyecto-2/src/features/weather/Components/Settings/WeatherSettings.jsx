@@ -107,6 +107,7 @@ export default function WeatherSettings({
 
                         <ForecastPreviewCard
                             forecast={weather.forecast}
+                            currentTemperature={weather.temperature}
                             onOpenFull={() => setIsFullOpen(true)}
                         />
 

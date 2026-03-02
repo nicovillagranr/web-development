@@ -1,64 +1,69 @@
-// Gradientes por tipo de clima y momento del dia.
-// Cada categoria puede tener una variante de "day" y "night",
-// y en categorias con intensidad se resuelve por nivel + dia/noche.
+﻿// Paleta de gradientes para clima.
+// Objetivo visual:
+// - Dia: tonos mas puros, con menos brillo para no fatigar la vista.
+// - Noche: tonos frios/profundos para uso en baja luz.
+// - Todas las variantes mantienen paradas 0/10/40/100 para consistencia.
+export const DEFAULT_WEATHER_GRADIENT =
+    "bg-[linear-gradient(135deg,_#3F546D_0%,_#2D425A_10%,_#21364C_40%,_#15283C_100%)]";
+
 export const weatherGradients = {
     clear: {
-        day: "bg-gradient-to-br from-[#6FA8FF] via-[#4C8DFF] to-[#2F6BFF]",
-        night: "bg-gradient-to-br from-[#1A2952] via-[#121D3D] to-[#0A1129]",
+        day: "bg-[linear-gradient(135deg,_#D4A61E_0%,_#CBB33E_10%,_#4A97D9_40%,_#226CB3_100%)]",
+        night: "bg-[linear-gradient(135deg,_#0A1632_0%,_#102449_10%,_#173760_40%,_#1D4A74_100%)]",
     },
 
     cloudy: {
         light: {
-            day: "bg-gradient-to-br from-[#8FA3B8] via-[#6F859E] to-[#4E647D]",
-            night: "bg-gradient-to-br from-[#4B5E78] via-[#34465F] to-[#22334A]",
+            day: "bg-[linear-gradient(135deg,_#6F8195_0%,_#607488_10%,_#53677B_40%,_#45596D_100%)]",
+            night: "bg-[linear-gradient(135deg,_#253447_0%,_#1F2D3F_10%,_#1A2635_40%,_#141E2B_100%)]",
         },
         medium: {
-            day: "bg-gradient-to-br from-[#6F859E] via-[#4E647D] to-[#384D63]",
-            night: "bg-gradient-to-br from-[#3A4E68] via-[#2A3C55] to-[#1A2A3F]",
+            day: "bg-[linear-gradient(135deg,_#62778C_0%,_#556A7E_10%,_#4A5F73_40%,_#3F5366_100%)]",
+            night: "bg-[linear-gradient(135deg,_#1F2D3F_0%,_#192638_10%,_#152030_40%,_#101926_100%)]",
         },
         heavy: {
-            day: "bg-gradient-to-br from-[#4E647D] via-[#384D63] to-[#243748]",
-            night: "bg-gradient-to-br from-[#2B3E57] via-[#1F2F46] to-[#121F34]",
+            day: "bg-[linear-gradient(135deg,_#566B7F_0%,_#4A5E72_10%,_#3F5366_40%,_#344758_100%)]",
+            night: "bg-[linear-gradient(135deg,_#182536_0%,_#142030_10%,_#101929_40%,_#0C131F_100%)]",
         },
     },
 
     rain: {
         light: {
-            day: "bg-gradient-to-br from-[#3E5C7A] via-[#2E4A66] to-[#1E344D]",
-            night: "bg-gradient-to-br from-[#1D3552] via-[#162A42] to-[#101F34]",
+            day: "bg-[linear-gradient(135deg,_#3F6D94_0%,_#345E84_10%,_#2A4E73_40%,_#213F61_100%)]",
+            night: "bg-[linear-gradient(135deg,_#112A46_0%,_#0E233C_10%,_#0A1C31_40%,_#071526_100%)]",
         },
         medium: {
-            day: "bg-gradient-to-br from-[#2E4A66] via-[#1E344D] to-[#142635]",
-            night: "bg-gradient-to-br from-[#172E4A] via-[#12253C] to-[#0D1B2F]",
+            day: "bg-[linear-gradient(135deg,_#355E84_0%,_#2B5173_10%,_#23455F_40%,_#1B384D_100%)]",
+            night: "bg-[linear-gradient(135deg,_#0D233B_0%,_#0A1D31_10%,_#081727_40%,_#06111D_100%)]",
         },
         heavy: {
-            day: "bg-gradient-to-br from-[#1E344D] via-[#142635] to-[#0B1723]",
-            night: "bg-gradient-to-br from-[#122740] via-[#0D1D33] to-[#081426]",
+            day: "bg-[linear-gradient(135deg,_#2C4F73_0%,_#244464_10%,_#1D3A56_40%,_#162D45_100%)]",
+            night: "bg-[linear-gradient(135deg,_#091A2D_0%,_#071525_10%,_#05101D_40%,_#030B15_100%)]",
         },
     },
 
     snow: {
         light: {
-            day: "bg-gradient-to-br from-[#BFD6F6] via-[#9EBFEA] to-[#7FA7DB]",
-            night: "bg-gradient-to-br from-[#6D89B5] via-[#4D6E99] to-[#324E78]",
+            day: "bg-[linear-gradient(135deg,_#6D8FB3_0%,_#5E82A7_10%,_#4F7498_40%,_#416789_100%)]",
+            night: "bg-[linear-gradient(135deg,_#2C4563_0%,_#243A54_10%,_#1D3045_40%,_#162638_100%)]",
         },
         medium: {
-            day: "bg-gradient-to-br from-[#9EBFEA] via-[#7FA7DB] to-[#5E8CCB]",
-            night: "bg-gradient-to-br from-[#597AA7] via-[#3D5E8A] to-[#28446E]",
+            day: "bg-[linear-gradient(135deg,_#5F84A9_0%,_#51779B_10%,_#456A8C_40%,_#395D7E_100%)]",
+            night: "bg-[linear-gradient(135deg,_#253C57_0%,_#1F334B_10%,_#192A3F_40%,_#132134_100%)]",
         },
         heavy: {
-            day: "bg-gradient-to-br from-[#7FA7DB] via-[#5E8CCB] to-[#3D6FB7]",
-            night: "bg-gradient-to-br from-[#486B99] via-[#31517D] to-[#1E3860]",
+            day: "bg-[linear-gradient(135deg,_#53789E_0%,_#476D90_10%,_#3B6182_40%,_#315574_100%)]",
+            night: "bg-[linear-gradient(135deg,_#1F344C_0%,_#1A2C40_10%,_#152436_40%,_#101C2B_100%)]",
         },
     },
 
     storm: {
-        day: "bg-gradient-to-br from-[#4B3F72] via-[#362A5C] to-[#1F183D]",
-        night: "bg-gradient-to-br from-[#231A43] via-[#181231] to-[#0E0A20]",
+        day: "bg-[linear-gradient(135deg,_#445E80_0%,_#395171_10%,_#2F455F_40%,_#25374C_100%)]",
+        night: "bg-[linear-gradient(135deg,_#142339_0%,_#101C2D_10%,_#0C1623_40%,_#080F18_100%)]",
     },
 
     mist: {
-        day: "bg-gradient-to-br from-[#A8B4C3] via-[#8D9AA8] to-[#6F7C8A]",
-        night: "bg-gradient-to-br from-[#5D6B82] via-[#445269] to-[#2D3A50]",
+        day: "bg-[linear-gradient(135deg,_#75899D_0%,_#687D90_10%,_#5B7082_40%,_#4E6374_100%)]",
+        night: "bg-[linear-gradient(135deg,_#253446_0%,_#1F2C3B_10%,_#192532_40%,_#131D27_100%)]",
     },
 };

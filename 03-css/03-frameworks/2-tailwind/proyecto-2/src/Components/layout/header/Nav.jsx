@@ -10,7 +10,7 @@ import CardWeather from "../../ui/cards/CardWeather.jsx";
 // Constantes para la gestión del orden de las tarjetas
 const ORDER_STORAGE_KEY = "smart_cooler_nav_order_v2";
 const FIXED_CARD_ID = "inventory";
-const MOVABLE_CARD_IDS = ["shopping", "time", "weather"];
+const MOVABLE_CARD_IDS = ["time", "weather", "shopping"];
 
 const DEFAULT_ORDER = ["time", "weather", "shopping"];
 

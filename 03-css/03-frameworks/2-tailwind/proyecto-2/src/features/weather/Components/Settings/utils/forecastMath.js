@@ -24,3 +24,12 @@ export function getRangeBarStyle({ min, max, globalMin, globalMax }) {
         width: `${widthPercent}%`,
     };
 }
+
+// ================= FUNCION EXPORTADA =================
+// getValuePercent: utilidad exportada; parametros: { value, globalMin, globalMax }
+export function getValuePercent({ value, globalMin, globalMax }) {
+    if (value === null || value === undefined) return null;
+    const range = globalMax - globalMin || 1;
+    const rawPercent = ((value - globalMin) / range) * 100;
+    return Math.max(0, Math.min(100, rawPercent));
+}

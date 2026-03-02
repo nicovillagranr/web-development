@@ -1,12 +1,18 @@
 // ================= IMPORTS =================
-import { weatherGradients } from "../constants/weatherGradients";
+import {
+    DEFAULT_WEATHER_GRADIENT,
+    weatherGradients,
+} from "../constants/weatherGradients";
 
 
 // ================= FUNCION EXPORTADA =================
 // getWeatherGradient: utilidad exportada; parametros: category, intensity, isDay
 export function getWeatherGradient(category, intensity, isDay = true) {
-    const categoryGradient = weatherGradients[category];
-    if (!categoryGradient) return "";
+    const normalizedCategory = String(category || "").toLowerCase().trim();
+    const normalizedIntensity = String(intensity || "medium").toLowerCase().trim();
+
+    const categoryGradient = weatherGradients[normalizedCategory];
+    if (!categoryGradient) return DEFAULT_WEATHER_GRADIENT;
 
     const timeKey = isDay ? "day" : "night";
 
@@ -19,13 +25,13 @@ export function getWeatherGradient(category, intensity, isDay = true) {
             categoryGradient[timeKey] ||
             categoryGradient.day ||
             categoryGradient.night ||
-            ""
+            DEFAULT_WEATHER_GRADIENT
         );
     }
 
     const intensityGradient =
-        categoryGradient[intensity || "medium"] || categoryGradient.medium;
-    if (!intensityGradient) return "";
+        categoryGradient[normalizedIntensity] || categoryGradient.medium;
+    if (!intensityGradient) return DEFAULT_WEATHER_GRADIENT;
 
     if (typeof intensityGradient === "string") {
         return intensityGradient;
@@ -35,6 +41,6 @@ export function getWeatherGradient(category, intensity, isDay = true) {
         intensityGradient[timeKey] ||
         intensityGradient.day ||
         intensityGradient.night ||
-        ""
+        DEFAULT_WEATHER_GRADIENT
     );
 }

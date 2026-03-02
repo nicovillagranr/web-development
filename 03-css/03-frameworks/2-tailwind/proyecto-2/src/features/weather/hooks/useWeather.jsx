@@ -1,8 +1,15 @@
-// ================= IMPORTS =================
+﻿// ================= IMPORTS =================
+// useState: guarda estados locales (raw, loading, error, refresh)
+// useEffect: orquesta efectos (reloj interno + fetch/polling)
+// useMemo: transforma respuesta API a modelo listo para UI
+// useCallback: expone refresh estable para evitar renders innecesarios
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-// ================= FUNCION =================
-// resolveIsDayValue: helper interno para normalizar bandera dia/noche
+// ================= HELPERS INTERNOS =================
+
+// resolveIsDayValue: normaliza el dato dia/noche de la API.
+// La API puede traer 1/0, true/false o valor indefinido.
+// Si viene indefinido, inferimos con hora local del timestamp.
 function resolveIsDayValue(rawIsDay, timeValue) {
     if (rawIsDay === 1 || rawIsDay === true) return true;
     if (rawIsDay === 0 || rawIsDay === false) return false;
@@ -11,8 +18,8 @@ function resolveIsDayValue(rawIsDay, timeValue) {
     return hour >= 7 && hour < 20;
 }
 
-// ================= FUNCION =================
-// buildForecast: helper interno para normalizar el pronostico diario
+// buildForecast: toma el bloque "daily" y devuelve un arreglo simple
+// consumible por UI (date, min, max, code), filtrando dias pasados.
 function buildForecast(data) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -34,8 +41,8 @@ function buildForecast(data) {
         .map(({ date, min, max, code }) => ({ date, min, max, code }));
 }
 
-// ================= FUNCION =================
-// buildHourly24: helper interno para normalizar las proximas 24 horas
+// buildHourly24: arma las proximas 24 horas desde "hourly".
+// Incluye temp, codigo, viento e indicador dia/noche para iconos.
 function buildHourly24(data, nowDate = new Date()) {
     const now = new Date(nowDate);
     now.setMinutes(0, 0, 0);
@@ -54,8 +61,8 @@ function buildHourly24(data, nowDate = new Date()) {
         .map(({ time, temp, code, isDay, wind }) => ({ time, temp, code, isDay, wind }));
 }
 
-// ================= FUNCION =================
-// resolveHourlyIndex: obtiene el indice horario mas cercano al "current_weather.time"
+// resolveHourlyIndex: busca el indice horario mas cercano al "current_weather.time".
+// Si no existe match exacto, intenta con la hora actual y como ultimo recurso usa 0.
 function resolveHourlyIndex(times, currentTime) {
     if (!times.length) {
         return -1;
@@ -73,8 +80,8 @@ function resolveHourlyIndex(times, currentTime) {
     return index;
 }
 
-// ================= FUNCION =================
-// buildCurrentMetrics: obtiene metricas actuales y acumuladas desde los datos horarios
+// buildCurrentMetrics: deriva metricas "actuales" desde series horarias.
+// Combina datos meteorologicos + calidad de aire y calcula UV acumulado del dia.
 function buildCurrentMetrics(data, airData) {
     const times = data.hourly?.time || [];
     if (!times.length) {
@@ -128,8 +135,9 @@ function buildCurrentMetrics(data, airData) {
     };
 }
 
-// ================= FUNCION EXPORTADA =================
-// useWeather: entrega clima + estado de carga/error + refresh manual
+// ================= HOOK EXPORTADO =================
+// useWeather: encapsula toda la logica de clima (fetch, polling, parseo y estados).
+// Retorna un modelo de dominio que la UI consume directo.
 export function useWeather({
     lat,
     lon,
@@ -137,24 +145,29 @@ export function useWeather({
     country,
     refreshMinutes = 15,
 }) {
-    // Hook: estado local de la respuesta cruda API
+    // raw: snapshot crudo de la API + metadata de ubicacion + timestamp
     const [raw, setRaw] = useState(null);
-    // Hook: estado local para recalculo de bloques por hora
+    // nowTick: reloj local para refrescar bloques horarios cada minuto sin refetch continuo
     const [nowTick, setNowTick] = useState(Date.now());
-    // Hook: estado local de carga
+    // estado de carga para skeletons/spinners
     const [isLoading, setIsLoading] = useState(false);
-    // Hook: estado local de error
+    // estado de error legible para la UI
     const [error, setError] = useState(null);
-    // Hook: trigger de refresh manual
+    // trigger manual que fuerza nuevo fetch cuando el usuario reintenta
     const [refreshTick, setRefreshTick] = useState(0);
 
-    // Hook: reloj local para refrescar hourly sin pegarle a la API cada minuto
+    // Reloj interno: actualiza nowTick cada 60s para que el bloque "proximas horas"
+    // se recalcule en tiempo real aunque no se vuelva a llamar a la API.
     useEffect(() => {
         const id = setInterval(() => setNowTick(Date.now()), 60_000);
         return () => clearInterval(id);
     }, []);
 
-    // Hook: fetch inicial + polling por minutos + refresh manual
+    // Fetch principal:
+    // - valida coordenadas
+    // - solicita clima (forecast) y calidad de aire (aqi)
+    // - guarda raw unificado
+    // - ejecuta polling por refreshMinutes
     useEffect(() => {
         if (!lat || !lon) {
             setRaw(null);
@@ -180,6 +193,8 @@ export function useWeather({
                 }
 
                 const data = await res.json();
+
+                // La calidad de aire es complementaria: si falla, no bloquea el clima principal.
                 let airData = null;
                 try {
                     const airRes = await fetch(
@@ -193,6 +208,7 @@ export function useWeather({
                     airData = null;
                 }
 
+                // Guard rail: validamos que la respuesta tenga los bloques minimos requeridos.
                 if (!data.current_weather || !data.daily || !data.hourly) {
                     throw new Error("Respuesta meteorologica incompleta");
                 }
@@ -226,7 +242,8 @@ export function useWeather({
         };
     }, [lat, lon, city, country, refreshMinutes, refreshTick]);
 
-    // Hook: memo para derivar modelo de dominio que consume la UI
+    // Mapeo de dominio para UI:
+    // raw API -> weather listo para render, con forecast, hourly y metricas ya normalizadas.
     const weather = useMemo(() => {
         if (!raw) return null;
 
@@ -253,11 +270,12 @@ export function useWeather({
         };
     }, [raw, nowTick]);
 
-    // Hook: callback estable para refresh manual desde la UI
+    // API publica del hook para refresco manual (boton reintentar, pull-to-refresh, etc).
     const refresh = useCallback(() => {
         setRefreshTick((prev) => prev + 1);
     }, []);
 
+    // Contrato final del hook consumido por componentes.
     return {
         weather,
         isLoading,

@@ -69,15 +69,10 @@ function MiniHourlyCard({ hour, isNow }) {
     // Render/retorno del bloque actual
     return (
         <div className=" rounded-2xl px-3 text-center">
-            <p className="text-md opacity-70">{formattedHour}</p>
-            <div className="flex justify-center mb-2">
-                <WeatherIcon code={hour.code} isDay={hour.isDay} size={50} />
-            </div>
+            <p className="text-md">{formattedHour}</p>
+            <div className="flex justify-center mb-2"><WeatherIcon code={hour.code} isDay={hour.isDay} size={50} /></div>
             <p className="text-lg font-light leading-none">{hour.temp}°</p>
         </div>
     );
 }
-
 export default HourlyForecast;
-
-
