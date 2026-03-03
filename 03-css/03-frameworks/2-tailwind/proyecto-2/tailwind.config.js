@@ -1,3 +1,6 @@
+// ================= CONTEXTO MODULO =================
+// Config central de Tailwind.
+// Define fuentes, colores y tokens base reutilizados por la UI.
 // tailwind.config.js
 export default {
     darkMode: "class",

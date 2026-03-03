@@ -1,3 +1,6 @@
+// ================= CONTEXTO MODULO =================
+// Barrel de iconos de clima.
+// Centraliza imports SVG para facilitar consumo desde componentes weather.
 // Clear
 // ================= IMPORTS =================
 import day from "./day.svg";

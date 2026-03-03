@@ -1,9 +1,12 @@
+// ================= CONTEXTO MODULO =================
+// Componente raiz de la aplicacion.
+// Monta DeviceShell dentro del lienzo principal.
 // Importamos los estilos globales de la aplicación
 // ================= IMPORTS =================
 import './assets/styles/App.css'
 
 // Importamos el contenedor principal del dispositivo
-import DeviceShell from "./Components/layout/hardware/DeviceShell.jsx"
+import DeviceShell from "@shared/hardware/DeviceShell.jsx"
 
 /**
  * App es el componente raíz de la UI.

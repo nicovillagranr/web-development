@@ -1,3 +1,6 @@
+// ================= CONTEXTO MODULO =================
+// Punto de entrada de React en el navegador.
+// Monta App dentro de #root y habilita StrictMode en desarrollo.
 // ================= IMPORTS =================
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

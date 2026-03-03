@@ -1,14 +1,17 @@
-﻿// ================= IMPORTS =================
+﻿// ================= CONTEXTO MODULO =================
+// Orquestador principal del dispositivo simulado.
+// Conecta hooks globales y controla apertura de cada pantalla de ajustes.
+// ================= IMPORTS =================
 import { useState } from "react";
-import { useSettings } from "../../../features/time/hooks/useSettings.jsx";
-import { useWeather } from "../../../features/weather/hooks/useWeather.jsx";
+import { useSettings } from "@screen1/features/time/hooks/useSettings.jsx";
+import { useWeather } from "@screen1/features/weather/hooks/useWeather.jsx";
 
 
-import HomeScreens from "../../screens/HomeScreens.jsx";
-import TimeSettings from "../../../features/time/Components/TimeSettings.jsx";
-import WeatherSettings from "../../../features/weather/Components/Settings/WeatherSettings.jsx";
-import InventorySettings from "../main/inventory/Components/InventorySettings.jsx";
-import ShoppingListSettings from "../../../features/shopping/Components/ShoppingListSettings.jsx";
+import HomeScreens from "@shared/screens/HomeScreens.jsx";
+import TimeSettings from "@screen1/features/time/Components/TimeSettings.jsx";
+import WeatherSettings from "@screen1/features/weather/Components/Settings/WeatherSettings.jsx";
+import InventorySettings from "@screen1/main/inventory/Components/InventorySettings.jsx";
+import ShoppingListSettings from "@screen1/features/shopping/Components/ShoppingListSettings.jsx";
 
 
 // DeviceShell tiene como propÃ³sito simular el HardWare del dispositivo de salida, en este caso es un refrigerador inteligente, por lo que se encarga de contener la interfaz y darle un estilo acorde a un dispositivo real, con un fondo, bordes redondeados y una disposiciÃ³n de elementos que simula una pantalla de dispositivo. AdemÃ¡s, maneja la lÃ³gica de navegaciÃ³n entre las diferentes pantallas (ajustes de tiempo y clima) utilizando un estado local para determinar quÃ© pantalla mostrar en cada momento.

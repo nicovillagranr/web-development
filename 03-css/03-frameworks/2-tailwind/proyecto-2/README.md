@@ -1,129 +1,92 @@
-# Smart-cooler
+# Smart Cooler UI
 
-If my lifestyle demands speed, my home ecosystem keeps up.
+Interfaz Front-end para la pantalla de un refrigerador inteligente.
+Disenada como producto independiente y como modulo para un portfolio 3D (Three.js).
 
----
+## Demo en vivo
 
-## ES - Descripcion
+- App web 2D: publicacion pendiente
+- Integracion 3D: en progreso
 
-`Smart-cooler` es una interfaz Front-end para la pantalla de un refrigerador inteligente.
-Permite revisar informacion clave del dia (hora, fecha y clima) con pocos clics, sin depender del smartphone.
+## Problema que resuelve
 
-Este proyecto es parte de mi portfolio 3D (Three.js): un departamento virtual donde cada pantalla del hogar muestra un producto distinto para evaluacion tecnica de reclutadores.
-`Smart-cooler` representa el modulo de cocina/refrigerador.
+Cuando una persona sale con prisa, necesita contexto rapido (hora, clima y estado de compras)
+sin depender de abrir el telefono.
 
-## ES - Problema que resuelve
+## Alcance actual (implementado)
 
-Pensado para personas con ritmo de vida rapido: si sales con prisa y con las manos ocupadas, puedes revisar tu contexto diario en segundos desde el refrigerador.
+- Panel de fecha y hora
+- Modo automatico/manual de tiempo
+- Cambio de formato 12h/24h
+- Clima actual (Open-Meteo)
+- Pronostico diario y por hora
+- Grid de metricas del clima (UV, humedad, sensacion termica, presion, AQI y UV diario)
+- Modulo de inventario de alimentos (crear/eliminar items, seguimiento de vencimiento)
+- Lista inteligente de compras basada en inventario + sugerencias de recetas
+- Reordenamiento de tarjetas del dashboard persistido en localStorage
+- Layout adaptado a mobile (dvh + safe-area)
 
-## ES - Motivacion y enfoque
+## Stack
 
-- Diseno minimalista y bajo ruido visual.
-- Mejoras reales de productividad con interacciones rapidas.
-- Benchmark de UX en refrigeradores inteligentes reales.
-- Referencia visual para clima inspirada en HyperOS de Xiaomi.
-
-## ES - Funcionalidades actuales (v1)
-
-- Panel de fecha y hora.
-- Ajustes de formato horario.
-- Clima actual en tiempo real.
-- Pronostico diario y por hora.
-- Grid de metricas: UV, humedad, sensacion termica, presion, AQI y UV diario.
-- Ajustes mobile (dvh + safe-area).
-
-## ES - Proximas versiones
-
-- Calendario con agendamiento de tareas/eventos.
-- Inventario de alimentos del refrigerador.
-- Integracion completa en el portfolio 3D.
-
-## ES - Stack
-
-- React
-- Vite
-- Tailwind CSS
+- React 19
+- Vite 7
+- Tailwind CSS 4
 - React Icons
-- ESLint
-- Open-Meteo APIs (Weather + Air Quality)
+- ESLint 9
+- APIs de Open-Meteo (clima + calidad del aire)
 
-## ES - Demo
+## Ejecucion local
 
-- Demo dentro del portfolio 3D: Proximamente
-- Demo en portfolio basico (sin 3D): Proximamente
+Requisitos:
 
-## ES - Instalacion y uso local
+- Node.js LTS
 
-Requisito minimo:
-
-- Node.js instalado (LTS recomendado)
-
-Pasos:
+Comandos:
 
 1. `npm install`
 2. `npm run dev`
-3. `npm run build`
-4. `npm run preview`
+3. `npm run lint`
+4. `npm run build`
+5. `npm run preview`
 
-## ES - Arquitectura (resumen)
+## Arquitectura (alto nivel)
 
 ```txt
 src/
-  features/
-    weather/
-    time/
   Components/
     layout/
-    ui/
+      hardware/
+      screens/
+        HomeScreens.jsx
+        screen_1/
+          header/
+          main/
+          ui/
+          features/
+            time/
+            weather/
+            shopping/
+        screen_2/
   assets/
 ```
 
-## EN - Overview
+## Senales tecnicas para portfolio
 
-`Smart-cooler` is a Front-end interface built for a smart refrigerator display.
-It helps users check essential daily info (time, date, weather) with minimal interaction and without relying on a smartphone.
+Este proyecto busca demostrar:
 
-This project is part of my 3D portfolio apartment (Three.js), where each home display hosts a different product for recruiter evaluation.
-`Smart-cooler` is the kitchen/refrigerator module.
+- Arquitectura jerarquica por pantalla (screen-first) con modulos internos por feature
+- Hooks personalizados para orquestacion de estado y datos
+- Integracion real con APIs y normalizacion de respuesta
+- Modelado de estados de UI (loading, empty, error, stale data)
+- Persistencia local aplicada a un caso de uso real
 
-## EN - Current Features (v1)
+## Proximos hitos
 
-- Time and date settings panel.
-- 12/24h format handling.
-- Real-time weather data.
-- Daily and hourly forecast.
-- Metrics grid: UV, humidity, feels-like, pressure, AQI, and daily UV score.
-- Mobile viewport fixes (dvh + safe-area).
+- Publicar URL de demo (Vercel/Netlify)
+- Agregar tests automaticos para hooks criticos
+- Incluir checklist base de accesibilidad (a11y) y navegacion por teclado
+- Integrar el modulo como panel interactivo dentro del departamento 3D
 
-## EN - Roadmap
+## Autor
 
-- Calendar with event/task scheduling.
-- Refrigerator food inventory module.
-- Full integration into the 3D portfolio.
-
-## EN - Local Setup
-
-Minimum requirement:
-
-- Node.js installed (LTS recommended)
-
-Commands:
-
-1. `npm install`
-2. `npm run dev`
-3. `npm run build`
-4. `npm run preview`
-
-## Screenshots
-
-Store capture versions in:
-
-```txt
-capturas/
-  v1/
-  v2/
-```
-
-## Author
-
-- LinkedIn: https://www.linkedin.com/in/nico-villagran/
+- LinkedIn: <https://www.linkedin.com/in/nico-villagran/>
