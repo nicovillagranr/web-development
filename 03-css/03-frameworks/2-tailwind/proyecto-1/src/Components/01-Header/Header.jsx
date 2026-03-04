@@ -1,15 +1,20 @@
+// Import de Hooks y bibliotecas
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
+// Importamos íconos
 import HouseIcon from "../../assets/icons/1-Header/house.svg";
 import MenuIcon from "../../assets/icons/1-Header/bars.svg";
 import CloseIcon from "../../assets/icons/1-Header/x.svg";
 
+// Importamos componentes
 import NavItem from "./NavItem.jsx";
 
+// Definimos el componente MotionMenu para animar el menú móvil
 const MotionMenu = motion.ul;
 
+// Definimos las variantes de animación para el menú móvil | El cómo aparecerá y desaparecerá el menú
 const mobileMenuVariants = {
   hidden: {
     opacity: 0,
@@ -33,6 +38,7 @@ const mobileMenuVariants = {
   },
 };
 
+// Definimos los elementos de navegación para el menú para recorrerlos fácilmente tanto en la versión de escritorio como en la móvil con un .map() y evitar la repetición de código
 const navItems = [
   { to: "/", text: "Home" },
   { to: "/services", text: "Services" },
