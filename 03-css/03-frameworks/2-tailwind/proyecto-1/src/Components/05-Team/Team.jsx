@@ -101,10 +101,10 @@ function Team() {
                         {/* Social Media */}
                         <div className="flex gap-3 mt-auto pt-4">
                             {member.socials.map((social) => (
-                                <a
+                                <button
+                                    // Si fuese un perfil real, aquí abriríamos el enlace a la red social correspondienteCpi
+                                    // onClick={() => window.open(social.link, "_blank")}
                                     key={social.platform}
-                                    href="#"
-                                    onClick={(event) => event.preventDefault()}
                                     aria-label={`${social.platform} demo`}
                                     className="
                                     w-9 h-9 md:w-7 md:h-7
@@ -117,7 +117,7 @@ function Team() {
                                         src={social.icon}
                                         alt={social.platform}
                                         className="w-5 h-5 md:w-4 md:h-4" />
-                                </a>
+                                </button>
                             ))}
                         </div>
 
@@ -132,5 +132,4 @@ function Team() {
         </section>
     )
 }
-
 export default Team

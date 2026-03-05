@@ -5,6 +5,8 @@ import { Link } from "react-router-dom"
 
 // Importamos los assets necesarios
 import HeroVideoWebm from "../../assets/images/1-Hero/bg-video.webm"
+import HeroVideoMp4 from "../../assets/images/1-Hero/bg-video.mp4"
+
 import HeroImg from "../../assets/images/1-Hero/hero.webp"
 import businessImg from "../../assets/images/1-Hero/business.webp"
 
@@ -43,17 +45,6 @@ function Hero() {
         <section
             className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center" aria-label="Hero Section">
 
-            {/* Video background tablet + desktop (version original, conservada como referencia) */}
-            {/* <video
-                aria-hidden="true"
-                poster={HeroImg}
-                className="hidden md:block absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
-                src={HeroVideoWebm}
-                autoPlay
-                loop
-                muted
-                playsInline /> */}
-
             {/* Video optimizado: se desactiva con reduce-motion o save-data */}
             {!shouldUseStaticHero && (
                 <video
@@ -66,8 +57,9 @@ function Hero() {
                     playsInline
                     preload="metadata">
                     <source src={HeroVideoWebm} type="video/webm" />
-                    {/* Fallback opcional para maxima compatibilidad cuando tengas el archivo mp4 */}
-                    {/* <source src={HeroVideoMp4} type="video/mp4" /> */}
+
+                    {/* Fallback opcional para maxima compatibilidad con otros navegadores*/}
+                    <source src={HeroVideoMp4} type="video/mp4" />
                 </video>
             )}
 

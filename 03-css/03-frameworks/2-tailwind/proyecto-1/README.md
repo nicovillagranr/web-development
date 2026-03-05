@@ -1,16 +1,27 @@
-# React + Vite
+﻿# Proyecto 3 | Projex Landing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Landing page construida con React, React Router, Tailwind CSS y Framer Motion.
 
-Currently, two official plugins are available:
+## Contexto Del Repositorio
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este proyecto vive localmente en la carpeta:
 
-## React Compiler
+`03-css/03-frameworks/2-tailwind/proyecto-1`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Pero en hosting se publica como:
 
-## Expanding the ESLint configuration
+`/proyecto-3/`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ese desacople es intencional y responde a la estructura global del repositorio (proyectos 1, 2, 3 y 4 en raiz de hosting).
+
+## Nota De Configuracion
+
+- `vite.config.js` usa `base: "/proyecto-3/"` para que los assets y rutas resuelvan bien en produccion.
+- La app usa `HashRouter` para compatibilidad de navegacion en hosting estatico.
+
+## Scripts
+
+- `npm run dev`: levanta entorno local.
+- `npm run build`: genera build de produccion.
+- `npm run preview`: previsualiza build localmente.
+- `npm run lint`: ejecuta ESLint.
