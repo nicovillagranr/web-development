@@ -1,4 +1,4 @@
-# React Projects
+﻿# React Projects
 
 Resumen de proyectos React aplicados en el repositorio.
 
@@ -9,14 +9,14 @@ Resumen de proyectos React aplicados en el repositorio.
 
 ## Proyecto React destacado fuera de este modulo
 
-Smart Cooler (implementado en `03-css/03-frameworks/tailwind/proyecto-2`) tambien es una app React y se usa como evidencia de:
+Smart Cooler (implementado en `03-css/03-frameworks/2-tailwind/proyecto-2`) tambien es una app React y se usa como evidencia de:
 
 - arquitectura por features
 - custom hooks
 - integracion de APIs
 - persistencia local
 
-## Est�ndar esperado por proyecto
+## Estándar esperado por proyecto
 
 - README de objetivo y alcance
 - stack y scripts de ejecucion

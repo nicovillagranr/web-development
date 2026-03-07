@@ -1,0 +1,44 @@
+.feature__card {
+    height: auto;
+    width: auto;
+    /* border: 1px solid red; */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    gap: 2rem;
+}
+
+.feature__icon {
+    height: 10rem;
+    width: 10rem;
+}
+
+.feature__card-title {
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+.feature__card-text {
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: gray;
+}
+
+@media (width <=770px) {
+    .feature__icon {
+        height: 8rem;
+        width: 8rem;
+    }
+
+    .feature__card-title {
+        font-size: 1.8rem;
+    }
+
+    .feature__card-text {
+        font-size: 1.2rem;
+    }
+}

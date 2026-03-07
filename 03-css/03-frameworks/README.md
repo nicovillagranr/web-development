@@ -8,9 +8,4 @@ Estructura del modulo de frameworks CSS:
 ## Estado actual
 
 - Bootstrap: se agrega evidencia de dominio con ejemplos tecnicos.
-- Tailwind: proyectos aplicados activos en `tailwind/`.
-
-## Nota de compatibilidad
-
-Se conserva la carpeta `tailwind/` porque contiene los proyectos reales actuales.
-La carpeta `2-tailwind/` funciona como documentacion de apoyo y evidencia de criterio.
+- Tailwind: proyectos aplicados y documentacion unificados en `2-tailwind/`.

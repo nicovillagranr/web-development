@@ -10,7 +10,6 @@ Este modulo cubre maquetacion y estilos web desde base hasta proyectos aplicados
 - `03-frameworks/`: practica de frameworks con estructura:
   - `1-bootstrap/`
   - `2-tailwind/`
-  - `tailwind/` (proyectos reales actuales)
 - `04-templates/`: maquetacion basada en referencias visuales.
 
 ## Estado actual

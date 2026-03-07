@@ -5,10 +5,10 @@ Este modulo documenta enrutamiento con React Router a partir de implementacion r
 ## Evidencia real
 
 - Configuracion de rutas:
-  - `03-css/03-frameworks/tailwind/proyecto-1/src/App.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-1/src/App.jsx`
 - Navegacion declarativa:
-  - `03-css/03-frameworks/tailwind/proyecto-1/src/Components/01-Header/Header.jsx`
-  - `03-css/03-frameworks/tailwind/proyecto-1/src/Components/01-Header/NavItem.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-1/src/Components/01-Header/Header.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-1/src/Components/01-Header/NavItem.jsx`
 
 ## Conceptos ya aplicados
 

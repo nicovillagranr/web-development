@@ -18,7 +18,7 @@ Este modulo documenta la evolucion en React desde fundamentos hasta proyectos ap
 
 ## Evidencia aplicada
 
-- Smart Cooler (`03-css/03-frameworks/tailwind/proyecto-2`) se usa como caso real para:
+- Smart Cooler (`03-css/03-frameworks/2-tailwind/proyecto-2`) se usa como caso real para:
   - composicion de componentes
   - custom hooks por feature
   - integracion de APIs y persistencia local

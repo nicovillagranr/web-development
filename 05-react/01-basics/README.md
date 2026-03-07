@@ -9,11 +9,11 @@ Dominar componentes funcionales, props, estado local y composicion.
 ## Evidencia real (Smart Cooler)
 
 - Componente raiz:
-  - `03-css/03-frameworks/tailwind/proyecto-2/src/App.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/App.jsx`
 - Composicion de layout:
-  - `03-css/03-frameworks/tailwind/proyecto-2/src/Components/layout/hardware/DeviceShell.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/Components/layout/hardware/DeviceShell.jsx`
 - Componentes de UI reutilizables:
-  - `03-css/03-frameworks/tailwind/proyecto-2/src/Components/ui/Card.jsx`
+  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/Components/ui/Card.jsx`
   - `CardWeather.jsx`, `CardTime.jsx`, `CardMusic.jsx`, `CardRecipe.jsx`
 
 ## Conceptos aplicados

@@ -4,8 +4,8 @@ Esta seccion resume el uso de Tailwind aplicado en proyectos reales del reposito
 
 ## Proyectos reales
 
-- `../tailwind/proyecto-1`
-- `../tailwind/proyecto-2` (Smart Cooler)
+- `proyecto-1`
+- `proyecto-2` (Smart Cooler)
 
 ## Evidencia tecnica en Smart Cooler
 
@@ -16,7 +16,7 @@ Esta seccion resume el uso de Tailwind aplicado en proyectos reales del reposito
 
 ## Archivos de referencia
 
-- `../tailwind/proyecto-2/src/Components/layout/hardware/DeviceShell.jsx`
-- `../tailwind/proyecto-2/src/features/weather/hooks/useWeather.jsx`
-- `../tailwind/proyecto-2/src/features/music/hooks/useRadioPlayer.jsx`
-- `../tailwind/proyecto-2/src/features/inventory/hooks/useInventory.jsx`
+- `proyecto-2/src/Components/layout/hardware/DeviceShell.jsx`
+- `proyecto-2/src/features/weather/hooks/useWeather.jsx`
+- `proyecto-2/src/features/music/hooks/useRadioPlayer.jsx`
+- `proyecto-2/src/features/inventory/hooks/useInventory.jsx`

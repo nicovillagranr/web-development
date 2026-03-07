@@ -34,11 +34,11 @@ Este bloque conecta teoria de hooks con implementaciones reales del repo.
 
 ## Custom hooks de evidencia
 
-- `03-css/03-frameworks/tailwind/proyecto-2/src/features/time/hooks/useDateTime.jsx`
-- `03-css/03-frameworks/tailwind/proyecto-2/src/features/time/hooks/useSettings.jsx`
-- `03-css/03-frameworks/tailwind/proyecto-2/src/features/weather/hooks/useWeather.jsx`
-- `03-css/03-frameworks/tailwind/proyecto-2/src/features/music/hooks/useRadioPlayer.jsx`
-- `03-css/03-frameworks/tailwind/proyecto-2/src/features/inventory/hooks/useInventory.jsx`
+- `03-css/03-frameworks/2-tailwind/proyecto-2/src/features/time/hooks/useDateTime.jsx`
+- `03-css/03-frameworks/2-tailwind/proyecto-2/src/features/time/hooks/useSettings.jsx`
+- `03-css/03-frameworks/2-tailwind/proyecto-2/src/features/weather/hooks/useWeather.jsx`
+- `03-css/03-frameworks/2-tailwind/proyecto-2/src/features/music/hooks/useRadioPlayer.jsx`
+- `03-css/03-frameworks/2-tailwind/proyecto-2/src/features/inventory/hooks/useInventory.jsx`
 
 ## Nota
 
