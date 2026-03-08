@@ -1,4 +1,4 @@
-# Frontend Learning Repository
+﻿# Frontend Learning Repository
 
 This repository tracks my frontend learning path with a practical and progressive structure.
 The goal is to build strong fundamentals, document technical decisions, and evolve projects
@@ -11,9 +11,11 @@ into portfolio-ready work for a first frontend developer role.
 - `02-html/`: semantic HTML and accessibility-focused practice.
 - `03-css/`: architecture, layouts, frameworks, and template practice.
 - `04-javascript/`: fundamentals, DOM, OOP, async, libraries, and projects.
-- `05-react/`: React learning path and applied projects.
-- `06-projects/`: applied projects area.
-- `07-playground/`: experiments, spikes, and quick tests.
+- `05-typescript/`: TypeScript learning path (module base created).
+- `06-react/`: React learning path and applied projects.
+- `07-projects/`: applied projects area.
+- `08-playground/`: experiments, spikes, and quick tests.
+- `09-docker/`: Docker learning material and operational guides.
 - `config/`: shared config reference files.
 - `root/`: legacy project documentation files.
 
@@ -39,4 +41,3 @@ The current focus is repository hardening:
 - align root documentation and real folder structure
 - enforce root-level git/editor defaults
 - normalize naming conventions with low-risk changes first
-

@@ -1,4 +1,4 @@
-# Naming Conventions
+﻿# Naming Conventions
 
 This file defines directory and file naming rules for the repository.
 
@@ -22,5 +22,6 @@ This file defines directory and file naming rules for the repository.
 - Completed: `01-git/04-cheatsheets` (fixed typo from `04-cheasheets`).
 - Pending review in later phases:
   - legacy path names in Three.js practice folders
-  - duplicated project labels in `05-react/05-projects`
+  - duplicated project labels in `06-react/05-projects`
+
 

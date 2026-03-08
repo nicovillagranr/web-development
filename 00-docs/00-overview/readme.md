@@ -14,9 +14,11 @@ Este repositorio documenta una ruta real de aprendizaje Front-End con foco en:
 - `02-html/`: modulo de HTML con introduccion y 25 proyectos progresivos.
 - `03-css/`: arquitectura CSS, layouts, framework (Tailwind) y templates.
 - `04-javascript/`: fundamentos, DOM, POO, async, librerias y proyectos.
-- `05-react/`: ruta React por etapas mas proyectos aplicados.
-- `06-projects/`: espacio para proyectos integradores (en construccion).
-- `07-playground/`: experimentos, pruebas rapidas e ideas.
+- `05-typescript/`: modulo base para ruta de TypeScript (en construccion).
+- `06-react/`: ruta React por etapas mas proyectos aplicados.
+- `07-projects/`: espacio para proyectos integradores (en construccion).
+- `08-playground/`: experimentos, pruebas rapidas e ideas.
+- `09-docker/`: fundamentos, imagenes, contenedores, compose y cheatsheets.
 - `config/`: archivos de configuracion compartidos.
 - `root/`: documentacion legacy previa a la normalizacion actual.
 
