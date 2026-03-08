@@ -40,3 +40,6 @@ Este repositorio documenta una ruta real de aprendizaje Front-End con foco en:
 
 - `README.md` (raiz): entrada principal del repositorio.
 - `00-docs/00-overview/naming-conventions.md`: reglas de naming.
+- `00-docs/README.md`: indice documental central.
+- `00-docs/00-overview/retoma-rapida.md`: ruta para retomar estudio rapido.
+- `00-docs/00-overview/session-log.md`: bitacora de continuidad.
