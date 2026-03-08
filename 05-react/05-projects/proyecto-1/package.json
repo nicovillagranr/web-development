@@ -1,7 +1,7 @@
 {
-  "name": "proyecto-1-mairala-agency",
+  "name": "proyecto-1-productivity-hub",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

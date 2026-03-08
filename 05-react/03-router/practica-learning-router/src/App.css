@@ -1,0 +1,110 @@
+:root {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #0f172a;
+  background: #eef2ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(170deg, #c7d2fe, #f8fafc 40%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  width: min(1024px, 92%);
+  margin: 2rem auto 3rem;
+}
+
+.header {
+  background: #ffffffd9;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  text-decoration: none;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.4rem 0.7rem;
+}
+
+nav a.active {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
+}
+
+.panel {
+  background: #ffffffd9;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #334155;
+}
+
+.course-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1rem;
+}
+
+.side-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.side-list a {
+  display: block;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  text-decoration: none;
+  color: #0f172a;
+}
+
+.side-list a.active {
+  background: #e0e7ff;
+  border-color: #6366f1;
+}
+
+.card {
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0.9rem;
+  background: #fff;
+}
+
+@media (max-width: 760px) {
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+}

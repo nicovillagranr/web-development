@@ -1,24 +1,22 @@
-﻿# React Projects
+# 05-projects
 
-Resumen de proyectos React aplicados en el repositorio.
+Proyectos React completos para consolidar aprendizaje practico.
 
-## Proyectos en esta carpeta
+## Proyectos activos
 
-- `proyecto-1`
-- `proyecto-1-mairala-agency`
+- `proyecto-1/`: Productivity Hub (tablero de sprint con metricas y persistencia).
+- `proyecto-1-mairala-agency/`: landing comercial modular con interacciones en React.
 
-## Proyecto React destacado fuera de este modulo
+## Como ejecutar
 
-Smart Cooler (implementado en `03-css/03-frameworks/2-tailwind/proyecto-2`) tambien es una app React y se usa como evidencia de:
+```bash
+cd proyecto-1
+npm install
+npm run dev
+```
 
-- arquitectura por features
-- custom hooks
-- integracion de APIs
-- persistencia local
-
-## Estándar esperado por proyecto
-
-- README de objetivo y alcance
-- stack y scripts de ejecucion
-- decisiones tecnicas clave
-- mejoras pendientes
+```bash
+cd proyecto-1-mairala-agency
+npm install
+npm run dev
+```

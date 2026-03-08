@@ -1,16 +1,30 @@
-# React + Vite
+# Proyecto 1: Productivity Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicacion React para gestionar tareas de sprint con metricas y foco.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React + Vite
+- LocalStorage
+- CSS puro
 
-## React Compiler
+## Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Crear tareas con responsable, puntos y estado.
+- Filtrar tareas por columna (todo, doing, done).
+- Cambiar estado de tareas en un click.
+- Persistir datos en localStorage.
+- Ver metricas de avance del sprint.
 
-## Expanding the ESLint configuration
+## Run
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+## Retos sugeridos
+
+1. Agregar drag and drop entre columnas.
+2. Incorporar fecha limite y alertas visuales.
+3. Guardar historial de cambios por tarea.

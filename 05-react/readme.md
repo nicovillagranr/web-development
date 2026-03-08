@@ -1,33 +1,18 @@
-﻿# React Learning Path
+# React Learning Path
 
-Este modulo documenta la evolucion en React desde fundamentos hasta proyectos aplicados.
+Modulo orientado a practica progresiva de React.
 
-## Estructura real
+## Estructura
 
-- `01-basics/`: componentes, props, estado y eventos.
-- `02-hooks/`: hooks base y hooks personalizados.
-- `03-router/`: navegacion y estructura SPA.
-- `04-context/`: estado global con Context API.
-- `05-projects/`: proyectos completos de practica.
-- `06-threejs/`: integraciones React + Three.js.
+- `01-basics/`: fundamentos por temas numerados (01 a 09) con ejercicios y mini proyectos.
+- `02-hooks/`: app de sesiones de foco con hooks base y custom hooks.
+- `03-router/`: laboratorio de rutas, params y 404 con React Router.
+- `04-context/`: estado global con ThemeContext + CartContext.
+- `05-projects/`: proyectos completos para consolidar arquitectura.
+- `06-threejs/`: reservado para integracion React + Three.js.
 
-## Estado actual
+## Recomendacion de estudio
 
-- `05-projects/` contiene `proyecto-1` y `proyecto-1-mairala-agency`.
-- Parte de los proyectos esta en refactor y normalizacion de estructura.
-
-## Evidencia aplicada
-
-- Smart Cooler (`03-css/03-frameworks/2-tailwind/proyecto-2`) se usa como caso real para:
-  - composicion de componentes
-  - custom hooks por feature
-  - integracion de APIs y persistencia local
-
-## Stack de practica
-
-- React
-- Vite
-- React Router DOM
-- Context API
-- Tailwind CSS
-- Three.js / React Three Fiber
+1. Completa una practica por modulo en orden.
+2. Resuelve al menos un reto extra por practica.
+3. Integra lo aprendido en `05-projects`.

@@ -1,30 +1,28 @@
-# React Basics
+# 01-basics
 
-Este bloque cubre fundamentos de React usando ejemplos reales del repo.
+Este bloque ahora sigue el estilo de `01-fundamentals` de JavaScript: contenido por tema, numerado y 100% practico.
 
-## Objetivo
+## Ruta sugerida
 
-Dominar componentes funcionales, props, estado local y composicion.
+1. `01-jsx-and-components/`
+2. `02-props/`
+3. `03-state/`
+4. `04-events/`
+5. `05-conditional-rendering/`
+6. `06-lists-and-keys/`
+7. `07-controlled-forms/`
+8. `08-lifting-state/`
+9. `09-mini-projects/`
 
-## Evidencia real (Smart Cooler)
+## Como ejecutar cada practica
 
-- Componente raiz:
-  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/App.jsx`
-- Composicion de layout:
-  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/Components/layout/hardware/DeviceShell.jsx`
-- Componentes de UI reutilizables:
-  - `03-css/03-frameworks/2-tailwind/proyecto-2/src/Components/ui/Card.jsx`
-  - `CardWeather.jsx`, `CardTime.jsx`, `CardMusic.jsx`, `CardRecipe.jsx`
+Abre el `index.html` del tema en tu navegador (o Live Server). Cada carpeta trae su propio `index.jsx`.
 
-## Conceptos aplicados
+## Mini proyectos
 
-- Composition over inheritance
-- Props como contrato entre capas
-- Estado local para control de pantalla (`activeScreen`)
-- Separacion de layout vs logica de negocio
+- `09-mini-projects/proyecto-1-habit-tracker/`
+- `09-mini-projects/proyecto-2-product-catalog/`
 
-## Check de dominio
+## Practica extendida
 
-- Puedes dividir una pantalla grande en componentes pequenos
-- Puedes mover logica repetida a hooks custom
-- Puedes explicar por que un estado vive en un componente y no en otro
+- `practica-task-board/` (Vite + React) para llevar los fundamentos a una app mas completa.
