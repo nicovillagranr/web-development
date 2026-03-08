@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stopwatch practica JavaScript">
+  <title>Stopwatch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Stopwatch</h1>
+      <p>Cronometro con start, stop, reset y listado de laps.</p>
+    </header>
+    <section class="panel grid">
+      <strong id="time" style="font-size:1.5rem;">00:00.0</strong>
+      <div class="row">
+        <button id="start">Start</button>
+        <button id="stop" class="secondary">Stop</button>
+        <button id="lap">Lap</button>
+        <button id="reset" class="danger">Reset</button>
+      </div>
+      <ul id="laps" class="list"></ul>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

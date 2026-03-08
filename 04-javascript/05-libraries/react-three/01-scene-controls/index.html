@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Scene Controls demo 3d practica">
+  <title>Scene Controls</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <p class="kicker">3D Practice</p>
+      <h1>Scene Controls</h1>
+      <p>Controla color y velocidad de rotacion de un cubo 3D.</p>
+    </header>
+    <section class="panel row">
+      <label>
+        Color del cubo
+        <input id="colorPicker" type="color" value="#22c55e">
+      </label>
+      <label>
+        Velocidad
+        <input id="speed" type="range" min="0" max="0.08" step="0.005" value="0.02">
+      </label>
+    </section>
+    <section id="canvasMount" class="canvas-mount"></section>
+  </main>
+  <script type="module" src="index.js"></script>
+</body>
+</html>

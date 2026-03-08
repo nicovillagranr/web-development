@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Counter Pro practica JavaScript">
+  <title>Counter Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Counter Pro</h1>
+      <p>Contador con incremento/decremento, reset y paso configurable.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <button id="dec" class="secondary">-</button>
+        <strong id="value" style="font-size:1.4rem;">0</strong>
+        <button id="inc">+</button>
+      </div>
+      <div class="row">
+        <label>Paso <input id="step" type="number" value="1" min="1"></label>
+        <button id="reset" class="danger">Reset</button>
+      </div>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>
