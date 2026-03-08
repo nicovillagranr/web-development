@@ -1,16 +1,43 @@
-# React + Vite
+﻿# Proyecto 2 | Landing Layout System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto orientado a practicar un layout mas amplio con secciones reutilizables y arquitectura CSS mantenible.
 
-Currently, two official plugins are available:
+## Objetivo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Consolidar flex, grid y responsive en una pagina completa con multiples bloques UI.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- CSS por secciones y componentes
 
-## Expanding the ESLint configuration
+## Enfoque tecnico
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- layout base desacoplado de componentes internos
+- secciones independientes (`Hero`, `Features`, `Portfolio`, `Team`, `CTA`, `Testimonial`)
+- assets centralizados para iconos e imagenes
+
+## Checklist de validacion
+
+- [ ] jerarquia visual clara por seccion
+- [ ] uso correcto de flex y grid segun contexto
+- [ ] responsive funcional sin saltos bruscos
+- [ ] clases y archivos con responsabilidad unica
+
+## Ejercicio propuesto
+
+Agregar una nueva seccion de FAQ con 3 preguntas y respuestas, respetando escala tipografica, espaciado y comportamiento responsive existente.
+
+## Solucion esperada
+
+- la seccion nueva se integra sin romper el layout global
+- se reutilizan utilidades o patrones ya presentes
+- la lectura en mobile se mantiene clara
+
+## Scripts
+
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`

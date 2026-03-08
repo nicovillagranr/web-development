@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Template semántico y visual base para practicar maquetación CSS en Template 19.">
+    <title>Template 19 | CSS Templates Lab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="#inicio">Template 19</a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a href="#servicios">Servicios</a>
+            <a href="#portfolio">Portafolio</a>
+            <a href="#proceso">Proceso</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <main class="page" id="inicio">
+        <section class="hero">
+            <div class="hero__content">
+                <p class="eyebrow">CSS Templates Lab</p>
+                <h1>Template 19 con estructura semántica real y base visual clara</h1>
+                <p>
+                    Este template ya no es un bloque genérico: incluye secciones concretas para practicar layout,
+                    jerarquía tipográfica y componentes reutilizables desde una base coherente.
+                </p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#servicios">Ver secciones</a>
+                    <a class="btn btn--ghost" href="#contacto">Revisar brief</a>
+                </div>
+            </div>
+            <figure class="hero__media" aria-label="Referencia visual del template">
+                <img src="Corporate-Agency-Mairala.jpg" alt="Referencia visual para Template 19">
+            </figure>
+        </section>
+
+        <section class="section" id="servicios">
+            <div class="section__header">
+                <p class="eyebrow">Bloques funcionales</p>
+                <h2>Servicios y propuesta de valor</h2>
+                <p>Usa esta sección para practicar tarjetas consistentes, spacing y composición responsive.</p>
+            </div>
+            <div class="card-grid card-grid--3">
+                <article class="info-card">
+                    <h3>Dirección visual</h3>
+                    <p>Define paleta, contraste y ritmo para que el layout comunique intención desde el primer scroll.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Sistema de componentes</h3>
+                    <p>Construye bloques reutilizables para evitar estilos aislados y ganar escalabilidad.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Responsive sólido</h3>
+                    <p>Adapta la estructura sin hacks ni quiebres abruptos entre mobile, tablet y desktop.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section section--alt" id="portfolio">
+            <div class="section__header">
+                <p class="eyebrow">Muestras</p>
+                <h2>Portafolio de referencia</h2>
+                <p>Sección pensada para entrenar grillas, media cards y equilibrio visual entre texto e imagen.</p>
+            </div>
+            <div class="work-grid">
+                <article class="work-card">
+                    <img src="Corporate-Agency-Mairala.jpg" alt="Preview visual de Template 19">
+                    <div class="work-card__meta">
+                        <h3>Preview principal</h3>
+                        <p>Base visual para definir ritmo, contraste y densidad de contenido.</p>
+                    </div>
+                </article>
+                <article class="work-card">
+                    <div class="work-card__meta">
+                        <h3>Caso de estudio A</h3>
+                        <p>Landing enfocada en conversión con CTA principal y soporte visual secundario.</p>
+                    </div>
+                </article>
+                <article class="work-card">
+                    <div class="work-card__meta">
+                        <h3>Caso de estudio B</h3>
+                        <p>Layout editorial con jerarquía tipográfica y énfasis en lectura prolongada.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="proceso">
+            <div class="section__header">
+                <p class="eyebrow">Método</p>
+                <h2>Proceso de trabajo</h2>
+                <p>Estructura ideal para practicar listas de pasos, badges y composición secuencial.</p>
+            </div>
+            <ol class="process-list">
+                <li><span>01</span> Analizar la referencia y definir bloques semánticos.</li>
+                <li><span>02</span> Maquetar estructura HTML antes de detallar estilos.</li>
+                <li><span>03</span> Aplicar tokens de color, tipografía y espaciado.</li>
+                <li><span>04</span> Refinar responsive y estados interactivos.</li>
+            </ol>
+        </section>
+
+        <section class="section section--contact" id="contacto">
+            <div class="section__header">
+                <p class="eyebrow">Siguiente paso</p>
+                <h2>Contacto y cierre</h2>
+                <p>Bloque final para practicar formularios básicos y distribución de campos en grid.</p>
+            </div>
+            <form class="contact-form">
+                <label>
+                    Nombre
+                    <input type="text" placeholder="Tu nombre" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" placeholder="tu@email.com" required>
+                </label>
+                <label class="contact-form__full">
+                    Mensaje
+                    <textarea rows="4" placeholder="Cuéntame qué quieres mejorar en este template"></textarea>
+                </label>
+                <button class="btn btn--primary contact-form__full" type="submit">Enviar consulta</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Template 19 · CSS Templates Lab · Base MVP lista para iterar</p>
+    </footer>
+</body>
+
+</html>

@@ -1,16 +1,43 @@
-# React + Vite
+﻿# Proyecto 1 | Layout Practice
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto de practica para consolidar layout CSS aplicado con componentes React.
 
-Currently, two official plugins are available:
+## Objetivo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Entrenar estructura de layout, componentes visuales y consistencia de estilos en una landing modular.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- CSS modular por componentes
 
-## Expanding the ESLint configuration
+## Enfoque tecnico
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- separacion por bloques (`Header`, `Main`, `Card`, `Footer`)
+- hojas de estilo por componente
+- assets locales para tipografia e imagenes
+
+## Checklist de validacion
+
+- [ ] layout legible en mobile y desktop
+- [ ] estilos desacoplados por componente
+- [ ] uso consistente de espaciado, color y tipografia
+- [ ] sin reglas duplicadas innecesarias
+
+## Ejercicio propuesto
+
+Crear una segunda variante de la seccion principal con una distribucion alternativa de cards y mantener la coherencia visual del sistema.
+
+## Solucion esperada
+
+- se agrega variante de layout sin romper la estructura existente
+- se reutilizan estilos base en lugar de duplicarlos
+- la variante mantiene consistencia de tipografia y espaciado
+
+## Scripts
+
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`
