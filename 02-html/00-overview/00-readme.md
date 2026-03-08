@@ -25,6 +25,7 @@ No incluye:
 - `00-overview/`: descripcion general del modulo.
 - `01-intro/`: introduccion y fundamentos iniciales.
 - `02-projects/`: 25 proyectos progresivos.
+- `03-guides/`: guias por bloque (fundamentos, semantica, formularios y accesibilidad).
 
 ## Criterios de dominio
 
@@ -40,3 +41,12 @@ Se considera dominado cuando puedo:
 - semantica primero
 - accesibilidad por defecto
 - claridad sobre optimizacion prematura
+
+## Estandar minimo de proyecto
+
+Cada `index.html` del modulo mantiene una base comun:
+
+- `meta name="description"` descriptivo
+- un `main` para contenido principal
+- un `h1` unico y claro
+- rutas locales sin referencias rotas

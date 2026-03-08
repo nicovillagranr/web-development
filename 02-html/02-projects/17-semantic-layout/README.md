@@ -1,11 +1,26 @@
-# Semantic Layout
+﻿# HTML Semantic Layout
 
 ## Objetivo
-Construir un layout usando etiquetas semánticas.
+Construir layouts semanticos y navegacion clara en escenarios de interfaz real.
 
-## Etiquetas
-- header
-- nav
-- main
+## Conceptos trabajados
 - footer
-- aside
+- h1
+- header
+- main
+- nav
+
+## Checklist de validacion
+- [ ] Documento HTML5 valido (doctype, lang, charset, viewport).
+- [ ] Existe un h1 unico y descriptivo.
+- [ ] El contenido principal esta dentro de main.
+- [ ] Las etiquetas usadas coinciden con el objetivo del proyecto.
+- [ ] No hay rutas rotas en href o src.
+
+## Ejercicio propuesto
+Reestructura el layout agregando una seccion complementaria y revisa landmarks semanticos.
+
+## Solucion esperada
+- El layout conserva header/nav/main/footer segun necesidad.
+- Existe un h1 unico y descriptivo.
+- La navegacion tiene texto claro y comprensible.

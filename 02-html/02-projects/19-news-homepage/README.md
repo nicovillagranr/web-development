@@ -1,7 +1,25 @@
-# News Homepage
+﻿# HTML News Homepage
 
 ## Objetivo
-Página principal con múltiples artículos.
+Construir layouts semanticos y navegacion clara en escenarios de interfaz real.
 
-## Enfoque
-Repetición estructural y jerarquía.
+## Conceptos trabajados
+- article
+- h1
+- h2
+- main
+
+## Checklist de validacion
+- [ ] Documento HTML5 valido (doctype, lang, charset, viewport).
+- [ ] Existe un h1 unico y descriptivo.
+- [ ] El contenido principal esta dentro de main.
+- [ ] Las etiquetas usadas coinciden con el objetivo del proyecto.
+- [ ] No hay rutas rotas en href o src.
+
+## Ejercicio propuesto
+Reestructura el layout agregando una seccion complementaria y revisa landmarks semanticos.
+
+## Solucion esperada
+- El layout conserva header/nav/main/footer segun necesidad.
+- Existe un h1 unico y descriptivo.
+- La navegacion tiene texto claro y comprensible.

@@ -19,6 +19,17 @@ Cada proyecto deberia validar:
 - etiquetas adecuadas para el tipo de informacion
 - accesibilidad base (labels, alt, estructura)
 
-## Nota
+## Material de apoyo agregado
 
-Las subcarpetas `assets/` vacias se mantienen como placeholders para recursos cuando un proyecto los necesita.
+- Cada proyecto incluye checklist tecnico en su `README.md`.
+- Cada proyecto incluye ejercicio propuesto y solucion esperada.
+- Cada carpeta `assets/` contiene `README.md` con recursos esperados.
+
+## Plantilla minima aplicada
+
+Todos los `index.html` usan un baseline comun:
+
+- documento HTML5 valido
+- `meta description`
+- `main`
+- `h1`

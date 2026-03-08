@@ -1,10 +1,24 @@
-# Links and Routes
+﻿# HTML Links and Routes
 
 ## Objetivo
-Comprender enlaces y rutas en HTML.
+Entrenar uso de enlaces, rutas y multimedia manteniendo estructura semantica limpia.
 
-## Etiquetas
+## Conceptos trabajados
 - a
+- h1
+- main
 
-## Enfoque
-Rutas relativas vs absolutas y buenas prácticas.
+## Checklist de validacion
+- [ ] Documento HTML5 valido (doctype, lang, charset, viewport).
+- [ ] Existe un h1 unico y descriptivo.
+- [ ] El contenido principal esta dentro de main.
+- [ ] Las etiquetas usadas coinciden con el objetivo del proyecto.
+- [ ] No hay rutas rotas en href o src.
+
+## Ejercicio propuesto
+Agrega una segunda ruta o recurso multimedia y valida que los enlaces y rutas funcionen sin errores.
+
+## Solucion esperada
+- No hay rutas rotas en href o src.
+- El contenido principal esta agrupado dentro de main.
+- La pagina ofrece fallback textual minimo para multimedia.

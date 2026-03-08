@@ -1,19 +1,24 @@
-# HTML Document Head
+﻿# HTML Document Head
 
 ## Objetivo
-Comprender la estructura correcta del documento HTML y el uso del `<head>`.
+Reforzar estructura base del documento y semantica textual en ejemplos simples.
 
 ## Conceptos trabajados
-- DOCTYPE
-- html lang
-- meta charset
-- meta viewport
-- meta description
-- title
-- favicon
+- h1
+- main
+- p
 
-## Enfoque
-Documento mínimo, válido y orientado a producción.
+## Checklist de validacion
+- [ ] Documento HTML5 valido (doctype, lang, charset, viewport).
+- [ ] Existe un h1 unico y descriptivo.
+- [ ] El contenido principal esta dentro de main.
+- [ ] Las etiquetas usadas coinciden con el objetivo del proyecto.
+- [ ] No hay rutas rotas en href o src.
 
-## Notas
-El `<body>` se mantiene simple para no distraer del objetivo.
+## Ejercicio propuesto
+Extiende el documento con una segunda seccion textual y ajusta la jerarquia de titulos sin romper semantica.
+
+## Solucion esperada
+- Se agrega una nueva seccion con encabezado claro.
+- La jerarquia de titulos se mantiene coherente.
+- La pagina sigue validando como HTML5.
