@@ -13,7 +13,8 @@ import "./PortfolioSection.css"
 
 function PortfolioSection() {
     return (
-        <section className="portfolio__section" id="portfolio">
+        <section className="portfolio__section" id="portfolio" aria-labelledby="portfolio-title">
+            <h2 className="sr-only" id="portfolio-title">Portfolio</h2>
             <PortfolioItem img={PorfolioItem1} name="Portfolio Item 1" text="Lorem ipsum dolor sit amet ." />
             <PortfolioItem img={PorfolioItem2} name="Portfolio Item 2" text="Lorem ipsum dolor sit amet ." />
             <PortfolioItem img={PorfolioItem3} name="Portfolio Item 3" text="Lorem ipsum dolor sit amet ." />

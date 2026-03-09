@@ -19,7 +19,7 @@ import {
 } from "../../../../../../../assets/icons/weather/export.js";
 
 // Parser que traduce codigo numerico API a categoria/intensidad.
-import { parseWeather } from "../utils/weatherParser";
+import { parseWeather } from "../utils/weatherParser.js";
 
 // ================= MAPA DE ICONOS =================
 // Estructura central para resolver icono por:

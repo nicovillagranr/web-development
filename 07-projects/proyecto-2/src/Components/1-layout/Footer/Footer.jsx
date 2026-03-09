@@ -1,8 +1,8 @@
 import "./Footer.css"
 
 import facebookIcon from "../../../assets/icons/facebook.svg"
-import twitterIcon from "../../../Assets/Icons/twitter.svg"
-import linkedinIcon from "../../../Assets/Icons/linkedin.svg"
+import twitterIcon from "../../../assets/icons/twitter.svg"
+import linkedinIcon from "../../../assets/icons/linkedin.svg"
 
 function Footer() {
     return (
@@ -18,13 +18,19 @@ function Footer() {
                     <h3 className="footer__rrss-title">Share with love</h3>
                     <ul className="footer__rrss-list">
                         <li className="footer__social-item">
-                            <a href="#"><img src={facebookIcon} alt="Facebook" className="memberCard__social-icon" /></a>
+                            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit Facebook">
+                                <img src={facebookIcon} alt="" className="memberCard__social-icon" />
+                            </a>
                         </li>
                         <li className="footer__social-item">
-                            <a href="#"><img src={twitterIcon} alt="Twitter" className="memberCard__social-icon" /></a>
+                            <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit X">
+                                <img src={twitterIcon} alt="" className="memberCard__social-icon" />
+                            </a>
                         </li>
                         <li className="footer__social-item">
-                            <a href="#"><img src={linkedinIcon} alt="Linkedin" className="memberCard__social-icon" /></a>
+                            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn">
+                                <img src={linkedinIcon} alt="" className="memberCard__social-icon" />
+                            </a>
                         </li>
                     </ul>
                 </div>

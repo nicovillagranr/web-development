@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 function TitleWatcher() {
     useEffect(() => {
-        const defaultTitle = "Proyecto 1";
+        const defaultTitle = "Glossy Touch";
         const hiddenTitle = "Te fuiste?";
         let timeoutId = null;
 
@@ -21,6 +21,7 @@ function TitleWatcher() {
             document.title = defaultTitle;
         };
 
+        document.title = defaultTitle;
         document.addEventListener("visibilitychange", handler);
 
         return () => {

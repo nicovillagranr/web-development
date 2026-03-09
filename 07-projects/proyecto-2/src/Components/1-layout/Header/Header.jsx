@@ -2,9 +2,11 @@ import "./Header.css"
 
 function Header() {
     return (
-        <header className="header">
+        <header className="header" id="top">
             <nav className="header__nav">
-                <a href="#home" className="header__logo"><span className="header__logo-highlight">Active</span>Box</a>
+                <a href="#top" className="header__logo" aria-label="Go to the top of the page">
+                    <span className="header__logo-highlight">Active</span>Box
+                </a>
                 <ul className="header__list">
                     <li className="header__item"><a href="#feature" className="header__link">Features</a></li>
                     <li className="header__item"><a href="#portfolio" className="header__link">Works</a></li>

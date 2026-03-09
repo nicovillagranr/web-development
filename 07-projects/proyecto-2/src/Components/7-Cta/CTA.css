@@ -39,6 +39,16 @@
     cursor: pointer;
 }
 
+.cta__notice {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.8rem;
+    background: #f7f7f7;
+    font-size: 1.5rem;
+    line-height: 1.6;
+}
+
 @media(width <=770px) {
     .cta__container {
         width: 80%;
@@ -54,6 +64,10 @@
 
     .cta__button {
         width: 30rem;
+        font-size: 1rem;
+    }
+
+    .cta__notice {
         font-size: 1rem;
     }
 }

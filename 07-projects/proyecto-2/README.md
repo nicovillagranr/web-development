@@ -1,103 +1,43 @@
-# Smart Cooler UI
+﻿# Proyecto 2 | Landing Layout System
 
-Interfaz Front-end para la pantalla de un refrigerador inteligente.
-Disenada como producto independiente y como modulo para un portfolio 3D (Three.js).
+Proyecto orientado a practicar un layout mas amplio con secciones reutilizables y arquitectura CSS mantenible.
 
-## Demo en vivo
+## Objetivo
 
-- App web 2D: publicacion pendiente
-- Integracion 3D: en progreso
-
-## Problema que resuelve
-
-Cuando una persona sale con prisa, necesita contexto rapido (hora, clima y estado de compras)
-sin depender de abrir el telefono.
-
-## Alcance actual (implementado)
-
-- Panel de fecha y hora
-- Modo automatico/manual de tiempo
-- Cambio de formato 12h/24h
-- Clima actual (Open-Meteo)
-- Pronostico diario y por hora
-- Grid de metricas del clima (UV, humedad, sensacion termica, presion, AQI y UV diario)
-- Modulo de inventario de alimentos (crear/eliminar items, seguimiento de vencimiento)
-- Lista inteligente de compras basada en inventario + sugerencias de recetas
-- Reordenamiento de tarjetas del dashboard persistido en localStorage
-- Layout adaptado a mobile (dvh + safe-area)
-- Screen 2 (SystemPanel) como prototipo visual estatico, listo para conectar datos reales
-
-## Estado por pantalla
-
-- `screen_1`:
-  - Funcional. Incluye interacciones reales (tiempo, clima, inventario, compras y receta).
-- `screen_2`:
-  - Enfocada en UI para portfolio.
-  - Sin logica de negocio ni consumo de APIs por decision de alcance.
-  - Arquitectura ya preparada con `SystemPanelCard` + cards especializadas para futura integracion.
+Consolidar flex, grid y responsive en una pagina completa con multiples bloques UI.
 
 ## Stack
 
-- React 19
-- Vite 7
-- Tailwind CSS 4
-- React Icons
-- ESLint 9
-- APIs de Open-Meteo (clima + calidad del aire)
+- React
+- Vite
+- CSS por secciones y componentes
 
-## Ejecucion local
+## Enfoque tecnico
 
-Requisitos:
+- layout base desacoplado de componentes internos
+- secciones independientes (`Hero`, `Features`, `Portfolio`, `Team`, `CTA`, `Testimonial`)
+- assets centralizados para iconos e imagenes
 
-- Node.js LTS
+## Checklist de validacion
 
-Comandos:
+- [ ] jerarquia visual clara por seccion
+- [ ] uso correcto de flex y grid segun contexto
+- [ ] responsive funcional sin saltos bruscos
+- [ ] clases y archivos con responsabilidad unica
 
-1. `npm install`
-2. `npm run dev`
-3. `npm run lint`
-4. `npm run build`
-5. `npm run preview`
+## Ejercicio propuesto
 
-## Arquitectura (alto nivel)
+Agregar una nueva seccion de FAQ con 3 preguntas y respuestas, respetando escala tipografica, espaciado y comportamiento responsive existente.
 
-```txt
-src/
-  Components/
-    layout/
-      hardware/
-      screens/
-        HomeScreens.jsx
-        screen_1/
-          header/
-          main/
-          ui/
-          features/
-            time/
-            weather/
-            shopping/
-        screen_2/
-  assets/
-```
+## Solucion esperada
 
-## Senales tecnicas para portfolio
+- la seccion nueva se integra sin romper el layout global
+- se reutilizan utilidades o patrones ya presentes
+- la lectura en mobile se mantiene clara
 
-Este proyecto busca demostrar:
+## Scripts
 
-- Arquitectura jerarquica por pantalla (screen-first) con modulos internos por feature
-- Hooks personalizados para orquestacion de estado y datos
-- Integracion real con APIs y normalizacion de respuesta
-- Modelado de estados de UI (loading, empty, error, stale data)
-- Persistencia local aplicada a un caso de uso real
-- Separacion entre modulos funcionales (`screen_1`) y modulos de demostracion visual (`screen_2`)
-
-## Proximos hitos
-
-- Publicar URL de demo (Vercel/Netlify)
-- Agregar tests automaticos para hooks criticos
-- Incluir checklist base de accesibilidad (a11y) y navegacion por teclado
-- Integrar el modulo como panel interactivo dentro del departamento 3D
-
-## Autor
-
-- LinkedIn: <https://www.linkedin.com/in/nico-villagran/>
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`

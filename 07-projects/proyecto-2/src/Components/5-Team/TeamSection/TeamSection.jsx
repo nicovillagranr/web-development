@@ -9,8 +9,9 @@ import "./TeamSection.css"
 
 function TeamSection() {
     return (
-        <section className="team" id="team">
-            <div className="team__list" role="list">
+        <section className="team" id="team" aria-labelledby="team-title">
+            <h2 className="sr-only" id="team-title">Our Team</h2>
+            <ul className="team__list">
                 <TeamMemberCard
                     photo={member1}
                     name="Ruth Woods"
@@ -31,7 +32,7 @@ function TeamSection() {
                     name="Beberly Little"
                     position="DATA SCIENTIST"
                     description="Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Maecenas sed diam eget risus varius blandit sit amet non magna. Nullam quis risus eget urna mollis ornare vel eu leo." />
-            </div>
+            </ul>
         </section>
     )
 }

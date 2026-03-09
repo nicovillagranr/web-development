@@ -1,10 +1,8 @@
 /* ===== Reset del botón ===== */
 .portfolio__item {
-    all: unset;
     position: relative;
     display: block;
     width: 100%;
-    cursor: pointer;
     overflow: hidden;
 }
 
@@ -47,15 +45,8 @@
 }
 
 /* ===== Interacciones ===== */
-.portfolio__item:hover .portfolio__item-hover,
-.portfolio__item:focus-visible .portfolio__item-hover {
+.portfolio__item:hover .portfolio__item-hover {
     transform: translateY(0);
-}
-
-/* ===== Accesibilidad: foco visible ===== */
-.portfolio__item:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: -4px;
 }
 
 /* ===== Mobile: sin hover, info siempre visible ===== */

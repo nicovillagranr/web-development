@@ -21,6 +21,10 @@
 }
 
 .header__logo {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    line-height: 1;
     font-size: 3rem;
     color: white;
 }

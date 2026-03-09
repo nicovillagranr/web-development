@@ -1,27 +1,43 @@
-﻿# Proyecto 3 | Projex Landing
+﻿# Proyecto 1 | Layout Practice
 
-Landing page construida con React, React Router, Tailwind CSS y Framer Motion.
+Proyecto de practica para consolidar layout CSS aplicado con componentes React.
 
-## Contexto Del Repositorio
+## Objetivo
 
-Este proyecto vive localmente en la carpeta:
+Entrenar estructura de layout, componentes visuales y consistencia de estilos en una landing modular.
 
-`03-css/03-frameworks/2-tailwind/proyecto-1`
+## Stack
 
-Pero en hosting se publica como:
+- React
+- Vite
+- CSS modular por componentes
 
-`/proyecto-3/`
+## Enfoque tecnico
 
-Ese desacople es intencional y responde a la estructura global del repositorio (proyectos 1, 2, 3 y 4 en raiz de hosting).
+- separacion por bloques (`Header`, `Main`, `Card`, `Footer`)
+- hojas de estilo por componente
+- assets locales para tipografia e imagenes
 
-## Nota De Configuracion
+## Checklist de validacion
 
-- `vite.config.js` usa `base: "/proyecto-3/"` para que los assets y rutas resuelvan bien en produccion.
-- La app usa `HashRouter` para compatibilidad de navegacion en hosting estatico.
+- [ ] layout legible en mobile y desktop
+- [ ] estilos desacoplados por componente
+- [ ] uso consistente de espaciado, color y tipografia
+- [ ] sin reglas duplicadas innecesarias
+
+## Ejercicio propuesto
+
+Crear una segunda variante de la seccion principal con una distribucion alternativa de cards y mantener la coherencia visual del sistema.
+
+## Solucion esperada
+
+- se agrega variante de layout sin romper la estructura existente
+- se reutilizan estilos base en lugar de duplicarlos
+- la variante mantiene consistencia de tipografia y espaciado
 
 ## Scripts
 
-- `npm run dev`: levanta entorno local.
-- `npm run build`: genera build de produccion.
-- `npm run preview`: previsualiza build localmente.
-- `npm run lint`: ejecuta ESLint.
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`

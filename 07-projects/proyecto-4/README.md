@@ -1,40 +1,10 @@
-# Smart Cooler UI
+﻿# Smart Cooler UI
 
-Interfaz Front-end para la pantalla de un refrigerador inteligente.
-Disenada como producto independiente y como modulo para un portfolio 3D (Three.js).
+Interfaz front-end para la pantalla de un refrigerador inteligente.
 
-## Demo en vivo
+## Objetivo
 
-- App web 2D: publicacion pendiente
-- Integracion 3D: en progreso
-
-## Problema que resuelve
-
-Cuando una persona sale con prisa, necesita contexto rapido (hora, clima y estado de compras)
-sin depender de abrir el telefono.
-
-## Alcance actual (implementado)
-
-- Panel de fecha y hora
-- Modo automatico/manual de tiempo
-- Cambio de formato 12h/24h
-- Clima actual (Open-Meteo)
-- Pronostico diario y por hora
-- Grid de metricas del clima (UV, humedad, sensacion termica, presion, AQI y UV diario)
-- Modulo de inventario de alimentos (crear/eliminar items, seguimiento de vencimiento)
-- Lista inteligente de compras basada en inventario + sugerencias de recetas
-- Reordenamiento de tarjetas del dashboard persistido en localStorage
-- Layout adaptado a mobile (dvh + safe-area)
-- Screen 2 (SystemPanel) como prototipo visual estatico, listo para conectar datos reales
-
-## Estado por pantalla
-
-- `screen_1`:
-  - Funcional. Incluye interacciones reales (tiempo, clima, inventario, compras y receta).
-- `screen_2`:
-  - Enfocada en UI para portfolio.
-  - Sin logica de negocio ni consumo de APIs por decision de alcance.
-  - Arquitectura ya preparada con `SystemPanelCard` + cards especializadas para futura integracion.
+Aplicar arquitectura de componentes, estado local y estilos utilitarios en una UI funcional de producto.
 
 ## Stack
 
@@ -43,61 +13,45 @@ sin depender de abrir el telefono.
 - Tailwind CSS 4
 - React Icons
 - ESLint 9
-- APIs de Open-Meteo (clima + calidad del aire)
+- Open-Meteo API
 
-## Ejecucion local
+## Alcance implementado
 
-Requisitos:
+- fecha y hora con modo automatico y manual
+- clima actual y pronostico diario/horario
+- metricas de clima (UV, humedad, sensacion termica, presion, AQI)
+- inventario de alimentos
+- lista de compras inteligente
+- reordenamiento de tarjetas persistido en localStorage
+- pantalla secundaria (`screen_2`) como prototipo visual
 
-- Node.js LTS
+## Arquitectura resumida
 
-Comandos:
+- `screen_1`: funcional, con features activas
+- `screen_2`: demostracion visual lista para evolucion funcional
+- organizacion modular por `layout`, `ui` y `features`
 
-1. `npm install`
-2. `npm run dev`
-3. `npm run lint`
-4. `npm run build`
-5. `npm run preview`
+## Checklist de validacion
 
-## Arquitectura (alto nivel)
+- [ ] estado consistente entre tarjetas y modales
+- [ ] degradacion controlada ante error de API
+- [ ] persistencia local sin corrupcion de datos
+- [ ] responsive estable en el contenedor principal
 
-```txt
-src/
-  Components/
-    layout/
-      hardware/
-      screens/
-        HomeScreens.jsx
-        screen_1/
-          header/
-          main/
-          ui/
-          features/
-            time/
-            weather/
-            shopping/
-        screen_2/
-  assets/
-```
+## Ejercicio propuesto
 
-## Senales tecnicas para portfolio
+Implementar una card nueva de consumo energetico diario usando la misma arquitectura de `Card` y mantener persistencia de orden en dashboard.
 
-Este proyecto busca demostrar:
+## Solucion esperada
 
-- Arquitectura jerarquica por pantalla (screen-first) con modulos internos por feature
-- Hooks personalizados para orquestacion de estado y datos
-- Integracion real con APIs y normalizacion de respuesta
-- Modelado de estados de UI (loading, empty, error, stale data)
-- Persistencia local aplicada a un caso de uso real
-- Separacion entre modulos funcionales (`screen_1`) y modulos de demostracion visual (`screen_2`)
+- nueva card integrada sin romper cards existentes
+- logica desacoplada en su propio hook/componente
+- comportamiento coherente con el sistema visual actual
 
-## Proximos hitos
+## Scripts
 
-- Publicar URL de demo (Vercel/Netlify)
-- Agregar tests automaticos para hooks criticos
-- Incluir checklist base de accesibilidad (a11y) y navegacion por teclado
-- Integrar el modulo como panel interactivo dentro del departamento 3D
-
-## Autor
-
-- LinkedIn: <https://www.linkedin.com/in/nico-villagran/>
+- `npm install`
+- `npm run dev`
+- `npm run lint`
+- `npm run build`
+- `npm run preview`

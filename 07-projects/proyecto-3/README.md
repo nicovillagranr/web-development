@@ -1,27 +1,46 @@
-﻿# Proyecto 3 | Projex Landing
+﻿# Proyecto 1 | Tailwind Landing
 
-Landing page construida con React, React Router, Tailwind CSS y Framer Motion.
+Landing construida con React, Tailwind y animaciones para reforzar composicion utilitaria.
 
-## Contexto Del Repositorio
+## Objetivo
 
-Este proyecto vive localmente en la carpeta:
+Practicar diseño de una landing completa usando utilidades Tailwind con criterio de sistema visual.
 
-`03-css/03-frameworks/2-tailwind/proyecto-1`
+## Stack
 
-Pero en hosting se publica como:
+- React
+- Vite
+- Tailwind CSS
+- React Router
+- Framer Motion
 
-`/proyecto-3/`
+## Enfoque tecnico
 
-Ese desacople es intencional y responde a la estructura global del repositorio (proyectos 1, 2, 3 y 4 en raiz de hosting).
+- composicion por secciones funcionales
+- clases utilitarias consistentes
+- configuracion de `base` para despliegue estatico
+- navegacion compatible con hosting estatico
 
-## Nota De Configuracion
+## Checklist de validacion
 
-- `vite.config.js` usa `base: "/proyecto-3/"` para que los assets y rutas resuelvan bien en produccion.
-- La app usa `HashRouter` para compatibilidad de navegacion en hosting estatico.
+- [ ] secciones con jerarquia visual clara
+- [ ] utilidades tailwind reutilizadas y legibles
+- [ ] responsive correcto en anchos comunes
+- [ ] animaciones sin afectar legibilidad
+
+## Ejercicio propuesto
+
+Crear una variante de hero con dos llamadas a la accion y comparar cual mantiene mejor claridad visual en mobile.
+
+## Solucion esperada
+
+- variante integrada sin romper navegacion ni estilos globales
+- mejor equilibrio entre contraste, espaciado y foco de accion
+- estructura de componentes mantenible
 
 ## Scripts
 
-- `npm run dev`: levanta entorno local.
-- `npm run build`: genera build de produccion.
-- `npm run preview`: previsualiza build localmente.
-- `npm run lint`: ejecuta ESLint.
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`

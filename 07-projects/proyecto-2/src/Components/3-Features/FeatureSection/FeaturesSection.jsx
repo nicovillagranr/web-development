@@ -11,7 +11,8 @@ import "./FeatureSection.css"
 
 function FeatureSection() {
     return (
-        <section className="feature" id="feature">
+        <section className="feature" id="feature" aria-labelledby="features-title">
+            <h2 className="sr-only" id="features-title">Features</h2>
             <div className="feature__cards">
                 <FeatureCard icon={penRulerIcon} title="Easily Customized" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus veritatis soluta quas distinctio dolores alias. Quasi molestias iure fugit provident." />
                 <FeatureCard icon={responsiveIcon} title="Responsive Ready" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus veritatis soluta quas distinctio dolores alias. Quasi molestias iure fugit provident." />

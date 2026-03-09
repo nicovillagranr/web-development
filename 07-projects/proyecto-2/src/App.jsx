@@ -1,36 +1,28 @@
-// ================= CONTEXTO MODULO =================
-// Componente raiz de la aplicacion.
-// Monta DeviceShell dentro del lienzo principal.
-// Importamos los estilos globales de la aplicación
-// ================= IMPORTS =================
-import './assets/styles/App.css'
+import Layout from "./Components/1-layout/Layout/Layout"
+import Hero from "./Components/2-Hero/HeroSection"
+import Features from "./Components/3-Features/FeatureSection/FeaturesSection"
+import PortfolioSection from "./Components/4-Portfolio/PortfolioSection/PortfolioSection"
+import TeamSection from "./Components/5-Team/TeamSection/TeamSection"
+import Testimonial from "./Components/6-Testimonial/Testimonial"
+import CTA from "./Components/7-Cta/CTA"
 
-// Importamos el contenedor principal del dispositivo
-import DeviceShell from "@shared/hardware/DeviceShell.jsx"
+import "./assets/styles/reset.css"
+import "./assets/styles/variables.css"
+import "./assets/styles/App.css"
 
-/**
- * App es el componente raíz de la UI.
- *
- * Su responsabilidad es:
- * - Definir el layout general
- * - Montar el "dispositivo" dentro de la pantalla
- *
- * En el proyecto final:
- * - este <main> será reemplazado o envuelto por THREE.JS
- */
-
-// ================= FUNCION =================
-// App: helper/componente interno; parametros: 
 function App() {
-    // Render/retorno del bloque actual
+
   return (
     <>
-      {/* Contenedor principal centrado en pantalla */}
-      <main className="min-h-screen w-full flex items-center justify-center bg-black">
-        <DeviceShell />
-      </main>
+      <Layout>
+        <Hero />
+        <Features />
+        <PortfolioSection />
+        <TeamSection />
+        <Testimonial />
+        <CTA />
+      </Layout>
     </>
   )
 }
-
 export default App

@@ -1,6 +1,3 @@
-// ================= CONTEXTO MODULO =================
-// Config de lint para JS/JSX.
-// Aplica reglas recomendadas de JS, React Hooks y React Refresh.
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

@@ -59,6 +59,8 @@
     color: white;
 }
 
+
+
 @media(width <=1550px) {
     .hero__content {
         width: 70%;
