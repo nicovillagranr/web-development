@@ -23,12 +23,18 @@
     color: white;
     font-size: .9rem;
     text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.footer__list-link:hover {
+    color: lightpink;
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.4);
 }
 
 .footer__line {
     height: 1px;
     width: 90%;
-    background-color: white;
+    background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.6), transparent);
 }
 
 .footer__copy-text {
@@ -44,7 +50,7 @@
 
 @media(width <=769px) {
     .footer {
-        width: 60%;
+        width: 90%;
         padding: 1rem;
         text-align: center;
     }

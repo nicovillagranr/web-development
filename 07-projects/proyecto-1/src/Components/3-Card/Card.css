@@ -4,12 +4,22 @@
     background: rgba(128, 128, 190, 0.5);
     border-radius: 1rem;
     padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.box-2__card:hover {
+    transform: translateY(-6px);
+    background: rgba(128, 128, 190, 0.65);
+    border-color: rgba(255, 182, 193, 0.3);
+    box-shadow: 0 12px 35px rgba(0, 0, 100, 0.25);
 }
 
 .card__icon {
@@ -25,6 +35,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box-2__card:hover .card__icon {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
 }
 
 .card__icon-svg {
@@ -46,6 +63,29 @@
     text-align: center;
     color: white;
 }
+
+/* Entrada escalonada */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.box-2__card {
+    animation: fadeSlideUp 0.6s ease-out both;
+}
+
+.box-2__card:nth-child(1) { animation-delay: 0.1s; }
+.box-2__card:nth-child(2) { animation-delay: 0.2s; }
+.box-2__card:nth-child(3) { animation-delay: 0.3s; }
+.box-2__card:nth-child(4) { animation-delay: 0.4s; }
+.box-2__card:nth-child(5) { animation-delay: 0.5s; }
+.box-2__card:nth-child(6) { animation-delay: 0.6s; }
 
 @media(width <=1024px) {
     .box-2__card {
