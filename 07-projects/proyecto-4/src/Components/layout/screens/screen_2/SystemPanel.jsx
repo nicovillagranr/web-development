@@ -15,13 +15,13 @@ import CardAlerts from "./ui/cards/CardAlerts.jsx";
 function SystemPanel() {
     return (
         <section className="h-full px-4 py-3 text-white overflow-y-auto no-scrollbar">
-            <article className="rounded-2xl bg-black/35 backdrop-blur-xl border border-white/10 p-3">
+            <article className="rounded-2xl bg-black/40 backdrop-blur-xl border border-white/[0.07] p-3">
                 <header className="pointer-events-none mb-3">
-                    <h2 className="text-lg flex items-center gap-2">
-                        <FiHome className="w-5 h-5 text-emerald-300" aria-hidden="true" />
+                    <h2 className="text-base font-medium tracking-wide flex items-center gap-2">
+                        <FiHome className="w-4 h-4 text-cyan-400" aria-hidden="true" />
                         Casa
                     </h2>
-                    <p className="mt-1 text-xs text-white/75">
+                    <p className="mt-0.5 text-[11px] text-white/50 tracking-wide">
                         Prototipo visual del panel de hogar inteligente.
                     </p>
                 </header>

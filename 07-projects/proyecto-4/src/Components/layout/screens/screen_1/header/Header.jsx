@@ -16,7 +16,6 @@ function Header({
     onOpenTimeSettings,
     onOpenWeatherSettings,
     onOpenRecipeSettings,
-    onOpenShoppingSettings,
     showTopBar = true,
     showNav = true,
     className = "",
@@ -43,7 +42,6 @@ function Header({
                     onOpenTimeSettings={onOpenTimeSettings}
                     onOpenWeatherSettings={onOpenWeatherSettings}
                     onOpenRecipeSettings={onOpenRecipeSettings}
-                    onOpenShoppingSettings={onOpenShoppingSettings}
                 />
             )}
         </header>

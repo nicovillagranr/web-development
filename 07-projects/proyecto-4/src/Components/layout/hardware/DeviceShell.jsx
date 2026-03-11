@@ -12,7 +12,6 @@ import TimeSettings from "@screen1/features/time/Components/TimeSettings.jsx";
 import WeatherSettings from "@screen1/features/weather/Components/Settings/WeatherSettings.jsx";
 import InventorySettings from "@screen1/main/inventory/Components/InventorySettings.jsx";
 import RecipeSettings from "@screen1/main/inventory/Components/RecipeSettings.jsx";
-import ShoppingListSettings from "@screen1/features/shopping/Components/ShoppingListSettings.jsx";
 
 
 // DeviceShell tiene como propÃ³sito simular el HardWare del dispositivo de salida, en este caso es un refrigerador inteligente, por lo que se encarga de contener la interfaz y darle un estilo acorde a un dispositivo real, con un fondo, bordes redondeados y una disposiciÃ³n de elementos que simula una pantalla de dispositivo. AdemÃ¡s, maneja la lÃ³gica de navegaciÃ³n entre las diferentes pantallas (ajustes de tiempo y clima) utilizando un estado local para determinar quÃ© pantalla mostrar en cada momento.
@@ -30,7 +29,7 @@ function DeviceShell() {
 
     // Render/retorno del bloque actual
     return (
-        <section className="relative w-120 h-dvh min-h-svh rounded-sm bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden">
+        <section className="relative w-120 h-dvh min-h-svh rounded-2xl bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8),_0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-white/5">
 
             {/* Pantallas de Home y Ajustes */}
             <HomeScreens
@@ -41,7 +40,6 @@ function DeviceShell() {
                 onOpenTimeSettings={() => setActiveScreen("time")}
                 onOpenWeatherSettings={() => setActiveScreen("weather")}
                 onOpenRecipeSettings={() => setActiveScreen("recipe")}
-                onOpenShoppingSettings={() => setActiveScreen("shopping")}
             />
 
             {/* Ajustes de fecha y hora  del Refrigerador */}
@@ -77,11 +75,6 @@ function DeviceShell() {
                 onBack={() => setActiveScreen(null)}
             />
 
-            {/* Pantalla que nos muestra sugerencias para nuestra próxima compra */}
-            <ShoppingListSettings
-                isActive={activeScreen === "shopping"}
-                onBack={() => setActiveScreen(null)}
-            />
         </section>
     )
 }

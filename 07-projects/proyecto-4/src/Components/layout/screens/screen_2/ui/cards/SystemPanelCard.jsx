@@ -21,7 +21,7 @@ function SystemPanelCard({
             type="button"
             onClick={onClick}
             aria-disabled={!isInteractive}
-            className={`relative h-35 rounded-2xl border border-white/20 bg-linear-to-b from-white/18 via-white/10 to-white/6 p-3 text-left transition-transform duration-200 flex flex-col overflow-hidden ${isInteractive ? "active:scale-96" : "cursor-default" } ${className}`}
+            className={`relative h-35 rounded-2xl border border-white/[0.10] bg-linear-to-b from-white/[0.10] via-white/[0.06] to-white/[0.03] p-3 text-left transition-transform duration-200 flex flex-col overflow-hidden ${isInteractive ? "active:scale-[0.96]" : "cursor-default"} ${className}`}
             {...props}
         >
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.22),transparent_55%)]" />

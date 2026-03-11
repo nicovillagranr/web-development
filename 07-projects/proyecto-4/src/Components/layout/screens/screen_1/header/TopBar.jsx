@@ -24,9 +24,9 @@ function TopBar({ time, date, weather }) {
         // Contenedor Invisible
         <div className="flex items-center justify-between pointer-events-none">
             {/* Fecha y hora */}
-            <div className="text-sm uppercase tracking-wide font-light">{time} | {date}</div>
+            <div className="text-[11px] uppercase tracking-[0.14em] font-light text-white/75">{time} · {date}</div>
             {/* Clima */}
-            <div className="flex items-center min-w-12 justify-end tracking-wide font-light">
+            <div className="flex items-center min-w-12 justify-end tracking-wide font-light text-white/75">
                 {weather ? (
                     <>
                         <WeatherIconMini code={weather.code} isDay={weather.isDay} size={20} />

@@ -24,108 +24,99 @@ function RecipeSettings({ isActive, onBack }) {
 
     useEffect(() => {
         if (!isActive) return;
-
         const handleKeyDown = (event) => {
             if (event.key !== "Escape") return;
             handleClose();
         };
-
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isActive, handleClose]);
 
     return (
         <section
-            className={`absolute inset-0 z-20 flex flex-col bg-[#1B1C27] text-white transition-transform duration-500 ease-out ${isActive ? "translate-x-0" : "-translate-x-full"}`}
+            className={`absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out ${isActive ? "translate-x-0" : "-translate-x-full"}`}
         >
             <SettingsHeader title="Receta" onBack={handleClose} />
 
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pb-6 space-y-4 no-scrollbar">
-                <article className="rounded-3xl overflow-hidden border border-white/15 bg-black/25">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pb-6 space-y-3 no-scrollbar pt-4">
+
+                {/* Hero imagen */}
+                <div className="rounded-2xl overflow-hidden border border-white/[0.06]">
                     <div
-                        className="relative h-52 bg-cover bg-center"
+                        className="relative h-48 bg-cover bg-center"
                         style={{ backgroundImage: `url(${recipesBg})` }}
                     >
-                        <div className="absolute inset-0 bg-black/35" />
-
-                        <div className="absolute inset-x-0 top-0 px-4 py-2 bg-gradient-to-b from-black/85 via-black/55 to-transparent backdrop-blur-[1px]">
-                            <p className="text-xs font-medium uppercase tracking-wide text-white/90">
-                                Receta recomendada
-                            </p>
-                        </div>
-
-                        <div className="absolute inset-x-0 bottom-0 px-4 py-3 bg-gradient-to-t from-black/90 via-black/55 to-transparent backdrop-blur-[1px]">
-                            <h2 className="text-2xl font-semibold leading-tight text-white">
+                        <div className="absolute inset-0 bg-black/40" />
+                        <div className="absolute inset-x-0 bottom-0 px-4 py-4 bg-gradient-to-t from-black/80 to-transparent">
+                            <p className="text-[10px] uppercase tracking-[0.14em] text-white/50 mb-1">Receta recomendada</p>
+                            <h2 className="text-xl font-medium leading-tight text-white">
                                 {recipe?.title || "Sin sugerencia por ahora"}
                             </h2>
                         </div>
                     </div>
-                </article>
+                </div>
 
                 {!hasInventory && (
-                    <article className="rounded-3xl backdrop-blur-xl bg-white/10 p-4">
-                        <p className="text-sm text-white/85">
-                            Agrega alimentos en tu inventario para recibir receta, ingredientes
-                            faltantes y pasos automaticamente.
+                    <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                        <p className="text-sm text-white/50">
+                            Agrega alimentos en tu inventario para recibir recetas, ingredientes
+                            faltantes y pasos automáticamente.
                         </p>
-                    </article>
+                    </div>
                 )}
 
                 {hasInventory && recipe && (
                     <>
-                        <article className="rounded-3xl backdrop-blur-xl bg-white/10 p-4">
-                            <p className="text-xs uppercase tracking-wide text-white/70">
-                                Ingredientes disponibles
-                            </p>
+                        {/* Ingredientes disponibles */}
+                        <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                            <span className="block text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium mb-3">Disponibles</span>
                             {matched.length > 0 ? (
-                                <ul className="mt-2 space-y-1 text-sm text-white/90">
+                                <ul className="space-y-1.5">
                                     {matched.map((ingredient) => (
-                                        <li key={`ok-${ingredient}`}>- {ingredient}</li>
+                                        <li key={`ok-${ingredient}`} className="flex items-center gap-2 text-sm text-white/75">
+                                            <span className="w-1 h-1 rounded-full bg-emerald-400 shrink-0" />
+                                            {ingredient}
+                                        </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="mt-2 text-sm text-white/75">
-                                    Sin coincidencias por ahora.
-                                </p>
+                                <p className="text-sm text-white/30">Sin coincidencias por ahora.</p>
                             )}
-                        </article>
+                        </div>
 
-                        <article className="rounded-3xl backdrop-blur-xl bg-white/10 p-4">
-                            <p className="text-xs uppercase tracking-wide text-white/70">
-                                Ingredientes faltantes
-                            </p>
+                        {/* Ingredientes faltantes */}
+                        <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                            <span className="block text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium mb-3">Faltantes</span>
                             {missing.length > 0 ? (
-                                <ul className="mt-2 space-y-1 text-sm text-white/90">
+                                <ul className="space-y-1.5">
                                     {missing.map((ingredient) => (
-                                        <li key={`miss-${ingredient}`}>- {ingredient}</li>
+                                        <li key={`miss-${ingredient}`} className="flex items-center gap-2 text-sm text-white/75">
+                                            <span className="w-1 h-1 rounded-full bg-amber-400 shrink-0" />
+                                            {ingredient}
+                                        </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="mt-2 text-sm text-emerald-200">
-                                    Receta completa, no faltan ingredientes.
-                                </p>
+                                <p className="text-sm text-emerald-400">Receta completa, no faltan ingredientes.</p>
                             )}
-                        </article>
+                        </div>
 
-                        <article className="rounded-3xl backdrop-blur-xl bg-white/10 p-4">
-                            <p className="text-xs uppercase tracking-wide text-white/70">
-                                Paso a paso
-                            </p>
+                        {/* Pasos */}
+                        <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                            <span className="block text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium mb-3">Paso a paso</span>
                             {steps.length > 0 ? (
-                                <ol className="mt-2 space-y-2 text-sm text-white/90">
+                                <ol className="space-y-2.5">
                                     {steps.map((step, index) => (
-                                        <li key={`step-${index}`}>
-                                            <span className="font-semibold mr-1">{index + 1}.</span>
-                                            {step}
+                                        <li key={`step-${index}`} className="flex gap-3 text-sm text-white/75">
+                                            <span className="text-[11px] font-medium text-white/30 pt-0.5 tabular-nums shrink-0">{String(index + 1).padStart(2, "0")}</span>
+                                            <span>{step}</span>
                                         </li>
                                     ))}
                                 </ol>
                             ) : (
-                                <p className="mt-2 text-sm text-white/75">
-                                    No hay pasos cargados para esta receta.
-                                </p>
+                                <p className="text-sm text-white/30">No hay pasos cargados para esta receta.</p>
                             )}
-                        </article>
+                        </div>
                     </>
                 )}
             </div>

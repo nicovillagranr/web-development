@@ -8,7 +8,7 @@ function Card({ children, className = "", as = "button", ...props }) {
     const Component = as; // permite usar <div>, <button>, etc.
     // Render/retorno del bloque actual
     return (
-        <Component className={`flex justify-center items-center rounded-lg shadow-md active:scale-96 transition-transform duration-100 ${className}`} {...props}>
+        <Component className={`flex justify-center items-center rounded-xl shadow-lg active:scale-[0.96] transition-all duration-150 ${className}`} {...props}>
             {children}
         </Component>
     );

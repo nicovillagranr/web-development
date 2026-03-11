@@ -21,7 +21,6 @@ function HomeScreens({
     onOpenTimeSettings,
     onOpenWeatherSettings,
     onOpenRecipeSettings,
-    onOpenShoppingSettings,
 }) {
     // Referencia al contenedor scrollable horizontal.
     const scrollerRef = useRef(null);
@@ -101,7 +100,6 @@ function HomeScreens({
                         onOpenTimeSettings={onOpenTimeSettings}
                         onOpenWeatherSettings={onOpenWeatherSettings}
                         onOpenRecipeSettings={onOpenRecipeSettings}
-                        onOpenShoppingSettings={onOpenShoppingSettings}
                     />
                 </section>
 

@@ -14,7 +14,6 @@ function HomePanel({
     onOpenTimeSettings,
     onOpenWeatherSettings,
     onOpenRecipeSettings,
-    onOpenShoppingSettings,
 }) {
     return (
         <div className="h-full flex flex-col">
@@ -26,7 +25,6 @@ function HomePanel({
                 onOpenTimeSettings={onOpenTimeSettings}
                 onOpenWeatherSettings={onOpenWeatherSettings}
                 onOpenRecipeSettings={onOpenRecipeSettings}
-                onOpenShoppingSettings={onOpenShoppingSettings}
                 showTopBar={false}
             />
 

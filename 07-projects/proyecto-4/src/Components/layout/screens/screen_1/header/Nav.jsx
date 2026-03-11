@@ -6,20 +6,19 @@ import { useEffect, useState } from "react";
 
 // Componentes de tarjeta especificos
 import CardRecipe from "../ui/cards/CardRecipe.jsx";
-import CardShoppingList from "../ui/cards/CardShoppingList.jsx";
+
 import CardTime from "../ui/cards/CardTime.jsx";
 import CardWeather from "../ui/cards/CardWeather.jsx";
 
 // Constantes para la gestion del orden de las tarjetas
 const ORDER_STORAGE_KEY = "smart_cooler_nav_order_v2";
 const FIXED_CARD_ID = "inventory";
-const MOVABLE_CARD_IDS = ["time", "weather", "shopping"];
+const MOVABLE_CARD_IDS = ["time", "weather"];
 
-const DEFAULT_ORDER = ["time", "weather", "shopping"];
+const DEFAULT_ORDER = ["time", "weather"];
 
 const SLOT_CLASSES = [
-    "col-span-1 row-span-3",
-    "col-span-1 row-span-1",
+    "col-span-1 row-span-2",
     "col-span-1 row-span-1",
     "col-span-1 row-span-1",
 ];
@@ -80,7 +79,6 @@ function Nav({
     weather,
     onOpenTimeSettings,
     onOpenWeatherSettings,
-    onOpenShoppingSettings,
     onOpenRecipeSettings,
 }) {
     const [cardOrder, setCardOrder] = useState(() =>
@@ -131,11 +129,6 @@ function Nav({
             props: {},
             onOpen: onOpenRecipeSettings,
         },
-        shopping: {
-            Component: CardShoppingList,
-            props: {},
-            onOpen: onOpenShoppingSettings,
-        },
         time: {
             Component: CardTime,
             props: { time },
@@ -151,7 +144,7 @@ function Nav({
 
     return (
         <nav className="w-full">
-            <section className="grid grid-cols-2 grid-rows-3 gap-3 w-full h-50">
+            <section className="grid grid-cols-2 grid-rows-2 gap-3 w-full h-40">
                 {renderOrder.map((cardId, slotIndex) => {
                     const cardConfig = cardsById[cardId];
                     if (!cardConfig) return null;
@@ -164,7 +157,7 @@ function Nav({
                             <Component
                                 {...props}
                                 onClick={handleCardClick(cardId, onOpen)}
-                                className={`w-full h-full ${isSelected ? "ring-2 ring-emerald-300" : ""}`}
+                                className={`w-full h-full ${isSelected ? "ring-2 ring-cyan-400/80 ring-offset-1 ring-offset-black/20" : ""}`}
                             />
                         </div>
                     );
@@ -182,7 +175,7 @@ function Nav({
                             return nextIsEditMode;
                         })
                     }
-                    className="text-[11px] px-2 py-0.5 rounded-full bg-black/10 text-black"
+                    className="text-[11px] px-3 py-1 rounded-full bg-white/8 border border-white/12 text-white/60 backdrop-blur-sm hover:bg-white/12 hover:text-white/80 transition-colors duration-200"
                 >
                     {isEditMode ? "Listo" : "Editar"}
                 </button>

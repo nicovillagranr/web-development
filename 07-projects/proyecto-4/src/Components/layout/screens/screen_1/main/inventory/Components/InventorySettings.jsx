@@ -3,7 +3,6 @@
 // Permite alta/baja de items y monitorea vencimientos por prioridad visual.
 
 // ================= IMPORTS =================
-// Aquí van los imports necesarios para el componente, como React, hooks personalizados, y componentes UI
 import SettingsHeader from "../../../ui/settings/SettingsHeader.jsx";
 import {
     INVENTORY_TYPES,
@@ -11,34 +10,16 @@ import {
     useInventory,
 } from "../hooks/useInventory.jsx";
 
-// Función que recibe la variable "daysToExpire" y devuelve un objeto con la etiqueta y el tono correspondiente
-// - Si "daysToExpire" es null, devuelve "Sin fecha" con tono blanco/60
-// - Si "daysToExpire" es negativo, devuelve "Vencido hace X dia(s)" con tono rojo
-// - Si "daysToExpire" es 0, devuelve "Vence hoy" con tono ámbar
-// - Si "daysToExpire" es menor o igual a 3, devuelve "Vence en X dia(s)" con tono ámbar
-// - Si "daysToExpire" es mayor a 3, devuelve "Vence en X dia(s)" con tono verde
 function getExpiryMeta(daysToExpire) {
-    if (daysToExpire === null) {
-        return { label: "Sin fecha", tone: "text-white/60" };
-    }
-
-    if (daysToExpire < 0) {
-        return { label: `Vencido hace ${Math.abs(daysToExpire)} dia(s)`, tone: "text-rose-300" };
-    }
-
-    if (daysToExpire === 0) {
-        return { label: "Vence hoy", tone: "text-amber-300" };
-    }
-
-    if (daysToExpire <= 3) {
-        return { label: `Vence en ${daysToExpire} dia(s)`, tone: "text-amber-300" };
-    }
-
-    return { label: `Vence en ${daysToExpire} dia(s)`, tone: "text-emerald-300" };
+    if (daysToExpire === null) return { label: "Sin fecha",                                tone: "text-white/30" };
+    if (daysToExpire < 0)      return { label: `Vencido hace ${Math.abs(daysToExpire)}d`, tone: "text-rose-400" };
+    if (daysToExpire === 0)    return { label: "Vence hoy",                               tone: "text-amber-400" };
+    if (daysToExpire <= 3)     return { label: `Vence en ${daysToExpire}d`,               tone: "text-amber-400" };
+    return                            { label: `Vence en ${daysToExpire}d`,               tone: "text-emerald-400" };
 }
 
 function getTypeLabel(typeValue) {
-    const match = INVENTORY_TYPES.find((type) => type.value === typeValue);
+    const match = INVENTORY_TYPES.find((t) => t.value === typeValue);
     return match ? match.label : typeValue;
 }
 
@@ -62,56 +43,49 @@ function InventorySettings({ isActive, onBack }) {
 
     return (
         <section
-            className={`absolute inset-0 z-20 flex flex-col bg-[#1B1C27] text-white transition-transform duration-500 ease-out ${isActive ? "translate-x-0" : "-translate-x-full"}`}
+            className={`absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out ${isActive ? "translate-x-0" : "-translate-x-full"}`}
         >
             <SettingsHeader title="Inventario" onBack={onBack} />
 
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pb-6 space-y-4 no-scrollbar">
-                <form onSubmit={handleSubmit} className="rounded-3xl backdrop-blur-xl bg-white/10 p-4 space-y-3">
-                    <p className="text-sm uppercase tracking-wide text-white/70">Nuevo alimento</p>
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pb-6 space-y-3 no-scrollbar pt-4">
+
+                {/* Formulario */}
+                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4 space-y-2.5">
+                    <span className="block text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium">Nuevo alimento</span>
 
                     <div className="space-y-1">
-                        <label htmlFor="inventory-name" className="text-xs text-white/70">
-                            Alimento
-                        </label>
+                        <label htmlFor="inventory-name" className="text-xs text-white/40">Alimento</label>
                         <input
                             id="inventory-name"
                             value={form.name}
-                            onChange={(event) => setField("name", event.target.value)}
+                            onChange={(e) => setField("name", e.target.value)}
                             placeholder="Ej: Leche descremada"
-                            className="w-full rounded-xl bg-black/25 border border-white/15 px-3 py-2 text-sm outline-none focus:border-white/40"
+                            className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.08] px-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-cyan-400/35 transition-colors"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-1">
-                            <label htmlFor="inventory-qty" className="text-xs text-white/70">
-                                Cantidad
-                            </label>
+                            <label htmlFor="inventory-qty" className="text-xs text-white/40">Cantidad</label>
                             <input
                                 id="inventory-qty"
                                 type="number"
                                 min="1"
                                 value={form.quantity}
-                                onChange={(event) => setField("quantity", event.target.value)}
-                                className="w-full rounded-xl bg-black/25 border border-white/15 px-3 py-2 text-sm outline-none focus:border-white/40"
+                                onChange={(e) => setField("quantity", e.target.value)}
+                                className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.08] px-3 text-sm text-white outline-none focus:border-cyan-400/35 transition-colors"
                             />
                         </div>
-
                         <div className="space-y-1">
-                            <label htmlFor="inventory-unit" className="text-xs text-white/70">
-                                Unidad
-                            </label>
+                            <label htmlFor="inventory-unit" className="text-xs text-white/40">Unidad</label>
                             <select
                                 id="inventory-unit"
                                 value={form.unit}
-                                onChange={(event) => setField("unit", event.target.value)}
-                                className="w-full rounded-xl bg-black/25 border border-white/15 px-3 py-2 text-sm text-black outline-none focus:border-white/40"
+                                onChange={(e) => setField("unit", e.target.value)}
+                                className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.08] px-3 text-sm text-white/80 outline-none focus:border-cyan-400/35 transition-colors"
                             >
-                                {INVENTORY_UNITS.map((unit) => (
-                                    <option className="bg-white text-slate-900" key={unit.value} value={unit.value}>
-                                        {unit.label}
-                                    </option>
+                                {INVENTORY_UNITS.map((u) => (
+                                    <option className="bg-[#1A1C28] text-white" key={u.value} value={u.value}>{u.label}</option>
                                 ))}
                             </select>
                         </div>
@@ -119,83 +93,76 @@ function InventorySettings({ isActive, onBack }) {
 
                     <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-1">
-                            <label htmlFor="inventory-type" className="text-xs text-white/70">
-                                Tipo
-                            </label>
+                            <label htmlFor="inventory-type" className="text-xs text-white/40">Tipo</label>
                             <select
                                 id="inventory-type"
                                 value={form.type}
-                                onChange={(event) => setField("type", event.target.value)}
-                                className="w-full rounded-xl bg-black/25 border border-white/15 px-3 py-2 text-sm text-white outline-none focus:border-white/40"
+                                onChange={(e) => setField("type", e.target.value)}
+                                className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.08] px-3 text-sm text-white/80 outline-none focus:border-cyan-400/35 transition-colors"
                             >
-                                {INVENTORY_TYPES.map((type) => (
-                                    <option className="bg-white text-slate-900" key={type.value} value={type.value}>
-                                        {type.label}
-                                    </option>
+                                {INVENTORY_TYPES.map((t) => (
+                                    <option className="bg-[#1A1C28] text-white" key={t.value} value={t.value}>{t.label}</option>
                                 ))}
                             </select>
                         </div>
-
                         <div className="space-y-1">
-                            <label htmlFor="inventory-expiry" className="text-xs text-white/70">
-                                Vencimiento
-                            </label>
+                            <label htmlFor="inventory-expiry" className="text-xs text-white/40">Vencimiento</label>
                             <input
                                 id="inventory-expiry"
                                 type="date"
                                 value={form.expiresAt}
-                                onChange={(event) => setField("expiresAt", event.target.value)}
-                                className="w-full rounded-xl bg-black/25 border border-white/15 px-3 py-2 text-sm outline-none focus:border-white/40"
+                                onChange={(e) => setField("expiresAt", e.target.value)}
+                                className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.08] px-3 text-sm text-white/70 outline-none focus:border-cyan-400/35 transition-colors"
                             />
                         </div>
                     </div>
 
-                    {error && <p className="text-xs text-rose-300">{error}</p>}
+                    {error && <p className="text-xs text-rose-400">{error}</p>}
 
                     <button
                         type="submit"
-                        className="w-full rounded-xl py-2.5 bg-white/20 hover:bg-white/30 transition-colors text-sm font-medium"
+                        onClick={handleSubmit}
+                        className="w-full h-10 rounded-xl bg-white/[0.07] border border-white/[0.09] text-sm text-white/65 hover:text-white hover:bg-white/[0.10] transition-colors"
                     >
                         Agregar alimento
                     </button>
-                </form>
+                </div>
 
-                <div className="rounded-3xl backdrop-blur-xl bg-white/10 p-4">
-                    <div className="flex items-center justify-between text-sm mb-3">
-                        <span className="text-white/75">Total alimentos: {items.length}</span>
-                        <span className="text-amber-200">Por vencer: {expiringSoonCount}</span>
+                {/* Lista */}
+                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium">Alimentos</span>
+                        <div className="flex items-center gap-3 text-[11px]">
+                            {expiringSoonCount > 0 && <span className="text-amber-400/90">{expiringSoonCount} por vencer</span>}
+                            <span className="text-white/30">{items.length} items</span>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                         {items.length === 0 && (
-                            <p className="text-sm text-white/60 py-4 text-center">
-                                Aun no agregas alimentos a tu inventario.
-                            </p>
+                            <p className="text-xs text-white/30 text-center py-4">Sin alimentos registrados.</p>
                         )}
 
                         {items.map((item) => {
                             const daysToExpire = getDaysToExpire(item.expiresAt);
-                            const expiryMeta = getExpiryMeta(daysToExpire);
+                            const { label, tone } = getExpiryMeta(daysToExpire);
 
                             return (
-                                <article key={item.id} className="rounded-2xl bg-black/20 border border-white/10 p-3">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="min-w-0">
-                                            <p className="font-medium truncate">{item.name}</p>
-                                            <p className="text-xs text-white/70 mt-1">
-                                                {item.quantity} {item.unit} | {getTypeLabel(item.type)}
-                                            </p>
-                                            <p className={`text-xs mt-1 ${expiryMeta.tone}`}>{expiryMeta.label}</p>
-                                        </div>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => removeItem(item.id)}
-                                            className="text-xs px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors shrink-0"
-                                        >
-                                            Quitar
-                                        </button>
+                                <article key={item.id} className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.06]">
+                                    <div className="min-w-0">
+                                        <p className="text-sm text-white/90 font-medium truncate">{item.name}</p>
+                                        <p className="text-xs text-white/40 mt-0.5">
+                                            {item.quantity} {item.unit} · {getTypeLabel(item.type)}
+                                        </p>
+                                        <p className={`text-[11px] mt-0.5 ${tone}`}>{label}</p>
                                     </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeItem(item.id)}
+                                        className="text-[11px] px-2.5 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.06] text-white/35 hover:text-white/65 hover:bg-white/[0.08] transition-colors shrink-0"
+                                    >
+                                        Quitar
+                                    </button>
                                 </article>
                             );
                         })}
@@ -207,4 +174,3 @@ function InventorySettings({ isActive, onBack }) {
 }
 
 export default InventorySettings;
-

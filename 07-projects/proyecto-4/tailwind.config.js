@@ -11,10 +11,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#ff5959',
-                surface: '#E5E7EB',
-                dark: '#1a1a1a',
+                primary: '#22d3ee',
+                surface: '#0D1117',
+                dark: '#080A12',
                 light: '#ffffff',
+                accent: '#22d3ee',
             },
             height: {
                 '800': '800px',
@@ -23,7 +24,7 @@ export default {
                 '500': '500px',
             },
             fontFamily: {
-                sans: ['Poppins', 'ui-sans-serif', 'system-ui'],
+                sans: ['Outfit', 'Poppins', 'ui-sans-serif', 'system-ui'],
             },
         },
     },

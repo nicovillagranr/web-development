@@ -13,17 +13,17 @@ function CardRecipe({ className = "", ...props }) {
     const recipeTitle = recommendedRecipe?.title || "Sin sugerencia por ahora";
 
     return (
-        // Card molde
-        <Card as="button" className={`w-full h-full rounded-none relative bg-white no-scrollbar p-2 border border-black/15 ${className}`}
+        <Card as="button" className={`w-full h-full rounded-xl relative overflow-hidden ${className}`}
             {...props}>
 
-            {/* Contenedor de la imagen */}
-            <section className="relative w-full h-full overflow-hidden bg-blue-300">
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/55 via-black/20 to-transparent pointer-events-none" />
+            {/* Fondo atmosférico: gradiente cálido oscuro con acento radial */}
+            <section className="relative w-full h-full bg-[linear-gradient(160deg,_#18112E_0%,_#0C1522_55%,_#0A1A18_100%)]">
+                <div className="absolute top-0 left-0 w-24 h-24 rounded-full bg-violet-500/10 blur-2xl pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[linear-gradient(to_top,_rgba(0,0,0,0.75)_0%,_transparent_100%)] pointer-events-none" />
 
-                <div className="absolute inset-x-0 bottom-0 px-2 py-3 z-10">
-                    <h2 className="text-[11px] font-light tracking-wide uppercase text-white text-left">Receta recomendada</h2>
-                    <p className="text-xs text-white text-left">{recipeTitle}</p>
+                <div className="absolute inset-x-0 bottom-0 px-3 py-3 z-10">
+                    <h2 className="text-[9px] font-medium tracking-[0.18em] uppercase text-cyan-400/70 text-left mb-0.5">Receta del día</h2>
+                    <p className="text-[11px] font-light text-white/90 text-left leading-tight">{recipeTitle}</p>
                 </div>
             </section>
 
