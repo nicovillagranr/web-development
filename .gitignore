@@ -32,3 +32,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# AI assistant artifacts
+**/.agent/
+**/.agents/
+**/.claude/
+**/.windsurf/
+**/skills-lock.json
