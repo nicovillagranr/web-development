@@ -19,17 +19,17 @@ function Footer() {
                     <ul className="footer__rrss-list">
                         <li className="footer__social-item">
                             <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit Facebook">
-                                <img src={facebookIcon} alt="" className="memberCard__social-icon" />
+                                <img src={facebookIcon} alt="" className="footer__social-icon" />
                             </a>
                         </li>
                         <li className="footer__social-item">
                             <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit X">
-                                <img src={twitterIcon} alt="" className="memberCard__social-icon" />
+                                <img src={twitterIcon} alt="" className="footer__social-icon" />
                             </a>
                         </li>
                         <li className="footer__social-item">
                             <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn">
-                                <img src={linkedinIcon} alt="" className="memberCard__social-icon" />
+                                <img src={linkedinIcon} alt="" className="footer__social-icon" />
                             </a>
                         </li>
                     </ul>
