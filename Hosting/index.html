@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portafolio de proyectos web desplegados en la nube." />
+    <meta name="theme-color" content="#0b1020" />
+    <title>Proyectos | Nico Villagran</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="/styles.css?v=20260312" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#">Nico Villagran</a>
+            <nav class="site-nav" aria-label="Navegacion principal">
+                <a href="#proyectos">Proyectos</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contacto">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow reveal">Portfolio cloud</p>
+            <h1 class="reveal delay-1">Proyectos web en produccion, listos para explorar.</h1>
+            <p class="hero-copy reveal delay-2">
+                Esta pagina centraliza mis trabajos desplegados en hosting para mostrar avances reales, interfaces bien
+                cuidadas y experimentos que ya puedes abrir.
+            </p>
+
+            <div class="hero-actions reveal delay-3">
+                <a class="btn btn-primary" href="#proyectos">Ver proyectos</a>
+                <a class="btn btn-ghost" href="#contacto">Hablar</a>
+            </div>
+
+            <div class="stats reveal delay-3" aria-label="Resumen de proyectos">
+                <article class="stat">
+                    <strong id="project-count">0</strong>
+                    <span>Proyectos</span>
+                </article>
+                <article class="stat">
+                    <strong id="online-count">0</strong>
+                    <span>Online</span>
+                </article>
+                <article class="stat">
+                    <strong id="updated-at">--/--/----</strong>
+                    <span>Actualizado</span>
+                </article>
+            </div>
+        </section>
+
+        <section id="proyectos" class="section">
+            <div class="section-head">
+                <h2>Catalogo</h2>
+                <p>Haz clic en cualquier tarjeta para abrir el proyecto.</p>
+            </div>
+
+            <section class="projects" id="projects" aria-live="polite"></section>
+        </section>
+
+        <section id="sobre" class="section">
+            <article class="about-card reveal">
+                <h2>Sobre este sitio</h2>
+                <p>
+                    Este index centraliza mis proyectos desplegados en hosting. Los datos se cargan desde
+                    <code>projects.json</code>, así que agregar un proyecto nuevo es tan simple como añadir una entrada al archivo.
+                </p>
+            </article>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="contacto">
+        <div class="container footer-inner">
+            <p>(c) <span id="year"></span> Nico Villagran</p>
+            <div class="footer-links">
+                <a href="mailto:nicovillagranroses@gmail.com">Email</a>
+                <a href="https://github.com/nicovillagranr" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/nico-villagran/" target="_blank" rel="noreferrer">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/index.js?v=20260312"></script>
+</body>
+
+</html>
+
