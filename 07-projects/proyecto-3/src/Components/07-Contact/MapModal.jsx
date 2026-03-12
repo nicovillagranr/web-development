@@ -1,5 +1,6 @@
 // MapModal.jsx
 import { useEffect, useRef } from "react"
+import { CONTACT_MAP_URL } from "./contactConstants"
 
 function MapModal({ onClose }) {
     // Referencias para controlar el foco dentro del modal.
@@ -85,7 +86,7 @@ function MapModal({ onClose }) {
                 {/* Mapa embebido de la ubicacion. */}
                 <iframe
                     title="Location map"
-                    src="https://www.google.com/maps?q=Alonso%20de%20C%C3%B3rdova%201234%20Vitacura%20Santiago&output=embed"
+                    src={CONTACT_MAP_URL}
                     className="h-80 w-full"
                     loading="lazy"
                 />

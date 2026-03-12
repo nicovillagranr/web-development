@@ -1,29 +1,45 @@
-// Importamos Link para que el logo del footer redirija al home
 import { Link } from "react-router-dom"
-
-// Importamos íconos
 import HouseIcon from "../../assets/icons/1-Header/house.svg"
+
+const navLinks = [
+    { to: "/services", label: "Services" },
+    { to: "/portfolio", label: "Work" },
+    { to: "/team", label: "Team" },
+    { to: "/contact", label: "Contact" },
+]
 
 function Footer() {
     return (
-        <footer className="w-full min-h-[15vh] bg-dark flex flex-col items-center justify-around sm:flex-row">
+        <footer className="w-full min-h-[15vh] bg-dark border-t border-white/10 flex flex-col items-center justify-center gap-4 px-8 sm:flex-row sm:justify-between sm:gap-0">
 
-            {/*Logo*/}
-            <div className="flex flex-col items-center">
-                <Link to="/" className="flex items-center text-white text-xl tracking-widest">
-                    <img src={HouseIcon} alt="Home" className="w-5 h-5" />
-                    <span className="text-md">Projex</span>
-                </Link>
-                <span className="text-white text-xs cursor-pointer">
+            {/* Logo */}
+            <Link to="/" className="flex flex-col items-center sm:items-start gap-0.5">
+                <span className="flex items-center gap-1.5 text-white text-base font-bold tracking-widest uppercase">
+                    <img src={HouseIcon} alt="" aria-hidden="true" className="w-4 h-4 opacity-80" />
+                    Projex
+                </span>
+                <span className="text-white/40 text-[10px] tracking-widest uppercase">
                     Building scalable web products
                 </span>
-            </div>
+            </Link>
 
+            {/* Nav links — solo desktop */}
+            <nav aria-label="Footer navigation" className="hidden sm:flex items-center gap-6">
+                {navLinks.map(({ to, label }) => (
+                    <Link
+                        key={to}
+                        to={to}
+                        className="text-white/40 text-xs tracking-wide hover:text-primary transition-colors duration-200"
+                    >
+                        {label}
+                    </Link>
+                ))}
+            </nav>
 
             {/* Copyright */}
-            <div className="text-white text-xs">
-                &copy; {new Date().getFullYear()} Nico Villagran. All rights reserved.
-            </div>
+            <p className="text-white/30 text-[10px] tracking-wide text-center sm:text-right">
+                &copy; {new Date().getFullYear()} Nico Villagran
+            </p>
 
         </footer>
     )

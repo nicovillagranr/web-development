@@ -10,9 +10,9 @@ const defaultAlerts = [
 ];
 
 function getAlertToneClass(level) {
-    if (level === "high") return "bg-rose-500/20 border-rose-300/40 text-rose-100";
-    if (level === "medium") return "bg-amber-500/20 border-amber-300/40 text-amber-100";
-    return "bg-white/8 border-white/15 text-white/85";
+    if (level === "high")   return "bg-rose-500/[0.10] border-rose-400/[0.15] text-rose-300/80";
+    if (level === "medium") return "bg-amber-500/[0.10] border-amber-400/[0.15] text-amber-300/80";
+    return "bg-white/[0.04] border-white/[0.07] text-white/50";
 }
 
 function CardAlerts({
@@ -24,7 +24,7 @@ function CardAlerts({
 }) {
     return (
         <SystemPanelCard title="Alertas" onClick={onClick} className={className} {...props}>
-            <p className="text-[11px] leading-snug text-white/90">
+            <p className="text-[11px] leading-snug text-white/50">
                 {summary}
             </p>
 
@@ -35,7 +35,7 @@ function CardAlerts({
                         className={`rounded-lg border px-2 py-1 flex items-center justify-between gap-2 ${getAlertToneClass(alert.level)}`}
                     >
                         <p className="text-[10px] font-medium leading-none">{alert.label}</p>
-                        <p className="text-[10px] leading-none opacity-90">{alert.time}</p>
+                        <p className="text-[10px] leading-none opacity-60">{alert.time}</p>
                     </article>
                 ))}
             </div>

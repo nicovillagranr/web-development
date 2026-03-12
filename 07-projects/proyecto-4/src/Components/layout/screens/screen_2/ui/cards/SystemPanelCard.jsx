@@ -24,13 +24,13 @@ function SystemPanelCard({
             className={`relative h-35 rounded-2xl border border-white/[0.10] bg-linear-to-b from-white/[0.10] via-white/[0.06] to-white/[0.03] p-3 text-left transition-transform duration-200 flex flex-col overflow-hidden ${isInteractive ? "active:scale-[0.96]" : "cursor-default"} ${className}`}
             {...props}
         >
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.22),transparent_55%)]" />
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.10),transparent_55%)]" />
 
             <header className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold leading-tight text-white/95">{title}</h3>
-                <span className="inline-flex items-center gap-0.5 text-[11px] text-white/80 shrink-0">
-                    <FiChevronRight className="w-4 h-4" aria-hidden="true" />
-                </span>
+                <h3 className="text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium">{title}</h3>
+                {isInteractive && (
+                    <FiChevronRight className="w-3.5 h-3.5 text-white/20 shrink-0" aria-hidden="true" />
+                )}
             </header>
 
             <div className={`relative z-10 mt-2 flex-1 min-h-0 ${contentClassName}`}>

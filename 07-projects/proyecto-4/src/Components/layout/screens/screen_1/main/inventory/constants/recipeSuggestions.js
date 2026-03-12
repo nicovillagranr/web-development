@@ -1,7 +1,10 @@
 // ================= CONTEXTO MODULO =================
 // Catalogo estatico de recetas y fallback.
 // Fuente de datos para sugerencias segun coincidencia de ingredientes.
+
 export const RECIPE_CATALOG = [
+
+    // ===== HUEVOS Y TORTILLAS =====
     {
         id: "omelette-queso",
         title: "Omelette de queso",
@@ -46,6 +49,41 @@ export const RECIPE_CATALOG = [
             "Termina en horno o tapa hasta cuajar.",
         ],
     },
+    {
+        id: "revuelto-champinon-queso",
+        title: "Revuelto de champinon y queso",
+        ingredients: ["huevo", "champinon", "queso"],
+        steps: [
+            "Saltea champinon laminado.",
+            "Agrega huevo batido y mezcla.",
+            "Termina con queso rallado.",
+            "Sirve caliente.",
+        ],
+    },
+    {
+        id: "shakshuka-rapida",
+        title: "Shakshuka rapida",
+        ingredients: ["huevo", "tomate", "pimenton"],
+        steps: [
+            "Sofrie pimenton y tomate picados.",
+            "Haz huecos y agrega huevos.",
+            "Tapa y cocina hasta cuajar.",
+            "Sirve con pan.",
+        ],
+    },
+    {
+        id: "huevos-benedictinos",
+        title: "Huevos benedictinos",
+        ingredients: ["huevo", "jamon", "pan"],
+        steps: [
+            "Tuesta el pan hasta dorar.",
+            "Calienta el jamon en sarten.",
+            "Pochea los huevos en agua con vinagre.",
+            "Arma: pan, jamon, huevo y sirve.",
+        ],
+    },
+
+    // ===== ENSALADAS =====
     {
         id: "ensalada-caprese",
         title: "Ensalada caprese",
@@ -102,6 +140,41 @@ export const RECIPE_CATALOG = [
         ],
     },
     {
+        id: "ensalada-frutas",
+        title: "Ensalada de frutas",
+        ingredients: ["manzana", "platano", "naranja"],
+        steps: [
+            "Lava y corta las frutas en cubos.",
+            "Mezcla en un bowl amplio.",
+            "Enfria 10 minutos en refrigeracion.",
+            "Sirve fresca.",
+        ],
+    },
+    {
+        id: "ensalada-garbanzos-fresca",
+        title: "Ensalada fresca de garbanzos",
+        ingredients: ["garbanzo", "tomate", "pepino"],
+        steps: [
+            "Escurre garbanzos cocidos.",
+            "Corta tomate y pepino en cubos.",
+            "Mezcla con aceite y limon.",
+            "Sirve fria.",
+        ],
+    },
+    {
+        id: "ensalada-quinoa-palta",
+        title: "Ensalada de quinoa y palta",
+        ingredients: ["quinoa", "palta", "tomate"],
+        steps: [
+            "Cocina quinoa y deja enfriar.",
+            "Corta palta y tomate en cubos.",
+            "Mezcla todo con aceite y limon.",
+            "Sirve fria.",
+        ],
+    },
+
+    // ===== BATIDOS Y SMOOTHIES =====
+    {
         id: "batido-frutas",
         title: "Batido de frutas",
         ingredients: ["leche", "platano", "frutilla"],
@@ -155,6 +228,30 @@ export const RECIPE_CATALOG = [
             "Consume fria por la manana.",
         ],
     },
+    {
+        id: "jugo-naranja-zanahoria",
+        title: "Jugo de naranja y zanahoria",
+        ingredients: ["naranja", "zanahoria", "limon"],
+        steps: [
+            "Exprime las naranjas.",
+            "Licua la zanahoria con un poco de agua.",
+            "Mezcla ambos jugos con jugo de limon.",
+            "Sirve bien frio con hielo.",
+        ],
+    },
+    {
+        id: "limonada-menta",
+        title: "Limonada con menta",
+        ingredients: ["limon", "menta", "agua"],
+        steps: [
+            "Exprime los limones en una jarra.",
+            "Agrega agua fria y azucar al gusto.",
+            "Incorpora hojas de menta y hielo.",
+            "Revuelve y sirve.",
+        ],
+    },
+
+    // ===== SANDWICHES Y WRAPS =====
     {
         id: "sandwich-pollo",
         title: "Sandwich de pollo",
@@ -211,6 +308,30 @@ export const RECIPE_CATALOG = [
         ],
     },
     {
+        id: "pizza-pan-molde",
+        title: "Pizza rapida en pan de molde",
+        ingredients: ["pan", "queso", "tomate"],
+        steps: [
+            "Pon pan en bandeja.",
+            "Agrega tomate picado y queso.",
+            "Hornea hasta derretir el queso.",
+            "Sirve caliente.",
+        ],
+    },
+    {
+        id: "completo-italiano",
+        title: "Completo italiano",
+        ingredients: ["pan", "tomate", "palta"],
+        steps: [
+            "Calienta el pan de hot dog.",
+            "Unta palta aplastada.",
+            "Agrega tomate picado.",
+            "Termina con mayonesa al gusto.",
+        ],
+    },
+
+    // ===== CARNES Y PROTEINAS =====
+    {
         id: "salteado-verduras",
         title: "Salteado de verduras",
         ingredients: ["zanahoria", "pimenton", "cebolla"],
@@ -254,6 +375,30 @@ export const RECIPE_CATALOG = [
             "Sirve con verduras.",
         ],
     },
+    {
+        id: "lomo-saltado",
+        title: "Lomo saltado",
+        ingredients: ["carne", "tomate", "cebolla"],
+        steps: [
+            "Corta la carne en tiras y sazona.",
+            "Saltea a fuego muy alto con cebolla.",
+            "Agrega tomate y saltea 1 minuto mas.",
+            "Sirve con arroz o papas fritas.",
+        ],
+    },
+    {
+        id: "albondigas-salsa",
+        title: "Albondigas en salsa de tomate",
+        ingredients: ["carne", "huevo", "tomate"],
+        steps: [
+            "Mezcla carne molida con huevo y sal.",
+            "Forma bolitas y dora en sarten.",
+            "Agrega tomate picado y cocina tapado.",
+            "Sirve con pasta o arroz.",
+        ],
+    },
+
+    // ===== PASTA Y ARROZ =====
     {
         id: "arroz-con-pollo",
         title: "Arroz con pollo",
@@ -310,27 +455,18 @@ export const RECIPE_CATALOG = [
         ],
     },
     {
-        id: "pizza-pan-molde",
-        title: "Pizza rapida en pan de molde",
-        ingredients: ["pan", "queso", "tomate"],
+        id: "risotto-champinon",
+        title: "Risotto de champinon",
+        ingredients: ["arroz", "champinon", "crema"],
         steps: [
-            "Pon pan en bandeja.",
-            "Agrega tomate picado y queso.",
-            "Hornea hasta derretir el queso.",
-            "Sirve caliente.",
+            "Saltea champinon laminado.",
+            "Agrega arroz y tuesta 1 minuto.",
+            "Incorpora caldo de a poco revolviendo.",
+            "Termina con crema y sirve.",
         ],
     },
-    {
-        id: "croquetas-papa-queso",
-        title: "Croquetas de papa y queso",
-        ingredients: ["papa", "queso", "huevo"],
-        steps: [
-            "Cocina y muele papas.",
-            "Mezcla con queso rallado y huevo.",
-            "Forma croquetas y dora en sarten.",
-            "Sirve con ensalada.",
-        ],
-    },
+
+    // ===== SOPAS Y CREMAS =====
     {
         id: "crema-zapallo",
         title: "Crema de zapallo",
@@ -351,6 +487,41 @@ export const RECIPE_CATALOG = [
             "Hierve en agua con sal.",
             "Cocina hasta que esten tiernas.",
             "Sirve caliente.",
+        ],
+    },
+    {
+        id: "cazuela-chilena",
+        title: "Cazuela chilena",
+        ingredients: ["pollo", "papa", "zapallo"],
+        steps: [
+            "Hierve el pollo con agua y sal.",
+            "Agrega papa y zapallo en trozos grandes.",
+            "Cocina hasta que todo este tierno.",
+            "Sirve en bowl con el caldo.",
+        ],
+    },
+    {
+        id: "sopa-lentejas",
+        title: "Sopa de lentejas",
+        ingredients: ["lenteja", "zanahoria", "cebolla"],
+        steps: [
+            "Sofrie cebolla y zanahoria picados.",
+            "Agrega lentejas y agua hasta cubrir.",
+            "Cocina a fuego medio 30 minutos.",
+            "Ajusta sal y sirve caliente.",
+        ],
+    },
+
+    // ===== SNACKS Y COMPLEMENTOS =====
+    {
+        id: "croquetas-papa-queso",
+        title: "Croquetas de papa y queso",
+        ingredients: ["papa", "queso", "huevo"],
+        steps: [
+            "Cocina y muele papas.",
+            "Mezcla con queso rallado y huevo.",
+            "Forma croquetas y dora en sarten.",
+            "Sirve con ensalada.",
         ],
     },
     {
@@ -376,52 +547,145 @@ export const RECIPE_CATALOG = [
         ],
     },
     {
-        id: "ensalada-frutas",
-        title: "Ensalada de frutas",
-        ingredients: ["manzana", "platano", "naranja"],
+        id: "sopaipillas",
+        title: "Sopaipillas",
+        ingredients: ["zapallo", "harina", "mantequilla"],
         steps: [
-            "Lava y corta las frutas en cubos.",
-            "Mezcla en un bowl amplio.",
-            "Enfria 10 minutos en refrigeracion.",
-            "Sirve fresca.",
+            "Cocina el zapallo y aplasta hasta hacer pure.",
+            "Mezcla con harina y mantequilla hasta formar masa.",
+            "Estira y corta en circulos.",
+            "Frie en aceite caliente hasta dorar.",
         ],
     },
     {
-        id: "ensalada-garbanzos-fresca",
-        title: "Ensalada fresca de garbanzos",
-        ingredients: ["garbanzo", "tomate", "pepino"],
+        id: "guacamole-tostadas",
+        title: "Guacamole con tostadas",
+        ingredients: ["palta", "tomate", "limon"],
         steps: [
-            "Escurre garbanzos cocidos.",
-            "Corta tomate y pepino en cubos.",
-            "Mezcla con aceite y limon.",
-            "Sirve fria.",
+            "Aplasta la palta con tenedor.",
+            "Agrega tomate picado y jugo de limon.",
+            "Sazona con sal y mezcla.",
+            "Sirve con pan o tostadas.",
         ],
     },
     {
-        id: "revuelto-champinon-queso",
-        title: "Revuelto de champinon y queso",
-        ingredients: ["huevo", "champinon", "queso"],
+        id: "hummus-casero",
+        title: "Hummus casero",
+        ingredients: ["garbanzo", "limon", "aceite"],
         steps: [
-            "Saltea champinon laminado.",
-            "Agrega huevo batido y mezcla.",
-            "Termina con queso rallado.",
-            "Sirve caliente.",
+            "Escurre y procesa los garbanzos.",
+            "Agrega limon y aceite.",
+            "Procesa hasta obtener pasta suave.",
+            "Sirve con pan o verduras.",
+        ],
+    },
+
+    // ===== BEBIDAS ALCOHOLICAS =====
+    {
+        id: "piscola-clasica",
+        title: "Piscola clasica",
+        ingredients: ["pisco", "coca cola", "limon"],
+        steps: [
+            "Llena un vaso con hielo.",
+            "Agrega 1 parte de pisco por 3 de cola.",
+            "Exprime medio limon encima.",
+            "Revuelve suavemente y sirve.",
         ],
     },
     {
-        id: "shakshuka-rapida",
-        title: "Shakshuka rapida",
-        ingredients: ["huevo", "tomate", "pimenton"],
+        id: "pisco-sour",
+        title: "Pisco Sour",
+        ingredients: ["pisco", "limon", "huevo"],
         steps: [
-            "Sofrie pimenton y tomate picados.",
-            "Haz huecos y agrega huevos.",
-            "Tapa y cocina hasta cuajar.",
-            "Sirve con pan.",
+            "Mezcla pisco, jugo de limon y azucar en coctelera.",
+            "Agrega clara de huevo.",
+            "Agita con hielo vigorosamente.",
+            "Cuela en copa fria y sirve con amargo.",
         ],
     },
+    {
+        id: "borgona-chilena",
+        title: "Borgona chilena",
+        ingredients: ["vino", "frutilla", "azucar"],
+        steps: [
+            "Lava y corta las frutillas en mitades.",
+            "Mezcla con azucar y deja macerar 10 minutos.",
+            "Agrega vino tinto bien frio.",
+            "Sirve con hielo.",
+        ],
+    },
+    {
+        id: "navegado-chileno",
+        title: "Navegado chileno",
+        ingredients: ["vino", "naranja", "canela"],
+        steps: [
+            "Calienta el vino tinto a fuego bajo, sin hervir.",
+            "Agrega rodajas de naranja y canela.",
+            "Endulza con azucar al gusto.",
+            "Sirve caliente en taza.",
+        ],
+    },
+    {
+        id: "terremoto",
+        title: "Terremoto",
+        ingredients: ["vino", "helado", "granadina"],
+        steps: [
+            "Sirve vino pipeño frio en vaso grande.",
+            "Agrega 1 bola de helado de piña encima.",
+            "Incorpora un chorro de granadina.",
+            "Sirve inmediatamente con sorbete.",
+        ],
+    },
+    {
+        id: "clery-chileno",
+        title: "Clery chileno",
+        ingredients: ["vino", "frutilla", "limon"],
+        steps: [
+            "Mezcla vino blanco frio con frutillas maceradas.",
+            "Agrega jugo de limon y azucar.",
+            "Revuelve bien y refrigera 15 minutos.",
+            "Sirve con hielo.",
+        ],
+    },
+    {
+        id: "chela-limon",
+        title: "Chela con limon",
+        ingredients: ["cerveza", "limon", "sal"],
+        steps: [
+            "Sirve la cerveza bien fria en vaso.",
+            "Exprime limon al gusto.",
+            "Agrega una pizca de sal en el borde.",
+            "Sirve inmediatamente.",
+        ],
+    },
+    {
+        id: "michelada",
+        title: "Michelada",
+        ingredients: ["cerveza", "limon", "tomate"],
+        steps: [
+            "Mezcla jugo de tomate con limon y sal.",
+            "Sirve la mezcla en vaso con hielo.",
+            "Completa con cerveza fria.",
+            "Revuelve suavemente y sirve.",
+        ],
+    },
+    {
+        id: "sangria-rapida",
+        title: "Sangria rapida",
+        ingredients: ["vino", "naranja", "manzana"],
+        steps: [
+            "Corta naranja y manzana en rodajas.",
+            "Mezcla vino tinto con las frutas.",
+            "Agrega azucar y refrigera 1 hora.",
+            "Sirve con hielo y un chorrito de jugo de naranja.",
+        ],
+    },
+
 ];
 
 export const FALLBACK_RECIPES = [
+
+    // ===== FALLBACK: usados cuando no hay coincidencias en el catalogo =====
     {
         id: "wrap-verduras",
         title: "Wrap de verduras",

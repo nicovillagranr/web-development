@@ -29,7 +29,7 @@ function DeviceShell() {
 
     // Render/retorno del bloque actual
     return (
-        <section className="relative w-120 h-dvh min-h-svh rounded-2xl bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8),_0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-white/5">
+        <section className="relative w-120 h-dvh min-h-svh rounded-2xl bg-[url('../../assets/images/fondo-1.jpg')] bg-cover bg-center overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-white/5">
 
             {/* Pantallas de Home y Ajustes */}
             <HomeScreens

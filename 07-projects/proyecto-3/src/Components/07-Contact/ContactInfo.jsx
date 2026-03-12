@@ -1,6 +1,7 @@
 // ContactInfo.jsx
 import locationIcon from "../../assets/icons/4-Contact/location.svg"
 import phoneIcon from "../../assets/icons/4-Contact/phone.svg"
+import { CONTACT_ADDRESS } from "./contactConstants"
 
 function ContactInfo({ onOpenMap }) {
     return (
@@ -14,7 +15,7 @@ function ContactInfo({ onOpenMap }) {
 
             <div className="flex items-center gap-2">
                 <img src={locationIcon} alt="Location icon" className="w-5 h-5" />
-                <span className="text-lg">Alonso de Córdova 1234, Vitacura, Santiago</span>
+                <span className="text-lg">{CONTACT_ADDRESS}</span>
             </div>
 
             <div className="flex items-center gap-2">

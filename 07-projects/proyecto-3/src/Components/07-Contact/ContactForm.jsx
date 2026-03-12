@@ -1,10 +1,7 @@
-﻿// Import hooks and validation helper
 import { useState } from "react"
-import { ContactValidation } from "./ContactValidation"
+import { validateContact } from "./ContactValidation"
 
 function ContactForm() {
-    const { validate } = ContactValidation()
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -17,12 +14,13 @@ function ContactForm() {
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
+        if (status === "success") setStatus("idle")
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const validationErrors = validate(formData)
+        const validationErrors = validateContact(formData)
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             setStatus("idle")
@@ -39,17 +37,22 @@ function ContactForm() {
     }
 
     return (
-        <section className="w-full md:w-[50%]">
+        <div className="w-full md:w-[50%]">
             <form
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-3"
                 onSubmit={handleSubmit}
                 noValidate
                 id="contact-form"
             >
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="contact-name" className="text-sm font-medium text-gray-800 md:text-base">
-                        Name
-                    </label>
+                <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                        <label htmlFor="contact-name" className="text-sm font-medium text-gray-800">
+                            Name
+                        </label>
+                        <p id="contact-name-error" role="alert" aria-live="polite" className="text-xs text-red-500">
+                            {errors.name}
+                        </p>
+                    </div>
                     <input
                         id="contact-name"
                         type="text"
@@ -59,20 +62,20 @@ function ContactForm() {
                         onChange={handleChange}
                         autoComplete="name"
                         aria-invalid={Boolean(errors.name)}
-                        aria-describedby={errors.name ? "contact-name-error" : undefined}
-                        className="w-full rounded-md border border-gray-400 p-3 text-md focus:outline-none focus:ring-2 focus:ring-primary md:text-lg"
+                        aria-describedby="contact-name-error"
+                        className="w-full rounded-md border border-gray-400 p-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    {errors.name && (
-                        <p id="contact-name-error" role="alert" className="text-sm text-red-600">
-                            {errors.name}
-                        </p>
-                    )}
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="contact-email" className="text-sm font-medium text-gray-800 md:text-base">
-                        Email
-                    </label>
+                <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                        <label htmlFor="contact-email" className="text-sm font-medium text-gray-800">
+                            Email
+                        </label>
+                        <p id="contact-email-error" role="alert" aria-live="polite" className="text-xs text-red-500">
+                            {errors.email}
+                        </p>
+                    </div>
                     <input
                         id="contact-email"
                         type="email"
@@ -83,20 +86,20 @@ function ContactForm() {
                         autoComplete="email"
                         inputMode="email"
                         aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? "contact-email-error" : undefined}
-                        className="w-full rounded-md border border-gray-400 p-3 text-md focus:outline-none focus:ring-2 focus:ring-primary md:text-lg"
+                        aria-describedby="contact-email-error"
+                        className="w-full rounded-md border border-gray-400 p-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    {errors.email && (
-                        <p id="contact-email-error" role="alert" className="text-sm text-red-600">
-                            {errors.email}
-                        </p>
-                    )}
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="contact-message" className="text-sm font-medium text-gray-800 md:text-base">
-                        Message
-                    </label>
+                <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                        <label htmlFor="contact-message" className="text-sm font-medium text-gray-800">
+                            Message
+                        </label>
+                        <p id="contact-message-error" role="alert" aria-live="polite" className="text-xs text-red-500">
+                            {errors.message}
+                        </p>
+                    </div>
                     <textarea
                         id="contact-message"
                         name="message"
@@ -105,23 +108,18 @@ function ContactForm() {
                         value={formData.message}
                         onChange={handleChange}
                         aria-invalid={Boolean(errors.message)}
-                        aria-describedby={errors.message ? "contact-message-error" : undefined}
-                        className="w-full rounded-md border border-gray-400 p-3 text-md focus:outline-none focus:ring-2 focus:ring-primary md:text-lg"
+                        aria-describedby="contact-message-error"
+                        className="w-full resize-none rounded-md border border-gray-400 p-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    {errors.message && (
-                        <p id="contact-message-error" role="alert" className="text-sm text-red-600">
-                            {errors.message}
-                        </p>
-                    )}
                 </div>
 
                 {status === "success" && (
-                    <p role="status" aria-live="polite" className="text-sm text-green-600">
+                    <p role="status" aria-live="polite" className="text-xs text-green-600 text-right">
                         Message sent successfully
                     </p>
                 )}
             </form>
-        </section>
+        </div>
     )
 }
 

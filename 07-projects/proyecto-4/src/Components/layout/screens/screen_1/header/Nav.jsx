@@ -144,7 +144,7 @@ function Nav({
 
     return (
         <nav className="w-full">
-            <section className="grid grid-cols-2 grid-rows-2 gap-3 w-full h-40">
+            <section className="grid grid-cols-2 grid-rows-2 gap-3 w-full h-35">
                 {renderOrder.map((cardId, slotIndex) => {
                     const cardConfig = cardsById[cardId];
                     if (!cardConfig) return null;
@@ -183,5 +183,4 @@ function Nav({
         </nav>
     );
 }
-
 export default Nav;

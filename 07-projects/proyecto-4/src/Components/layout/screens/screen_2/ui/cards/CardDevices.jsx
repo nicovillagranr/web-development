@@ -10,11 +10,11 @@ const defaultStats = [
     { id: "off", label: "Off", value: "1", tone: "slate" },
 ];
 
-function getStatToneClass(tone) {
-    if (tone === "sky") return "bg-sky-500/15 border-sky-300/30 text-sky-100";
-    if (tone === "slate") return "bg-slate-500/15 border-slate-300/30 text-slate-100";
-    if (tone === "amber") return "bg-amber-500/15 border-amber-300/30 text-amber-100";
-    return "bg-emerald-500/15 border-emerald-300/30 text-emerald-100";
+function getStatValueClass(tone) {
+    if (tone === "emerald") return "text-emerald-400";
+    if (tone === "amber")   return "text-amber-400";
+    if (tone === "sky")     return "text-cyan-400";
+    return "text-white/40";
 }
 
 function CardDevices({
@@ -26,7 +26,7 @@ function CardDevices({
 }) {
     return (
         <SystemPanelCard title="Dispositivos" onClick={onClick} className={className} {...props}>
-            <p className="text-[11px] leading-snug text-white/90">
+            <p className="text-[11px] leading-snug text-white/50">
                 {summary}
             </p>
 
@@ -34,10 +34,10 @@ function CardDevices({
                 {stats.slice(0, 3).map((stat) => (
                     <article
                         key={stat.id || stat.label}
-                        className={`rounded-xl border px-1.5 py-1 ${getStatToneClass(stat.tone)}`}
+                        className="rounded-xl border border-white/[0.07] bg-white/[0.04] px-1.5 py-1"
                     >
-                        <p className="text-[10px] leading-none">{stat.label}</p>
-                        <p className="mt-1 text-xs font-semibold leading-none">{stat.value}</p>
+                        <p className="text-[10px] leading-none text-white/35">{stat.label}</p>
+                        <p className={`mt-1 text-xs font-medium leading-none ${getStatValueClass(stat.tone)}`}>{stat.value}</p>
                     </article>
                 ))}
             </div>

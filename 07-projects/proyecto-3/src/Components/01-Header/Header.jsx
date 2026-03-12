@@ -58,9 +58,9 @@ function Header() {
           <div className="flex flex-col">
             <NavLink to="/" end className="flex items-center justify-center text-white text-xl tracking-widest ">
               <img src={HouseIcon} alt="Home" className="w-5 h-5" />
-              <p>Projex</p>
+              <span>Projex</span>
             </NavLink>
-            <span className="text-white text-xs font-md md:text-sm">Scalable Web Products</span>
+            <span className="text-white text-xs font-medium md:text-sm">Scalable Web Products</span>
           </div>
 
           <div className="flex-1" />
@@ -78,13 +78,16 @@ function Header() {
 
         <div className="flex items-center gap-4">
           <button
+            type="button"
             className="md:hidden text-white text-2xl"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             <img
               src={isOpen ? CloseIcon : MenuIcon}
-              alt={isOpen ? "Close menu icon" : "Open menu icon"}
+              alt=""
+              aria-hidden="true"
               className="w-7 h-7"
             />
           </button>

@@ -49,7 +49,7 @@ function TimeSettings({
 
             <div className="flex-1 p-4 space-y-2">
                 {/* Toggle: hora automática */}
-                <div className="flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                <div className="flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6">
                     <span className="text-sm text-white/80">Fecha y hora automáticas</span>
                     <button
                         type="button"
@@ -66,7 +66,7 @@ function TimeSettings({
                 <button
                     type="button"
                     onClick={() => setActiveEditor("date")}
-                    className={`w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06] transition-opacity duration-200 ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
+                    className={`w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6 transition-opacity duration-200 ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
                 >
                     <span className="text-sm text-white/80">Ajustar fecha</span>
                     <FiChevronRight className="w-4 h-4 text-white/30" />
@@ -76,14 +76,14 @@ function TimeSettings({
                 <button
                     type="button"
                     onClick={() => setActiveEditor("time")}
-                    className={`w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06] transition-opacity duration-200 ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
+                    className={`w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6 transition-opacity duration-200 ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
                 >
                     <span className="text-sm text-white/80">Ajustar hora</span>
                     <FiChevronRight className="w-4 h-4 text-white/30" />
                 </button>
 
                 {/* Toggle: formato 24h */}
-                <div className="flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                <div className="flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6">
                     <span className="text-sm text-white/80">Formato 24 horas</span>
                     <button
                         type="button"
@@ -108,5 +108,4 @@ function TimeSettings({
         </section>
     );
 }
-
 export default TimeSettings;

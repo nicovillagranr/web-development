@@ -8,8 +8,8 @@ import { useSmartShoppingList } from "../hooks/useSmartShoppingList.jsx";
 
 function getToneClass(tone) {
     if (tone === "recipe") return "bg-cyan-500/15 text-cyan-300/80";
-    if (tone === "stock")  return "bg-amber-500/15 text-amber-300/80";
-    return                        "bg-emerald-500/15 text-emerald-300/80";
+    if (tone === "stock") return "bg-amber-500/15 text-amber-300/80";
+    return "bg-emerald-500/15 text-emerald-300/80";
 }
 
 function ShoppingListSettings({ isActive, onBack }) {
@@ -46,15 +46,15 @@ function ShoppingListSettings({ isActive, onBack }) {
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pb-6 space-y-3 no-scrollbar pt-4">
 
                 {/* Resumen */}
-                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                <div className="rounded-2xl bg-white/4 border border-white/6 p-4">
                     <span className="block text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium mb-3">Resumen</span>
                     <div className="grid grid-cols-3 gap-2 text-center">
                         {[
-                            { label: "Total",     value: suggestedItems.length },
+                            { label: "Total", value: suggestedItems.length },
                             { label: "Pendientes", value: pendingCount },
-                            { label: "Listos",    value: doneCount },
+                            { label: "Listos", value: doneCount },
                         ].map(({ label, value }) => (
-                            <div key={label} className="rounded-xl bg-white/[0.05] border border-white/[0.06] py-2.5">
+                            <div key={label} className="rounded-xl bg-white/5 border border-white/6 py-2.5">
                                 <p className="text-[10px] text-white/35 uppercase tracking-wide">{label}</p>
                                 <p className="text-lg font-light text-white/90 mt-0.5">{value}</p>
                             </div>
@@ -66,13 +66,13 @@ function ShoppingListSettings({ isActive, onBack }) {
                 </div>
 
                 {/* Lista */}
-                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.06] p-4">
+                <div className="rounded-2xl bg-white/4 border border-white/6 p-4">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium">Compras sugeridas</span>
                         <button
                             type="button"
                             onClick={clearCompleted}
-                            className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.07] text-white/35 hover:text-white/65 transition-colors"
+                            className="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 border border-white/[0.07] text-white/35 hover:text-white/65 transition-colors"
                         >
                             Limpiar
                         </button>
@@ -91,7 +91,7 @@ function ShoppingListSettings({ isActive, onBack }) {
                             return (
                                 <article
                                     key={item.id}
-                                    className={`rounded-xl border px-3 py-2.5 transition-colors ${isDone ? "bg-white/[0.03] border-white/[0.04]" : "bg-white/[0.05] border-white/[0.06]"}`}
+                                    className={`rounded-xl border px-3 py-2.5 transition-colors ${isDone ? "bg-white/3 border-white/4" : "bg-white/5 border-white/6"}`}
                                 >
                                     <button
                                         type="button"
@@ -123,5 +123,4 @@ function ShoppingListSettings({ isActive, onBack }) {
         </section>
     );
 }
-
 export default ShoppingListSettings;

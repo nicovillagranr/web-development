@@ -10,9 +10,9 @@ const defaultRows = [
 ];
 
 function getToneClass(tone) {
-    if (tone === "sky") return "bg-sky-400";
-    if (tone === "amber") return "bg-amber-400";
-    return "bg-teal-400";
+    if (tone === "sky") return "bg-white/25";
+    if (tone === "amber") return "bg-amber-400/60";
+    return "bg-cyan-400/60";
 }
 
 function normalizeProgress(progress) {
@@ -30,7 +30,7 @@ function CardEnergy({
 }) {
     return (
         <SystemPanelCard title="Energia" onClick={onClick} className={className} {...props}>
-            <p className="text-[11px] leading-snug text-white/90">
+            <p className="text-[11px] leading-snug text-white/50">
                 {summary}
             </p>
 
@@ -38,10 +38,10 @@ function CardEnergy({
                 {rows.slice(0, 2).map((row) => (
                     <div key={row.id || row.label}>
                         <div className="flex items-center justify-between text-[10px]">
-                            <span className="text-white/80">{row.label}</span>
-                            <span className="text-white/90 font-medium">{row.value}</span>
+                            <span className="text-white/40">{row.label}</span>
+                            <span className="text-white/70 font-medium">{row.value}</span>
                         </div>
-                        <div className="mt-1 h-1.5 rounded-full bg-white/12 overflow-hidden">
+                        <div className="mt-1 h-1.5 rounded-full bg-white/[0.08] overflow-hidden">
                             <span
                                 className={`block h-full rounded-full ${getToneClass(row.tone)}`}
                                 style={{ width: `${normalizeProgress(row.progress)}%` }}

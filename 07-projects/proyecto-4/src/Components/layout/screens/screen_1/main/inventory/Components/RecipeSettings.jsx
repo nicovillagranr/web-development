@@ -6,11 +6,12 @@
 import { useCallback, useEffect } from "react";
 import SettingsHeader from "../../../ui/settings/SettingsHeader.jsx";
 import { useInventoryRecipeSuggestions } from "../hooks/useInventoryRecipeSuggestions.jsx";
-import recipesBg from "@assets/images/recipes-bg.jpg";
+import { useRecipeImage } from "../hooks/useRecipeImage.jsx";
 
 // ================= COMPONENT =================
 function RecipeSettings({ isActive, onBack }) {
     const { itemCount, recommendedRecipe } = useInventoryRecipeSuggestions();
+    const imageUrl = useRecipeImage(recommendedRecipe?.title ?? null);
 
     const hasInventory = itemCount > 0;
     const recipe = recommendedRecipe;
@@ -43,8 +44,8 @@ function RecipeSettings({ isActive, onBack }) {
                 {/* Hero imagen */}
                 <div className="rounded-2xl overflow-hidden border border-white/[0.06]">
                     <div
-                        className="relative h-48 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${recipesBg})` }}
+                        className="relative h-48 bg-cover bg-center bg-[#0D0F1A]"
+                        style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
                     >
                         <div className="absolute inset-0 bg-black/40" />
                         <div className="absolute inset-x-0 bottom-0 px-4 py-4 bg-gradient-to-t from-black/80 to-transparent">
