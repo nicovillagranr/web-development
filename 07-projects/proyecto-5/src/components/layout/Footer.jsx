@@ -13,18 +13,19 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           {/* Brand */}
           <div>
-            <span className="font-heading text-2xl font-800 text-brand-accent drop-shadow-[0_0_10px_rgba(0,229,255,0.4)]">
-              {FOOTER.logo}<span className="text-brand-warm drop-shadow-[0_0_10px_rgba(255,45,149,0.4)]">.</span>
+
+            <span className="font-heading text-2xl font-800 text-brand-accent drop-shadow-glow-accent">
+              {FOOTER.logo}<span className="text-brand-warm drop-shadow-glow-warm">.</span>
             </span>
             <p className="text-brand-muted mt-4 font-300 leading-relaxed">{FOOTER.tagline}</p>
             <div className="flex gap-5 mt-6">
-              <a href="#" className="text-brand-muted hover:text-brand-accent hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.5)] transition-all duration-300 text-lg">
+              <a href="#" className="text-brand-muted hover:text-brand-accent hover:drop-shadow-glow-accent-sm transition-all duration-300 text-lg">
                 <FaLinkedin />
               </a>
-              <a href="#" className="text-brand-muted hover:text-brand-warm hover:drop-shadow-[0_0_8px_rgba(255,45,149,0.5)] transition-all duration-300 text-lg">
+              <a href="#" className="text-brand-muted hover:text-brand-warm hover:drop-shadow-glow-warm-sm transition-all duration-300 text-lg">
                 <FaXTwitter />
               </a>
-              <a href="#" className="text-brand-muted hover:text-brand-accent hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.5)] transition-all duration-300 text-lg">
+              <a href="#" className="text-brand-muted hover:text-brand-accent hover:drop-shadow-glow-accent-sm transition-all duration-300 text-lg">
                 <FaGithub />
               </a>
             </div>
