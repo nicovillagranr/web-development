@@ -3,6 +3,7 @@
 @theme {
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Outfit', sans-serif;
+
   --color-brand-900: #0d0221;
   --color-brand-800: #150535;
   --color-brand-700: #1e0a45;
@@ -14,6 +15,22 @@
   --color-brand-sunset: #ff6b35;
   --color-brand-text: #f0e6ff;
   --color-brand-muted: #9b8ab8;
+
+  /* Neon drop-shadows */
+  --drop-shadow-glow-accent-xs: 0 0 6px rgba(0, 229, 255, 0.5);
+  --drop-shadow-glow-accent-sm: 0 0 8px rgba(0, 229, 255, 0.4);
+  --drop-shadow-glow-accent: 0 0 10px rgba(0, 229, 255, 0.5);
+  --drop-shadow-glow-accent-md: 0 0 15px rgba(0, 229, 255, 0.3);
+  --drop-shadow-glow-accent-lg: 0 0 20px rgba(0, 229, 255, 0.3);
+  --drop-shadow-glow-warm-sm: 0 0 8px rgba(255, 45, 149, 0.4);
+  --drop-shadow-glow-warm: 0 0 10px rgba(255, 45, 149, 0.5);
+  --drop-shadow-glow-warm-lg: 0 0 20px rgba(255, 45, 149, 0.3);
+
+  /* Letter spacing */
+  --tracking-tag: 0.3em;
+
+  /* Blur */
+  --blur-glow: 60px;
 }
 
 @layer base {
