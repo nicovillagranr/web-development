@@ -18,8 +18,9 @@
 
 .member__position {
     font-size: 1.5rem;
-    color: tomato;
-    font-weight: lighter;
+    color: var(--button-color);
+    font-weight: 500;
+    letter-spacing: 0.05em;
 }
 
 .member__description {
@@ -42,11 +43,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.member__social:hover {
+    border-color: var(--button-color);
+    background-color: var(--button-color);
+}
+
+.member__social:hover .member__social-icon {
+    filter: brightness(10);
 }
 
 .member__social-icon {
     width: 2rem;
     height: 2rem;
+    transition: filter 0.2s ease;
 }
 
 @media (width <=1050px) {

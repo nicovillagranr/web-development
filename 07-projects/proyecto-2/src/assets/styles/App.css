@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
 html {
     font-size: 62.5%;
     scroll-behavior: smooth;
@@ -8,7 +10,7 @@ html {
 
 body {
     min-height: 100vh;
-    font-family: sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.5;
     overflow-x: hidden;

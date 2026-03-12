@@ -1,7 +1,6 @@
 .feature__card {
     height: auto;
     width: auto;
-    /* border: 1px solid red; */
 
     display: flex;
     flex-direction: column;
@@ -10,6 +9,14 @@
     text-align: center;
 
     gap: 2rem;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.feature__card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
 }
 
 .feature__icon {
@@ -19,7 +26,10 @@
 
 .feature__card-title {
     font-size: 2rem;
+    font-family: var(--font-display);
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .feature__card-text {

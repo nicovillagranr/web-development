@@ -18,6 +18,9 @@
     align-items: center;
 
     gap: .5rem;
+    max-width: 120rem;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .header__logo {
@@ -25,13 +28,18 @@
     border: 0;
     background: transparent;
     line-height: 1;
-    font-size: 3rem;
+    font-size: 2.2rem;
     color: white;
+    transition: opacity 0.2s ease;
+}
+
+.header__logo:hover {
+    opacity: 0.85;
 }
 
 .header__logo-highlight {
     font-weight: 800;
-    color: gray;
+    color: var(--button-color);
 }
 
 .header__list {
@@ -48,6 +56,28 @@
     font-size: 1.5rem;
     font-weight: 500;
     color: white;
+    position: relative;
+    padding-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+
+.header__link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--button-color);
+    transition: width 0.25s ease;
+}
+
+.header__link:hover {
+    color: var(--button-color);
+}
+
+.header__link:hover::after {
+    width: 100%;
 }
 
 @media(width <=1180px) {
@@ -85,6 +115,6 @@
     }
 
     .header__logo {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 }
