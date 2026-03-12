@@ -7,11 +7,11 @@ import AnimateOnScroll from '../ui/AnimateOnScroll'
 export default function PainPoints() {
   return (
     <section className="py-24 md:py-32 px-6 md:px-10 relative">
-      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-brand-warm/15 to-transparent" />
+      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-brand-warm/15 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
         <AnimateOnScroll>
-          <span className="text-brand-sunset text-xs font-body font-500 uppercase tracking-[0.3em]">
+          <span className="text-brand-sunset text-xs font-body font-500 uppercase tracking-tag">
             {PAIN_POINTS.tag}
           </span>
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-800 text-brand-text mt-4 mb-16 max-w-3xl leading-tight tracking-tight">
@@ -23,7 +23,7 @@ export default function PainPoints() {
           {PAIN_POINTS.items.map((item, i) => (
             <AnimateOnScroll key={item.title} delay={i * 0.12}>
               <div className="group bg-brand-800/60 rounded-2xl border border-brand-warm/8 p-7 md:p-9 h-full hover:border-brand-warm/25 transition-all duration-500 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-warm/3 rounded-full blur-[60px] group-hover:bg-brand-warm/8 transition-all duration-500" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-warm/3 rounded-full blur-glow group-hover:bg-brand-warm/8 transition-all duration-500" />
                 <HiXCircle className="text-brand-warm/50 text-2xl mb-5 relative z-10" />
                 <h3 className="font-heading text-xl font-700 text-brand-text mb-3 relative z-10">{item.title}</h3>
                 <p className="text-brand-muted leading-relaxed font-300 relative z-10">{item.description}</p>

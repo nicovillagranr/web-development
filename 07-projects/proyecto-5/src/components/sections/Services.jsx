@@ -7,12 +7,12 @@ import ServiceCard from '../ui/ServiceCard'
 export default function Services() {
   return (
     <section id="servicios" className="py-24 md:py-32 px-6 md:px-10 relative">
-      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-brand-accent/15 to-transparent" />
+      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-brand-accent/15 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
         <AnimateOnScroll>
           <div className="mb-16 max-w-2xl">
-            <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-[0.3em]">
+            <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-tag">
               {SERVICES.tag}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-800 text-brand-text mt-4 mb-5 leading-tight tracking-tight">

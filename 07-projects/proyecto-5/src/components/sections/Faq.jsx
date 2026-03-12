@@ -7,12 +7,12 @@ import FaqItem from '../ui/FaqItem'
 export default function Faq() {
   return (
     <section id="faq" className="py-24 md:py-32 px-6 md:px-10 relative">
-      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-brand-accent/15 to-transparent" />
+      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-brand-accent/15 to-transparent" />
 
       <div className="max-w-3xl mx-auto">
         <AnimateOnScroll>
           <div className="text-center mb-16">
-            <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-[0.3em]">
+            <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-tag">
               {FAQ.tag}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-800 text-brand-text mt-4 tracking-tight">
