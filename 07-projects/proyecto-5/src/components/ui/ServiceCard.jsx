@@ -10,7 +10,7 @@ export default function ServiceCard({ Icon, title, description, delay = 0, featu
           ? 'bg-brand-800/80 border-brand-accent/10 hover:border-brand-accent/30 hover:shadow-[0_0_30px_rgba(0,229,255,0.06)]'
           : 'bg-brand-800/50 border-brand-700/50 hover:border-brand-warm/20 hover:shadow-[0_0_30px_rgba(255,45,149,0.06)]'
       }`}>
-        <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] transition-all duration-700 ${
+        <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-glow transition-all duration-700 ${
           featured
             ? 'bg-brand-accent/0 group-hover:bg-brand-accent/5'
             : 'bg-brand-warm/0 group-hover:bg-brand-warm/5'

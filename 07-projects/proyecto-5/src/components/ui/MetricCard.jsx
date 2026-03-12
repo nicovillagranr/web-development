@@ -32,10 +32,10 @@ export default function MetricCard({ value, suffix, label, delay = 0 }) {
     <AnimateOnScroll delay={delay}>
       <div ref={ref} className="text-center p-6 relative">
         <div className="font-heading text-4xl md:text-6xl font-800 mb-3 tracking-tight">
-          <span className="bg-gradient-to-r from-brand-accent to-brand-warm bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+          <span className="bg-linear-to-r from-brand-accent to-brand-warm bg-clip-text text-transparent drop-shadow-glow-accent-md">
             {display}
           </span>
-          <span className="text-brand-warm drop-shadow-[0_0_10px_rgba(255,45,149,0.4)]">{suffix}</span>
+          <span className="text-brand-warm drop-shadow-glow-warm">{suffix}</span>
         </div>
         <p className="text-brand-muted text-sm font-500 uppercase tracking-widest">{label}</p>
       </div>
