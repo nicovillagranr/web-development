@@ -3,7 +3,6 @@
 // Define fuentes, colores y tokens base reutilizados por la UI.
 // tailwind.config.js
 export default {
-    darkMode: "class",
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
@@ -11,11 +10,10 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#22d3ee',
-                surface: '#0D1117',
-                dark: '#080A12',
-                light: '#ffffff',
-                accent: '#22d3ee',
+                surface: '#27313A',
+                dark: '#1F2933',
+                light: '#F9FAFB',
+                accent: '#22C55E',
             },
             height: {
                 '800': '800px',

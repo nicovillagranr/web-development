@@ -1,6 +1,9 @@
+/* ─── Tailwind & configuración ───────────────────────────────────────────── */
 @import "tailwindcss";
 @config "../../../tailwind.config.js";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap');
+
+/* ─── Fuentes locales: Poppins (100–700) ─────────────────────────────────── */
+/* Servidas desde /assets/fonts para evitar dependencias externas            */
 
 @font-face {
     font-family: "Poppins";
@@ -50,16 +53,24 @@
     font-display: swap;
 }
 
+/* ─── Variables globales ─────────────────────────────────────────────────── */
+/* Tokens de color reutilizables en todo el proyecto                         */
+
 :root {
-    --accent: #22D3EE;
-    --accent-dim: rgba(34, 211, 238, 0.12);
-    --glass-dark: rgba(8, 10, 20, 0.60);
-    --glass-border: rgba(255, 255, 255, 0.07);
+    --accent: #22C55E;                      /* Verde fresco principal         */
+    --accent-dim: rgba(34, 197, 94, 0.12);  /* Verde con baja opacidad        */
+    --glass-dark: rgba(39, 49, 58, 0.92);   /* Fondo de elementos glass       */
+    --glass-border: rgba(255, 255, 255, 0.10); /* Borde sutil para glass     */
 }
 
+/* ─── Tipografía base ────────────────────────────────────────────────────── */
+
 html {
-    font-family: 'Outfit', Poppins, ui-sans-serif, system-ui;
+    font-family: Poppins, ui-sans-serif, system-ui;
 }
+
+/* ─── Animaciones ────────────────────────────────────────────────────────── */
+/* card-in: entrada suave para tarjetas (fade + slide + scale)               */
 
 @keyframes card-in {
     from { opacity: 0; transform: translateY(6px) scale(0.98); }
@@ -70,13 +81,29 @@ html {
     animation: card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Date/time inputs: forzar esquema oscuro para el picker nativo */
+/* ─── Inputs nativos ─────────────────────────────────────────────────────── */
+/* Fuerza esquema oscuro en el date/time picker del navegador                */
+
 input[type="date"],
 input[type="time"] {
     color-scheme: dark;
 }
 
-/* Oculta scrollbar pero mantiene scroll */
+/* ─── Wizard modal ───────────────────────────────────────────────────────── */
+/* Panel que sube desde abajo al abrir el wizard de inventario                */
+
+@keyframes slide-up {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.wizard-enter {
+    animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Scrollbar invisible ────────────────────────────────────────────────── */
+/* Oculta la scrollbar visualmente pero mantiene el scroll funcional         */
+
 .no-scrollbar::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -87,8 +114,6 @@ input[type="time"] {
 }
 
 .no-scrollbar {
-    -ms-overflow-style: none;
-    /* IE/Edge viejo */
-    scrollbar-width: none;
-    /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge viejo */
+    scrollbar-width: none;    /* Firefox */
 }

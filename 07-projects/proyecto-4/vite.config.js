@@ -14,10 +14,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@screen1": fileURLToPath(new URL("./src/Components/layout/screens/screen_1", import.meta.url)),
-      "@screen2": fileURLToPath(new URL("./src/Components/layout/screens/screen_2", import.meta.url)),
-      "@shared": fileURLToPath(new URL("./src/Components/layout", import.meta.url)),
-      "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
+      "@shell":     fileURLToPath(new URL("./src/shell",              import.meta.url)),
+      "@features":  fileURLToPath(new URL("./src/features",           import.meta.url)),
+      "@screen1":   fileURLToPath(new URL("./src/screens/screen-1",   import.meta.url)),
+      "@screen2":   fileURLToPath(new URL("./src/screens/screen-2",   import.meta.url)),
+      "@ui":        fileURLToPath(new URL("./src/ui",                 import.meta.url)),
+      "@assets":    fileURLToPath(new URL("./src/assets",             import.meta.url)),
     },
   },
   base: '/proyecto-4/',
