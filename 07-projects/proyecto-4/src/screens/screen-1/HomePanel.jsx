@@ -9,9 +9,13 @@ import InventoryMainForm from "@features/inventory/components/InventoryMainForm.
 function HomePanel({
     time,
     weather,
+    spotify,
+    isSpotifyConnected,
+    spotifyState,
     onOpenTimeSettings,
     onOpenWeatherSettings,
     onOpenRecipeSettings,
+    onOpenSpotifySettings,
 }) {
     return (
         <div className="h-full flex flex-col">
@@ -19,13 +23,17 @@ function HomePanel({
                 <Nav
                     time={time}
                     weather={weather}
+                    spotify={spotify}
+                    isSpotifyConnected={isSpotifyConnected}
+                    spotifyState={spotifyState}
                     onOpenTimeSettings={onOpenTimeSettings}
                     onOpenWeatherSettings={onOpenWeatherSettings}
                     onOpenRecipeSettings={onOpenRecipeSettings}
+                    onOpenSpotifySettings={onOpenSpotifySettings}
                 />
             </header>
 
-            <div className="px-4 pb-4 mt-8 h-[37%]">
+            <div className="px-4 pb-4 mt-2 h-[37%]">
                 <InventoryMainForm />
             </div>
         </div>

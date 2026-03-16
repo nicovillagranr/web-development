@@ -19,9 +19,13 @@ function HomeScreens({
     manualDate,
     is24hFormat,
     weather,
+    spotify,
+    isSpotifyConnected,
+    spotifyState,
     onOpenTimeSettings,
     onOpenWeatherSettings,
     onOpenRecipeSettings,
+    onOpenSpotifySettings,
 }) {
     // Referencia al contenedor scrollable horizontal.
     const scrollerRef = useRef(null);
@@ -94,9 +98,13 @@ function HomeScreens({
                     <HomePanel
                         time={time}
                         weather={weather}
+                        spotify={spotify}
+                        isSpotifyConnected={isSpotifyConnected}
+                        spotifyState={spotifyState}
                         onOpenTimeSettings={onOpenTimeSettings}
                         onOpenWeatherSettings={onOpenWeatherSettings}
                         onOpenRecipeSettings={onOpenRecipeSettings}
+                        onOpenSpotifySettings={onOpenSpotifySettings}
                     />
                 </section>
 
@@ -107,7 +115,7 @@ function HomeScreens({
             </div>
 
             {/* Indicador visual de pagina activa (dots) */}
-            <div className="pointer-events-none absolute bottom-15 left-1/2 -translate-x-1/2 flex items-center gap-2">
+            <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
                 {Array.from({ length: SCREEN_COUNT }, (_, index) => (
                     <span key={index}
                         className={`h-1.5 w-1.5 rounded-full transition-colors ${activeIndex === index ? "bg-white" : "bg-white/25"}`} />

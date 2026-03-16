@@ -32,7 +32,7 @@ function CardRecipe({ className = "", ...props }) {
 
                 <div className="absolute bottom-0 left-0 px-3 py-3 z-10">
                     <div className="inline-block px-2 py-1.5 rounded-lg bg-black/50 backdrop-blur-md">
-                        <h2 className="text-[9px] font-medium tracking-[0.18em] uppercase text-green-400/70 text-left mb-0.5">Receta recomendada</h2>
+                        <h2 className="text-[11px] font-medium tracking-[0.18em] uppercase text-green-400/70 text-left mb-0.5">Receta recomendada</h2>
                         <p className="text-[11px] font-light text-white/90 text-left leading-tight">{recipeTitle}</p>
                     </div>
                 </div>

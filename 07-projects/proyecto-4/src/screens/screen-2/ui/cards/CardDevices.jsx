@@ -39,7 +39,7 @@ function CardDevices({
                         key={stat.id}
                         className="flex-1 rounded-lg border border-white/6 bg-white/4 px-2 py-1.5"
                     >
-                        <p className="text-[9px] text-white/30 leading-none mb-1">{stat.label}</p>
+                        <p className="text-[11px] text-white/30 leading-none mb-1">{stat.label}</p>
                         <p className={`text-sm font-semibold tabular-nums leading-none ${stat.valueClass}`}>
                             {stat.value}
                         </p>

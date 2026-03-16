@@ -32,7 +32,7 @@ function HourlyForecast({ hours }) {
         <div className="px-4 mt-4">
             <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-5">
                 {/* Titulo de seccion */}
-                <h3 className="text-sm opacity-70 mb-4">Proximas 24 horas</h3>
+                <h3 className="text-sm opacity-70 mb-4">Próximas 24 horas</h3>
 
                 {/* Carrusel horizontal de horas */}
                 <div ref={scrollerRef} className="flex gap-3 overflow-x-auto overflow-y-hidden no-scrollbar snap-x snap-mandatory -mx-5 px-5 scroll-px-5 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
@@ -66,14 +66,12 @@ function MiniHourlyCard({ hour, isNow }) {
         });
 
     return (
-        <div className="rounded-2xl px-3 text-center">
+        <div className="rounded-2xl px-3 flex flex-col items-center">
             {/* Hora */}
-            <p className="text-md">{formattedHour}</p>
+            <p className="text-sm">{formattedHour}</p>
 
             {/* Icono meteo de esa hora */}
-            <div className="flex justify-center mb-2">
-                <WeatherIcon code={hour.code} isDay={hour.isDay} size={50} />
-            </div>
+            <WeatherIcon code={hour.code} isDay={hour.isDay} size={50} />
 
             {/* Temperatura puntual */}
             <p className="text-lg font-light leading-none">{hour.temp}°</p>

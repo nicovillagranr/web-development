@@ -56,20 +56,17 @@ function CardWeather({
         };
 
         return (
-            <Card
-                as="button"
-                onClick={handleFallbackClick}
-                className={`w-full h-full rounded-lg backdrop-blur-md shadow-lg flex flex-col items-center justify-center p-3 ${showLoading
-                    ? "bg-white/20 animate-pulse"
-                    : "bg-rose-500/20 border border-rose-300/40"
-                    } ${className}`}
+            <Card as="button" onClick={handleFallbackClick} className={`w-full h-full rounded-lg backdrop-blur-md shadow-lg flex flex-col items-center justify-center p-3 ${showLoading
+                ? "bg-white/20 animate-pulse"
+                : "bg-rose-500/20 border border-rose-300/40"
+                } ${className}`}
                 {...props}
             >
                 {showLoading ? (
                     <>
                         {/* Skeleton visual del estado de carga */}
-                        <div className="w-20 h-10 bg-white/40 mb-2" />
-                        <div className="w-24 h-4 bg-white/40 mb-2" />
+                        <div className="w-20 h-10 rounded-3xl bg-white/40 mb-2" />
+                        <div className="w-24 h-10 rounded-3xl bg-white/40 mb-2" />
                         <p className="text-xs text-black/50 text-center">Cargando clima...</p>
                     </>
                 ) : (
@@ -91,10 +88,7 @@ function CardWeather({
     const gradient = getWeatherGradient(category, intensity, weather.isDay);
 
     return (
-        <Card
-            as="button"
-            onClick={onClick}
-            className={`flex flex-col items-center justify-center ${gradient} border border-white/10 transition-all duration-500 ease-out ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 scale-95"} ${className}`}
+        <Card as="button" onClick={onClick} className={`flex flex-col items-center justify-center ${gradient} border border-white/10 transition-all duration-500 ease-out ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 scale-95"} ${className}`}
             {...props}
         >
             {/* Bloque principal: icono meteorologico + temperatura actual */}

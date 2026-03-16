@@ -34,7 +34,7 @@ function SystemPanelCard({
             onClick={onClick}
             aria-disabled={!onClick}
             style={{ animationDelay: `${animDelay}ms` }}
-            className="wizard-enter w-full text-left rounded-xl border border-white/6 bg-surface/40 overflow-hidden active:scale-[0.98] transition-transform duration-150"
+            className="wizard-enter w-full text-left rounded-xl border border-white/6 bg-surface/40 shadow-lg overflow-hidden active:scale-[0.98] transition-transform duration-150"
             {...props}
         >
             <div className="flex">
@@ -48,13 +48,13 @@ function SystemPanelCard({
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
                             {Icon && <Icon className="w-3 h-3 text-white/35" aria-hidden="true" />}
-                            <span className="text-[10px] uppercase tracking-[0.16em] text-white/40 font-medium">
+                            <span className="text-[12px] uppercase tracking-[0.16em] text-white/40 font-medium">
                                 {title}
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             {statusLabel && (
-                                <span className={`text-[10px] font-medium ${statusClass}`}>
+                                <span className={`text-[12px] font-medium ${statusClass}`}>
                                     {statusLabel}
                                 </span>
                             )}

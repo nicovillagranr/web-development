@@ -46,8 +46,8 @@ function CardAlerts({
                         key={alert.id}
                         className={`rounded-lg border px-2 py-1.5 flex items-center justify-between gap-2 ${getAlertClasses(alert.level)}`}
                     >
-                        <p className="text-[10px] font-medium leading-none">{alert.label}</p>
-                        <p className="text-[10px] leading-none opacity-55 shrink-0">{alert.time}</p>
+                        <p className="text-[12px] font-medium leading-none">{alert.label}</p>
+                        <p className="text-[12px] leading-none opacity-55 shrink-0">{alert.time}</p>
                     </div>
                 ))}
             </div>

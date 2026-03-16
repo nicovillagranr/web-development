@@ -26,8 +26,8 @@ export default function FullForecastModal({ forecast, isOpen, onClose }) {
 
                 {/* Header modal con boton de cierre */}
                 <div className="flex justify-between items-center mb-5">
-                    <h2 className="text-lg font-medium">Pronostico de 5 dias</h2>
-                    <button type="button" aria-label="Cerrar pronostico" onClick={onClose} className="text-md">
+                    <h2 className="text-lg font-medium">Pronóstico de 5 días</h2>
+                    <button type="button" aria-label="Cerrar pronóstico" onClick={onClose} className="text-base">
                         <FiX className="w-7 h-7" />
                     </button>
                 </div>

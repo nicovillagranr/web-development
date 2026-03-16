@@ -41,8 +41,8 @@ function CardEnergy({
                 {rows.slice(0, 2).map((row) => (
                     <div key={row.id}>
                         <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] text-white/35">{row.label}</span>
-                            <span className="text-[10px] font-medium text-white/65 tabular-nums">{row.value}</span>
+                            <span className="text-[12px] text-white/35">{row.label}</span>
+                            <span className="text-[12px] font-medium text-white/65 tabular-nums">{row.value}</span>
                         </div>
                         {/* Barra de progreso */}
                         <div className="h-1 rounded-full bg-white/8 overflow-hidden">

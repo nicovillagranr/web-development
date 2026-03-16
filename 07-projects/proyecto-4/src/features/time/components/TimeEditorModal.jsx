@@ -34,9 +34,9 @@ function TimeEditorModal({
 
     return (
         <div className="absolute inset-0 z-30 bg-black/40 flex items-center justify-center">
-            <div className="w-80 bg-white rounded-xl p-4 space-y-4 shadow-lg">
+            <div className="w-80 bg-[var(--glass-dark)] border border-white/10 backdrop-blur-xl rounded-xl p-4 space-y-4">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium">
+                    <h3 className="text-lg font-medium text-white">
                         {mode === "date" && "Ajustar Fecha"}
                         {mode === "time" && "Ajustar Hora"}
                     </h3>
@@ -44,7 +44,7 @@ function TimeEditorModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
+                        className="w-8 h-8 flex items-center justify-center rounded-full text-white/60 hover:bg-white/10 transition"
                     >
                         <FiX size={18} />
                     </button>
@@ -53,7 +53,7 @@ function TimeEditorModal({
                 {mode === "date" && (
                     <input
                         type="date"
-                        className="w-full h-12 px-4 rounded-lg border"
+                        className="w-full h-12 px-4 rounded-lg bg-white/8 border border-white/10 text-white outline-none focus:ring-1 focus:ring-accent/50"
                         value={manualDate.toISOString().split("T")[0]}
                         onChange={(event) => updateDate(event.target.value)}
                     />
@@ -62,7 +62,7 @@ function TimeEditorModal({
                 {mode === "time" && (
                     <input
                         type="time"
-                        className="w-full h-12 px-4 rounded-lg border"
+                        className="w-full h-12 px-4 rounded-lg bg-white/8 border border-white/10 text-white outline-none focus:ring-1 focus:ring-accent/50"
                         value={manualDate.toTimeString().slice(0, 5)}
                         onChange={(event) => updateTime(event.target.value)}
                     />

@@ -41,7 +41,7 @@ function CardHomeCare({
                     return (
                         <div key={device.id} className="flex items-center gap-1.5">
                             <Icon className="w-3 h-3 text-white/30" aria-hidden="true" />
-                            <span className="text-[10px] text-white/50 leading-none">{device.label}</span>
+                            <span className="text-[12px] text-white/50 leading-none">{device.label}</span>
                             {isOk
                                 ? <FiCheckCircle className="w-3 h-3 text-accent/70" aria-label="OK" />
                                 : <FiAlertCircle className="w-3 h-3 text-amber-400/80" aria-label="Revisar" />
