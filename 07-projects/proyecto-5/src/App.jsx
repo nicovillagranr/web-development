@@ -12,6 +12,8 @@ import FinalCta from './components/sections/FinalCta'
 import Footer from './components/layout/Footer'
 
 export default function App() {
+  // Orden de las secciones de la landing page:
+  // Navbar → Hero → PainPoints → Services → Process → Metrics → Testimonials → FAQ → FinalCta → Footer
   return (
     <>
       <Navbar />

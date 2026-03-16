@@ -1,5 +1,16 @@
+/* ================= ESTILOS GLOBALES =================
+   Tokens de diseño, estilos base y efectos visuales globales.
+   El tema oscuro es el default; el tema claro se activa añadiendo
+   la clase "light" al elemento <html> (ver useTheme.js).
+*/
+
 @import "tailwindcss";
 
+/* --- Tokens de diseño (design tokens) ---
+   Variables CSS que definen la paleta Miami Vice (morados oscuros +
+   neon cyan/magenta), las tipografías, sombras neon y espaciados.
+   Tailwind los expone como clases: text-brand-accent, bg-brand-900, etc.
+*/
 @theme {
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Outfit', sans-serif;
@@ -16,7 +27,7 @@
   --color-brand-text: #f0e6ff;
   --color-brand-muted: #9b8ab8;
 
-  /* Neon drop-shadows */
+  /* Neon drop-shadows — tamaños xs → lg para distintas intensidades */
   --drop-shadow-glow-accent-xs: 0 0 6px rgba(0, 229, 255, 0.5);
   --drop-shadow-glow-accent-sm: 0 0 8px rgba(0, 229, 255, 0.4);
   --drop-shadow-glow-accent: 0 0 10px rgba(0, 229, 255, 0.5);
@@ -33,6 +44,10 @@
   --blur-glow: 60px;
 }
 
+/* --- Estilos base del documento ---
+   Aplica la fuente, colores y transiciones globales. Las transiciones
+   en * aseguran que el cambio dark↔light sea suave en todos los elementos.
+*/
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -45,13 +60,14 @@
     transition: background-color 0.5s ease, color 0.5s ease;
   }
 
+  /* Transición suave en todos los elementos para el cambio de tema */
   *,
   *::before,
   *::after {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, fill 0.3s ease;
   }
 
-  /* Light mode overrides */
+  /* Light mode overrides — sobreescribe los tokens oscuros con valores claros */
   html.light {
     --color-brand-900: #fdf2f8;
     --color-brand-800: #ffffff;
@@ -67,6 +83,12 @@
   }
 }
 
+/* --- Overlay de ruido/scanlines ---
+   Pseudo-elemento fixed sobre toda la pantalla (z-index 9999) que combina
+   líneas de escaneo horizontales (repeating-linear-gradient) con una textura
+   de ruido SVG fractal. Da un look retro de pantalla CRT sin afectar clicks
+   (pointer-events: none). Opacidad muy baja (0.04) para que sea sutil.
+*/
 /* Noise texture overlay + scanlines for retro CRT feel */
 body::after {
   content: '';
@@ -89,11 +111,14 @@ body::after {
   background-size: 100% 100%, 256px 256px;
 }
 
+/* --- Utilidades globales: selección de texto y scrollbar oculto --- */
 @layer base {
+  /* En light mode el overlay de ruido es aún más sutil */
   html.light body::after {
     opacity: 0.02;
   }
 
+  /* Color de selección de texto — magenta translúcido en dark, mismo en light */
   ::selection {
     background-color: #ff2d9550;
     color: #fff;
@@ -103,6 +128,7 @@ body::after {
     color: #1e0a2e;
   }
 
+  /* Oculta el scrollbar visualmente sin perder la funcionalidad de scroll */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

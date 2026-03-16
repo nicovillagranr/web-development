@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { HiChevronDown } from 'react-icons/hi'
 
 export default function FaqItem({ question, answer }) {
+  // Controla si el acordeón está expandido o colapsado
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="border-b border-brand-accent/8">
+      {/* Header del acordeón: pregunta + chevron que rota 180° al abrir */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between py-6 text-left cursor-pointer group"
@@ -24,6 +26,9 @@ export default function FaqItem({ question, answer }) {
           <HiChevronDown />
         </motion.span>
       </button>
+
+      {/* AnimatePresence permite animar la salida del contenido (exit).
+          La altura va de 0 → auto al abrir y de auto → 0 al cerrar. */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

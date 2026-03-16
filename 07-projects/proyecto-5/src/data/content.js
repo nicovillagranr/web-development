@@ -3,6 +3,8 @@
 // Facilita cambios de texto sin tocar componentes.
 import { FaRobot, FaCogs, FaChartLine, FaBrain } from 'react-icons/fa'
 
+// --- Navbar ---
+// Links del menú y texto del CTA. Consumido por Navbar.jsx.
 export const NAV = {
   logo: 'NexusAI',
   links: [
@@ -14,6 +16,9 @@ export const NAV = {
   cta: 'Agendar Llamada',
 }
 
+// --- Hero ---
+// Headline principal, subheadline, textos de los CTAs y social proof.
+// Consumido por Hero.jsx.
 export const HERO = {
   headline: 'Construimos Soluciones de IA que ',
   headlineAccent: 'Multiplican tus Resultados',
@@ -24,6 +29,9 @@ export const HERO = {
   socialProof: '+50 empresas ya confían en nosotros',
 }
 
+// --- Pain Points ---
+// Los 3 problemas que sufre el cliente antes de contratar NexusAI.
+// Consumido por PainPoints.jsx.
 export const PAIN_POINTS = {
   tag: 'EL PROBLEMA',
   headline:
@@ -47,6 +55,9 @@ export const PAIN_POINTS = {
   ],
 }
 
+// --- Services ---
+// Los 4 servicios que ofrece NexusAI. Cada item lleva un icono de react-icons.
+// Consumido por Services.jsx → ServiceCard.jsx.
 export const SERVICES = {
   tag: 'SOLUCIONES',
   headline: 'Aplicaciones de IA Diseñadas para tu Negocio',
@@ -80,6 +91,8 @@ export const SERVICES = {
   ],
 }
 
+// --- Process ---
+// Los 4 pasos del proceso de trabajo. Consumido por Process.jsx → ProcessStep.jsx.
 export const PROCESS = {
   tag: 'PROCESO',
   headline: 'De la Idea al Impacto en 4 Pasos',
@@ -113,17 +126,23 @@ export const PROCESS = {
   ],
 }
 
+// --- Metrics ---
+// Métricas clave del negocio. value es el número final del contador animado.
+// Consumido por Metrics.jsx → MetricCard.jsx.
 export const METRICS = {
   tag: 'RESULTADOS',
   headline: 'Números que Hablan por Sí Solos',
   items: [
-    { value: 50, suffix: '+', label: 'Proyectos Entregados' },
+    { value: 25, suffix: '+', label: 'Proyectos Entregados' },
     { value: 12000, suffix: '+', label: 'Horas Ahorradas a Clientes' },
     { value: 3, suffix: 'x', label: 'ROI Promedio en 6 Meses' },
     { value: 98, suffix: '%', label: 'Clientes Satisfechos' },
   ],
 }
 
+// --- Testimonials ---
+// Testimonios de clientes con quote, nombre, rol y empresa.
+// Consumido por Testimonials.jsx → TestimonialCard.jsx.
 export const TESTIMONIALS = {
   tag: 'TESTIMONIOS',
   headline: 'Lo que Dicen Nuestros Clientes',
@@ -152,6 +171,9 @@ export const TESTIMONIALS = {
   ],
 }
 
+// --- FAQ ---
+// Preguntas frecuentes con acordeón animado.
+// Consumido por Faq.jsx → FaqItem.jsx.
 export const FAQ = {
   tag: 'PREGUNTAS FRECUENTES',
   headline: 'Resolvemos tus Dudas',
@@ -186,6 +208,8 @@ export const FAQ = {
   ],
 }
 
+// --- Final CTA ---
+// Sección de cierre con llamada a la acción principal. Consumido por FinalCta.jsx.
 export const FINAL_CTA = {
   headline: '¿Listo para Transformar tu Negocio con IA?',
   subheadline:
@@ -194,6 +218,9 @@ export const FINAL_CTA = {
   note: 'Cupos limitados este mes',
 }
 
+// --- Footer ---
+// Datos del pie de página: logo, tagline, columnas de links y copyright.
+// Consumido por Footer.jsx.
 export const FOOTER = {
   logo: 'NexusAI',
   tagline: 'Inteligencia Artificial que Impulsa tu Negocio',
@@ -215,4 +242,6 @@ export const FOOTER = {
   copyright: `© ${new Date().getFullYear()} NexusAI. Todos los derechos reservados.`,
 }
 
+// --- Booking URL ---
+// URL del calendario de Calendly. Usada en Navbar, Hero y FinalCta.
 export const BOOKING_URL = 'https://calendly.com/nexusai/consulta'

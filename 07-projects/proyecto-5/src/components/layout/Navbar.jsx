@@ -17,11 +17,12 @@ import { NAV, BOOKING_URL } from '../../data/content'
 import Button from '../ui/Button'
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)  // controla el fondo blur al hacer scroll
+  const [isOpen, setIsOpen] = useState(false)           // controla el menú mobile
   const scrollTo = useScrollTo()
   const { theme, toggle } = useTheme()
 
+  // Activa el fondo blur de la navbar cuando el usuario scrollea más de 50px
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
     window.addEventListener('scroll', handleScroll)

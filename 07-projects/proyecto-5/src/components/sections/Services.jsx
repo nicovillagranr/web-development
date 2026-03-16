@@ -7,9 +7,11 @@ import ServiceCard from '../ui/ServiceCard'
 export default function Services() {
   return (
     <section id="servicios" className="py-24 md:py-32 px-6 md:px-10 relative">
+      {/* Línea decorativa superior */}
       <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-brand-accent/15 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
+        {/* Header alineado a la izquierda (distinto al resto de secciones) */}
         <AnimateOnScroll>
           <div className="mb-16 max-w-2xl">
             <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-tag">
@@ -24,7 +26,8 @@ export default function Services() {
           </div>
         </AnimateOnScroll>
 
-        {/* Bento grid - asymmetric layout */}
+        {/* Bento grid asimétrico — items[0] e items[3] ocupan 2 columnas (featured),
+            items[1] e items[2] ocupan 1 columna. Crea un layout visual más dinámico. */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2">
             <ServiceCard {...SERVICES.items[0]} delay={0} featured />

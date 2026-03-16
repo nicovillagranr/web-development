@@ -7,9 +7,11 @@ import ProcessStep from '../ui/ProcessStep'
 export default function Process() {
   return (
     <section id="proceso" className="py-24 md:py-32 px-6 md:px-10 relative">
+      {/* Línea decorativa superior */}
       <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-brand-accent/15 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
+        {/* Header centrado con tag, headline y subheadline */}
         <AnimateOnScroll>
           <div className="text-center mb-20 max-w-2xl mx-auto">
             <span className="text-brand-accent text-xs font-body font-500 uppercase tracking-tag">
@@ -24,10 +26,12 @@ export default function Process() {
           </div>
         </AnimateOnScroll>
 
+        {/* Grid de 4 pasos con línea neon horizontal que los conecta visualmente (solo desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-          {/* Neon connection line */}
+          {/* Neon connection line — línea punteada que pasa por los centros de los círculos */}
           <div className="hidden lg:block absolute top-16 left-[12%] right-[12%] h-px bg-linear-to-r from-brand-warm/25 via-brand-accent/15 to-brand-warm/25 shadow-[0_0_8px_rgba(0,229,255,0.1)]" />
 
+          {/* Cada paso entra con stagger de 0.12s */}
           {PROCESS.steps.map((step, i) => (
             <ProcessStep key={step.number} {...step} delay={i * 0.12} />
           ))}

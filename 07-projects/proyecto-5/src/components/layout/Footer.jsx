@@ -9,6 +9,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-brand-900 border-t border-brand-accent/8 pt-16 pb-8 px-6 md:px-10">
+      {/* Grid de 3 columnas: Brand | Links empresa | Contacto */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           {/* Brand */}
@@ -18,6 +19,7 @@ export default function Footer() {
               {FOOTER.logo}<span className="text-brand-warm drop-shadow-glow-warm">.</span>
             </span>
             <p className="text-brand-muted mt-4 font-300 leading-relaxed">{FOOTER.tagline}</p>
+            {/* Iconos de redes sociales con glow neon en hover */}
             <div className="flex gap-5 mt-6">
               <a href="#" className="text-brand-muted hover:text-brand-accent hover:drop-shadow-glow-accent-sm transition-all duration-300 text-lg">
                 <FaLinkedin />
@@ -61,6 +63,7 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Barra de copyright — separada del grid por un borde sutil */}
         <div className="border-t border-brand-warm/8 pt-8 text-center text-brand-muted/50 text-sm font-300">
           {FOOTER.copyright}
         </div>
