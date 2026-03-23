@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+/* ── Local fonts (variable, single file per family) ── */
+@font-face {
+  font-family: "Satoshi";
+  src: url("@/assets/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("@/assets/fonts/Manrope-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("@/assets/fonts/JetBrainsMono-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+@theme {
+  /* ── Base palette ── */
+  --color-base-900: #060a14;
+  --color-base-800: #0b1123;
+  --color-base-700: #111932;
+  --color-base-600: #1a2444;
+  --color-surface: rgba(14, 22, 45, 0.72);
+  --color-surface-strong: rgba(18, 28, 56, 0.85);
+
+  /* ── Text ── */
+  --color-text-primary: #ecf2ff;
+  --color-text-secondary: #a8b8d8;
+  --color-text-muted: #7b8db5;
+
+  /* ── Accents ── */
+  --color-accent: #38bdf8;
+  --color-accent-glow: rgba(56, 189, 248, 0.15);
+  --color-accent-border: rgba(56, 189, 248, 0.3);
+  --color-emerald: #34d399;
+  --color-emerald-glow: rgba(52, 211, 153, 0.15);
+  --color-amber: #fbbf24;
+  --color-amber-glow: rgba(251, 191, 36, 0.15);
+
+  /* ── Borders ── */
+  --color-line: rgba(148, 170, 210, 0.12);
+  --color-line-hover: rgba(148, 170, 210, 0.25);
+
+  /* ── Fonts ── */
+  --font-heading: "Satoshi", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* ── Radius ── */
+  --radius-card: 16px;
+  --radius-badge: 999px;
+  --radius-btn: 12px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 60px rgba(56, 189, 248, 0.08);
+}
+
+/* ── Base styles (inside @layer so utilities can override) ── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    background: var(--color-base-900);
+    min-height: 100dvh;
+  }
+
+  #root {
+    position: relative;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 10%, rgba(56, 189, 248, 0.08), transparent),
+      radial-gradient(ellipse 50% 40% at 85% 5%, rgba(52, 211, 153, 0.06), transparent),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(56, 189, 248, 0.04), transparent),
+      var(--color-base-900);
+  }
+
+  /* Grain overlay */
+  #root::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Animation utilities (inside @layer so they coexist with Tailwind) ── */
+@utility animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.6s ease both;
+}
+
+@utility animate-card-enter {
+  animation: card-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility delay-1 {
+  animation-delay: 80ms;
+}
+
+@utility delay-2 {
+  animation-delay: 160ms;
+}
+
+@utility delay-3 {
+  animation-delay: 240ms;
+}
+
+@utility delay-4 {
+  animation-delay: 320ms;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  @layer base {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
