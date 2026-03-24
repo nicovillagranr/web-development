@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
         <html lang="es">
             <body className={`${poppins.variable} ${outfit.variable} font-(family-name:--font-poppins) bg-bg text-text min-h-screen`}>
                 <NavBar />
-                <main className="px-10 py-10">
+                <main className="px-5 py-5 sm:px-10 sm:py-10">
                     {children}
                 </main>
             </body>

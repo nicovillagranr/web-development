@@ -1,21 +1,25 @@
-// Import de Link, que hace la navegación
-import Link from "next/link"
+import ProductCard from "@/components/ProductCard"
+import { getProducts } from "@/data/products"
 
 export const metadata = {
-    title: "Falabella.com | Tienda - Categorias",
-    description: "Esta es la Tienda Page de Falabella.com",
+  title: "Falabella.com | Tienda - Todos los productos",
+  description: "Explora todos los productos disponibles en Falabella.com",
 }
 
 export default function TiendaPage() {
-    return (
-        <>
-            <nav>
-                <ul className="flex gap-4 list-none">
-                    <li><Link className="text-accent" href="/">Hombre</Link></li>
-                    <li><Link className="text-accent" href="/">Mujer</Link></li>
-                    <li><Link className="text-accent" href="/">Niños</Link></li>
-                </ul>
-            </nav>
-        </>
-    )
+  const products = getProducts()
+
+  return (
+    <>
+      <h1 className="font-(family-name:--font-outfit) text-3xl font-bold mb-6">
+        Todos los productos
+      </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </>
+  )
 }
