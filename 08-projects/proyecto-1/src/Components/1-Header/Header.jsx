@@ -3,7 +3,7 @@ function Header() {
     return (
         <header className='header' id="home">
             <nav className="header__nav" aria-label="Primary navigation">
-                <h2><a href="#home" className="nav__title">Glossy Touch</a></h2>
+                <a href="#home" className="nav__title">Glossy Touch</a>
 
                 <ul className="nav__list">
                     <li className="nav__item"><a href="#home" className="item__link">Home</a></li>

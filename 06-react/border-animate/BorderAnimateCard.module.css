@@ -1,0 +1,100 @@
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 1rem;
+}
+
+/* Glow — blurred gradient behind the card */
+.glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 1rem;
+
+  background-image: conic-gradient(
+    from var(--angle),
+    #5ac8fa,
+    #7d7aff,
+    #bf5af2,
+    #ff9fee,
+    #ffb7b2,
+    #7dffb2,
+    #5ac8fa
+  );
+
+  filter: blur(1.5rem);
+  opacity: 0;
+  scale: 0.5;
+
+  animation: spin 3s linear infinite;
+  animation-play-state: paused;
+  transition: scale 0.45s ease, opacity 0.45s ease;
+}
+
+/* Border — sharp gradient ring */
+.border {
+  position: absolute;
+  inset: -3px;
+  border-radius: 1rem;
+
+  background-image: conic-gradient(
+    from var(--angle),
+    #5ac8fa,
+    #7d7aff,
+    #bf5af2,
+    #ff9fee,
+    #ffb7b2,
+    #7dffb2,
+    #5ac8fa
+  );
+
+  opacity: 0;
+  scale: 0.85;
+
+  animation: spin 3s linear infinite;
+  animation-play-state: paused;
+  transition: scale 0.45s ease, opacity 0.45s ease;
+}
+
+/* Content — solid card on top */
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #1c1f2b;
+  border-radius: 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  padding: 1.5rem;
+  gap: 0.5rem;
+}
+
+/* Hover — activate animations */
+.wrapper:hover .glow {
+  animation-play-state: running;
+  opacity: 0.6;
+  scale: 1;
+}
+
+.wrapper:hover .border {
+  animation-play-state: running;
+  opacity: 1;
+  scale: 1;
+}

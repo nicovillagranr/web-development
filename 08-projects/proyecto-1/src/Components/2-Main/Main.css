@@ -41,6 +41,7 @@
 
 .box-1__text {
     color: white;
+    font-size: 1.4rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -48,10 +49,6 @@
 
 .box-1__title {
     font-size: 3rem;
-}
-
-.box-1__text {
-    font-size: 1.4rem;
 }
 
 .box-1__btn {

@@ -1,9 +1,9 @@
 
 import "./Card.css"
-function Card({ icon, title, text }) {
+function Card({ icon, title, text, style }) {
     return (
-        <div className="box-2__card">
-            <span className="card__icon">{icon}</span>
+        <div className="box-2__card" style={style}>
+            <span className="card__icon"><img src={icon} alt="" aria-hidden="true" className="card__icon-svg" /></span>
             <h2 className="card__title">{title}</h2>
             <p className="card__text">{text}</p>
         </div>
