@@ -39,14 +39,23 @@ export const projects = [
     name: "NexusAI",
     path: "proyecto-5/",
     description:
-      "Landing page para agencia de inteligencia artificial con animaciones avanzadas y diseño orientado a conversión.",
+      "Landing de agencia IA con estructura de conversión completa: pain points, servicios, proceso, métricas, testimonios y FAQ. Animaciones Framer Motion y estética dark premium.",
     stack: "React 19 + Tailwind v4 + Framer Motion",
     type: "Landing",
     status: "online",
   },
   {
-    name: "Falabella.com",
+    name: "Fetch API Next.js",
     path: "proyecto-6/",
+    description:
+      "Proyecto en desarrollo con Next.js 16, server components y data fetching desde API externa.",
+    stack: "Next.js 16 + Tailwind v4",
+    type: "Full-stack",
+    status: "online",
+  },
+  {
+    name: "Falabella.com",
+    path: "proyecto-7/",
     description:
       "Clon de tienda online con rutas dinámicas, navegación multi-sección y data fetching usando App Router de Next.js.",
     stack: "Next.js 16 + Tailwind v4",
@@ -54,11 +63,11 @@ export const projects = [
     status: "online",
   },
   {
-    name: "Proyecto 7",
-    path: "proyecto-7/",
+    name: "Notas App Next.js",
+    path: "proyecto-8/",
     description:
-      "Proyecto en desarrollo con Next.js 16, server components y data fetching desde API externa.",
-    stack: "Next.js 16 + Tailwind v4",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    stack: "Lorem ipsum",
     type: "Full-stack",
     status: "maintenance",
   },
