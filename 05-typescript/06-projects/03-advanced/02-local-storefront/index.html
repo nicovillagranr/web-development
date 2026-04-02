@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Local Storefront practica JavaScript">
+  <title>Local Storefront</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Local Storefront</h1>
+      <p>Catalogo local con carrito, cantidades y total.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <select id="filter">
+          <option value="all">Todas las categorias</option>
+          <option value="hardware">Hardware</option>
+          <option value="audio">Audio</option>
+        </select>
+      </div>
+      <div id="catalog" class="grid"></div>
+    </section>
+
+    <section class="panel grid">
+      <h2>Carrito</h2>
+      <ul id="cart" class="list"></ul>
+      <p id="cartTotal" class="item">Total: 0</p>
+      <button id="checkout" class="danger">Vaciar carrito</button>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

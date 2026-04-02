@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Theme Toggle practica JavaScript">
+  <title>Theme Toggle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Theme Toggle</h1>
+      <p>Alterna tema y ajusta escala de texto.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <button id="toggleTheme">Cambiar tema</button>
+        <label>Escala texto <input id="fontScale" type="range" min="14" max="22" value="16"></label>
+      </div>
+      <p id="preview" class="item">Texto de prueba para validar contraste y legibilidad.</p>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

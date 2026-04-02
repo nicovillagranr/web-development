@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "moduleDetection": "force",
+    "outDir": ".",
+    "rootDir": ".",
+    "declaration": false,
+    "sourceMap": true
+  },
+  "include": [
+    "00-intro/**/*.ts",
+    "01-fundamentals/**/*.ts",
+    "02-dom/**/*.ts",
+    "03-poo/**/*.ts",
+    "04-async/**/*.ts",
+    "05-libraries/react-three/**/*.ts",
+    "06-projects/**/*.ts",
+    "proyectos-sueltos/**/*.ts"
+  ],
+  "exclude": [
+    "05-libraries/3D",
+    "node_modules"
+  ]
+}

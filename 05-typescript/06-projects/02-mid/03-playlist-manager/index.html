@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Playlist Manager practica JavaScript">
+  <title>Playlist Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Playlist Manager</h1>
+      <p>Gestiona canciones, calcula duracion total y filtra por busqueda.</p>
+    </header>
+    <section class="panel grid">
+      <div class="grid grid-2">
+        <input id="title" type="text" placeholder="Titulo">
+        <input id="artist" type="text" placeholder="Artista">
+      </div>
+      <div class="row">
+        <input id="duration" type="number" placeholder="Duracion (min)">
+        <button id="addSong">Agregar cancion</button>
+      </div>
+      <input id="search" type="text" placeholder="Buscar cancion o artista">
+      <p id="total" class="item">Duracion total: 0 min</p>
+      <ul id="songs" class="list"></ul>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

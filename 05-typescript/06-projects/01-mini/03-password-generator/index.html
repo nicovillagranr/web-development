@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Password Generator practica JavaScript">
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Password Generator</h1>
+      <p>Generador de password con reglas configurables.</p>
+    </header>
+    <section class="panel grid">
+      <label>Longitud <input id="len" type="number" min="6" max="32" value="12"></label>
+      <div class="row">
+        <label><input id="upper" type="checkbox" checked> Mayusculas</label>
+        <label><input id="numbers" type="checkbox" checked> Numeros</label>
+        <label><input id="symbols" type="checkbox"> Simbolos</label>
+      </div>
+      <div class="row">
+        <input id="result" type="text" readonly>
+        <button id="generate">Generar</button>
+      </div>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Drag Drop Basic practica JavaScript">
+  <title>Drag Drop Basic</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Drag Drop Basic</h1>
+      <p>Mueve tareas entre columnas usando drag and drop nativo.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <input id="taskInput" type="text" placeholder="Nueva tarea">
+        <button id="addTask">Agregar</button>
+      </div>
+      <div class="columns">
+        <div class="column" data-col="todo"><h3>ToDo</h3></div>
+        <div class="column" data-col="doing"><h3>Doing</h3></div>
+        <div class="column" data-col="done"><h3>Done</h3></div>
+      </div>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Habits Dashboard practica JavaScript">
+  <title>Habits Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Habits Dashboard</h1>
+      <p>Dashboard de habitos con check diario, streak y persistencia local.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <input id="habitInput" type="text" placeholder="Nuevo habito">
+        <button id="addHabit">Agregar</button>
+      </div>
+      <div class="row">
+        <span class="badge" id="totalHabits">Habitos: 0</span>
+        <span class="badge" id="doneToday">Completados hoy: 0</span>
+      </div>
+      <ul id="habitList" class="list"></ul>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

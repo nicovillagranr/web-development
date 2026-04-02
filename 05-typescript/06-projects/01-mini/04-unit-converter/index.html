@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Unit Converter practica JavaScript">
+  <title>Unit Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="kicker">JavaScript Practice</p>
+      <h1>Unit Converter</h1>
+      <p>Convierte unidades: km-mi, c-f, kg-lb.</p>
+    </header>
+    <section class="panel grid">
+      <div class="row">
+        <input id="value" type="number" placeholder="Valor">
+        <select id="type">
+          <option value="km-mi">Km a Millas</option>
+          <option value="c-f">Celsius a Fahrenheit</option>
+          <option value="kg-lb">Kg a Libras</option>
+        </select>
+        <button id="convert">Convertir</button>
+      </div>
+      <p id="output" class="item">Resultado: -</p>
+    </section>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

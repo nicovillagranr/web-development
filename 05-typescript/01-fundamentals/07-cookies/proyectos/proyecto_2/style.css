@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 10px;
+}
+
+body{
+    min-height: 100vh;
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+#boton__tema{
+    background: white;
+    height: 5rem;
+    width: 15rem;
+    font-family: 'Poppins';
+    border-radius: 1rem;
+    cursor: pointer;
+}
