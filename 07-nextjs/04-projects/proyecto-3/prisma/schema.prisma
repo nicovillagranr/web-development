@@ -1,20 +1,21 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
+// Configura el cliente de Prisma que se genera al correr `prisma generate`.
+// `output` define dónde se coloca el cliente generado (en lugar del default node_modules).
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
+// Define la base de datos que usa la app.
+// SQLite es un archivo local (.db), ideal para desarrollo sin servidor.
+// En producción se cambiaría a "postgresql" o "mysql" y se agregaría `url`.
 datasource db {
   provider = "sqlite"
 }
 
+// Tabla `Task` — representa una tarea en la base de datos.
 model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  createdAt   DateTime @default(now())
+  id          Int      @id @default(autoincrement()) // Clave primaria, autoincremental
+  title       String // Título obligatorio
+  description String? // Descripción opcional (nullable)
+  createdAt   DateTime @default(now()) // Fecha de creación, se asigna automáticamente
 }
