@@ -1,25 +1,49 @@
-﻿# JavaScript Module
+# 05 — TypeScript
 
-Este modulo reune practica de JavaScript desde base hasta integracion en proyectos.
+Ruta de aprendizaje progresiva de TypeScript, del cero a aplicarlo en proyectos React.
 
-## Estructura real
+## Setup inicial
 
-- `00-intro/`: entrada al modulo.
-- `01-fundamentals/`: logica base y sintaxis esencial.
-- `02-dom/`: seleccion, eventos y manipulacion.
-- `03-poo/`: clases, herencia y metodos.
-- `04-async/`: promesas, async/await y consumo de APIs.
-- `05-libraries/`: practica con librerias (incluye ruta 3D).
-- `06-projects/`: mini, mid y advanced (estructura base).
-- `proyectos-sueltos/`: ejercicios fuera de flujo principal.
-- `readmes/`: notas tematicas de apoyo.
+```bash
+npm install
+```
 
-## Estado actual
+## Cómo ejecutar cada archivo
 
-- `05-libraries/3D` concentra la mayor parte de practica aplicada.
-- Algunas carpetas de `03-poo`, `02-dom` y `06-projects` estan definidas pero incompletas.
+```bash
+npx tsx 01-tipos-basicos/notas.ts
+```
 
-## Objetivo
+O para chequear tipos sin ejecutar (como lo haría el IDE):
 
-Consolidar una base de JavaScript robusta para proyectos React y arquitectura escalable.
+```bash
+npm run check
+```
 
+## Orden recomendado
+
+| # | Tema | Qué aprendes |
+|---|---|---|
+| 00 | intro | Qué es TS y por qué usarlo |
+| 01 | tipos-basicos | `string`, `number`, `boolean`, `any`, `unknown`, inferencia |
+| 02 | arrays-tuplas | Arrays tipados, tuplas, readonly |
+| 03 | objetos-interfaces | `interface` vs `type`, propiedades opcionales |
+| 04 | funciones | Parámetros tipados, retorno, opcionales, overloads |
+| 05 | unions-narrowing | `\|`, literal types, type guards |
+| 06 | generics | Funciones y tipos genéricos |
+| 07 | utility-types | `Partial`, `Pick`, `Omit`, `Record`, `Readonly` |
+| 08 | clases | Clases tipadas, modificadores, `implements` |
+| 09 | react-practico | Cómo aplicar todo esto a componentes React |
+
+## Cómo estudiar cada carpeta
+
+1. Lee el archivo `notas.ts` de arriba a abajo.
+2. Los comentarios explican el concepto, el código muestra el uso.
+3. Al final de cada archivo hay una sección **EJERCICIOS** — intenta resolverlos.
+4. Ejecuta con `npx tsx <ruta>` para ver el resultado.
+
+## Recursos oficiales
+
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [TS Playground](https://www.typescriptlang.org/play) — probar sin instalar nada
+- [Type Challenges](https://github.com/type-challenges/type-challenges) — cuando domines lo básico

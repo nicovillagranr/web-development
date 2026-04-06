@@ -1,30 +1,31 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
-    "moduleResolution": "bundler",
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM"],
+
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "moduleDetection": "force",
-    "outDir": ".",
-    "rootDir": ".",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    "outDir": "./dist",
+    "rootDir": "./",
+    "sourceMap": true,
     "declaration": false,
-    "sourceMap": true
+
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false
   },
-  "include": [
-    "00-intro/**/*.ts",
-    "01-fundamentals/**/*.ts",
-    "02-dom/**/*.ts",
-    "03-poo/**/*.ts",
-    "04-async/**/*.ts",
-    "05-libraries/react-three/**/*.ts",
-    "06-projects/**/*.ts",
-    "proyectos-sueltos/**/*.ts"
-  ],
-  "exclude": [
-    "05-libraries/3D",
-    "node_modules"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
