@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@theme {
+    --font-family-sans: 'Poppins', sans-serif;
+    --font-family-serif: 'Roboto Slab', serif;
+
+    --color-primary: #1D4ED8;
+    --color-secondary: #F87171;
+}
+
+:root {
+    color-scheme: light dark;
+    font-family: var(--font-family-sans);
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-weight: 400;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        background-color: #fff;
+        color: rgba(0, 0, 0, 0.87);
+    }
+}

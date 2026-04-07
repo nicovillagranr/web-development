@@ -1,8 +1,8 @@
-import type { VideoGame } from "../../data";
+import type { VideoGame } from "../../../data";
 
 import "./GameItem.css";
 
-const GameItem = (game: Omit<VideoGame, "id">) => {
+export const GameItem = (game: Omit<VideoGame, "id">) => {
     return (
         <div className="card">
             <div className="card-image-container group">
@@ -25,4 +25,3 @@ const GameItem = (game: Omit<VideoGame, "id">) => {
         </div>
     )
 }
-export default GameItem

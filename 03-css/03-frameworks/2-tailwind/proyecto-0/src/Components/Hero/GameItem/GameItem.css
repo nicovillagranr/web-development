@@ -1,4 +1,4 @@
-@reference "../../assets/styles/App.css";
+@reference "../../../assets/styles/App.css";
 
 .card {
     @apply bg-gray-800 rounded-lg overflow-hidden shadow-lg transition;
@@ -17,7 +17,7 @@
 }
 
 .card-content {
-    @apply p-6;
+    @apply px-6 py-3;
 }
 
 .card-title {

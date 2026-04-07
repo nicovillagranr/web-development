@@ -1,0 +1,5 @@
+@reference "../../assets/styles/App.css";
+
+header {
+    @apply h-[10vh] bg-gray-900 flex justify-between items-center px-8;
+}
