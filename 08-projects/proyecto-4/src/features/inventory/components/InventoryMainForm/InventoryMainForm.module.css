@@ -1,0 +1,102 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de InventoryMainForm + ItemCard — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+@reference "../../../../assets/styles/App.css";
+
+/* ─── Block: inventory ─────────────────────────────── */
+
+.inventory {
+    @apply h-full rounded-2xl bg-surface border border-white/10 text-white p-4 flex flex-col;
+}
+
+.inventory__header {
+    @apply flex items-center justify-between mb-3 shrink-0;
+}
+
+.inventory__header-label {
+    @apply text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium;
+}
+
+.inventory__header-info {
+    @apply flex items-center gap-3;
+}
+
+.inventory__header-expiring {
+    @apply text-[11px] text-amber-400/90;
+}
+
+.inventory__header-count {
+    @apply text-[11px] text-white/50;
+}
+
+.inventory__add-btn {
+    @apply w-7 h-7 rounded-lg bg-white/[0.07] border border-white/9 text-white/60 hover:text-white hover:bg-white/12 transition-colors flex items-center justify-center text-base leading-none;
+}
+
+/* ─── List area ────────────────────────────────────── */
+
+.inventory__list-wrap {
+    @apply flex-1 min-h-0 relative;
+}
+
+.inventory__list-scroll {
+    @apply h-full overflow-y-auto;
+}
+
+.inventory__list {
+    @apply flex flex-col;
+}
+
+.inventory__empty {
+    @apply text-xs text-white/50 text-center py-4;
+}
+
+.inventory__fade {
+    @apply absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-surface to-transparent pointer-events-none;
+}
+
+/* ─── Block: item-row ──────────────────────────────── */
+
+.item-row {
+    @apply flex items-center gap-3 px-2 py-2 border-b border-white/6 transition-colors hover:bg-white/5;
+}
+
+.item-row__emoji {
+    @apply text-lg leading-none shrink-0;
+}
+
+.item-row__info {
+    @apply flex flex-col min-w-0 flex-1;
+}
+
+.item-row__name {
+    @apply text-xs text-white font-medium truncate;
+}
+
+.item-row__type {
+    @apply text-[10px] text-white/35;
+}
+
+.item-row__quantity {
+    @apply text-[11px] text-white/50 shrink-0;
+}
+
+.item-row__expiry {
+    @apply flex items-center gap-1.5 shrink-0;
+}
+
+.item-row__dot {
+    @apply w-1.5 h-1.5 rounded-full shrink-0;
+}
+
+.item-row__expiry-label {
+    @apply text-[10px] whitespace-nowrap;
+}
+
+.item-row__remove {
+    @apply w-5 h-5 shrink-0 rounded-md text-[10px] text-white/0 hover:text-white/70 transition-colors flex items-center justify-center leading-none;
+}
+
+.item-row:hover .item-row__remove {
+    @apply text-white/30;
+}

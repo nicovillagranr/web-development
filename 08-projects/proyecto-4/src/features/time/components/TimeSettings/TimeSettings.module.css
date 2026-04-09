@@ -1,0 +1,67 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de TimeSettings — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: time-settings ─────────────────────────── */
+
+.time-settings {
+    @apply absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out;
+}
+
+.time-settings--active {
+    @apply translate-x-0;
+}
+
+.time-settings--hidden {
+    @apply -translate-x-full;
+}
+
+.time-settings__body {
+    @apply flex-1 p-4 space-y-2;
+}
+
+/* ─── Row ──────────────────────────────────────────── */
+
+.time-settings__row {
+    @apply flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6;
+}
+
+.time-settings__row-label {
+    @apply text-sm text-white/80;
+}
+
+/* ─── Row button (date/time adjust) ────────────────── */
+
+.time-settings__row-btn {
+    @apply w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/4 border border-white/6 transition-opacity duration-200;
+}
+
+.time-settings__row-btn--disabled {
+    @apply opacity-30 pointer-events-none;
+}
+
+.time-settings__row-btn-chevron {
+    @apply w-4 h-4 text-white/30;
+}
+
+/* ─── Toggle switch ────────────────────────────────── */
+
+.time-settings__toggle {
+    @apply relative w-11 h-6 rounded-full transition-colors duration-200;
+}
+
+.time-settings__toggle--on {
+    @apply bg-green-500;
+}
+
+.time-settings__toggle--off {
+    @apply bg-white/15;
+}
+
+.time-settings__toggle-knob {
+    @apply absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200;
+}
+
+.time-settings__toggle-knob--on {
+    @apply translate-x-5;
+}

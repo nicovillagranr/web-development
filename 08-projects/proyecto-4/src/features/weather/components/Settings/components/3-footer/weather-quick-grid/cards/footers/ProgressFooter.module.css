@@ -1,0 +1,25 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del ProgressFooter — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: progress-footer ───────────────────────── */
+
+.progress-footer {
+    @apply h-full grid grid-rows-[1fr_auto];
+}
+
+.progress-footer__bar-wrapper {
+    @apply flex items-end mt-2;
+}
+
+.progress-footer__track {
+    @apply h-1.5 w-full rounded-full bg-white/20 overflow-hidden;
+}
+
+.progress-footer__fill {
+    @apply h-full rounded-full;
+}
+
+.progress-footer__spacer {
+    @apply mt-0.5 h-2.5;
+}

@@ -1,17 +1,15 @@
-/* ─── Tailwind & configuración ───────────────────────────────────────────── */
+/* ─── Tailwind & tema ────────────────────────────────────────────────────── */
 @import "tailwindcss";
-@config "../../../tailwind.config.js";
 
-/* ─── Fuentes locales: Poppins (100–700) ─────────────────────────────────── */
-/* Servidas desde /assets/fonts para evitar dependencias externas            */
-
-@font-face {
-    font-family: "Poppins";
-    src: url("../fonts/sans/Poppins/Poppins-Thin.ttf") format("truetype");
-    font-weight: 100;
-    font-style: normal;
-    font-display: swap;
+@theme {
+    --color-surface: #27313A;
+    --color-dark: #1F2933;
+    --color-accent: #22C55E;
+    --color-light: #F9FAFB;
 }
+
+/* ─── Fuentes locales: Poppins (300–700) ─────────────────────────────────── */
+/* Servidas desde /assets/fonts para evitar dependencias externas            */
 
 @font-face {
     font-family: "Poppins";
@@ -53,14 +51,28 @@
     font-display: swap;
 }
 
+/* ─── Fuente: Fraunces (títulos de recetas) ──────────────────────────────── */
+
+@font-face {
+    font-family: "Fraunces";
+    src: url("../fonts/Fraunces_72pt_Soft-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* ─── Variables globales ─────────────────────────────────────────────────── */
 /* Tokens de color reutilizables en todo el proyecto                         */
 
 :root {
-    --accent: #22C55E;                      /* Verde fresco principal         */
-    --accent-dim: rgba(34, 197, 94, 0.12);  /* Verde con baja opacidad        */
-    --glass-dark: rgba(39, 49, 58, 0.92);   /* Fondo de elementos glass       */
-    --glass-border: rgba(255, 255, 255, 0.10); /* Borde sutil para glass     */
+    --accent: #22C55E;
+    /* Verde fresco principal         */
+    --accent-dim: rgba(34, 197, 94, 0.12);
+    /* Verde con baja opacidad        */
+    --glass-dark: rgba(39, 49, 58, 0.92);
+    /* Fondo de elementos glass       */
+    --glass-border: rgba(255, 255, 255, 0.10);
+    /* Borde sutil para glass     */
 }
 
 /* ─── Tipografía base ────────────────────────────────────────────────────── */
@@ -73,8 +85,15 @@ html {
 /* card-in: entrada suave para tarjetas (fade + slide + scale)               */
 
 @keyframes card-in {
-    from { opacity: 0; transform: translateY(6px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .card-enter {
@@ -93,8 +112,15 @@ input[type="time"] {
 /* Panel que sube desde abajo al abrir el wizard de inventario                */
 
 @keyframes slide-up {
-    from { transform: translateY(100%); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .wizard-enter {
@@ -114,6 +140,8 @@ input[type="time"] {
 }
 
 .no-scrollbar {
-    -ms-overflow-style: none; /* IE/Edge viejo */
-    scrollbar-width: none;    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge viejo */
+    scrollbar-width: none;
+    /* Firefox */
 }

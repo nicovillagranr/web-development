@@ -1,7 +1,3 @@
-// ================= CONTEXTO MODULO =================
-// Hook de persistencia para configuraciones globales.
-// Sincroniza autoTime, formato horario, fecha manual y weather en localStorage.
-// ================= IMPORTS =================
 import { useEffect, useState } from "react";
 
 const DEFAULT_SETTINGS = {
@@ -10,8 +6,8 @@ const DEFAULT_SETTINGS = {
     manualDate: new Date().toISOString(),
 
     weather: {
-        lat: -33.45,
-        lon: -70.66,
+        lat: - 33.4175,
+        lon: -70.6067,
         city: "Santiago",
         country: "Chile",
     }

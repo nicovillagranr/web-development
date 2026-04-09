@@ -1,15 +1,15 @@
-# Dependencies
+# Dependencias — se reinstalan con npm install, no se suben al repo
 node_modules/
 **/node_modules/
 
-# Build outputs
+# Archivos de compilación — se regeneran al hacer build, no necesitan versionarse
 dist/
 build/
 dist-ssr/
 **/dist/
 **/build/
 
-# Logs
+# Logs — archivos de registro generados por los package managers al fallar
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -17,22 +17,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# System
+# Archivos del sistema operativo — macOS genera .DS_Store, Windows genera Thumbs.db
 .DS_Store
 Thumbs.db
 
-# Environment
+# Variables de entorno — contienen datos sensibles (API keys, contraseñas, etc.)
 .env
 .env.local
 .env.development
 .env.production
 .env.test
 
-# IDE
+# Configuración local del editor — cada dev tiene sus propias preferencias
 .vscode/
 .idea/
 
-# AI assistant artifacts
+# Archivos generados por asistentes de IA — no aportan al código del proyecto
 **/.agent/
 **/.agents/
 **/.claude/

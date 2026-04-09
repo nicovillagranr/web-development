@@ -20,9 +20,7 @@ function WeatherIconMini({ code, isDay = true, size = 20, className = "" }) {
     // Resolvemos icono segun categoria y franja temporal.
     switch (category) {
         case "clear":
-            return isDay
-                ? <WiDaySunny size={size} className={className} />
-                : <WiNightClear size={size} className={className} />;
+            return isDay ? <WiDaySunny size={size} className={className} /> : <WiNightClear size={size} className={className} />;
 
         case "cloudy":
             return isDay

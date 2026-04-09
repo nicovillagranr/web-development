@@ -11,6 +11,7 @@ import {
     getUvMeta,
 } from "./weather-quick-grid/config/metricThresholds.js";
 import { formatValue, normalizePercent } from "./weather-quick-grid/utils/metricFormatters.js";
+import s from "./WeatherQuickGrid.module.css";
 
 // ================= COMPONENT =================
 // WeatherQuickGrid: grid visual 2x3 con metricas actuales
@@ -40,9 +41,9 @@ function WeatherQuickGrid({ weather }) {
     const uvDayScorePercent = normalizePercent(uvDayScore, 0, 60);
 
     return (
-        <div className="px-4 mt-4 mb-4">
+        <div className={s["weather-grid"]}>
             {/* Grid de metricas (2 columnas mobile) */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className={s["weather-grid__grid"]}>
                 <MetricCard
                     label="Radiacion UV actual"
                     mobileLabel="Radiacion UV"

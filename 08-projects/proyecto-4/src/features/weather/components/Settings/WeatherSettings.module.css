@@ -1,0 +1,83 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del WeatherSettings — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: weather-settings ──────────────────────── */
+
+.weather-settings__scroll {
+    @apply flex-1 pb-10 overflow-y-auto overscroll-contain;
+}
+
+/* ─── Estado 1: skeleton loading ───────────────────── */
+
+.weather-settings__skeleton {
+    @apply mx-4 mt-4 rounded-3xl backdrop-blur-xl bg-white/10 p-4 text-white;
+}
+
+.weather-settings__skeleton-text {
+    @apply text-sm text-white/80;
+}
+
+.weather-settings__skeleton-bars {
+    @apply mt-3 space-y-2 animate-pulse;
+}
+
+.weather-settings__skeleton-bar--lg {
+    @apply h-6 w-28 bg-white/20 rounded-md;
+}
+
+.weather-settings__skeleton-bar--md {
+    @apply h-4 w-40 bg-white/15 rounded-md;
+}
+
+.weather-settings__skeleton-bar--xl {
+    @apply h-20 w-full bg-white/10 rounded-2xl;
+}
+
+/* ─── Estado 2: error sin datos ────────────────────── */
+
+.weather-settings__error-card {
+    @apply mx-4 mt-4 rounded-3xl backdrop-blur-xl bg-rose-500/15 border border-rose-300/40 p-4 text-white;
+}
+
+.weather-settings__error-title {
+    @apply text-sm font-medium;
+}
+
+.weather-settings__error-detail {
+    @apply text-xs text-white/80 mt-1;
+}
+
+.weather-settings__retry-btn {
+    @apply mt-3 rounded-xl px-3 py-2 bg-white/20 text-sm transition-colors;
+    &:hover {
+        @apply bg-white/30;
+    }
+}
+
+/* ─── Estado 3: vacio ──────────────────────────────── */
+
+.weather-settings__empty-card {
+    @apply mx-4 mt-4 rounded-3xl backdrop-blur-xl bg-white/10 p-4 text-white;
+}
+
+.weather-settings__empty-text {
+    @apply text-sm;
+}
+
+/* ─── Banners inline (con datos) ───────────────────── */
+
+.weather-settings__refreshing-banner {
+    @apply mx-4 mt-4 rounded-xl bg-white/10 px-3 py-2 text-xs text-white/85;
+}
+
+.weather-settings__error-banner {
+    @apply mx-4 mt-2 rounded-xl bg-amber-500/20 border border-amber-200/40 px-3 py-2 text-xs text-amber-50 flex items-center justify-between gap-2;
+}
+
+.weather-settings__error-banner-btn {
+    @apply shrink-0 rounded-lg bg-white/20 px-2 py-1 transition-colors;
+    &:hover {
+        @apply bg-white/30;
+    }
+}

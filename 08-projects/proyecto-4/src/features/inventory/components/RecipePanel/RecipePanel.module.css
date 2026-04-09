@@ -1,0 +1,214 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de RecipePanel y sub-componentes — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+@reference "../../../../assets/styles/App.css";
+
+/* ─── Block: recipe — Panel principal ──────────────── */
+
+.recipe__panel {
+    @apply absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out;
+}
+
+.recipe__panel--active {
+    @apply translate-x-0;
+}
+
+.recipe__panel--hidden {
+    @apply -translate-x-full;
+}
+
+.recipe__content-scroll {
+    @apply flex-1 min-h-0 overflow-y-auto overscroll-contain;
+}
+
+/* ─── CategoryNav ──────────────────────────────────── */
+
+.recipe__category-nav {
+    @apply flex gap-2 pl-2 pr-4 pb-3 overflow-x-auto shrink-0;
+}
+
+.recipe__category-btn {
+    @apply shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-medium tracking-wide transition-all duration-200 border;
+}
+
+.recipe__category-btn--active {
+    @apply border-accent text-accent bg-accent/10;
+}
+
+.recipe__category-btn--inactive {
+    @apply border-white/10 text-white/45 bg-white/6 hover:text-white/75 hover:bg-white/10;
+}
+
+/* ─── EmptyState / NoInventoryState ────────────────── */
+
+.recipe__empty {
+    @apply flex flex-col items-center justify-center px-8 py-16 text-center;
+}
+
+.recipe__empty-icon {
+    @apply w-14 h-14 rounded-full bg-white/4 border border-white/8 flex items-center justify-center mb-4 text-xl;
+}
+
+.recipe__empty-text {
+    @apply text-[13px] text-white/35 leading-relaxed;
+}
+
+/* ─── RecipeListCard ───────────────────────────────── */
+
+.recipe__list-card {
+    @apply rounded-xl overflow-hidden border border-white/8 active:scale-[0.97] transition-transform duration-150 text-left;
+}
+
+.recipe__list-card-image {
+    @apply aspect-square bg-cover bg-position-[center_60%];
+}
+
+.recipe__list-card-info {
+    @apply px-2.5 py-2.5 bg-white/4;
+}
+
+.recipe__list-card-origin {
+    @apply text-[10px] text-white/40;
+}
+
+.recipe__list-card-title {
+    @apply text-[14px] font-semibold text-white/90 leading-tight mt-0.5 line-clamp-2;
+}
+
+.recipe__list-card-time {
+    @apply text-[11px] text-white/40 mt-1 block;
+}
+
+.recipe__list-card-chip {
+    @apply inline-block mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400;
+}
+
+/* ─── RecipeList ───────────────────────────────────── */
+
+.recipe__list-grid {
+    @apply grid grid-cols-2 gap-3 px-4 pb-6;
+}
+
+/* ─── RecipeHero ───────────────────────────────────── */
+
+.recipe__hero {
+    @apply relative h-52 mx-4 rounded-2xl overflow-hidden shrink-0;
+}
+
+.recipe__hero-image {
+    @apply absolute inset-0 bg-cover bg-position-[center_60%];
+}
+
+.recipe__hero-overlay-top {
+    @apply absolute inset-x-0 top-0 h-20 bg-linear-to-b from-black/50 to-transparent;
+}
+
+.recipe__hero-overlay-bottom {
+    @apply absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/95 via-black/50 to-transparent;
+}
+
+.recipe__hero-content {
+    @apply absolute inset-x-0 bottom-0 px-4 pb-4;
+}
+
+.recipe__hero-chips {
+    @apply flex items-center gap-1.5 mb-2.5;
+}
+
+.recipe__hero-chip {
+    @apply flex items-center gap-1 text-[10px] text-white/65 bg-black/50 backdrop-blur-sm border border-white/10 rounded-full px-2.5 py-1 leading-none;
+}
+
+.recipe__hero-title {
+    @apply text-[22px] font-semibold leading-tight text-white;
+}
+
+/* ─── IngredientSection ────────────────────────────── */
+
+.recipe__ingredients-label {
+    @apply text-[10px] uppercase tracking-[0.14em] text-white/35 font-medium mb-2.5;
+}
+
+.recipe__ingredients-label--spaced {
+    @apply mb-2;
+}
+
+.recipe__ingredients-wrap {
+    @apply flex flex-wrap gap-1.5;
+}
+
+.recipe__ingredients-section {
+    @apply px-4;
+}
+
+.recipe__ingredients-section--multi {
+    @apply px-4 space-y-3.5;
+}
+
+.recipe__ingredient--matched {
+    @apply flex items-center gap-1.5 px-3 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[12px] text-emerald-400 font-medium capitalize;
+}
+
+.recipe__ingredient--missing {
+    @apply flex items-center gap-1.5 px-3 py-2 rounded-full bg-amber-500/8 border border-amber-500/20 text-[12px] text-amber-400/80 capitalize;
+}
+
+.recipe__ingredient--neutral {
+    @apply px-3 py-2 rounded-full bg-white/6 border border-white/10 text-[12px] text-white/65 capitalize;
+}
+
+.recipe__ingredient--neutral-dim {
+    @apply px-3 py-2 rounded-full bg-white/6 border border-white/10 text-[12px] text-white/60 capitalize;
+}
+
+.recipe__ingredient-check {
+    @apply text-[9px] font-bold;
+}
+
+.recipe__ingredient-plus {
+    @apply text-[9px];
+}
+
+/* ─── StepsSection ─────────────────────────────────── */
+
+.recipe__steps-wrap {
+    @apply px-4;
+}
+
+.recipe__steps-label {
+    @apply text-[10px] uppercase tracking-[0.14em] text-white/35 font-medium mb-4;
+}
+
+.recipe__step {
+    @apply relative flex gap-4 pb-5 last:pb-0;
+}
+
+.recipe__step-line {
+    @apply absolute left-4.25 top-9 bottom-0 w-px bg-white/7;
+}
+
+.recipe__step-number {
+    @apply relative z-10 shrink-0 w-8.5 h-8.5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mt-0.5;
+}
+
+.recipe__step-number-text {
+    @apply text-[10px] font-semibold text-white/35 tabular-nums;
+}
+
+.recipe__step-text {
+    @apply text-[14px] text-white/80 leading-relaxed pt-1.5;
+}
+
+.recipe__step-bold {
+    @apply text-white/90;
+}
+
+/* ─── RecipeDetail ─────────────────────────────────── */
+
+.recipe__detail-scroll {
+    @apply flex-1 min-h-0 overflow-y-auto overscroll-contain;
+}
+
+.recipe__detail-divider {
+    @apply h-px bg-white/6;
+}

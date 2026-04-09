@@ -17,4 +17,3 @@
 
 # Keep markdown as text with LF
 *.md text eol=lf
-

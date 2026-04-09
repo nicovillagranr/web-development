@@ -1,13 +1,17 @@
+# Estandariza el formato de archivos en cualquier editor (VS Code, WebStorm, etc.)
+# para que todo el proyecto mantenga un estilo consistente sin depender de la config
+# individual de cada editor.
+
 root = true
 
 [*]
 charset = utf-8
-indent_style = space
-indent_size = 2
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
+indent_style = space         # Usa espacios, no tabs
+indent_size = 2              # 2 espacios de indentación
+end_of_line = lf             # Fin de línea estilo Linux/Mac (no crlf de Windows)
+insert_final_newline = true  # Agrega una línea vacía al final de cada archivo
+trim_trailing_whitespace = true  # Elimina espacios en blanco al final de las líneas
 
 [*.md]
+# En Markdown, los espacios finales pueden ser saltos de línea intencionales
 trim_trailing_whitespace = false
-

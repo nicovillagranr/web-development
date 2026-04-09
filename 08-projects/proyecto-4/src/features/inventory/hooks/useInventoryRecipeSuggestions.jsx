@@ -26,7 +26,7 @@ function readInventoryItems() {
     return parseItems(localStorage.getItem(INVENTORY_STORAGE_KEY));
 }
 
-function normalizeText(value) {
+export function normalizeText(value) {
     return String(value || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -60,10 +60,10 @@ function enrichRecipe(recipe, matchedIngredients, score = 0) {
     };
 }
 
-function matchRecipe(recipe, nameSignals, typeSignals) {
+export function matchRecipe(recipe, nameSignals, typeSignals) {
     const matched = recipe.ingredients.filter((ingredient) => {
         const token = normalizeText(ingredient);
-        return nameSignals.some((name) => name.includes(token));
+        return nameSignals.some((name) => name.includes(token) || token.includes(name));
     });
 
     const coverage = recipe.ingredients.length
@@ -98,7 +98,7 @@ function buildFallbackRecipes() {
     return rotated.slice(0, 2).map((recipe) => enrichRecipe(recipe, [], 0));
 }
 
-function buildSuggestions(items) {
+export function buildSuggestions(items) {
     if (!items.length) {
         return buildFallbackRecipes();
     }
@@ -116,7 +116,7 @@ function buildSuggestions(items) {
         return buildFallbackRecipes();
     }
 
-    return ranked.slice(0, 2);
+    return ranked.slice(0, 4);
 }
 
 export function useInventoryRecipeSuggestions() {
@@ -147,10 +147,18 @@ export function useInventoryRecipeSuggestions() {
 
     const suggestedRecipes = useMemo(() => buildSuggestions(items), [items]);
 
+    const enrichedCatalog = useMemo(() => {
+        if (!items.length) return RECIPE_CATALOG.map((r) => enrichRecipe(r, [], 0));
+        const nameSignals = getNameSignals(items);
+        const typeSignals = getTypeSignals(items);
+        return RECIPE_CATALOG.map((r) => matchRecipe(r, nameSignals, typeSignals));
+    }, [items]);
+
     return {
         itemCount: items.length,
         suggestions: suggestedRecipes.map((recipe) => recipe.title),
         suggestedRecipes,
+        enrichedCatalog,
         recommendedRecipe: suggestedRecipes[0] || null,
     };
 }

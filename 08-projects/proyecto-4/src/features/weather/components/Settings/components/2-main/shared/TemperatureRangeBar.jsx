@@ -1,3 +1,6 @@
+// ================= IMPORTS =================
+import s from "./TemperatureRangeBar.module.css";
+
 // ================= COMPONENTE/FUNCION =================
 // TemperatureRangeBar: punto de entrada; recibe props/parametros: { style, markerPercent = null }
 // Muestra:
@@ -18,17 +21,17 @@ export default function TemperatureRangeBar({ style, markerPercent = null }) {
         : null;
 
     return (
-        <div className="relative h-1.5 w-16 rounded-full bg-white/20 overflow-hidden">
+        <div className={s["range-bar"]}>
             {/* Segmento de rango (min-max) */}
             <div
-                className="absolute h-full bg-linear-to-r from-yellow-300 via-orange-400 to-red-400 rounded-full"
+                className={s["range-bar__segment"]}
                 style={style}
             />
 
             {/* Marcador puntual de temperatura actual (solo hoy) */}
             {hasMarker && (
                 <span
-                    className="absolute top-1/2 z-10 size-1.5 rounded-full bg-white border border-black -translate-x-1/2 -translate-y-1/2"
+                    className={s["range-bar__marker"]}
                     style={{ left: `${safeMarkerPercent}%` }}
                 />
             )}

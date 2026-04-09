@@ -1,0 +1,19 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del WeatherSettingsShell — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: weather-shell ─────────────────────────── */
+
+.weather-shell {
+    @apply absolute inset-x-0 top-0 h-dvh min-h-svh z-20 flex flex-col text-white transition-transform duration-500 ease-out;
+}
+
+/* ─── Modifiers ────────────────────────────────────── */
+
+.weather-shell--active {
+    @apply translate-x-0;
+}
+
+.weather-shell--hidden {
+    @apply -translate-x-full;
+}

@@ -1,0 +1,45 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de Screens — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: screens ───────────────────────────────── */
+
+.screens {
+    @apply h-full flex flex-col;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+
+.screens__header {
+    @apply w-full flex flex-col px-4 py-2 gap-2;
+}
+
+/* ─── Scroller (carrusel horizontal) ───────────────── */
+
+.screens__scroller {
+    @apply flex-1 flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory;
+}
+
+/* ─── Cada pantalla dentro del scroller ────────────── */
+
+.screens__section {
+    @apply h-full w-full shrink-0 snap-center;
+}
+
+/* ─── Dots de navegación ───────────────────────────── */
+
+.screens__dots {
+    @apply pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2;
+}
+
+.screens__dot {
+    @apply h-1.5 w-1.5 rounded-full transition-colors;
+}
+
+.screens__dot--active {
+    @apply bg-white;
+}
+
+.screens__dot--inactive {
+    @apply bg-white/25;
+}

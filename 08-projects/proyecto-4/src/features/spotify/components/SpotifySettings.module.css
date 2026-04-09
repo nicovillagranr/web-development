@@ -1,0 +1,33 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de SpotifySettings — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: spotify-settings ──────────────────────── */
+
+.spotify-settings {
+    @apply absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out;
+}
+
+.spotify-settings--active {
+    @apply translate-x-0;
+}
+
+.spotify-settings--hidden {
+    @apply -translate-x-full;
+}
+
+.spotify-settings__content {
+    @apply flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center;
+}
+
+.spotify-settings__icon {
+    @apply text-[#1DB954];
+}
+
+.spotify-settings__title {
+    @apply text-sm font-medium;
+}
+
+.spotify-settings__desc {
+    @apply text-sm leading-relaxed;
+}

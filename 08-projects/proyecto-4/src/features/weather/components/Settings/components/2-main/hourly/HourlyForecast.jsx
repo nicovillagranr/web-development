@@ -1,6 +1,7 @@
 // ================= IMPORTS =================
 import { useMemo, useRef } from "react";
 import { WeatherIcon } from "../../../../weatherIcon.jsx";
+import s from "./HourlyForecast.module.css";
 
 // ================= FUNCION =================
 // isSameHour: helper/componente interno; parametros: a, b
@@ -29,20 +30,20 @@ function HourlyForecast({ hours }) {
     const now = new Date();
 
     return (
-        <div className="px-4 mt-4">
-            <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-5">
+        <div className={s.hourly}>
+            <div className={s.hourly__card}>
                 {/* Titulo de seccion */}
-                <h3 className="text-sm opacity-70 mb-4">Próximas 24 horas</h3>
+                <h3 className={s.hourly__title}>Próximas 24 horas</h3>
 
                 {/* Carrusel horizontal de horas */}
-                <div ref={scrollerRef} className="flex gap-3 overflow-x-auto overflow-y-hidden no-scrollbar snap-x snap-mandatory -mx-5 px-5 scroll-px-5 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
+                <div ref={scrollerRef} className={`${s.hourly__carousel} no-scrollbar`}>
 
                     {visibleHours.map((hour) => {
                         const hourDate = new Date(hour.time);
                         const isNow = isSameHour(hourDate, now);
 
                         return (
-                            <div key={hour.time} className="snap-start shrink-0">
+                            <div key={hour.time} className={s["hourly__snap-item"]}>
                                 <MiniHourlyCard hour={hour} isNow={isNow} />
                             </div>
                         );
@@ -66,15 +67,15 @@ function MiniHourlyCard({ hour, isNow }) {
         });
 
     return (
-        <div className="rounded-2xl px-3 flex flex-col items-center">
+        <div className={s["hourly__mini-card"]}>
             {/* Hora */}
-            <p className="text-sm">{formattedHour}</p>
+            <p className={s["hourly__mini-card-hour"]}>{formattedHour}</p>
 
             {/* Icono meteo de esa hora */}
             <WeatherIcon code={hour.code} isDay={hour.isDay} size={50} />
 
             {/* Temperatura puntual */}
-            <p className="text-lg font-light leading-none">{hour.temp}°</p>
+            <p className={s["hourly__mini-card-temp"]}>{hour.temp}°</p>
         </div>
     );
 }

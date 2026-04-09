@@ -29,14 +29,15 @@ Base URL de producción: `/proyecto-4/`
 
 ```
 src/
-├── shell/          # DeviceShell (orquestador) + HomeScreens (carrusel)
+├── hardware/       # Shell (orquestador) + Screens (carrusel)
 ├── screens/        # screen-1 (HomePanel + widgets + header) | screen-2 (SystemPanel)
-├── features/       # inventory | time | weather  →  components / hooks / utils / constants
+├── features/       # inventory | time | weather | spotify  →  components / hooks / utils / constants
+├── hooks/          # hooks globales compartidos (ej: useEscapeKey)
 ├── ui/             # componentes globales reutilizables (ej: SettingsHeader)
 └── assets/         # fonts, icons/weather, styles/App.css
 ```
 
-**State machine en DeviceShell:**
+**State machine en Shell:**
 `activeScreen` (`null` | `"time"` | `"weather"` | `"recipe"`) controla qué panel de ajustes se muestra. Los paneles se montan siempre y se muestran/ocultan con `translate-x` (transición CSS).
 
 **Carrusel en HomeScreens:**
@@ -45,10 +46,11 @@ src/
 ## Aliases de Vite/jsconfig
 | Alias | Ruta |
 |---|---|
-| `@shell` | `src/shell` |
+| `@shell` | `src/hardware` |
 | `@features` | `src/features` |
 | `@screen1` | `src/screens/screen-1` |
 | `@screen2` | `src/screens/screen-2` |
+| `@hooks` | `src/hooks` |
 | `@ui` | `src/ui` |
 | `@assets` | `src/assets` |
 
@@ -131,7 +133,7 @@ bg-[linear-gradient(145deg,#0D111E_0%,#0A0F1A_100%)]
 
 ## Qué NO hacer
 - No agregar imágenes a `src/assets/images/` — directorio eliminado intencionalmente (peso innecesario)
-- No usar `Header.jsx` (`src/screens/screen-1/header/Header.jsx`) — dead code, reemplazado por `TopBar` y `Nav` directos
+- `Header.jsx` (`src/screens/screen-1/header/Header.jsx`) es un wrapper semántico de `Nav` — usado por `Screen1`
 - No instalar Framer Motion ni otras librerías de animación — las animaciones van en App.css
 - No instalar routers — la navegación es un state machine local (`activeScreen`)
 - **Al hacer commits, nunca incluir `.env`** — asegurarse de que esté en `.gitignore` antes de subir
