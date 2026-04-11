@@ -1,0 +1,97 @@
+.preloader {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100svh;
+    background-color: var(--preloader-bg, #060a14);
+    color: var(--preloader-color, #ecf2ff);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    will-change: transform, clip-path;
+    z-index: 9999;
+}
+
+.preloader p {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+}
+
+.preloader :global(.line) {
+    position: relative;
+    transform: translateY(100%);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.initializing p,
+.initializing .svgStrokes {
+    visibility: hidden;
+}
+
+.initializing :global(.line) {
+    visibility: visible;
+}
+
+.row {
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btnContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15rem;
+    height: 15rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: default;
+    pointer-events: none;
+}
+
+.btnContainer:focus-visible {
+    outline: 2px solid var(--preloader-color, #ecf2ff);
+    outline-offset: 0.5rem;
+    border-radius: 50%;
+}
+
+.svgStrokes,
+.logo,
+.label,
+.outroLabel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo {
+    width: 10rem;
+    height: 10rem;
+}
+
+.label,
+.outroLabel {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.svgStrokes,
+.svgStrokes svg {
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+}

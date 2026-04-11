@@ -129,6 +129,12 @@
   }
 }
 
+/* ── Layout utilities ── */
+@utility container-page {
+  margin-inline: auto;
+  width: min(1080px, 92vw);
+}
+
 /* ── Animation utilities (inside @layer so they coexist with Tailwind) ── */
 @utility animate-fade-up {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;

@@ -1,0 +1,21 @@
+@reference "../../../assets/styles/App.css";
+
+.catalog {
+    @apply mt-10;
+}
+
+.catalog__header {
+    @apply mb-5 grid gap-1.5;
+}
+
+.catalog__header-title {
+    @apply font-heading text-2xl md:text-3xl font-bold text-text-primary;
+}
+
+.catalog__header-subtitle {
+    @apply text-text-secondary;
+}
+
+.catalog__grid {
+    @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
+}

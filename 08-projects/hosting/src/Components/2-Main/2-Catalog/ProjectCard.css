@@ -1,0 +1,37 @@
+@reference "../../../assets/styles/App.css";
+
+.card {
+    @apply animate-card-enter grid gap-3 rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent-border hover:shadow-glow;
+}
+
+.card__header {
+    @apply flex flex-wrap items-center justify-between gap-2;
+}
+
+.card__type {
+    @apply rounded-badge border border-accent-border bg-accent-glow px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-accent;
+}
+
+.card__status {
+    @apply rounded-badge border px-2.5 py-0.5 text-xs font-medium;
+}
+
+.card__title {
+    @apply font-heading text-lg font-bold text-text-primary;
+}
+
+.card__description {
+    @apply text-sm leading-relaxed text-text-secondary;
+}
+
+.card__footer {
+    @apply mt-auto flex flex-wrap items-center justify-between gap-2 pt-1;
+}
+
+.card__stack {
+    @apply font-mono text-xs font-medium text-text-muted;
+}
+
+.card__arrow {
+    @apply text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100;
+}
