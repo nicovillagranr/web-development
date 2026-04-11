@@ -1,0 +1,19 @@
+@reference "../../../assets/styles/App.css";
+
+/* MapModal Component - BEM */
+
+.map-modal__overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60;
+}
+
+.map-modal {
+    @apply relative w-[90%] max-w-lg overflow-hidden rounded-lg bg-white;
+}
+
+.map-modal__close {
+    @apply absolute right-3 top-3 rounded-md text-4xl;
+}
+
+.map-modal__iframe {
+    @apply h-80 w-full;
+}

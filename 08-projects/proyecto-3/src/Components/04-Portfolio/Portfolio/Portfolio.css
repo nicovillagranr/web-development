@@ -1,0 +1,71 @@
+@reference "../../../assets/styles/App.css";
+
+/* Portfolio Component - BEM */
+
+.portfolio {
+    @apply flex min-h-[75vh] w-full flex-col items-center bg-primary py-10;
+}
+
+.portfolio__title-text {
+    @apply text-white;
+}
+
+.portfolio__container {
+    @apply mt-8 grid w-[80%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+/* Portfolio Item - BEM */
+
+.portfolio-item {
+    @apply relative overflow-hidden aspect-square;
+}
+
+.portfolio-item--big {
+    @apply aspect-4/3 sm:aspect-video lg:col-span-2;
+}
+
+.portfolio-item__image {
+    @apply h-full w-full object-cover transition-transform duration-300;
+}
+
+.portfolio-item__overlay {
+    @apply absolute inset-0 flex flex-col items-center justify-center gap-4 bg-linear-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300;
+}
+
+.portfolio-item__title {
+    @apply max-w-[90%] text-center text-lg leading-snug font-semibold text-white;
+}
+
+.portfolio-item__buttons {
+    @apply flex gap-4;
+}
+
+.portfolio-item__button {
+    @apply px-4 py-2 text-sm font-medium transition;
+}
+
+.portfolio-item__button--primary {
+    @apply bg-white text-black hover:bg-gray-200;
+}
+
+.portfolio-item__button--secondary {
+    @apply border border-white text-white hover:bg-white hover:text-black;
+}
+
+.portfolio-item__message {
+    @apply rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-center text-xs font-semibold tracking-wide text-amber-900 shadow-sm;
+}
+
+.portfolio-item:hover .portfolio-item__image {
+    transform: scale(1.05);
+}
+
+@media (min-width: 640px) {
+    .portfolio-item__overlay {
+        opacity: 0;
+    }
+
+    .portfolio-item:hover .portfolio-item__overlay {
+        opacity: 1;
+    }
+}

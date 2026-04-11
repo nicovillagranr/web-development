@@ -1,0 +1,63 @@
+@reference "../../../assets/styles/App.css";
+
+/* Team Component - BEM */
+
+.team {
+    @apply w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center px-4 py-4;
+}
+
+.team__title-text {
+    @apply text-black;
+}
+
+.team__container {
+    @apply w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-6;
+}
+
+.team__card {
+    @apply flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white;
+}
+
+.team__card-image {
+    @apply w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-4 border-primary;
+}
+
+.team__card-content {
+    @apply flex flex-col flex-1;
+}
+
+.team__card-name {
+    @apply mt-4 text-lg font-semibold md:text-xl;
+}
+
+.team__card-role {
+    @apply text-sm text-gray-600 md:text-base;
+}
+
+.team__card-description {
+    @apply mt-3 text-xs text-gray-700;
+}
+
+.team__socials {
+    @apply mt-auto flex list-none gap-3 pt-4;
+}
+
+.team__social-item {
+    @apply flex;
+}
+
+.team__social-badge {
+    @apply flex h-9 w-9 items-center justify-center rounded-full md:h-7 md:w-7;
+}
+
+.team__social-icon {
+    @apply w-5 h-5 md:w-4 md:h-4;
+}
+
+.team__demo-notice {
+    @apply w-full mt-3;
+}
+
+.team__demo-text {
+    @apply rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold tracking-wide text-amber-900 pointer-events-none;
+}

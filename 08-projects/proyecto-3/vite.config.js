@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-  // Esta carpeta local es "proyecto-3" y en hosting este sitio se publica en "/proyecto-3/".
+  // Esta carpeta local es "proyecto-1", pero en hosting este sitio se publica en "/proyecto-3/".
   // Se mantiene este base para respetar la estructura raiz del portafolio en produccion.
   base: '/proyecto-3/',
 })

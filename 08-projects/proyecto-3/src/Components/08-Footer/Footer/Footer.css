@@ -1,0 +1,31 @@
+@reference "../../../assets/styles/App.css";
+
+/* Footer Component - BEM */
+
+.footer {
+    @apply w-full min-h-[15vh] bg-dark flex flex-col items-center justify-around sm:flex-row;
+}
+
+.footer__logo-container {
+    @apply flex flex-col items-center;
+}
+
+.footer__logo-link {
+    @apply flex items-center text-white text-xl tracking-widest;
+}
+
+.footer__logo-icon {
+    @apply w-5 h-5;
+}
+
+.footer__logo-text {
+    @apply font-medium;
+}
+
+.footer__tagline {
+    @apply text-white text-xs;
+}
+
+.footer__copyright {
+    @apply text-white text-xs;
+}
