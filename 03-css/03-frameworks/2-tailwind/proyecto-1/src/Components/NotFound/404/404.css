@@ -1,0 +1,19 @@
+@reference "../../../assets/styles/App.css";
+
+/* NotFound Component - BEM */
+
+.not-found {
+    @apply min-h-[75vh] flex flex-col items-center justify-center gap-5 bg-surface;
+}
+
+.not-found__code {
+    @apply text-6xl md:text-8xl;
+}
+
+.not-found__message {
+    @apply text-center text-xl px-2 md:text-4xl;
+}
+
+.not-found__link {
+    @apply text-lg md:text-2xl underline text-blue-600 hover:text-blue-800;
+}

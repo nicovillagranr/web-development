@@ -2,16 +2,20 @@
 import { useRef } from "react"
 
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../../SectionTitle/SectionTitle/SectionTitle.jsx"
+
+// Importamos estilos
+import "../../../assets/styles/App.css"
+import "./News.css"
 
 // Importamos las imágenes de noticias
-import newsImage1 from "../../assets/images/5-News/news-1.webp"
-import newsImage2 from "../../assets/images/5-News/news-2.webp"
-import newsImage3 from "../../assets/images/5-News/news-3.webp"
+import newsImage1 from "../../../assets/images/5-News/news-1.webp"
+import newsImage2 from "../../../assets/images/5-News/news-2.webp"
+import newsImage3 from "../../../assets/images/5-News/news-3.webp"
 
 // Importamos los Icons de las tarjetas de noticias
-import calendarIcon from "../../assets/icons/3-News/calendar.svg"
-import userIcon from "../../assets/icons/3-News/user.svg"
+import calendarIcon from "../../../assets/icons/3-News/calendar.svg"
+import userIcon from "../../../assets/icons/3-News/user.svg"
 
 // Creamos el array de noticias para recorrerlo con un .map()
 const news = [
@@ -38,7 +42,7 @@ const news = [
         image: newsImage3,
         title: "Good UX is invisible: lessons from real client projects",
         Date: "September 3, 2023",
-        text: "Users rarely notice good UX, but they immediately feel when it’s missing. Here are practical insights we apply to avoid friction and confusion",
+        text: "Users rarely notice good UX, but they immediately feel when it's missing. Here are practical insights we apply to avoid friction and confusion",
         author: "Projex Team",
         comments: 7,
     },
@@ -70,35 +74,35 @@ function News() {
     }
 
     return (
-        <section className="w-full min-h-[75vh] py-6 bg-primary flex flex-col items-center justify-center">
+        <section className="news">
 
             {/* Services Title */}
-            <SectionTitle className="text-white" title="Insights & Updates" />
+            <SectionTitle className="news__title-text" title="Insights & Updates" />
 
             {/* Cards */}
-            <section onWheel={handleWheel} ref={scrollRef} className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
+            <section onWheel={handleWheel} ref={scrollRef} className="news__container scrollbar-none">
 
                 {news.map((newItem) => (
-                    <article key={newItem.id} className="shrink-0 w-[85vw] sm:w-75 md:w-90 flex flex-col">
+                    <article key={newItem.id} className="news__card">
 
                         {/* Tarjeta */}
-                        <div className="w-full h-48 overflow-hidden">
-                            <img src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
+                        <div className="news__card-image-wrapper">
+                            <img src={newItem.image} alt={newItem.title} className="news__card-image" />
                         </div>
-                        <h3 className="text-xl font-bold mt-4 mb-2 text-white">{newItem.title}</h3>
-                        <time className="text-sm text-gray-300 mb-4">{newItem.Date}</time>
-                        <p className="text-gray-200 text-xs">{newItem.text}</p>
+                        <h3 className="news__card-title">{newItem.title}</h3>
+                        <time className="news__card-date">{newItem.Date}</time>
+                        <p className="news__card-text">{newItem.text}</p>
                         {/* Tarjeta */}
 
                         {/* Autor y Comentarios */}
-                        <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-200">
-                            <div className="flex items-center gap-2">
-                                <img src={userIcon} alt="Author" className="w-5 h-5" />
+                        <div className="news__card-meta">
+                            <div className="news__card-author">
+                                <img src={userIcon} alt="" aria-hidden="true" className="news__card-meta-icon" />
                                 <span>{newItem.author}</span>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <img src={calendarIcon} alt="Comments" className="w-5 h-5" />
+                            <div className="news__card-comments">
+                                <img src={calendarIcon} alt="" aria-hidden="true" className="news__card-meta-icon" />
                                 <span>{newItem.comments} Comments</span>
                             </div>
                         </div>

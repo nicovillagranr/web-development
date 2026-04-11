@@ -1,0 +1,35 @@
+@reference "../../../assets/styles/App.css";
+
+/* ContactForm Component - BEM */
+
+.contact-form {
+    @apply w-full md:w-[50%];
+}
+
+.contact-form__form {
+    @apply flex flex-col gap-4;
+}
+
+.contact-form__group {
+    @apply flex flex-col gap-2;
+}
+
+.contact-form__label {
+    @apply text-sm font-medium text-gray-800 md:text-base;
+}
+
+.contact-form__input {
+    @apply w-full rounded-md border border-gray-400 p-3 text-base focus:outline-none focus:ring-2 focus:ring-primary md:text-lg;
+}
+
+.contact-form__textarea {
+    @apply w-full rounded-md border border-gray-400 p-3 text-base focus:outline-none focus:ring-2 focus:ring-primary md:text-lg;
+}
+
+.contact-form__error {
+    @apply text-sm text-red-600;
+}
+
+.contact-form__success {
+    @apply text-sm text-green-600;
+}

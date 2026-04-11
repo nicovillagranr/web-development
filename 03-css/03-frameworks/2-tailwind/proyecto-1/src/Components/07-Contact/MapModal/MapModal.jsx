@@ -1,6 +1,10 @@
 // MapModal.jsx
 import { useEffect, useRef } from "react"
 
+// Importamos estilos
+import "../../../assets/styles/App.css"
+import "./MapModal.css"
+
 function MapModal({ onClose }) {
     // Referencias para controlar el foco dentro del modal.
     const modalRef = useRef(null)
@@ -74,11 +78,22 @@ function MapModal({ onClose }) {
 
     return (
         // Overlay oscuro del modal.
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" role="dialog" aria-modal="true">
+        <div
+            className="map-modal__overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="map-modal-title"
+            onClick={(event) => {
+                if (event.target === event.currentTarget) {
+                    onClose()
+                }
+            }}
+        >
             {/* Contenedor principal del modal. */}
-            <div ref={modalRef} tabIndex={-1} className="relative w-[90%] max-w-lg overflow-hidden rounded-lg bg-white">
+            <div ref={modalRef} tabIndex={-1} className="map-modal">
+                <h2 id="map-modal-title" className="sr-only">Office location map</h2>
                 {/* Boton para cerrar el modal. */}
-                <button ref={closeButtonRef} type="button" onClick={onClose} className="absolute right-3 top-3 text-4xl" aria-label="Close map">
+                <button ref={closeButtonRef} type="button" onClick={onClose} className="map-modal__close" aria-label="Close map">
                     &times;
                 </button>
 
@@ -86,7 +101,7 @@ function MapModal({ onClose }) {
                 <iframe
                     title="Location map"
                     src="https://www.google.com/maps?q=Alonso%20de%20C%C3%B3rdova%201234%20Vitacura%20Santiago&output=embed"
-                    className="h-80 w-full"
+                    className="map-modal__iframe"
                     loading="lazy"
                 />
             </div>

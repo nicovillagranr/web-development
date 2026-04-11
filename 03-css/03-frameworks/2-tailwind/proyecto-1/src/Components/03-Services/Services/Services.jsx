@@ -1,10 +1,14 @@
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../../SectionTitle/SectionTitle/SectionTitle.jsx"
+
+// Importamos estilos
+import "../../../assets/styles/App.css"
+import "./Services.css"
 
 // Importamos las imágenes de los servicios
-import service1Img from "../../assets/images/2-Services/idea.webp"
-import service2Img from "../../assets/images/2-Services/seo.webp"
-import service3Img from "../../assets/images/2-Services/graphic-design.webp"
+import service1Img from "../../../assets/images/2-Services/idea.webp"
+import service2Img from "../../../assets/images/2-Services/seo.webp"
+import service3Img from "../../../assets/images/2-Services/graphic-design.webp"
 
 
 const services = [
@@ -33,26 +37,26 @@ const services = [
 
 function Services() {
     return (
-        <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center p-5">
+        <section className="services">
 
             {/* Services Title */}
-            <SectionTitle className="text-black" title="What We Do" />
+            <SectionTitle className="services__title-text" title="What We Do" />
 
             {/* Services Cards */}
-            <div className="w-[90%] mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="services__container">
 
                 {/* .map() de cada Card */}
                 {services.map(service => {
                     return (
-                        <article key={service.id} className="flex flex-col items-center justify-center gap-4 p-6 md:p-10 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                        <article key={service.id} className="services__card">
                             <img
                                 draggable="false"
                                 src={service.img}
                                 alt={service.title}
-                                className="w-24 h-24 md:w-32 md:h-32"
+                                className="services__card-image"
                             />
-                            <h3 className="text-lg md:text-2xl cursor-pointer">{service.title}</h3>
-                            <p className="text-sm md:text-base text-center cursor-pointer">{service.text}</p>
+                            <h3 className="services__card-title">{service.title}</h3>
+                            <p className="services__card-text">{service.text}</p>
                         </article>
                     )
                 })}

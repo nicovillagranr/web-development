@@ -1,16 +1,20 @@
-﻿// Importamos useState para mostrar feedback de demo
+// Importamos useState para mostrar feedback de demo
 import { useState } from "react"
 
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../../SectionTitle/SectionTitle/SectionTitle.jsx"
+
+// Importamos estilos
+import "../../../assets/styles/App.css"
+import "./Portfolio.css"
 
 // Importamos las imagenes de los proyectos
-import portfolioImg1 from "../../assets/images/3-Portfolio/portfolio-1.webp"
-import portfolioImg2 from "../../assets/images/3-Portfolio/portfolio-2.webp"
-import portfolioImg3 from "../../assets/images/3-Portfolio/portfolio-3.webp"
-import portfolioImg4 from "../../assets/images/3-Portfolio/portfolio-4.webp"
-import portfolioImg5 from "../../assets/images/3-Portfolio/portfolio-5.webp"
-import portfolioImg6 from "../../assets/images/3-Portfolio/portfolio-6.webp"
+import portfolioImg1 from "../../../assets/images/3-Portfolio/portfolio-1.webp"
+import portfolioImg2 from "../../../assets/images/3-Portfolio/portfolio-2.webp"
+import portfolioImg3 from "../../../assets/images/3-Portfolio/portfolio-3.webp"
+import portfolioImg4 from "../../../assets/images/3-Portfolio/portfolio-4.webp"
+import portfolioImg5 from "../../../assets/images/3-Portfolio/portfolio-5.webp"
+import portfolioImg6 from "../../../assets/images/3-Portfolio/portfolio-6.webp"
 
 // Datos de los proyectos para recorrerlos con un .map()
 const portfolioItems = [
@@ -57,20 +61,20 @@ function PortfolioItem({ image, title, big }) {
     }
 
     return (
-        <article className={`group relative overflow-hidden ${big ? "aspect-4/3 sm:aspect-video lg:col-span-2" : "aspect-square"}`}>
+        <article className={`portfolio-item ${big ? "portfolio-item--big" : ""}`}>
             {/* Imagen */}
-            <img width={200} height={200} src={image} alt={title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            <img width={200} height={200} src={image} alt={title} className="portfolio-item__image" />
 
             {/* Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-linear-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
-                <h3 className="max-w-[90%] text-center text-lg leading-snug font-semibold text-white">{title}</h3>
+            <div className="portfolio-item__overlay">
+                <h3 className="portfolio-item__title">{title}</h3>
 
-                <div className="flex gap-4">
+                <div className="portfolio-item__buttons">
                     {/* Demo externa */}
                     <button
                         type="button"
                         onClick={handleDemoClick}
-                        className="bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-gray-200"
+                        className="portfolio-item__button portfolio-item__button--primary"
                     >
                         View Demo
                     </button>
@@ -79,7 +83,7 @@ function PortfolioItem({ image, title, big }) {
                     <button
                         type="button"
                         onClick={handleDemoClick}
-                        className="border border-white px-4 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-black"
+                        className="portfolio-item__button portfolio-item__button--secondary"
                     >
                         Project Details
                     </button>
@@ -89,7 +93,7 @@ function PortfolioItem({ image, title, big }) {
                     <p
                         role="status"
                         aria-live="polite"
-                        className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-center text-xs font-semibold tracking-wide text-amber-900 shadow-sm"
+                        className="portfolio-item__message"
                     >
                         AVISO: Proyecto Demo
                     </p>
@@ -102,12 +106,12 @@ function PortfolioItem({ image, title, big }) {
 // Contenedor general del Portfolio
 function Portfolio() {
     return (
-        <section className="flex min-h-[75vh] w-full flex-col items-center bg-primary py-10">
+        <section className="portfolio">
             {/* Titulo */}
-            <SectionTitle className="text-white" title="Selected Work" />
+            <SectionTitle className="portfolio__title-text" title="Selected Work" />
 
             {/* Grid */}
-            <div className="mt-8 grid w-[80%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="portfolio__container">
                 {portfolioItems.map(item => (
                     <PortfolioItem
                         key={item.id}

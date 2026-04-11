@@ -1,18 +1,22 @@
-﻿// Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+// Importamos SectionTitle
+import SectionTitle from "../../SectionTitle/SectionTitle/SectionTitle.jsx"
+
+// Importamos estilos
+import "../../../assets/styles/App.css"
+import "./Team.css"
 
 // Importamos las imagenes de los miembros del equipo
-import member1img from "../../assets/images/4-Team/team__member-1.webp"
-import member2img from "../../assets/images/4-Team/team__member-2.webp"
-import member3img from "../../assets/images/4-Team/team__member-3.webp"
-import member4img from "../../assets/images/4-Team/team__member-4.webp"
+import member1img from "../../../assets/images/4-Team/team__member-1.webp"
+import member2img from "../../../assets/images/4-Team/team__member-2.webp"
+import member3img from "../../../assets/images/4-Team/team__member-3.webp"
+import member4img from "../../../assets/images/4-Team/team__member-4.webp"
 
 // Importamos los iconos de redes sociales
-import twitterIcon from "../../assets/icons/2-Team/twitter.svg"
-import pinterestIcon from "../../assets/icons/2-Team/pinterest.svg"
-import facebookIcon from "../../assets/icons/2-Team/facebook.svg"
-import googleIcon from "../../assets/icons/2-Team/google.svg"
-import linkedinIcon from "../../assets/icons/2-Team/linkedin.svg"
+import twitterIcon from "../../../assets/icons/2-Team/twitter.svg"
+import pinterestIcon from "../../../assets/icons/2-Team/pinterest.svg"
+import facebookIcon from "../../../assets/icons/2-Team/facebook.svg"
+import googleIcon from "../../../assets/icons/2-Team/google.svg"
+import linkedinIcon from "../../../assets/icons/2-Team/linkedin.svg"
 
 const members = [
     {
@@ -75,55 +79,56 @@ const members = [
 
 function Team() {
     return (
-        <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center px-4 py-4">
+        <section className="team">
             {/* Title */}
-            <SectionTitle className="text-black" title="People Behind the Product" />
+            <SectionTitle className="team__title-text" title="People Behind the Product" />
 
             {/* Members */}
-            <section className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-6">
+            <section className="team__container">
                 {members.map((member) => (
                     <article
                         key={member.id}
-                        className="flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white"
+                        className="team__card"
                     >
                         <img
                             src={member.img}
                             alt={member.name}
-                            className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-4 border-primary"
+                            className="team__card-image"
                         />
 
-                        <div className="flex flex-col flex-1">
-                            <h3 className="mt-4 text-lg font-semibold md:text-xl">{member.name}</h3>
-                            <h4 className="text-sm text-gray-600 md:text-base">{member.role}</h4>
-                            <p className="mt-3 text-xs text-gray-700">{member.description}</p>
+                        <div className="team__card-content">
+                            <h3 className="team__card-name">{member.name}</h3>
+                            <h4 className="team__card-role">{member.role}</h4>
+                            <p className="team__card-description">{member.description}</p>
                         </div>
 
                         {/* Social Media */}
-                        <div className="flex gap-3 mt-auto pt-4">
+                        <ul className="team__socials" aria-label={`Social platforms for ${member.name}`}>
                             {member.socials.map((social) => (
-                                <button
-                                    // Si fuese un perfil real, aquí abriríamos el enlace a la red social correspondienteCpi
-                                    // onClick={() => window.open(social.link, "_blank")}
+                                <li
                                     key={social.platform}
-                                    aria-label={`${social.platform} demo`}
-                                    className="
-                                    w-9 h-9 md:w-7 md:h-7
-                                    flex items-center justify-center
-                                    rounded-full
-                                    transition-transform
-                                    hover:scale-110"
-                                    style={{ backgroundColor: social.bg }}>
-                                    <img
-                                        src={social.icon}
-                                        alt={social.platform}
-                                        className="w-5 h-5 md:w-4 md:h-4" />
-                                </button>
+                                    className="team__social-item"
+                                >
+                                    <span
+                                        className="team__social-badge"
+                                        style={{ backgroundColor: social.bg }}
+                                        title={social.platform}
+                                    >
+                                        <img
+                                            src={social.icon}
+                                            alt=""
+                                            aria-hidden="true"
+                                            className="team__social-icon"
+                                        />
+                                        <span className="sr-only">{social.platform}</span>
+                                    </span>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
 
-                        <div className="w-full mt-3">
-                            <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold tracking-wide text-amber-900 pointer-events-none">
-                                Perfil demo: sin redes sociales
+                        <div className="team__demo-notice">
+                            <p className="team__demo-text">
+                                Demo profile: social platforms are shown for presentation only.
                             </p>
                         </div>
                     </article>
