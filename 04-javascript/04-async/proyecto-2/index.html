@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="assets/clear.svg" type="image/x-icon">
+    <title>Open Meteo | JavaScript | Tailwind | CSS Modules</title>
+</head>
+
+<body>
+
+    <section class="main-container">
+        <h1 class="app-title">Weather App</h1>
+        <form action="" id=" search-box" class="search-form">
+            <input type="text" name="location" id="location-input" placeholder="Buscar ciudad"
+                class="search-input text-white">
+            <button type="submit" aria-label="Buscar" class="search-button">Buscar</button>
+        </form>
+
+
+
+        <div class="weather-details">
+            <h2>Weather in
+                <span id="location">Location name</span>
+            </h2>
+            <div class="grid">
+                <div class="temperature">
+                    <img src="assets/clear.svg" id="weather-condition-icon" alt="weather-icon" width="150" height="150">
+                    <p id="weather-condition-name">Clear</p>
+                </div>
+                <ul class="info">
+                    <li><img src="assets/humidity.svg" alt="humidity" width="64" height="64"></li>
+                    <li><img src="assets/wind.svg" alt="wind-speed" width="64" height="64">
+                        <span id="wind-speed">0
+                            <span>km/h</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <h3>Daily Forecast</h3>
+            <div class="daily-cards" id="daily-forecast"></div>
+        </div>
+    </section>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

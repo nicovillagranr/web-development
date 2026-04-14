@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.main-container {
+    @apply w-screen h-screen flex flex-col items-center justify-center bg-blue-800;
+}
+
+/* App Title */
+.app-title {
+    @apply text-white text-2xl font-bold mb-4;
+}
+
+/* Search Form Styles */
+.search-form {
+    @apply flex gap-2 mt-4;
+}
+
+.search-input {
+    @apply border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.search-button {
+    @apply bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium;
+}
+
+/* Weather Details */
+.weather-details {
+    @apply mt-8 bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full;
+}
+
+.weather-details h2 {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+}
+
+.weather-details h3 {
+    @apply text-xl font-semibold text-gray-700 mt-6 mb-4;
+}
+
+/* Grid Layout for Temperature and Info */
+.grid {
+    @apply grid grid-cols-2 gap-6 mb-6;
+}
+
+/* Temperature Section */
+.temperature {
+    @apply flex flex-col items-center justify-center;
+}
+
+.temperature img {
+    @apply mb-4;
+}
+
+.temperature p {
+    @apply text-lg font-semibold text-gray-700;
+}
+
+/* Info List */
+.info {
+    @apply list-none flex flex-col gap-4 items-center justify-center;
+}
+
+.info li {
+    @apply flex items-center gap-2;
+}
+
+.info img {
+    @apply w-16 h-16;
+}
+
+.info span {
+    @apply text-lg font-semibold text-gray-700;
+}
+
+/* Daily Forecast Cards */
+.daily-cards {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
