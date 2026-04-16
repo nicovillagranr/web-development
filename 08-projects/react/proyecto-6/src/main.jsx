@@ -1,11 +1,19 @@
+// ================= CONTEXTO MODULO =================
+// Punto de entrada de React en el navegador.
+// Monta App dentro de #root y habilita StrictMode en desarrollo.
+// ================= IMPORTS =================
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import emailjs from '@emailjs/browser'
 import App from './App.jsx'
 
-// Initialize EmailJS
-emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'test_key')
-
+/**
+ * Punto de entrada de la aplicación React.
+ *
+ * - createRoot monta React en el div #root del index.html
+ * - StrictMode ayuda a detectar errores y malas prácticas en desarrollo
+ *   (NO afecta producción)
+ * - App es el componente raíz de toda la aplicación
+ */
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

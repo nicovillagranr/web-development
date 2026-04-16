@@ -1,7 +1,7 @@
 export const projects = [
   {
     name: "Glossy Touch",
-    path: "proyecto-1/",
+    path: "react/proyecto-1/",
     description:
       "Landing de práctica para consolidar layout CSS con componentes React. Estructura modular por bloques (Header, Main, Card, Footer) y hojas de estilo desacopladas.",
     stack: "React 19 + Vite + CSS modular",
@@ -11,7 +11,7 @@ export const projects = [
   },
   {
     name: "ActiveBox",
-    path: "proyecto-2/",
+    path: "react/proyecto-2/",
     description:
       "Landing completa con secciones reutilizables: Hero, Features, Portfolio, Team, CTA y Testimonial. Enfoque en flex, grid y arquitectura CSS mantenible.",
     stack: "React 19 + Vite + CSS modular",
@@ -21,7 +21,7 @@ export const projects = [
   },
   {
     name: "Projex",
-    path: "proyecto-3/",
+    path: "react/proyecto-3/",
     description:
       "Landing con composición utilitaria Tailwind, animaciones Framer Motion y navegación con React Router configurada para hosting estático.",
     stack: "React 19 + Tailwind v4 + Framer Motion + React Router",
@@ -30,28 +30,8 @@ export const projects = [
     framework: "React",
   },
   {
-    name: "Smart Cooler UI",
-    path: "proyecto-4/",
-    description:
-      "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
-    stack: "React 19 + Tailwind v4 + React Icons",
-    type: "Dashboard",
-    status: "online",
-    framework: "React",
-  },
-  {
-    name: "NexusAI",
-    path: "proyecto-5/",
-    description:
-      "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
-    stack: "React 19 + Tailwind v4 + Framer Motion + React Icons",
-    type: "Landing",
-    status: "online",
-    framework: "React",
-  },
-  {
     name: "MGD Exports",
-    path: "react/proyecto-6/",
+    path: "react/proyecto-4/",
     description:
       "Sitio corporativo para empresa exportadora con formulario de contacto funcional vía EmailJS, video de fondo en hero y sistema de diseño custom con Tailwind v4.",
     stack: "React 19 + Vite + Tailwind v4 + EmailJS",
@@ -60,8 +40,28 @@ export const projects = [
     framework: "React",
   },
   {
+    name: "NexusAI",
+    path: "react/proyecto-5/",
+    description:
+      "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
+    stack: "React 19 + Tailwind v4 + Framer Motion + React Icons",
+    type: "Landing",
+    status: "online",
+    framework: "React",
+  },
+  {
+    name: "Smart Cooler UI",
+    path: "react/proyecto-6/",
+    description:
+      "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
+    stack: "React 19 + Tailwind v4 + React Icons",
+    type: "Dashboard",
+    status: "online",
+    framework: "React",
+  },
+  {
     name: "Users Fetch API",
-    path: "proyecto-6/",
+    path: "next/proyecto-1/",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
     stack: "Next.js 16 + Tailwind v4",
@@ -71,7 +71,7 @@ export const projects = [
   },
   {
     name: "Falabella.com",
-    path: "proyecto-7/",
+    path: "next/proyecto-2/",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
     stack: "Next.js 16 + Tailwind v4",
@@ -81,7 +81,7 @@ export const projects = [
   },
   {
     name: "Tasks App",
-    path: "proyecto-8/",
+    path: "next/proyecto-3/",
     description:
       "App de gestión de tareas con CRUD completo vía API routes y persistencia en base de datos SQLite usando Prisma ORM. Actualmente en desarrollo.",
     stack: "Next.js 16 + Tailwind v4 + Prisma + SQLite",

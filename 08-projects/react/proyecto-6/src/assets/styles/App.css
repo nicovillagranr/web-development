@@ -1,263 +1,147 @@
-/* Import Tailwind CSS v4 */
+/* ─── Tailwind & tema ────────────────────────────────────────────────────── */
 @import "tailwindcss";
 
-/* ============================================
-   CUSTOM DESIGN TOKENS (Tailwind v4 @theme)
-   ============================================ */
 @theme {
-  /* Primary Colors - Industrial Palette */
-  --color-mgd-navy: #1F2F3A;
-  --color-mgd-hero: #2F4F5F;
-  --color-mgd-blue: #3E6A85;
-  --color-mgd-cta: #2E4C8C;
-  --color-mgd-orange: #C97A2B;
-  --color-mgd-gray-light: #D9E1E8;
-  --color-mgd-gray-med: #A0AAB3;
-  --color-mgd-dark: #0F1A21;
-
-  /* Accent Colors */
-  --color-orange-dark: #8A6628;
-  --color-orange-light: #E89A4A;
-
-  /* Semantic Colors */
-  --color-success: #4CAF50;
-  --color-error: #E74C3C;
-  --color-warning: #FFC107;
-
-  /* Typography */
-  --font-display: 'Montserrat', sans-serif;
-  --font-body: 'Open Sans', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+    --color-surface: #27313A;
+    --color-dark: #1F2933;
+    --color-accent: #22C55E;
+    --color-light: #F9FAFB;
 }
 
-/* ============================================
-   ROOT / GLOBAL STYLES
-   ============================================ */
+/* ─── Fuentes locales: Poppins (300–700) ─────────────────────────────────── */
+/* Servidas desde /assets/fonts para evitar dependencias externas            */
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/sans/Poppins/Poppins-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/sans/Poppins/Poppins-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/sans/Poppins/Poppins-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/sans/Poppins/Poppins-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/sans/Poppins/Poppins-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ─── Fuente: Fraunces (títulos de recetas) ──────────────────────────────── */
+
+@font-face {
+    font-family: "Fraunces";
+    src: url("../fonts/Fraunces_72pt_Soft-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ─── Variables globales ─────────────────────────────────────────────────── */
+/* Tokens de color reutilizables en todo el proyecto                         */
+
 :root {
-  /* Smooth scroll globally */
-  scroll-behavior: smooth;
-  font-family: var(--font-body);
-  color: var(--color-mgd-dark);
-  background-color: #FFFFFF;
+    --accent: #22C55E;
+    /* Verde fresco principal         */
+    --accent-dim: rgba(34, 197, 94, 0.12);
+    /* Verde con baja opacidad        */
+    --glass-dark: rgba(39, 49, 58, 0.92);
+    /* Fondo de elementos glass       */
+    --glass-border: rgba(255, 255, 255, 0.10);
+    /* Borde sutil para glass     */
+}
 
-  /* Reduced motion respect */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
+/* ─── Tipografía base ────────────────────────────────────────────────────── */
+
+html {
+    font-family: Poppins, ui-sans-serif, system-ui;
+}
+
+/* ─── Animaciones ────────────────────────────────────────────────────────── */
+/* card-in: entrada suave para tarjetas (fade + slide + scale)               */
+
+@keyframes card-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
     }
-  }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+.card-enter {
+    animation: card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFB 100%);
+/* ─── Inputs nativos ─────────────────────────────────────────────────────── */
+/* Fuerza esquema oscuro en el date/time picker del navegador                */
+
+input[type="date"],
+input[type="time"] {
+    color-scheme: dark;
 }
 
-/* ============================================
-   TYPOGRAPHY - Display Focus
-   ============================================ */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+/* ─── Wizard modal ───────────────────────────────────────────────────────── */
+/* Panel que sube desde abajo al abrir el wizard de inventario                */
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
+.wizard-enter {
+    animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 800;
+/* ─── Scrollbar invisible ────────────────────────────────────────────────── */
+/* Oculta la scrollbar visualmente pero mantiene el scroll funcional         */
+
+.no-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 
-h3 {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700;
+.no-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
 }
 
-p {
-  font-family: var(--font-body);
-  font-weight: 400;
-  line-height: 1.65;
-  letter-spacing: 0.005em;
-}
-
-/* ============================================
-   ANIMATIONS - Industrial Precision
-   ============================================ */
-
-/* Fade In Up - Hero entrance */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Glow Pulse - CTA Button effect */
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(201, 122, 43, 0.4), 0 0 20px rgba(201, 122, 43, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(201, 122, 43, 0.7), 0 0 40px rgba(201, 122, 43, 0.4);
-  }
-}
-
-/* Floating - Subtle lift effect */
-@keyframes floating {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-/* Slide In Right - Stats reveal */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Border Shimmer - Accent effect */
-@keyframes borderShimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-
-/* Scale Pulse - Icon hover */
-@keyframes scalePulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
-/* ============================================
-   COMPONENT STYLES - Base Elements
-   ============================================ */
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #F0F0F0;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-mgd-orange);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-orange-dark);
-}
-
-/* Links - Default styling */
-a {
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-/* Default link colors (not in nav) */
-a:not([class*="text-white"]):not([class*="text-mgd-gray"]) {
-  color: var(--color-mgd-cta);
-}
-
-a:not([class*="text-white"]):not([class*="text-mgd-gray"]):hover {
-  color: var(--color-mgd-orange);
-}
-
-/* Utility Classes for Components */
-.text-gradient {
-  background: linear-gradient(135deg, var(--color-mgd-hero), var(--color-mgd-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.glass-effect {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.shadow-industrial {
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.12),
-    0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.shadow-lg-industrial {
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.15),
-    0 20px 60px rgba(0, 0, 0, 0.2);
-}
-
-.gradient-overlay {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 26, 33, 0.85) 0%,
-    rgba(47, 79, 95, 0.70) 100%
-  );
-}
-
-.orange-glow {
-  box-shadow: 0 0 20px rgba(201, 122, 43, 0.5);
-}
-
-/* Divider - Subtle separation */
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 122, 43, 0.3), transparent);
-}
-
-/* ============================================
-   RESPONSIVE UTILITIES
-   ============================================ */
-
-/* Mobile-first breakpoints via Tailwind (no custom needed) */
-
-/* Section Padding */
-.section-padding {
-  @apply py-16 px-6 md:py-20 md:px-8 lg:py-28 lg:px-12;
-}
-
-.container-wide {
-  @apply max-w-7xl mx-auto;
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE/Edge viejo */
+    scrollbar-width: none;
+    /* Firefox */
 }

@@ -1,16 +1,26 @@
-// Import de estilos
 import './assets/styles/App.css'
-
-// Importamos el contenedor principal del dispositivo
-import { Shell } from "@shell/Shell"
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import About from './components/About'
+import Services from './components/Services'
+import WhyUs from './components/WhyUs'
+import Contact from './components/Contact'
+import Footer from './components/Footer'
 
 function App() {
   return (
     <>
-      <main className="min-h-screen w-full flex items-center justify-center bg-black/50">
-        <Shell />
+      <Navbar />
+      <main>
+        <Hero id="inicio" />
+        <About id="nosotros" />
+        <Services id="servicios" />
+        <WhyUs id="por-que-elegirnos" />
+        <Contact id="contacto" />
       </main>
+      <Footer />
     </>
   )
 }
+
 export default App

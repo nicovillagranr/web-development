@@ -1,57 +1,18 @@
-﻿# Smart Cooler UI
+# React + Vite
 
-Interfaz front-end para la pantalla de un refrigerador inteligente.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Objetivo
+Currently, two official plugins are available:
 
-Aplicar arquitectura de componentes, estado local y estilos utilitarios en una UI funcional de producto.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Stack
+## React Compiler
 
-- React 19
-- Vite 7
-- Tailwind CSS 4
-- React Icons
-- ESLint 9
-- Open-Meteo API
+The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
 
-## Alcance implementado
+Note: This will impact Vite dev & build performances.
 
-- fecha y hora con modo automatico y manual
-- clima actual y pronostico diario/horario
-- metricas de clima (UV, humedad, sensacion termica, presion, AQI)
-- inventario de alimentos
-- lista de compras inteligente
-- reordenamiento de tarjetas persistido en localStorage
-- pantalla secundaria (`screen_2`) como prototipo visual
+## Expanding the ESLint configuration
 
-## Arquitectura resumida
-
-- `screen_1`: funcional, con features activas
-- `screen_2`: demostracion visual lista para evolucion funcional
-- organizacion modular por `layout`, `ui` y `features`
-
-## Checklist de validacion
-
-- [ ] estado consistente entre tarjetas y modales
-- [ ] degradacion controlada ante error de API
-- [ ] persistencia local sin corrupcion de datos
-- [ ] responsive estable en el contenedor principal
-
-## Ejercicio propuesto
-
-Implementar una card nueva de consumo energetico diario usando la misma arquitectura de `Card` y mantener persistencia de orden en dashboard.
-
-## Solucion esperada
-
-- nueva card integrada sin romper cards existentes
-- logica desacoplada en su propio hook/componente
-- comportamiento coherente con el sistema visual actual
-
-## Scripts
-
-- `npm install`
-- `npm run dev`
-- `npm run lint`
-- `npm run build`
-- `npm run preview`
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
