@@ -33,3 +33,25 @@
 .catalog__grid {
     @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
 }
+
+.catalog__sections {
+    @apply flex flex-col gap-10;
+}
+
+.catalog__section {
+    @apply w-full;
+}
+
+.catalog__section-divider {
+    @apply flex items-center gap-4 mb-6;
+}
+
+.catalog__section-divider::before,
+.catalog__section-divider::after {
+    content: "";
+    @apply flex-1 border-t border-line;
+}
+
+.catalog__section-label {
+    @apply font-mono text-xs font-medium tracking-widest uppercase text-text-muted px-2;
+}
