@@ -16,6 +16,20 @@
     @apply text-text-secondary;
 }
 
+.catalog__filters {
+    @apply flex gap-2 mt-4;
+}
+
+.catalog__filter-btn {
+    @apply px-4 py-1.5 rounded-full text-sm font-medium border border-line text-text-secondary
+           bg-surface cursor-pointer transition-all duration-200
+           hover:border-accent-border hover:text-text-primary;
+}
+
+.catalog__filter-btn.active {
+    @apply border-accent-border text-accent bg-accent/10;
+}
+
 .catalog__grid {
     @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
 }

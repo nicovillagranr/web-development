@@ -7,6 +7,7 @@ export const projects = [
     stack: "React 19 + Vite + CSS modular",
     type: "Landing",
     status: "online",
+    framework: "React",
   },
   {
     name: "ActiveBox",
@@ -16,6 +17,7 @@ export const projects = [
     stack: "React 19 + Vite + CSS modular",
     type: "Landing",
     status: "online",
+    framework: "React",
   },
   {
     name: "Projex",
@@ -25,6 +27,7 @@ export const projects = [
     stack: "React 19 + Tailwind v4 + Framer Motion + React Router",
     type: "Landing",
     status: "online",
+    framework: "React",
   },
   {
     name: "Smart Cooler UI",
@@ -34,6 +37,7 @@ export const projects = [
     stack: "React 19 + Tailwind v4 + React Icons",
     type: "Dashboard",
     status: "online",
+    framework: "React",
   },
   {
     name: "NexusAI",
@@ -43,6 +47,17 @@ export const projects = [
     stack: "React 19 + Tailwind v4 + Framer Motion + React Icons",
     type: "Landing",
     status: "online",
+    framework: "React",
+  },
+  {
+    name: "MGD Exports",
+    path: "react/proyecto-6/",
+    description:
+      "Sitio corporativo para empresa exportadora con formulario de contacto funcional vía EmailJS, video de fondo en hero y sistema de diseño custom con Tailwind v4.",
+    stack: "React 19 + Vite + Tailwind v4 + EmailJS",
+    type: "Landing",
+    status: "online",
+    framework: "React",
   },
   {
     name: "Users Fetch API",
@@ -52,6 +67,7 @@ export const projects = [
     stack: "Next.js 16 + Tailwind v4",
     type: "Full-stack",
     status: "online",
+    framework: "Next.js",
   },
   {
     name: "Falabella.com",
@@ -61,6 +77,7 @@ export const projects = [
     stack: "Next.js 16 + Tailwind v4",
     type: "Full-stack",
     status: "online",
+    framework: "Next.js",
   },
   {
     name: "Tasks App",
@@ -70,5 +87,6 @@ export const projects = [
     stack: "Next.js 16 + Tailwind v4 + Prisma + SQLite",
     type: "Full-stack",
     status: "maintenance",
+    framework: "Next.js",
   },
 ];
