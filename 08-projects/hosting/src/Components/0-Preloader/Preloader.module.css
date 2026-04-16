@@ -3,8 +3,8 @@
     inset: 0;
     width: 100%;
     height: 100svh;
-    background-color: var(--preloader-bg, #060a14);
-    color: var(--preloader-color, #ecf2ff);
+    background-color: var(--preloader-bg, #0c1508);
+    color: var(--preloader-color, #edfade);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -61,7 +61,7 @@
 }
 
 .btnContainer:focus-visible {
-    outline: 2px solid var(--preloader-color, #ecf2ff);
+    outline: 2px solid var(--preloader-color, #edfade);
     outline-offset: 0.5rem;
     border-radius: 50%;
 }
