@@ -23,31 +23,31 @@
 }
 
 @theme {
-  /* ── Base palette — Bosque en flor ── */
-  --color-base-900: #0c1508;
-  --color-base-800: #142010;
-  --color-base-700: #1e2e18;
-  --color-base-600: #2a3e24;
-  --color-surface: rgba(20, 32, 16, 0.72);
-  --color-surface-strong: rgba(26, 40, 20, 0.85);
+  /* ── Base palette — Vice City 2025 ── */
+  --color-base-900: #080510;
+  --color-base-800: #0f0a1a;
+  --color-base-700: #180f2a;
+  --color-base-600: #231540;
+  --color-surface: rgba(15, 10, 28, 0.75);
+  --color-surface-strong: rgba(20, 14, 38, 0.88);
 
-  /* ── Text — warm spring light ── */
-  --color-text-primary: #edfade;
-  --color-text-secondary: #a8d4a0;
-  --color-text-muted: #7aaa72;
+  /* ── Text — neon white/pink ── */
+  --color-text-primary: #fff8fb;
+  --color-text-secondary: #ffb3d9;
+  --color-text-muted: #c878a8;
 
-  /* ── Accents — coral vivo ── */
-  --color-accent: #ff6b35;
-  --color-accent-glow: rgba(255, 107, 53, 0.15);
-  --color-accent-border: rgba(255, 107, 53, 0.3);
-  --color-emerald: #4ade80;
-  --color-emerald-glow: rgba(74, 222, 128, 0.15);
-  --color-amber: #fbbf24;
-  --color-amber-glow: rgba(251, 191, 36, 0.15);
+  /* ── Accents — hot magenta neon ── */
+  --color-accent: #ff0077;
+  --color-accent-glow: rgba(255, 0, 119, 0.18);
+  --color-accent-border: rgba(255, 0, 119, 0.35);
+  --color-emerald: #00e5ff;
+  --color-emerald-glow: rgba(0, 229, 255, 0.15);
+  --color-amber: #e8ff00;
+  --color-amber-glow: rgba(232, 255, 0, 0.15);
 
   /* ── Borders ── */
-  --color-line: rgba(168, 212, 160, 0.1);
-  --color-line-hover: rgba(168, 212, 160, 0.22);
+  --color-line: rgba(255, 0, 119, 0.1);
+  --color-line-hover: rgba(255, 0, 119, 0.22);
 
   /* ── Fonts ── */
   --font-heading: "Satoshi", sans-serif;
@@ -60,8 +60,8 @@
   --radius-btn: 12px;
 
   /* ── Shadows ── */
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 60px rgba(255, 107, 53, 0.08);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 60px rgba(255, 0, 119, 0.1);
 }
 
 /* ── Base styles (inside @layer so utilities can override) ── */
@@ -83,9 +83,9 @@
   #root {
     position: relative;
     background:
-      radial-gradient(ellipse 60% 50% at 15% 10%, rgba(255, 107, 53, 0.07), transparent),
-      radial-gradient(ellipse 50% 40% at 85% 5%, rgba(74, 222, 128, 0.05), transparent),
-      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255, 107, 53, 0.04), transparent),
+      radial-gradient(ellipse 60% 50% at 10% 5%, rgba(255, 0, 119, 0.1), transparent),
+      radial-gradient(ellipse 50% 40% at 90% 8%, rgba(0, 229, 255, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 50% 95%, rgba(232, 255, 0, 0.05), transparent),
       var(--color-base-900);
   }
 

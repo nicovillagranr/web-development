@@ -21,8 +21,8 @@
 }
 
 .hero__button--light {
-    @apply rounded-btn bg-linear-to-br from-accent to-orange-300 px-5 py-2.5 text-sm font-bold text-base-900 transition-transform hover:-translate-y-0.5;
-    box-shadow: 0 12px 28px rgba(255, 107, 53, 0.25);
+    @apply rounded-btn bg-linear-to-br from-accent to-cyan-400 px-5 py-2.5 text-sm font-bold text-base-900 transition-transform hover:-translate-y-0.5;
+    box-shadow: 0 12px 28px rgba(255, 0, 119, 0.35);
 }
 
 .hero__button--dark {
