@@ -30,11 +30,11 @@
 }
 
 .hero__stats {
-    @apply animate-fade-up delay-4 mt-8 grid grid-cols-3 gap-3 sm:max-w-md;
+    @apply animate-fade-up delay-4 mt-8 grid grid-cols-3 gap-2 sm:gap-3 px-2 sm:px-0 sm:max-w-md;
 }
 
 .hero__stat {
-    @apply rounded-xl border border-line bg-surface px-3.5 py-3;
+    @apply rounded-xl border border-line bg-surface px-2 py-2 sm:px-3.5 sm:py-3 flex flex-col justify-center items-center sm:justify-start sm:items-start;
 }
 
 .hero__stat-value {

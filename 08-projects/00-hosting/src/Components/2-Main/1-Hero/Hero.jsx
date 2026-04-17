@@ -5,7 +5,7 @@ import "./Hero.css";
 export default function Hero() {
   const totalProjects = projects.length;
   const onlineCount = useMemo(() => projects.filter((p) => p.status === "online").length, []);
-  const updatedAt = useMemo(() => new Date().toLocaleDateString("es-CL"), []);
+  const updatedAt = useMemo(() => new Date().toLocaleDateString("es-CL", { day: "numeric", month: "short" }), []);
 
   return (
     <section className="hero">

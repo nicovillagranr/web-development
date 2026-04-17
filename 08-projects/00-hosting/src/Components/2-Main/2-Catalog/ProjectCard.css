@@ -28,10 +28,38 @@
     @apply mt-auto flex flex-wrap items-center justify-between gap-2 pt-1;
 }
 
-.card__stack {
-    @apply font-mono text-xs font-medium text-text-muted;
+.card__chips {
+    @apply flex flex-wrap gap-1.5;
+}
+
+.card__chip {
+    @apply rounded-badge border px-2 py-0.5 font-mono text-xs font-medium;
+}
+
+.card__chip--accent {
+    @apply border-accent-border bg-accent-glow text-accent;
+}
+
+.card__chip--emerald {
+    @apply border-emerald/30 bg-emerald-glow text-emerald;
+}
+
+.card__chip--amber {
+    @apply border-amber/30 bg-amber-glow text-amber;
+}
+
+.card__chip--neutral {
+    @apply border-line bg-surface text-text-muted;
 }
 
 .card__arrow {
     @apply text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100;
+}
+
+.card__image-wrapper {
+    @apply overflow-hidden rounded-sm -mx-4 -mt-3;
+}
+
+.card__image {
+    @apply w-full aspect-video object-cover object-top transition-transform duration-500 group-hover:scale-105;
 }
