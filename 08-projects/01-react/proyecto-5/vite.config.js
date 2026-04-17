@@ -11,5 +11,5 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-  base: '/react/proyecto-5/',
+  base: 'proyecto-5/',
 })

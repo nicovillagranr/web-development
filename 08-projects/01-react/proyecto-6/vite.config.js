@@ -23,5 +23,5 @@ export default defineConfig({
       "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
     },
   },
-  base: '/react/proyecto-6/',
+  base: 'proyecto-6/',
 })

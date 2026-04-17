@@ -2,7 +2,7 @@ export const projects = [
   {
     name: "Glossy Touch",
     path: "/proyecto-1/",
-    image: "/previews/proyecto-1.png",
+    image: "/previews/proyecto-1.webp",
     description:
       "Landing de práctica para consolidar layout CSS con componentes React. Estructura modular por bloques (Header, Main, Card, Footer) y hojas de estilo desacopladas.",
     stack: ["React 19", "Vite", "CSS modular"],
@@ -13,7 +13,7 @@ export const projects = [
   {
     name: "ActiveBox",
     path: "/proyecto-2/",
-    image: "/previews/proyecto-2.png",
+    image: "/previews/proyecto-2.webp",
     description:
       "Landing completa con secciones reutilizables: Hero, Features, Portfolio, Team, CTA y Testimonial. Enfoque en flex, grid y arquitectura CSS mantenible.",
     stack: ["React 19", "Vite", "CSS modular"],
@@ -24,7 +24,7 @@ export const projects = [
   {
     name: "Projex",
     path: "/proyecto-3/",
-    image: "/previews/proyecto-3.png",
+    image: "/previews/proyecto-3.webp",
     description:
       "Landing con composición utilitaria Tailwind, animaciones Framer Motion y navegación con React Router configurada para hosting estático.",
     stack: ["React 19", "Tailwind v4", "Framer Motion", "React Router"],
@@ -35,7 +35,7 @@ export const projects = [
   {
     name: "MGD Exports",
     path: "/proyecto-4/",
-    image: "/previews/proyecto-4.png",
+    image: "/previews/proyecto-4.webp",
     description:
       "Sitio corporativo para empresa exportadora con formulario de contacto funcional vía EmailJS, video de fondo en hero y sistema de diseño custom con Tailwind v4.",
     stack: ["React 19", "Vite", "Tailwind v4", "EmailJS"],
@@ -46,7 +46,7 @@ export const projects = [
   {
     name: "NexusAI",
     path: "/proyecto-5/",
-    image: "/previews/proyecto-5.png",
+    image: "/previews/proyecto-5.webp",
     description:
       "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
     stack: ["React 19", "Tailwind v4", "Framer Motion", "React Icons"],
@@ -57,7 +57,7 @@ export const projects = [
   {
     name: "Smart Cooler UI",
     path: "/proyecto-6/",
-    image: "/previews/proyecto-6.png",
+    image: "/previews/proyecto-6.webp",
     description:
       "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
     stack: ["React 19", "Tailwind v4", "React Icons"],
@@ -68,7 +68,7 @@ export const projects = [
   {
     name: "Users Fetch API",
     path: "/proyecto-7/",
-    image: "/previews/proyecto-7.png",
+    image: "/previews/proyecto-7.webp",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
     stack: ["Next.js 16", "Tailwind v4"],
@@ -79,7 +79,7 @@ export const projects = [
   {
     name: "Falabella.com",
     path: "/proyecto-8/",
-    image: "/previews/proyecto-8.png",
+    image: "/previews/proyecto-8.webp",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
     stack: ["Next.js 16", "Tailwind v4"],
@@ -90,7 +90,7 @@ export const projects = [
   {
     name: "Tasks App",
     path: "/proyecto-9/",
-    image: "/previews/proyecto-9.png",
+    image: "/previews/proyecto-9.webp",
     description:
       "App de gestión de tareas con CRUD completo vía API routes y persistencia en base de datos SQLite usando Prisma ORM. Actualmente en desarrollo.",
     stack: ["Next.js 16", "Tailwind v4", "Prisma", "SQLite"],
