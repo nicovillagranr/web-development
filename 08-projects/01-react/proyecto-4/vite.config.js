@@ -10,5 +10,5 @@ export default defineConfig({
     tailwindcss(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-  base: 'proyecto-4/',
+  base: '/proyecto-4/',
 })
