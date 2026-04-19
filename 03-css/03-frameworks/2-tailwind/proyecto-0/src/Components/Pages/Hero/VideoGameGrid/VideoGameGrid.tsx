@@ -1,6 +1,3 @@
-// Import de estilos
-import "./VideoGameGrid.css"
-
 // Import de la data
 import type { VideoGame } from "../../../data";
 
@@ -14,7 +11,7 @@ interface Props {
 export const VideoGameGrid = ({ games }: Props) => {
     return (
         <>
-            <section className="page-container">
+            <section className="min-h-screen max-w-screen bg-gray-900">
                 <div className="max-w-6xl mx-auto flex flex-col justify-center items-center gap-8">
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">

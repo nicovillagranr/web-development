@@ -9,8 +9,8 @@ import { games } from "./data/";
 
 // Import de componentes
 import { Header } from "./Components/Header/Header";
-import { VideoGameGrid } from "./Components/Hero";
-import { About } from "./Components/About/About"
+import { VideoGameGrid } from "./Components/Pages/Hero";
+import { About } from "./Components/Pages/About/About";
 
 // A la hora de aplicar Tailwind el orden debe ser:
 // layout -> display -> spacing -> border -> colors -> text -> effects -> transitions -> transforms -> interactivity -> svg

@@ -1,5 +1,0 @@
-@reference "../../../assets/styles/App.css";
-
-.title {
-    @apply text-2xl text-white font-bold uppercase;
-}
