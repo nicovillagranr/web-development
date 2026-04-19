@@ -1,3 +1,8 @@
+/* Import Local Fonts */
+@import "../fonts/Montserrat/font.css";
+@import "../fonts/Open_Sans/font.css";
+@import "../fonts/Space_Mono/font.css";
+
 /* Import Tailwind CSS v4 */
 @import "tailwindcss";
 
@@ -34,13 +39,11 @@
    ROOT / GLOBAL STYLES
    ============================================ */
 :root {
-  /* Smooth scroll globally */
   scroll-behavior: smooth;
   font-family: var(--font-body);
   color: var(--color-mgd-dark);
   background-color: #FFFFFF;
 
-  /* Reduced motion respect */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -98,78 +101,8 @@ p {
 }
 
 /* ============================================
-   ANIMATIONS - Industrial Precision
+   SCROLLBAR
    ============================================ */
-
-/* Fade In Up - Hero entrance */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Glow Pulse - CTA Button effect */
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(201, 122, 43, 0.4), 0 0 20px rgba(201, 122, 43, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(201, 122, 43, 0.7), 0 0 40px rgba(201, 122, 43, 0.4);
-  }
-}
-
-/* Floating - Subtle lift effect */
-@keyframes floating {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-/* Slide In Right - Stats reveal */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Border Shimmer - Accent effect */
-@keyframes borderShimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-
-/* Scale Pulse - Icon hover */
-@keyframes scalePulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
-/* ============================================
-   COMPONENT STYLES - Base Elements
-   ============================================ */
-
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -187,13 +120,14 @@ p {
   background: var(--color-orange-dark);
 }
 
-/* Links - Default styling */
+/* ============================================
+   LINKS
+   ============================================ */
 a {
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
-/* Default link colors (not in nav) */
 a:not([class*="text-white"]):not([class*="text-mgd-gray"]) {
   color: var(--color-mgd-cta);
 }
@@ -202,34 +136,44 @@ a:not([class*="text-white"]):not([class*="text-mgd-gray"]):hover {
   color: var(--color-mgd-orange);
 }
 
-/* Utility Classes for Components */
-.text-gradient {
+/* ============================================
+   CUSTOM UTILITIES (Tailwind v4 @utility)
+   ============================================ */
+@utility container-wide {
+  @apply max-w-7xl mx-auto;
+}
+
+@utility section-padding {
+  @apply py-16 px-6 md:py-20 md:px-8 lg:py-28 lg:px-12;
+}
+
+@utility text-gradient {
   background: linear-gradient(135deg, var(--color-mgd-hero), var(--color-mgd-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.glass-effect {
+@utility glass-effect {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.shadow-industrial {
+@utility shadow-industrial {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 4px 12px rgba(0, 0, 0, 0.12),
     0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-.shadow-lg-industrial {
+@utility shadow-lg-industrial {
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.15),
     0 20px 60px rgba(0, 0, 0, 0.2);
 }
 
-.gradient-overlay {
+@utility gradient-overlay {
   background: linear-gradient(
     135deg,
     rgba(15, 26, 33, 0.85) 0%,
@@ -237,27 +181,11 @@ a:not([class*="text-white"]):not([class*="text-mgd-gray"]):hover {
   );
 }
 
-.orange-glow {
-  box-shadow: 0 0 20px rgba(201, 122, 43, 0.5);
+@utility orange-glow {
+  box-shadow: 0 0 20px rgba(201, 122, 43, 0.3);
 }
 
-/* Divider - Subtle separation */
-.divider {
+@utility divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201, 122, 43, 0.3), transparent);
-}
-
-/* ============================================
-   RESPONSIVE UTILITIES
-   ============================================ */
-
-/* Mobile-first breakpoints via Tailwind (no custom needed) */
-
-/* Section Padding */
-.section-padding {
-  @apply py-16 px-6 md:py-20 md:px-8 lg:py-28 lg:px-12;
-}
-
-.container-wide {
-  @apply max-w-7xl mx-auto;
 }
