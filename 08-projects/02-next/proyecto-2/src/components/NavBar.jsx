@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const navLinks = [
     { href: "/", label: "Home" },
@@ -12,9 +12,17 @@ const navLinks = [
 
 export default function NavBar() {
     const [open, setOpen] = useState(false)
+    const [scrolled, setScrolled] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 10)
+        handleScroll()
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
     return (
-        <nav className="bg-nav-bg px-6 py-4 md:px-8">
+        <nav className={`bg-nav-bg px-6 md:px-8 transition-all duration-200 ${scrolled ? 'py-2 shadow-md' : 'py-4'}`}>
             <div className="flex items-center justify-between max-w-240 mx-auto">
                 {/* Links — desktop */}
                 <ul className="hidden md:flex gap-8 list-none">
