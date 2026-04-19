@@ -44,7 +44,7 @@ export default function WhyUs({ id }) {
             </span>
             <div className="w-1 h-8 bg-mgd-orange rounded-full" />
           </div>
-          <h2 className="font-display font-800 text-3xl md:text-4xl text-white mb-4">
+          <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
             Trusted by Industry Leaders
           </h2>
           <p className="text-mgd-gray-light text-lg max-w-2xl mx-auto">
@@ -55,20 +55,14 @@ export default function WhyUs({ id }) {
         {/* Stats Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="text-center group"
-              style={{
-                animation: `slideInRight 0.8s ease-out ${idx * 0.1}s backwards`,
-              }}
-            >
+            <div key={idx} className="text-center group">
               {/* Icon */}
               <p className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                 {stat.icon}
               </p>
 
               {/* Number */}
-              <p className="font-display font-900 text-4xl md:text-5xl text-mgd-orange mb-2">
+              <p className="font-display font-black text-4xl md:text-5xl text-mgd-orange mb-2">
                 {stat.number}
               </p>
 
@@ -86,7 +80,7 @@ export default function WhyUs({ id }) {
         {/* Features List */}
         <div className="mt-20 pt-20 border-t border-mgd-blue/30 grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
-            <h3 className="font-display font-700 text-xl text-white mb-6">
+            <h3 className="font-display font-bold text-xl text-white mb-6">
               Why Trust Us
             </h3>
             {[
@@ -97,7 +91,7 @@ export default function WhyUs({ id }) {
             ].map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3">
                 <svg
-                  className="w-6 h-6 text-mgd-orange flex-shrink-0 mt-0.5"
+                  className="w-6 h-6 text-mgd-orange shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -113,7 +107,7 @@ export default function WhyUs({ id }) {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-display font-700 text-xl text-white mb-6">
+            <h3 className="font-display font-bold text-xl text-white mb-6">
               Our Commitment
             </h3>
             {[
@@ -124,7 +118,7 @@ export default function WhyUs({ id }) {
             ].map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3">
                 <svg
-                  className="w-6 h-6 text-mgd-orange flex-shrink-0 mt-0.5"
+                  className="w-6 h-6 text-mgd-orange shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -142,15 +136,12 @@ export default function WhyUs({ id }) {
 
         {/* Call to Action */}
         <div className="text-center mt-20 pt-12 border-t border-mgd-blue/30">
-          <h3 className="font-display font-700 text-2xl text-white mb-4">
+          <h3 className="font-display font-bold text-2xl text-white mb-4">
             Ready to Partner With Us?
           </h3>
           <a
-            href="#contacto"
-            className="inline-block px-10 py-4 bg-mgd-orange text-white font-display font-bold rounded-lg hover:shadow-lg transition-all duration-300 hover:bg-orange-dark"
-            style={{
-              boxShadow: '0 0 20px rgba(201, 122, 43, 0.3)',
-            }}
+            href="#contact"
+            className="orange-glow inline-block px-10 py-4 bg-mgd-orange text-white font-display font-bold rounded-lg hover:shadow-lg transition-all duration-300 hover:bg-orange-dark"
           >
             Request a Quote
           </a>

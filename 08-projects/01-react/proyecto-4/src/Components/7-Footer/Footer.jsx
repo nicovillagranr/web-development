@@ -1,4 +1,4 @@
-import logo from '../assets/logo-2.png'
+import logo from '../../assets/images/logo.webp'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -19,7 +19,7 @@ export default function Footer() {
               <span className="font-display font-bold text-lg">MGD Exports</span>
             </div>
             <p className="text-mgd-gray-light text-sm leading-relaxed mb-6">
-              Integrated solutions for mining, safety equipment, hydraulic seals, and engineering services since 2008.
+              Integrated solutions for mining, safety equipment, hydraulic seals, and engineering services.
             </p>
             {/* Social Links */}
             <div className="flex gap-4">
@@ -44,13 +44,13 @@ export default function Footer() {
 
           {/* Quick Links Column */}
           <div>
-            <h3 className="font-display font-700 text-lg mb-6">Quick Links</h3>
+            <h3 className="font-display font-bold text-lg mb-6">Quick Links</h3>
             <ul className="space-y-3">
               {[
-                { label: 'Home', href: '#inicio' },
-                { label: 'About', href: '#nosotros' },
-                { label: 'Services', href: '#servicios' },
-                { label: 'Contact', href: '#contacto' },
+                { label: 'Home', href: '#home' },
+                { label: 'About', href: '#about-us' },
+                { label: 'Services', href: '#services' },
+                { label: 'Contact', href: '#contact' },
               ].map((link, idx) => (
                 <li key={idx}>
                   <a
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Services Column */}
           <div>
-            <h3 className="font-display font-700 text-lg mb-6">Services</h3>
+            <h3 className="font-display font-bold text-lg mb-6">Services</h3>
             <ul className="space-y-3">
               {[
                 'Mining Materials',
@@ -76,7 +76,7 @@ export default function Footer() {
               ].map((service, idx) => (
                 <li key={idx}>
                   <a
-                    href="#servicios"
+                    href="#services"
                     className="text-mgd-gray-light hover:text-mgd-orange transition-colors text-sm"
                   >
                     {service}
@@ -94,25 +94,9 @@ export default function Footer() {
             © {currentYear} MGD Exports. All rights reserved.
           </p>
 
-          {/* Legal Links */}
-          <div className="flex items-center gap-6 text-sm">
-            <a
-              href="#"
-              className="text-mgd-gray-med hover:text-mgd-orange transition-colors"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="#"
-              className="text-mgd-gray-med hover:text-mgd-orange transition-colors"
-            >
-              Terms & Conditions
-            </a>
-          </div>
-
           {/* Back to Top */}
           <a
-            href="#inicio"
+            href="#home"
             className="flex items-center gap-2 text-mgd-orange hover:gap-3 transition-all text-sm font-semibold"
           >
             Back to Top

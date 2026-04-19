@@ -43,7 +43,6 @@ export default function Contact({ id }) {
       setStatus('success')
       setFormData({ name: '', email: '', company: '', message: '' })
 
-      // Reset success message after 5 seconds
       setTimeout(() => setStatus('idle'), 5000)
     } catch (error) {
       console.error('Error enviando email:', error)
@@ -53,6 +52,9 @@ export default function Contact({ id }) {
       )
     }
   }
+
+  const inputClass =
+    'w-full px-4 py-3 bg-white border border-mgd-gray-med rounded-lg focus:outline-hidden focus:ring-2 focus:ring-mgd-orange transition-all'
 
   return (
     <section id={id} className="bg-white py-20 md:py-28 px-6 md:px-8">
@@ -66,7 +68,7 @@ export default function Contact({ id }) {
             </span>
             <div className="w-1 h-8 bg-mgd-orange rounded-full" />
           </div>
-          <h2 className="font-display font-800 text-3xl md:text-4xl text-mgd-dark mb-4">
+          <h2 className="font-display font-extrabold text-3xl md:text-4xl text-mgd-dark mb-4">
             Questions? We're Here to Help
           </h2>
           <p className="text-mgd-gray-med text-lg max-w-2xl mx-auto">
@@ -78,15 +80,15 @@ export default function Contact({ id }) {
         <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* Contact Info */}
           <div>
-            <h3 className="font-display font-700 text-2xl mb-8 text-mgd-navy">
+            <h3 className="font-display font-bold text-2xl mb-8 text-mgd-navy">
               Contact Information
             </h3>
 
             {/* Contact Items */}
             <div className="space-y-8">
               {/* Email */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                <div className="shrink-0">
                   <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-mgd-orange text-white">
                     <svg
                       className="w-6 h-6"
@@ -103,17 +105,17 @@ export default function Contact({ id }) {
                     </svg>
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-mgd-gray-med text-sm font-medium">Email</p>
-                  <p className="text-mgd-dark font-display font-semibold">
-                    sales@mgdexports.com
+                  <p className="text-mgd-dark font-display font-semibold break-all">
+                    guillermo.joaquin.ansieta@mgdexport.com
                   </p>
                 </div>
               </div>
 
               {/* Phone */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                <div className="shrink-0">
                   <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-mgd-orange text-white">
                     <svg
                       className="w-6 h-6"
@@ -130,17 +132,17 @@ export default function Contact({ id }) {
                     </svg>
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-mgd-gray-med text-sm font-medium">Phone</p>
                   <p className="text-mgd-dark font-display font-semibold">
-                    +51 (1) 2205-8800
+                    0000 0000
                   </p>
                 </div>
               </div>
 
               {/* Location */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                <div className="shrink-0">
                   <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-mgd-orange text-white">
                     <svg
                       className="w-6 h-6"
@@ -163,25 +165,15 @@ export default function Contact({ id }) {
                     </svg>
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-mgd-gray-med text-sm font-medium">Location</p>
                   <p className="text-mgd-dark font-display font-semibold">
-                    Lima, Peru
+                    Santiago, Chile
                   </p>
                 </div>
               </div>
 
-              {/* Hours */}
-              <div className="flex gap-4 mt-12 p-6 bg-mgd-gray-light rounded-lg">
-                <div>
-                  <p className="text-mgd-gray-med text-sm font-medium mb-2">Business Hours</p>
-                  <p className="text-mgd-dark font-body text-sm">
-                    Monday - Friday: 8:00 AM - 6:00 PM<br />
-                    Saturday: 9:00 AM - 2:00 PM<br />
-                    Sunday: Closed
-                  </p>
-                </div>
-              </div>
+
             </div>
           </div>
 
@@ -199,7 +191,7 @@ export default function Contact({ id }) {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white border border-mgd-gray-med rounded-lg focus:outline-none focus:ring-2 focus:ring-mgd-orange transition-all"
+                  className={inputClass}
                   placeholder="Your name"
                 />
               </div>
@@ -215,7 +207,7 @@ export default function Contact({ id }) {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white border border-mgd-gray-med rounded-lg focus:outline-none focus:ring-2 focus:ring-mgd-orange transition-all"
+                  className={inputClass}
                   placeholder="your@email.com"
                 />
               </div>
@@ -230,7 +222,7 @@ export default function Contact({ id }) {
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white border border-mgd-gray-med rounded-lg focus:outline-none focus:ring-2 focus:ring-mgd-orange transition-all"
+                  className={inputClass}
                   placeholder="Your company name"
                 />
               </div>
@@ -246,14 +238,14 @@ export default function Contact({ id }) {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3 bg-white border border-mgd-gray-med rounded-lg focus:outline-none focus:ring-2 focus:ring-mgd-orange transition-all resize-none"
+                  className={`${inputClass} resize-none`}
                   placeholder="Tell us about your inquiry..."
                 />
               </div>
 
               {/* Status Messages */}
               {status === 'success' && (
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="p-4 rounded-lg bg-green-50 border border-green-200">
                   <p className="text-green-800 font-semibold flex items-center gap-2">
                     <svg
                       className="w-5 h-5"
@@ -272,7 +264,7 @@ export default function Contact({ id }) {
               )}
 
               {status === 'error' && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="p-4 rounded-lg bg-red-50 border border-red-200">
                   <p className="text-red-800 font-semibold">{errorMessage}</p>
                 </div>
               )}
