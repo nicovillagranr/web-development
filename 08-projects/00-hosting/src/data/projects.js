@@ -9,6 +9,7 @@ export const projects = [
     type: "Landing",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "ActiveBox",
@@ -20,6 +21,7 @@ export const projects = [
     type: "Landing",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "Projex",
@@ -31,6 +33,7 @@ export const projects = [
     type: "Landing",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "MGD Exports",
@@ -42,6 +45,7 @@ export const projects = [
     type: "Landing",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "NexusAI",
@@ -53,6 +57,7 @@ export const projects = [
     type: "Landing",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "Smart Cooler UI",
@@ -64,6 +69,7 @@ export const projects = [
     type: "Dashboard",
     status: "online",
     framework: "React",
+    deploy: "Hostinger",
   },
   {
     name: "Users Fetch API",
@@ -75,6 +81,7 @@ export const projects = [
     type: "Full-stack",
     status: "online",
     framework: "Next.js",
+    deploy: "Vercel",
   },
   {
     name: "Falabella.com",
@@ -86,6 +93,7 @@ export const projects = [
     type: "Full-stack",
     status: "online",
     framework: "Next.js",
+    deploy: "Vercel",
   },
   {
     name: "Tasks App",
@@ -97,5 +105,18 @@ export const projects = [
     type: "Full-stack",
     status: "maintenance",
     framework: "Next.js",
+    deploy: "Vercel",
+  },
+  {
+    name: "Products API",
+    path: "https://products-api-puce.vercel.app/products",
+    image: null,
+    description:
+      "API REST con 50 productos de moda (hombres, mujeres y niños). Cada producto expone nombre, categoría, tipo, descripción, imagen y precio — lista para consumir y filtrar en cualquier proyecto e-commerce.",
+    stack: ["Node.js"],
+    type: "REST API",
+    status: "online",
+    framework: "APIs",
+    deploy: "Vercel",
   },
 ];

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import "./assets/styles/App.css"
 
@@ -6,16 +6,32 @@ import Preloader from "@/Components/0-Preloader/Preloader";
 import Header from "@/Components/1-Header/Header";
 import Hero from "@/Components/2-Main/1-Hero/Hero";
 import Catalog from "@/Components/2-Main/2-Catalog/Catalog";
-import About from "@/Components/2-Main/3-About/About";
 import Footer from "@/Components/3-Footer/Footer";
 
 const PRELOADER_KEY = "preloader:seen";
+const THEME_KEY = "theme:mode";
 
 export default function App() {
 
   const [loading, setLoading] = useState(
     () => localStorage.getItem(PRELOADER_KEY) !== "1"
   );
+
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem(THEME_KEY) ?? "dark"
+  );
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+    } else {
+      root.classList.remove("light");
+    }
+    localStorage.setItem(THEME_KEY, theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   const handlePreloaderComplete = () => {
     localStorage.setItem(PRELOADER_KEY, "1");
@@ -25,11 +41,10 @@ export default function App() {
   return (
     <>
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
-      <Header />
+      <Header theme={theme} onToggleTheme={toggleTheme} />
       <main className="container-page">
         <Hero />
         <Catalog />
-        <About />
       </main>
       <Footer />
     </>
