@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 // Import de Componentes
-import { Header, Main, Footer } from "./Components"
+import { Header, Home, Products, Footer } from "./Components"
 
 // Import de Estilos
 import './assets/styles/App.css'
@@ -10,12 +10,17 @@ import './assets/styles/App.css'
 function App() {
 
   return (
-    <BrowserRouter> {/* Habilita el sistema de rutas en toda la app */}
-      <Header /> {/* Fuera de Routes para que aparezca en todas las páginas */}
-      <Routes> {/* Contenedor donde se renderizan las rutas */}
-        <Route path="/" element={<Main />} /> {/* Asocia la ruta / con el componente Home */}
-      </Routes>
-      <Footer /> {/* Fuera de Routes para que aparezca en todas las páginas */}
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/productos" element={<Products />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </BrowserRouter>
   )
 }

@@ -8,27 +8,27 @@ import { NavBar } from "./NavBar/NavBar"
 import searchIcon from "../../assets/icons/search.svg"
 import cartIcon from "../../assets/icons/shop-cart.svg"
 
-// Import de Estilos
-import styles from "./Header.module.css"
-
 export const Header = () => {
     return (
-        <header className={styles.header}>
+        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-white border-b border-gray-100 sticky top-0 z-50 gap-4">
 
-            <Link to="/">
-                <h1 className={styles.logo}>TR<span className={styles["logo-accent"]}>ENDY</span></h1>
+            {/* Logo */}
+            <Link to="/" className="shrink-0">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">Fashion Go!</h1>
             </Link>
 
+            {/* Navegación */}
             <NavBar />
 
-            <div className={styles.actions}>
-                <button className={styles["icon-btn"]}>
-                    <img src={searchIcon} alt="Search" className={styles.icon} />
+            {/* Buscador y Carrito */}
+            <div className="flex items-center gap-4 sm:gap-5">
+                <button className="hover:text-rose-500 text-gray-600 transition-colors duration-200 cursor-pointer">
+                    <img src={searchIcon} alt="Search" className="h-5" />
                 </button>
 
-                <Link to="/carrito" className={styles["cart-link"]}>
-                    <img src={cartIcon} alt="Cart" className={styles.icon} />
-                    <span className={styles["cart-badge"]}>0</span>
+                <Link to="/carrito" className="relative hover:text-rose-500 text-gray-600 transition-colors duration-200">
+                    <img src={cartIcon} alt="Cart" className="h-5" />
+                    <span className="absolute -top-2 -right-3 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
                 </Link>
             </div>
 

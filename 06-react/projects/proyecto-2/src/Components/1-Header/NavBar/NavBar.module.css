@@ -1,9 +1,0 @@
-@reference "tailwindcss";
-
-.nav-list {
-    @apply flex items-center gap-8;
-}
-
-.nav-link {
-    @apply font-body text-small text-gray-600 hover:text-rose-500 transition-colors duration-200 tracking-wide uppercase;
-}
