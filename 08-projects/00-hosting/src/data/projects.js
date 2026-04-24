@@ -10,6 +10,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-1",
   },
   {
     name: "ActiveBox",
@@ -22,6 +23,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-2",
   },
   {
     name: "Projex",
@@ -34,6 +36,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-3",
   },
   {
     name: "MGD Exports",
@@ -46,6 +49,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-4",
   },
   {
     name: "NexusAI",
@@ -58,6 +62,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
   },
   {
     name: "Smart Cooler UI",
@@ -70,10 +75,11 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-6",
   },
   {
     name: "Users Fetch API",
-    path: "/proyecto-7/",
+    path: "https://proyecto-1-next-nine.vercel.app/",
     image: "/previews/proyecto-7.webp",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
@@ -82,10 +88,11 @@ export const projects = [
     status: "online",
     framework: "Next.js",
     deploy: "Vercel",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/02-next/proyecto-1",
   },
   {
     name: "Falabella.com",
-    path: "/proyecto-8/",
+    path: "https://proyecto-next-2.vercel.app/",
     image: "/previews/proyecto-8.webp",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
@@ -94,18 +101,7 @@ export const projects = [
     status: "online",
     framework: "Next.js",
     deploy: "Vercel",
-  },
-  {
-    name: "Tasks App",
-    path: "/proyecto-9/",
-    image: "/previews/proyecto-9.webp",
-    description:
-      "App de gestión de tareas con CRUD completo vía API routes y persistencia en base de datos SQLite usando Prisma ORM. Actualmente en desarrollo.",
-    stack: ["Next.js 16", "Tailwind v4", "Prisma", "SQLite"],
-    type: "Full-stack",
-    status: "maintenance",
-    framework: "Next.js",
-    deploy: "Vercel",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/02-next/proyecto-2",
   },
   {
     name: "Products API",
@@ -118,5 +114,6 @@ export const projects = [
     status: "online",
     framework: "APIs",
     deploy: "Vercel",
+    repo: "https://github.com/nicovillagranr/APIs/tree/main/01-products-api",
   },
 ];

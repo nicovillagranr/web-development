@@ -1,3 +1,5 @@
+import githubIcon from "../../../assets/icons/github.svg";
+
 const STATUS_STYLES = {
   online: "border-emerald/30 bg-emerald-glow text-emerald",
   maintenance: "border-amber/30 bg-amber-glow text-amber",
@@ -58,26 +60,35 @@ const TECH_TEXT_COLOR = {
 };
 
 export default function ProjectCard({ project, index }) {
-  const { name, path, description, stack, type, status, image, deploy } = project;
+  const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "Mantenimiento";
-  const href = path.endsWith("/") ? path : `${path}/`;
+  const demoHref = path.endsWith("/") ? path : `${path}/`;
 
   return (
-    <a
-      target="_blank"
-      href={href}
-      aria-label={`Abrir ${name}`}
-      className="animate-card-enter group grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent-border hover:bg-none hover:bg-accent-glow hover:shadow-glow"
+    <article
+      aria-label={name}
+      className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
       style={{ animationDelay: `${100 + index * 80}ms` }}
     >
       {image && (
-        <div className="-mx-4 -mt-4">
+        <div className="relative -mx-4 -mt-4">
           <img
             src={image}
             alt={`Preview de ${name}`}
             className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
+          {repo && (
+            <a
+              href={repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Repositorio de ${name} en GitHub`}
+              className="absolute right-2 top-2 z-20 hidden h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100 group-hover:opacity-100 md:flex"
+            >
+              <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+            </a>
+          )}
         </div>
       )}
 
@@ -120,9 +131,53 @@ export default function ProjectCard({ project, index }) {
         )}
       </div>
 
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
-        <span className="text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100">Abrir &rarr;</span>
+      <div className="mt-auto hidden items-center justify-between gap-2 pt-1 md:flex">
+        <a
+          href={demoHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Abrir demo de ${name}`}
+          className="md:after:absolute md:after:inset-0 md:after:content-['']"
+        >
+          <span className="text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100">
+            Abrir &rarr;
+          </span>
+        </a>
+        {repo && !image && (
+          <a
+            href={repo}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Repositorio de ${name} en GitHub`}
+            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface opacity-70 transition hover:opacity-100"
+          >
+            <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+          </a>
+        )}
       </div>
-    </a>
+
+      <div className="mt-auto flex gap-2 pt-1 md:hidden">
+        <a
+          href={demoHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Abrir demo de ${name}`}
+          className="flex min-h-11 flex-1 items-center justify-center rounded-badge border border-accent-border bg-accent-glow px-3 text-sm font-semibold text-accent"
+        >
+          Demo &rarr;
+        </a>
+        {repo && (
+          <a
+            href={repo}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Repositorio de ${name} en GitHub`}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3"
+          >
+            <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+          </a>
+        )}
+      </div>
+    </article>
   );
 }
