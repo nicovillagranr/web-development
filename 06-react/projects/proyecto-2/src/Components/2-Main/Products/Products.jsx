@@ -15,7 +15,7 @@ export const Products = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch("https://products-api-puce.vercel.app/products")
+                const response = await fetch("https://01-products-api.vercel.app/products")
                 if (!response.ok) {
                     throw new Error("Error al cargar los productos. Por favor, inténtalo de nuevo más tarde.")
                 }
