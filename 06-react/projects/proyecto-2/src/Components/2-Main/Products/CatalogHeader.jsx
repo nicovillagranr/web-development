@@ -19,8 +19,8 @@ export const CatalogHeader = ({ orden, handleOrdenChange }) => {
                     onChange={handleOrdenChange}
                     className="border border-gray-300 rounded-md px-3 py-2 text-small text-gray-700 bg-white hover:border-gray-400 focus:outline-none focus:border-rose-500 cursor-pointer transition-colors duration-200">
                     <option value="relevance">Relevancia</option>
-                    <option value="price-low-high">Precio: de menor a mayor</option>
-                    <option value="price-high-low">Precio: de mayor a menor</option>
+                    <option value="price-low-high">Precio: Menor a mayor</option>
+                    <option value="price-high-low">Precio: Mayor a menor</option>
                     <option value="newest">Novedades</option>
                 </select>
 
