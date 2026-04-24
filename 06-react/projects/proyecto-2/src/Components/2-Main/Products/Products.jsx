@@ -6,6 +6,8 @@ import { FilterSidebar } from "./FilterSidebar"
 import { CatalogHeader } from "./CatalogHeader"
 import { ProductGrid } from "./ProductGrid"
 
+import { API_URL } from "./config.js"
+
 export const Products = () => {
 
     // Hooks para el Fetch de Productos
@@ -15,7 +17,7 @@ export const Products = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch("https://01-products-api.vercel.app/products")
+                const response = await fetch(`${API_URL}/products`)
                 if (!response.ok) {
                     throw new Error("Error al cargar los productos. Por favor, inténtalo de nuevo más tarde.")
                 }

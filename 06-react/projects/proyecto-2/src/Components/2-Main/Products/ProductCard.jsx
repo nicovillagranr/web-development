@@ -1,8 +1,10 @@
+import { API_URL } from "./config.js"
+
 export const ProductCard = ({ producto }) => {
     return (
         <div className="flex flex-col gap-2">
             <img
-                src={producto.image}
+                src={`${API_URL}${producto.image}`}
                 alt={producto.nombre}
                 className="w-full h-48 object-cover rounded-md hover:scale-105 transition-transform duration-500"
             />
