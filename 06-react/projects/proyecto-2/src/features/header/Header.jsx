@@ -2,11 +2,10 @@
 import { Link } from "react-router-dom"
 
 // Import de Componentes
-import { NavBar } from "./NavBar/NavBar"
+import { NavBar } from "./NavBar"
 
 // Import de Icons
-import searchIcon from "../../assets/icons/search.svg"
-import cartIcon from "../../assets/icons/shop-cart.svg"
+import { searchIcon, cartIcon } from "../../assets/icons"
 
 export const Header = () => {
     return (

@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 // Import de Componentes
-import { Header, Home, Products, Footer } from "./Components"
+import { Header, Home, Products, DetailsProduct, Footer } from "./features"
 
 // Import de Estilos
 import './assets/styles/App.css'
@@ -17,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/productos" element={<Products />} />
+            <Route path="/productos/:id" element={<DetailsProduct />} />
           </Routes>
         </main>
         <Footer />
