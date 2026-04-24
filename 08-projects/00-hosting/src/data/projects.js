@@ -109,7 +109,7 @@ export const projects = [
   },
   {
     name: "Products API",
-    path: "https://products-api-puce.vercel.app/products",
+    path: "https://01-products-api.vercel.app/products",
     image: null,
     description:
       "API REST con 50 productos de moda (hombres, mujeres y niños). Cada producto expone nombre, categoría, tipo, descripción, imagen y precio — lista para consumir y filtrar en cualquier proyecto e-commerce.",
