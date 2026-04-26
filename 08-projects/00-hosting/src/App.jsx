@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import "./assets/styles/App.css"
+import "./assets/styles/App.css";
 
 import Preloader from "@/Components/0-Preloader/Preloader";
 import Header from "@/Components/1-Header/Header";
@@ -18,7 +18,7 @@ export default function App() {
   );
 
   const [theme, setTheme] = useState(
-    () => localStorage.getItem(THEME_KEY) ?? "dark"
+    () => localStorage.getItem(THEME_KEY) ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
   );
 
   useEffect(() => {
