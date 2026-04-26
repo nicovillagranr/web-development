@@ -65,27 +65,18 @@ export default function ProjectCard({ project, index }) {
   const demoHref = path.endsWith("/") ? path : `${path}/`;
 
   return (
-    <article
-      aria-label={name}
-      className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
-      style={{ animationDelay: `${100 + index * 80}ms` }}
-    >
+    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
+      style={{ animationDelay: `${100 + index * 80}ms` }}>
       {image && (
         <div className="relative -mx-4 -mt-4">
-          <img
-            src={image}
-            alt={`Preview de ${name}`}
-            className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
+          <img src={image} alt={`Preview de ${name}`} className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105" loading="lazy" />
           {repo && (
             <a
               href={repo}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Repositorio de ${name} en GitHub`}
-              className="absolute right-2 top-2 z-20 hidden h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100 group-hover:opacity-100 md:flex"
-            >
+              className="absolute right-2 top-2 z-20 hidden h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100 group-hover:opacity-100 md:flex">
               <img src={githubIcon} alt="" className="h-5 w-5 invert" />
             </a>
           )}
@@ -144,12 +135,11 @@ export default function ProjectCard({ project, index }) {
           </span>
         </a>
         {repo && !image && (
-          <a
-            href={repo}
+          <a href={repo}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Repositorio de ${name} en GitHub`}
-            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface opacity-70 transition hover:opacity-100"
+            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100"
           >
             <img src={githubIcon} alt="" className="h-5 w-5 invert" />
           </a>
@@ -174,7 +164,7 @@ export default function ProjectCard({ project, index }) {
             aria-label={`Repositorio de ${name} en GitHub`}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3"
           >
-            <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+            <img src={githubIcon} alt="" className="h-5 w-5" />
           </a>
         )}
       </div>
