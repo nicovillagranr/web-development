@@ -1,4 +1,4 @@
-import { CONTACT } from "@/constants/contact";
+import { CONTACT } from "../../data/contact";
 
 import Sun from "../../assets/icons/sun.svg";
 import Moon from "../../assets/icons/moon.svg";
@@ -7,7 +7,7 @@ export default function Header({ theme, onToggleTheme }) {
   const isLight = theme === "light";
 
   return (
-    <header id="top" className="sticky top-0 z-20 border-b border-line bg-base-900/75 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-line bg-base-900/75 backdrop-blur-xl">
       <div className="container-page flex items-center justify-between gap-4 py-3.5">
         <span className="font-heading text-sm font-bold uppercase tracking-widest text-text-primary">{CONTACT.name}</span>
 
