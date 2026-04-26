@@ -65,9 +65,22 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
   },
   {
+    name: "ShopReact",
+    path: "/proyecto-7/",
+    image: "/previews/proyecto-6.webp",
+    description:
+      "E-commerce de moda que consume mi propia Products API. Catálogo con filtros por categoría y tipo, ordenamiento por precio, detalle con selector de talla y galería de imágenes. SPA con React Router.",
+    stack: ["React 19", "Vite", "Tailwind v4", "React Router"],
+    type: "E-commerce",
+    status: "online",
+    framework: "React",
+    deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/06-react/projects/proyecto-2",
+  },
+  {
     name: "Smart Cooler UI",
     path: "/proyecto-6/",
-    image: "/previews/proyecto-6.webp",
+    image: "/previews/proyecto-7.webp",
     description:
       "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
     stack: ["React 19", "Tailwind v4", "React Icons"],
@@ -80,7 +93,7 @@ export const projects = [
   {
     name: "Users Fetch API",
     path: "https://proyecto-1-next-nine.vercel.app/",
-    image: "/previews/proyecto-7.webp",
+    image: "/previews/proyecto-8.webp",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
     stack: ["Next.js 16", "Tailwind v4"],
@@ -93,7 +106,7 @@ export const projects = [
   {
     name: "Falabella.com",
     path: "https://proyecto-next-2.vercel.app/",
-    image: "/previews/proyecto-8.webp",
+    image: "/previews/proyecto-9.webp",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
     stack: ["Next.js 16", "Tailwind v4"],
