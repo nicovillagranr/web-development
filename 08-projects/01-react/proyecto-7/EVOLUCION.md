@@ -1,4 +1,4 @@
-# Evolución de proyecto-4: Smart Cooler UI
+# Evolución de proyecto-7: Smart Cooler UI
 
 ## Documento de Aprendizaje y Crecimiento
 

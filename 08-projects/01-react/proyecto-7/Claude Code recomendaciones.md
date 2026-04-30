@@ -1,6 +1,6 @@
 # Claude Code Recomendaciones
 
-## Llevar proyecto-4 de 75-78% a 100% portfolio-ready
+## Llevar proyecto-7 de 75-78% a 100% portfolio-ready
 
 El proyecto Smart Cooler actualmente cubre la mayoría de aspectos frontend modernos, pero le falta integración con datos reales. Estas recomendaciones te llevarían a un **portfolio impresionante para primer empleo**.
 
