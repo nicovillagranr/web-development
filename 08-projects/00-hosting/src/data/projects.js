@@ -66,7 +66,7 @@ export const projects = [
   },
   {
     name: "ShopReact",
-    path: "/proyecto-7/",
+    path: "/proyecto-6/",
     image: "/previews/proyecto-6.webp",
     description:
       "E-commerce de moda que consume mi propia Products API. Catálogo con filtros por categoría y tipo, ordenamiento por precio, detalle con selector de talla y galería de imágenes. SPA con React Router.",
@@ -75,11 +75,11 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/06-react/projects/proyecto-2",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-6",
   },
   {
     name: "Smart Cooler UI",
-    path: "/proyecto-6/",
+    path: "/proyecto-7/",
     image: "/previews/proyecto-7.webp",
     description:
       "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
@@ -88,7 +88,7 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-6",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-7",
   },
   {
     name: "Users Fetch API",
