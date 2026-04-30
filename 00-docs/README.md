@@ -9,6 +9,10 @@ Central documentation hub for navigation, standards, and recovery workflows.
 3. `00-overview/naming-conventions.md`
 4. `00-overview/session-log.md`
 
+## References
+
+- `02-a11y/README.md` — Cheat-sheet de ARIA y accesibilidad (transversal a todos los proyectos).
+
 ## Module Entry Points
 
 - `../01-git/readme.md`
