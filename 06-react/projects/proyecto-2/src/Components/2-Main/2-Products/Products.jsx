@@ -20,7 +20,7 @@ const ProductCard = ({ producto, handleImageClick }) => (
             className="w-full h-48 object-cover rounded-md"
         />
         <h3 className="font-heading text-small font-semibold text-gray-900">{producto.nombre}</h3>
-        <p className="font-body text-small font-semibold text-rose-500">{producto.precio}</p>
+        <p className="font-body text-small font-semibold text-rose-500">${producto.precio}</p>
     </div>
 )
 
@@ -177,7 +177,6 @@ export const Products = () => {
                 )}
 
             </section>
-
         </section>
     )
 }

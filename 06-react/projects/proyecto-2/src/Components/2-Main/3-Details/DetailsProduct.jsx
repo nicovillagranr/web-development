@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom"
 // Import de API
 const API_URL = import.meta.env.VITE_API_URL
 
-
 export const DetailsProduct = () => {
     const { id } = useParams()
     const [producto, setProducto] = useState(null)
