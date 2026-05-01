@@ -137,4 +137,42 @@ body::after {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* --- Scrollbar global con estética Miami Vice ---
+     Track oscuro alineado al brand-900, thumb con gradiente cyan→magenta
+     y glow neon en hover. Firefox usa scrollbar-color (track + thumb).
+  */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-brand-900);
+    border-left: 1px solid rgba(0, 229, 255, 0.08);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-brand-accent) 0%, var(--color-brand-warm) 100%);
+    border: 2px solid var(--color-brand-900);
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.35);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    box-shadow: 0 0 12px rgba(255, 45, 149, 0.6), 0 0 6px rgba(0, 229, 255, 0.5);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--color-brand-900);
+  }
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-brand-accent) var(--color-brand-900);
+  }
+
+  html.light {
+    scrollbar-color: var(--color-brand-warm) var(--color-brand-900);
+  }
 }

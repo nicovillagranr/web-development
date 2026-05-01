@@ -3,7 +3,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
-import './App.css'
+import './assets/App.css'
 
 // StrictMode renderiza los componentes dos veces en desarrollo para detectar efectos secundarios
 createRoot(document.getElementById('root')).render(
