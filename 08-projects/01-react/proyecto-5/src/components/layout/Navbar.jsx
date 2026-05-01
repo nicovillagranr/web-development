@@ -35,10 +35,7 @@ export default function Navbar() {
   }
 
   return (
-
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-brand-900/80 backdrop-blur-md'
-      : 'bg-transparent'}`}>
-
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-brand-900/80 backdrop-blur-md' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16 md:h-20">
         <span className="font-heading text-xl md:text-2xl font-800 tracking-tight text-brand-accent drop-shadow-glow-accent pointer-events-none">
           {NAV.logo}<span className="text-brand-warm drop-shadow-glow-warm">.</span>
@@ -70,17 +67,10 @@ export default function Navbar() {
 
         {/* Mobile: theme toggle + hamburger */}
         <div className="flex lg:hidden items-center gap-4">
-          <button
-            onClick={toggle}
-            className="text-brand-muted hover:text-brand-warm text-xl cursor-pointer transition-colors"
-            aria-label="Cambiar tema"
-          >
+          <button onClick={toggle} className="text-brand-muted hover:text-brand-warm text-xl cursor-pointer transition-colors" aria-label="Cambiar tema">
             {theme === 'dark' ? <HiSun /> : <HiMoon />}
           </button>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-brand-muted hover:text-brand-warm text-2xl cursor-pointer transition-colors"
-          >
+          <button onClick={() => setIsOpen(!isOpen)} className="text-brand-muted hover:text-brand-warm text-2xl cursor-pointer transition-colors">
             {isOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
         </div>
@@ -88,7 +78,6 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isOpen && (
-
         <div className="lg:hidden bg-brand-900/95 backdrop-blur-xl border-t border-brand-accent/10 px-6 pb-8 pt-6">
           <div className="flex flex-col gap-5">
 
@@ -105,7 +94,6 @@ export default function Navbar() {
         </div>
 
       )}
-
     </nav>
   )
 }
