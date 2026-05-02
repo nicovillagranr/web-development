@@ -1,51 +1,114 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Poppins (Regular 400, Medium 500, SemiBold 600, Bold 700) ── */
-@font-face {
-    font-family: "Poppins";
-    src: url("../fonts/Poppins/Poppins-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-display: swap;
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease, fill 0.3s ease;
 }
 
-@font-face {
-    font-family: "Poppins";
-    src: url("../fonts/Poppins/Poppins-Medium.ttf") format("truetype");
-    font-weight: 500;
-    font-display: swap;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
+/* ── DM Serif Display (Regular 400) ── */
 @font-face {
-    font-family: "Poppins";
-    src: url("../fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
-    font-weight: 600;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Poppins";
-    src: url("../fonts/Poppins/Poppins-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-display: swap;
+  font-family: "DM Serif Display";
+  src: url("../fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* ── Inter Variable (todos los pesos en un solo archivo) ── */
 @font-face {
-    font-family: "Inter";
-    src: url("../fonts/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
-    font-weight: 100 900;
-    font-display: swap;
+  font-family: "Inter";
+  src: url("../fonts/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
 }
+
+/* ──────────────────────────────────────────────────────────────
+   GUÍA RÁPIDA: LIGHT ↔ DARK MODE
+   ──────────────────────────────────────────────────────────────
+   El dark mode se aplica con la variante `dark:` de Tailwind v4
+   (ver @custom-variant arriba). Cuando <html> tiene class="dark",
+   las clases `dark:*` se activan.
+
+   Pareja CLARO (default)        →   OSCURO (añadir `dark:`)
+   ─────────────────────────────────────────────────────────────
+   FONDOS
+     bg-paper        (#ffffff)   →   dark:bg-ink           (#0a0a0a)
+     bg-stone-50     (#faf8f5)   →   dark:bg-stone-900     (#1f1c18)
+     bg-stone-100    (#f1ede6)   →   dark:bg-stone-900
+
+   TEXTO
+     text-ink        (#0a0a0a)   →   dark:text-paper       (#ffffff)
+     text-stone-600  (#5b554e)   →   dark:text-stone-300   (#cfc6b6)
+     text-stone-400  (#9c948a)   →   dark:text-stone-600   (placeholders)
+
+   BORDES
+     border-stone-200 (#e3dcd0)  →   dark:border-stone-900 (#1f1c18)
+     border-stone-300 (#cfc6b6)  →   dark:border-stone-900
+
+   ACENTO (no cambia — funciona en ambos temas)
+     text-camel / bg-camel       →   text-camel / bg-camel
+   ────────────────────────────────────────────────────────────── */
 
 /* ── Tailwind v4 Theme ── */
 @theme {
-    --font-heading: "Poppins", sans-serif;
-    --font-body: "Inter", sans-serif;
+  /* ============ TIPOGRAFÍA ============ */
+  --font-heading: "DM Serif Display", serif;
+  --font-body: "Inter", sans-serif;
 
-    /* Tamaños de texto: font-size / line-height */
-    --text-title: 2.25rem / 1.2;       /* 36px — títulos principales */
-    --text-subtitle: 1.5rem / 1.3;     /* 24px — subtítulos de sección */
-    --text-body: 1rem / 1.5;           /* 16px — texto general */
-    --text-small: 0.875rem / 1.4;      /* 14px — labels, captions */
-    --text-price: 1.25rem / 1.3;       /* 20px — precios de producto */
+  /* ============ PALETA — TEMA CLARO (default) ============
+       Estas son las variables base. Se usan automáticamente
+       cuando <html> NO tiene la clase .dark.                  */
+
+  /* Texto principal y fondo principal (alto contraste) */
+  --color-ink: #0a0a0a;
+  /* texto en claro · fondo en oscuro */
+  --color-paper: #ffffff;
+  /* fondo en claro · texto en oscuro */
+
+  /* Acento camel (común a ambos temas) */
+  --color-camel: #c9a77c;
+  --color-camel-deep: #a8865c;
+
+  /* Escala de grises cálidos (de más claro a más oscuro)
+       En light: stone-50/100/200 = fondos/bordes sutiles
+       En dark : stone-900 = fondos/bordes sutiles            */
+  --color-stone-50: #faf8f5;
+  /* fondo super claro */
+  --color-stone-100: #f1ede6;
+  /* fondo claro */
+  --color-stone-200: #e3dcd0;
+  /* borde claro */
+  --color-stone-300: #cfc6b6;
+  /* texto secundario en dark */
+  --color-stone-400: #9c948a;
+  /* placeholder en light */
+  --color-stone-600: #5b554e;
+  /* texto secundario en light · placeholder en dark */
+  --color-stone-900: #1f1c18;
+  /* fondo/borde sutil en dark */
+
+  /* ============ TAMAÑOS DE TEXTO ============ */
+  --text-display: 4.5rem / 1.05;
+  /* 72px — hero */
+  --text-title: 2.5rem / 1.15;
+  /* 40px — títulos de sección */
+  --text-subtitle: 1.5rem / 1.3;
+  /* 24px — subtítulos */
+  --text-body: 1rem / 1.6;
+  /* 16px — texto general */
+  --text-small: 0.8125rem / 1.5;
+  /* 13px — labels finos */
+  --text-eyebrow: 0.6875rem / 1.4;
+  /* 11px — eyebrows uppercase */
+  --text-price: 1.0625rem / 1.3;
+  /* 17px — precios */
 }

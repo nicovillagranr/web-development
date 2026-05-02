@@ -36,7 +36,7 @@ export const campanas = [
     {
         id: "marcas-destacadas",
         title: "Marcas destacadas",
-        subtitle: "Hasta 40% de descuento",
+        subtitle: "Hasta 40% de descuento en productos seleccionados",
         image: "https://picsum.photos/seed/marcas/1200/700",
         href: "/productos",
     },

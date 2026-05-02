@@ -1,181 +1,128 @@
-// Import de Hooks
-import { useState, useEffect } from "react"
-
 // Navigate
 import { useNavigate } from "react-router-dom"
 
-// Import de API
-const API_URL = import.meta.env.VITE_API_URL
-// Constantes
-const CATEGORIAS = ["Hombres", "Mujeres", "Niños"]
-const TIPOS = ["Abrigos", "Ropa interior", "Calzado", "Accesorios"]
+// Hooks propios
+import { useProducts } from "./hooks/useProducts"
+import { useFiltrosProductos } from "./hooks/useFiltrosProductos"
+import { useOrdenProductos } from "./hooks/useOrdenProductos"
 
+// Constantes globales
+import { PRODUCT_FILTERS, SORT_OPTIONS } from "../../../utils/constants"
+
+const API_URL = import.meta.env.VITE_API_URL
 
 const ProductCard = ({ producto, handleImageClick }) => (
-    <div className="flex flex-col gap-2 hover:scale-105 transition-transform duration-500">
-        <img
-            src={`${API_URL}${producto.image}`}
-            alt={producto.nombre}
-            onClick={() => handleImageClick(producto.id)}
-            className="w-full h-48 object-cover rounded-md"
-        />
-        <h3 className="font-heading text-small font-semibold text-gray-900">{producto.nombre}</h3>
-        <p className="font-body text-small font-semibold text-rose-500">${producto.precio}</p>
+    <div className="group flex flex-col gap-3 cursor-pointer">
+        <div className="overflow-hidden aspect-[3/4] bg-stone-100">
+            <img src={`${API_URL}${producto.image}`} alt={producto.nombre} onClick={() => handleImageClick(producto.id)} className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-90" />
+        </div>
+        <h3 className="font-body uppercase text-[11px] tracking-[0.18em] text-ink mt-1">{producto.nombre}</h3>
+        <p className="font-body text-price text-ink -mt-2">${producto.precio}</p>
     </div>
 )
 
 export const Products = () => {
 
-    // Fetch de productos
-    const [productos, setProductos] = useState([])
-    const [error, setError] = useState(null)
+    const { data: productos, error, loading } = useProducts()
 
-    // Orden por precio
-    const [orden, setOrden] = useState("relevance")
-    const handleOrdenChange = (e) => setOrden(e.target.value)
+    const { filtros, toggleFiltros, productosFiltrados } = useFiltrosProductos(productos ?? [])
 
-    // Filtros por categoría y tipo
-    const [filtros, setFiltros] = useState({ categorias: [], tipos: [] })
+    const { orden, handleOrdenChange, productosOrdenados } = useOrdenProductos(productosFiltrados)
 
     const navigate = useNavigate()
-
-
-    useEffect(() => {
-        const fetchProductos = async () => {
-            try {
-                const response = await fetch(`${API_URL}/products`)
-                if (!response.ok) {
-                    throw new Error("Error al cargar los productos. Por favor, inténtalo de nuevo más tarde.")
-                }
-                const data = await response.json()
-                setProductos(data)
-            } catch (error) {
-                setError(error.message)
-            }
-        }
-        fetchProductos()
-    }, [])
-
-
-    const toggleFiltros = (tipoFiltro, valor) => {
-        setFiltros((prev) => ({
-            ...prev,
-            [tipoFiltro]: prev[tipoFiltro].includes(valor)
-                ? prev[tipoFiltro].filter((item) => item !== valor)
-                : [...prev[tipoFiltro], valor],
-        }))
-    }
-
-    const productosFiltrados = productos.filter((producto) => {
-        const matchCategoria =
-            filtros.categorias.length === 0 || filtros.categorias.includes(producto.categoria)
-        const matchTipo =
-            filtros.tipos.length === 0 || filtros.tipos.includes(producto.tipo)
-        return matchCategoria && matchTipo
-    })
-
-    const productosOrdenados = [...productosFiltrados].sort((a, b) => {
-        if (orden === "price-low-high") return a.precio - b.precio
-        if (orden === "price-high-low") return b.precio - a.precio
-        return 0
-    })
-
-    const handleImageClick = (id) => {
-        navigate(`/productos/${id}`)
-    }
+    const handleImageClick = (id) => navigate(`/productos/${id}`)
 
     return (
-        <section className="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr] lg:pr-8">
+        <section className="grid grid-cols-1 lg:grid-cols-[240px_1fr] xl:grid-cols-[280px_1fr] lg:pr-10">
 
             {/* Sidebar de filtros */}
-            <aside className="p-4 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-200">
-                <h2 className="font-heading text-subtitle font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-100">
-                    Filtros
-                </h2>
-                <div className="flex flex-col gap-4">
+            <aside className="px-4 sm:px-6 py-8 lg:py-12 border-b lg:border-b-0 lg:border-r border-stone-200">
+                <h2 className="font-heading font-normal text-subtitle text-ink mb-8 pb-5 border-b border-stone-200">Filtros</h2>
+                <div className="flex flex-col gap-8">
 
-                    <div className="p-4 border border-gray-200 rounded-md">
-                        <h3 className="font-heading text-small font-semibold uppercase tracking-wide text-gray-700 mb-3">
-                            Categorías
-                        </h3>
-                        {CATEGORIAS.map((opt) => (
-                            <label key={opt} className="flex items-center gap-3 cursor-pointer text-small text-gray-600 hover:text-rose-500 transition-colors duration-200 py-1">
-                                <input
-                                    type="checkbox"
-                                    className="w-4 h-4 accent-rose-500 cursor-pointer"
-                                    checked={filtros.categorias.includes(opt)}
-                                    onChange={() => toggleFiltros("categorias", opt)}
-                                />
-                                <span className="font-body select-none">{opt}</span>
-                            </label>
-                        ))}
+                    <div>
+                        <h3 className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink mb-4">Categorías</h3>
+                        <div className="flex flex-col">
+                            {PRODUCT_FILTERS.CATEGORIES.map((opt) => (
+                                <label key={opt} className="flex items-center gap-3 cursor-pointer text-small text-stone-600 hover:text-ink transition-colors duration-200 py-1.5">
+                                    <input type="checkbox" className="w-3.5 h-3.5 accent-ink cursor-pointer rounded-none" checked={filtros.categorias.includes(opt)}
+                                        onChange={() => toggleFiltros("categorias", opt)}
+                                    />
+                                    <span className="font-body select-none">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
-                    <div className="p-4 border border-gray-200 rounded-md">
-                        <h3 className="font-heading text-small font-semibold uppercase tracking-wide text-gray-700 mb-3">
-                            Tipo de Producto
+                    <div className="border-t border-stone-200 pt-6">
+                        <h3 className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink mb-4">
+                            Tipo de producto
                         </h3>
-                        {TIPOS.map((opt) => (
-                            <label
-                                key={opt}
-                                className="flex items-center gap-3 cursor-pointer text-small text-gray-600 hover:text-rose-500 transition-colors duration-200 py-1"
-                            >
-                                <input
-                                    type="checkbox"
-                                    className="w-4 h-4 accent-rose-500 cursor-pointer"
-                                    checked={filtros.tipos.includes(opt)}
-                                    onChange={() => toggleFiltros("tipos", opt)}
-                                />
-                                <span className="font-body select-none">{opt}</span>
-                            </label>
-                        ))}
+                        <div className="flex flex-col">
+                            {PRODUCT_FILTERS.TYPES.map((opt) => (
+                                <label
+                                    key={opt}
+                                    className="flex items-center gap-3 cursor-pointer text-small text-stone-600 hover:text-ink transition-colors duration-200 py-1.5"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        className="w-3.5 h-3.5 accent-ink cursor-pointer rounded-none"
+                                        checked={filtros.tipos.includes(opt)}
+                                        onChange={() => toggleFiltros("tipos", opt)}
+                                    />
+                                    <span className="font-body select-none">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                 </div>
             </aside>
 
             {/* Catálogo */}
-            <section className="px-4 sm:px-6 lg:px-8 py-6">
+            <section className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12">
 
                 {/* Header del catálogo */}
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-5 border-b border-gray-200">
-                    <div className="flex flex-col gap-1">
-                        <span className="font-body text-small text-gray-500 uppercase tracking-wide">
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-8 border-b border-stone-200">
+                    <div className="flex flex-col gap-2">
+                        <span className="font-body text-eyebrow text-stone-600 uppercase tracking-[0.28em]">
                             Catálogo
                         </span>
-                        <h2 className="font-heading text-subtitle sm:text-title font-semibold text-gray-900">
+                        <h2 className="font-heading font-normal text-3xl md:text-title text-ink">
                             Todas las colecciones
                         </h2>
                     </div>
 
-                    <label className="flex items-center gap-2 font-body text-small text-gray-600 shrink-0">
-                        <span className="uppercase tracking-wide text-gray-500">Ordenar por</span>
+                    <label className="flex items-center gap-3 font-body text-small text-ink shrink-0">
+                        <span className="uppercase tracking-[0.22em] text-[11px] text-stone-600">Ordenar por</span>
                         <select
                             value={orden}
                             onChange={handleOrdenChange}
-                            className="border border-gray-300 rounded-md px-3 py-2 text-small text-gray-700 bg-white hover:border-gray-400 focus:outline-none focus:border-rose-500 cursor-pointer transition-colors duration-200"
+                            className="border-0 border-b border-ink rounded-none px-1 py-1 text-small text-ink bg-transparent focus:outline-none focus:border-camel cursor-pointer transition-colors duration-200"
                         >
-                            <option value="relevance">Relevancia</option>
-                            <option value="price-low-high">Precio: Menor a mayor</option>
-                            <option value="price-high-low">Precio: Mayor a menor</option>
-                            <option value="newest">Novedades</option>
+                            {SORT_OPTIONS.map(({ value, label }) => (
+                                <option key={value} value={value}>{label}</option>
+                            ))}
                         </select>
                     </label>
                 </div>
 
                 {/* Grid de productos */}
-                {error ? (
-                    <p className="pt-6 font-body text-small text-red-600">{error}</p>
-                ) : productosFiltrados.length > 0 ? (
-                    <div className="pt-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {loading ? (
+                    <p className="pt-8 font-body text-small text-stone-600">Cargando productos...</p>
+                ) : error ? (
+                    <p className="pt-8 font-body text-small text-red-700">{error}</p>
+                ) : productosOrdenados.length > 0 ? (
+                    <div className="pt-10 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-10">
                         {productosOrdenados.map((producto) => (
                             <ProductCard key={producto.id} producto={producto} handleImageClick={handleImageClick} />
                         ))}
                     </div>
                 ) : (
-                    <p className="pt-6 font-body text-small text-gray-600">No se encontraron productos</p>
+                    <div className="w-full h-screen flex justify-center items-center pt-6 font-body text-small text-stone-600">
+                        <p className="pt-6 font-body text-small text-stone-600">No se encontraron productos</p>
+                    </div>
                 )}
-
             </section>
         </section>
     )

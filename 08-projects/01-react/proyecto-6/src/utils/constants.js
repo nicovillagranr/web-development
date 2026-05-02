@@ -8,6 +8,10 @@ export const ROUTES = {
     CART: '/carrito',
     LOGIN: '/login',
     REGISTER: '/registro',
+    HELP: '/ayuda',
+    SHIPPING: '/envios',
+    CONTACT: '/contacto',
+    TERMS: '/terminos',
 }
 
 export const API_CONFIG = {
