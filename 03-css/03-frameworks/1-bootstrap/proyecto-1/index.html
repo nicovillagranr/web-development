@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="es" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="80">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Estudio frontend especializado en interfaces rápidas, accesibles y con estética moderna." />
+    <title>Norvell · Estudio Frontend</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  </head>
+  <body>
+    <!-- Navbar ============================================================ -->
+    <nav id="mainNav" class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#hero">
+          <span class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded" style="width:32px;height:32px;">N</span>
+          Norvell
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavLinks" aria-controls="mainNavLinks" aria-expanded="false" aria-label="Abrir menú">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavLinks">
+          <ul class="navbar-nav mx-lg-auto gap-lg-2">
+            <li class="nav-item"><a class="nav-link" href="#services">Servicios</a></li>
+            <li class="nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
+            <li class="nav-item"><a class="nav-link" href="#process">Proceso</a></li>
+            <li class="nav-item"><a class="nav-link" href="#pricing">Planes</a></li>
+            <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+          </ul>
+          <a href="#contact" class="btn btn-primary">Empezar proyecto</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero ============================================================== -->
+    <header id="hero" class="hero">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <span class="section-eyebrow">Estudio frontend · Remoto</span>
+            <h1 class="display-4 fw-bold mb-3">Interfaces rápidas, accesibles y con identidad propia.</h1>
+            <p class="lead text-secondary mb-4">
+              Diseñamos y desarrollamos productos web para startups que quieren un frontend cuidado: rendimiento, accesibilidad y estética en una sola entrega.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <a href="#contact" class="btn btn-primary btn-lg">Solicitar propuesta</a>
+              <a href="#portfolio" class="btn btn-outline-dark btn-lg">Ver trabajos</a>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-4 mt-5 text-secondary small">
+              <span class="fw-semibold">Confían en nosotros:</span>
+              <span><i class="bi bi-stripe fs-4"></i></span>
+              <span><i class="bi bi-slack fs-4"></i></span>
+              <span><i class="bi bi-spotify fs-4"></i></span>
+              <span><i class="bi bi-vercel fs-4"></i></span>
+              <span><i class="bi bi-discord fs-4"></i></span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="hero-illustration d-flex align-items-center justify-content-center">
+              <i class="bi bi-bezier2 text-primary" style="font-size:8rem; opacity:.7;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Services ========================================================== -->
+    <section id="services" class="section">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="section-eyebrow">Qué hacemos</span>
+          <h2 class="display-6 fw-bold">Servicios end-to-end</h2>
+          <p class="text-secondary col-md-7 mx-auto">De la idea al deploy. Cubrimos el ciclo completo del frontend moderno.</p>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="service-icon mb-3"><i class="bi bi-palette"></i></div>
+                <h3 class="h5">Diseño UI</h3>
+                <p class="text-secondary mb-0">Sistemas visuales coherentes, design tokens y componentes reutilizables en Figma.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="service-icon mb-3"><i class="bi bi-code-slash"></i></div>
+                <h3 class="h5">Desarrollo</h3>
+                <p class="text-secondary mb-0">React, Next.js y Vue con tipado fuerte, tests y CI listos desde el primer commit.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="service-icon mb-3"><i class="bi bi-universal-access"></i></div>
+                <h3 class="h5">Accesibilidad</h3>
+                <p class="text-secondary mb-0">Auditorías WCAG 2.2 AA, lectores de pantalla y navegación por teclado de verdad.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="service-icon mb-3"><i class="bi bi-speedometer2"></i></div>
+                <h3 class="h5">Performance</h3>
+                <p class="text-secondary mb-0">Core Web Vitals en verde: bundle ligero, lazy loading y métricas reales en producción.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio ========================================================= -->
+    <section id="portfolio" class="section bg-white">
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+          <div>
+            <span class="section-eyebrow">Trabajos recientes</span>
+            <h2 class="display-6 fw-bold mb-0">Portfolio seleccionado</h2>
+          </div>
+          <p class="text-secondary mb-0">Haz click en un proyecto para ver el detalle.</p>
+        </div>
+        <div class="row g-4">
+          <!-- card 1 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="finhub">
+                <div class="portfolio-thumb" style="--thumb-from:#2D5BFF;--thumb-to:#0EA5E9;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">Fintech · 2025</span>
+                  <h3 class="h5 mb-1">FinHub Dashboard</h3>
+                  <p class="text-secondary small mb-0">Panel de finanzas personales con gráficos en tiempo real.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+          <!-- card 2 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="meridian">
+                <div class="portfolio-thumb" style="--thumb-from:#10B981;--thumb-to:#0EA5E9;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">SaaS · 2025</span>
+                  <h3 class="h5 mb-1">Meridian CRM</h3>
+                  <p class="text-secondary small mb-0">Rediseño completo de un CRM B2B con foco en velocidad de uso.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+          <!-- card 3 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="atlas">
+                <div class="portfolio-thumb" style="--thumb-from:#F59E0B;--thumb-to:#EF4444;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">E-commerce · 2024</span>
+                  <h3 class="h5 mb-1">Atlas Store</h3>
+                  <p class="text-secondary small mb-0">Tienda headless con Next.js y checkout custom.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+          <!-- card 4 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="lumen">
+                <div class="portfolio-thumb" style="--thumb-from:#8B5CF6;--thumb-to:#EC4899;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">Educación · 2024</span>
+                  <h3 class="h5 mb-1">Lumen Academy</h3>
+                  <p class="text-secondary small mb-0">Plataforma de cursos con player propio y notas sincronizadas.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+          <!-- card 5 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="orbit">
+                <div class="portfolio-thumb" style="--thumb-from:#0F172A;--thumb-to:#334155;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">Producto · 2024</span>
+                  <h3 class="h5 mb-1">Orbit Analytics</h3>
+                  <p class="text-secondary small mb-0">Dashboard de métricas con dark mode y export PDF.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+          <!-- card 6 -->
+          <div class="col-md-6 col-lg-4">
+            <article class="card h-100 border-0 shadow-sm overflow-hidden">
+              <button type="button" class="border-0 bg-transparent p-0 text-start" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="kairos">
+                <div class="portfolio-thumb" style="--thumb-from:#06B6D4;--thumb-to:#2D5BFF;"></div>
+                <div class="card-body">
+                  <span class="badge text-bg-light mb-2">Marketing · 2023</span>
+                  <h3 class="h5 mb-1">Kairos Landing</h3>
+                  <p class="text-secondary small mb-0">Landing de captación con A/B testing integrado.</p>
+                </div>
+              </button>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal compartido -->
+      <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title h5" id="projectModalLabel">Detalle del proyecto</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-secondary">
+                Caso de estudio resumido: contexto del cliente, problema a resolver, decisiones de UI y resultados medibles tras el lanzamiento.
+              </p>
+              <ul class="list-unstyled small text-secondary mb-0">
+                <li><i class="bi bi-check2 text-success me-2"></i>Stack técnico documentado</li>
+                <li><i class="bi bi-check2 text-success me-2"></i>Mejora medida en Core Web Vitals</li>
+                <li><i class="bi bi-check2 text-success me-2"></i>Sistema de diseño entregado</li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <a href="#contact" class="btn btn-primary" data-bs-dismiss="modal">Quiero algo similar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process =========================================================== -->
+    <section id="process" class="section">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="section-eyebrow">Cómo trabajamos</span>
+          <h2 class="display-6 fw-bold">Un proceso claro en 4 pasos</h2>
+        </div>
+        <div class="row process-row g-4 g-md-0">
+          <div class="col-md-3 process-step text-center">
+            <div class="step-num mx-auto mb-3">1</div>
+            <h3 class="h6">Descubrimiento</h3>
+            <p class="text-secondary small px-md-3">Workshop inicial para entender objetivos, usuarios y restricciones técnicas.</p>
+          </div>
+          <div class="col-md-3 process-step text-center">
+            <div class="step-num mx-auto mb-3">2</div>
+            <h3 class="h6">Diseño</h3>
+            <p class="text-secondary small px-md-3">Wireframes, sistema visual y prototipo navegable validado con stakeholders.</p>
+          </div>
+          <div class="col-md-3 process-step text-center">
+            <div class="step-num mx-auto mb-3">3</div>
+            <h3 class="h6">Desarrollo</h3>
+            <p class="text-secondary small px-md-3">Sprints semanales con demo, deploy continuo y métricas de calidad automatizadas.</p>
+          </div>
+          <div class="col-md-3 process-step text-center">
+            <div class="step-num mx-auto mb-3">4</div>
+            <h3 class="h6">Lanzamiento</h3>
+            <p class="text-secondary small px-md-3">QA cross-browser, formación al equipo y monitorización post-launch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing =========================================================== -->
+    <section id="pricing" class="section bg-white">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="section-eyebrow">Planes</span>
+          <h2 class="display-6 fw-bold">Modalidades de colaboración</h2>
+          <p class="text-secondary col-md-7 mx-auto">Tarifas transparentes. Sin sorpresas.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h3 class="h5">Sprint</h3>
+                <p class="text-secondary small">Una semana intensa para validar una idea o lanzar un MVP visual.</p>
+                <p class="display-6 fw-bold mb-0">€2.500<small class="fs-6 text-secondary fw-normal"> / sprint</small></p>
+                <hr />
+                <ul class="list-unstyled small mb-4">
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>1 landing o flujo crítico</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Diseño + maquetación</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Deploy en Vercel</li>
+                </ul>
+                <a href="#contact" class="btn btn-outline-primary w-100">Empezar</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border border-primary border-2 shadow pricing-card-featured">
+              <div class="card-body p-4 position-relative">
+                <span class="badge text-bg-primary position-absolute top-0 start-50 translate-middle">Más elegido</span>
+                <h3 class="h5">Producto</h3>
+                <p class="text-secondary small">Construcción completa de un producto frontend de principio a fin.</p>
+                <p class="display-6 fw-bold mb-0">€12.000<small class="fs-6 text-secondary fw-normal"> / proyecto</small></p>
+                <hr />
+                <ul class="list-unstyled small mb-4">
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Hasta 15 pantallas</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Sistema de diseño completo</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Tests E2E + CI</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>3 meses de soporte</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary w-100">Solicitar</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h3 class="h5">Retainer</h3>
+                <p class="text-secondary small">Equipo frontend dedicado mensualmente para iterar tu producto.</p>
+                <p class="display-6 fw-bold mb-0">€6.000<small class="fs-6 text-secondary fw-normal"> / mes</small></p>
+                <hr />
+                <ul class="list-unstyled small mb-4">
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>40 horas/mes</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Slack compartido</li>
+                  <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Reporte semanal</li>
+                </ul>
+                <a href="#contact" class="btn btn-outline-primary w-100">Hablar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials ====================================================== -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="section-eyebrow">Clientes</span>
+          <h2 class="display-6 fw-bold">Lo que dicen de nosotros</h2>
+        </div>
+        <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Testimonio 1"></button>
+            <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1" aria-label="Testimonio 2"></button>
+            <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2" aria-label="Testimonio 3"></button>
+          </div>
+          <div class="carousel-inner pb-5">
+            <div class="carousel-item active">
+              <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                  <p class="testimonial-quote">"En tres semanas teníamos el rediseño en producción. El equipo entendió nuestro producto mejor que algunos de los nuestros."</p>
+                  <p class="fw-bold mb-0 mt-3">Lucía Fernández</p>
+                  <p class="text-secondary small">CTO · Meridian</p>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                  <p class="testimonial-quote">"Pasamos de 2.4s a 0.8s de LCP. La conversión subió un 18% el primer mes tras el relanzamiento."</p>
+                  <p class="fw-bold mb-0 mt-3">Diego Romero</p>
+                  <p class="text-secondary small">Head of Growth · Atlas</p>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                  <p class="testimonial-quote">"Un partner técnico, no un proveedor. Recomiendan, retan y entregan. Difícil pedir más."</p>
+                  <p class="fw-bold mb-0 mt-3">Sara Vidal</p>
+                  <p class="text-secondary small">Product Manager · FinHub</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ =============================================================== -->
+    <section id="faq" class="section bg-white">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="text-center mb-5">
+              <span class="section-eyebrow">Preguntas frecuentes</span>
+              <h2 class="display-6 fw-bold">Lo que solemos resolver antes de empezar</h2>
+            </div>
+            <div class="accordion accordion-flush" id="faqAccordion">
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                    ¿Trabajáis con startups en fase pre-seed?
+                  </button>
+                </h3>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body text-secondary">
+                    Sí. Tenemos un plan Sprint pensado precisamente para validar producto rápido sin sobreinvertir.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                    ¿Qué stack técnico usáis?
+                  </button>
+                </h3>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body text-secondary">
+                    Por defecto Next.js + TypeScript + Tailwind o Bootstrap, según el caso. Si tu equipo ya usa otro stack, nos adaptamos.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                    ¿Cómo medís el éxito de un proyecto?
+                  </button>
+                </h3>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body text-secondary">
+                    Definimos KPIs concretos al inicio (CWV, conversión, accesibilidad) y los medimos antes/después con datos reales de producción.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                    ¿Entregáis código o solo diseño?
+                  </button>
+                </h3>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body text-secondary">
+                    Ambos. Y si solo necesitas uno de los dos, también: tenemos partners de diseño y desarrollo de confianza para complementar.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                    ¿Hay soporte después del lanzamiento?
+                  </button>
+                </h3>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body text-secondary">
+                    Sí. Todos los planes incluyen periodo de soporte y puedes pasar a un retainer mensual si quieres iteración continua.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact =========================================================== -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+            <div class="text-center mb-5">
+              <span class="section-eyebrow">Hablemos</span>
+              <h2 class="display-6 fw-bold">Cuéntanos tu proyecto</h2>
+              <p class="text-secondary">Respondemos en menos de 24 horas laborables.</p>
+            </div>
+            <form class="needs-validation card border-0 shadow-sm p-4 p-md-5" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="contactName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="contactName" required minlength="2" />
+                  <div class="invalid-feedback">Indica tu nombre.</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="contactEmail" required />
+                  <div class="invalid-feedback">Email no válido.</div>
+                </div>
+                <div class="col-12">
+                  <label for="contactBudget" class="form-label">Presupuesto</label>
+                  <select id="contactBudget" class="form-select" required>
+                    <option value="">Selecciona un rango…</option>
+                    <option>Menos de 5.000 €</option>
+                    <option>5.000 – 15.000 €</option>
+                    <option>15.000 – 50.000 €</option>
+                    <option>Más de 50.000 €</option>
+                  </select>
+                  <div class="invalid-feedback">Selecciona un rango.</div>
+                </div>
+                <div class="col-12">
+                  <label for="contactMessage" class="form-label">Mensaje</label>
+                  <textarea id="contactMessage" rows="4" class="form-control" required minlength="20"></textarea>
+                  <div class="invalid-feedback">Cuéntanos un poco más (mínimo 20 caracteres).</div>
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="contactPrivacy" required />
+                    <label class="form-check-label small text-secondary" for="contactPrivacy">
+                      Acepto la política de privacidad.
+                    </label>
+                    <div class="invalid-feedback">Necesitamos tu consentimiento.</div>
+                  </div>
+                </div>
+                <div class="col-12 d-grid">
+                  <button class="btn btn-primary btn-lg" type="submit">Enviar mensaje</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast confirmación -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="contactToast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto text-success"><i class="bi bi-check-circle me-1"></i> Mensaje enviado</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+          </div>
+          <div class="toast-body">Te respondemos en menos de 24 horas.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer ============================================================ -->
+    <footer class="footer pt-5">
+      <div class="container">
+        <div class="row g-4 pb-4">
+          <div class="col-lg-4">
+            <a href="#hero" class="d-inline-flex align-items-center gap-2 text-white text-decoration-none mb-3">
+              <span class="d-inline-flex align-items-center justify-content-center bg-primary rounded" style="width:32px;height:32px;">N</span>
+              <span class="fw-bold fs-5">Norvell</span>
+            </a>
+            <p class="small mb-3">Estudio frontend remoto. Madrid · Berlín · Buenos Aires.</p>
+            <div class="d-flex gap-3 fs-5">
+              <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" aria-label="GitHub"><i class="bi bi-github"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" aria-label="Dribbble"><i class="bi bi-dribbble"></i></a>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h4 class="h6 text-white">Estudio</h4>
+            <ul class="list-unstyled small">
+              <li class="mb-2"><a href="#services">Servicios</a></li>
+              <li class="mb-2"><a href="#process">Proceso</a></li>
+              <li class="mb-2"><a href="#pricing">Planes</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h4 class="h6 text-white">Recursos</h4>
+            <ul class="list-unstyled small">
+              <li class="mb-2"><a href="#portfolio">Portfolio</a></li>
+              <li class="mb-2"><a href="#faq">FAQ</a></li>
+              <li class="mb-2"><a href="#">Blog</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <h4 class="h6 text-white">Newsletter</h4>
+            <p class="small">Una vez al mes: lecturas, herramientas y un caso de estudio.</p>
+            <form class="d-flex gap-2" onsubmit="event.preventDefault();">
+              <label for="newsletterEmail" class="visually-hidden">Email</label>
+              <input id="newsletterEmail" type="email" class="form-control form-control-sm" placeholder="tu@email.com" required />
+              <button class="btn btn-primary btn-sm" type="submit">Suscribirme</button>
+            </form>
+          </div>
+        </div>
+        <hr class="border-secondary" />
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3 small">
+          <span>© 2026 Norvell Studio. Todos los derechos reservados.</span>
+          <div class="d-flex gap-3 mt-2 mt-md-0">
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
+            <a href="#">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

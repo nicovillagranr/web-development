@@ -1,0 +1,8 @@
+// 1) Overrides de variables (deben ir antes del import de bootstrap)
+@import "variables";
+
+// 2) Bootstrap completo
+@import "bootstrap/scss/bootstrap";
+
+// 3) Custom por sección
+@import "custom";

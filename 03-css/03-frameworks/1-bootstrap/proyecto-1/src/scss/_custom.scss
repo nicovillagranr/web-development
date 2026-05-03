@@ -1,0 +1,107 @@
+// Ajustes finos por sección. Bootstrap ya hace el 95%; aquí solo lo que no sale de utilities.
+
+html { scroll-behavior: smooth; }
+
+body { -webkit-font-smoothing: antialiased; }
+
+// Hero
+.hero {
+  background: linear-gradient(180deg, #EEF2FF 0%, #FAFAFB 100%);
+  padding: 6rem 0 5rem;
+}
+.hero-illustration {
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(45,91,255,.25), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(16,185,129,.2), transparent 60%),
+    #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 60px -20px rgba(15,23,42,.18);
+}
+
+// Sección genérica
+.section { padding: 5rem 0; }
+.section-eyebrow {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: $primary;
+  margin-bottom: .75rem;
+}
+
+// Service icon chip
+.service-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: .75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($primary, .1);
+  color: $primary;
+  font-size: 1.25rem;
+}
+
+// Portfolio thumbnail (placeholders sin imagen real)
+.portfolio-thumb {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--thumb-from, #2D5BFF), var(--thumb-to, #0EA5E9));
+  border-radius: .75rem .75rem 0 0;
+  position: relative;
+  overflow: hidden;
+}
+.portfolio-thumb::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(255,255,255,.35), transparent 50%);
+}
+
+// Process timeline (línea conectora)
+.process-step {
+  position: relative;
+}
+.process-step .step-num {
+  width: 3rem; height: 3rem;
+  border-radius: 999px;
+  background: $primary; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  position: relative; z-index: 2;
+}
+@media (min-width: 768px) {
+  .process-row {
+    position: relative;
+  }
+  .process-row::before {
+    content: "";
+    position: absolute;
+    top: 1.5rem;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: rgba($primary, .25);
+    z-index: 1;
+  }
+}
+
+// Pricing destacado
+.pricing-card-featured {
+  transform: translateY(-.5rem);
+}
+
+// Testimonials
+.testimonial-quote {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: $dark;
+}
+
+// Footer
+.footer {
+  background: $dark;
+  color: rgba(#fff, .75);
+}
+.footer a { color: rgba(#fff, .75); text-decoration: none; }
+.footer a:hover { color: #fff; }

@@ -1,0 +1,33 @@
+// Overrides de variables Sass de Bootstrap.
+// Deben definirse ANTES de @import "bootstrap/scss/bootstrap" para propagarse a todos los componentes.
+
+$primary:   #2D5BFF;
+$secondary: #6B7280;
+$success:   #10B981;
+$info:      #0EA5E9;
+$warning:   #F59E0B;
+$danger:    #EF4444;
+$dark:      #0F172A;
+$light:     #F8FAFC;
+
+$body-bg:   #FAFAFB;
+$body-color: #1F2937;
+
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+$headings-font-weight: 700;
+$headings-letter-spacing: -0.02em;
+
+$border-radius:    0.75rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.25rem;
+
+$enable-shadows: true;
+$enable-rounded: true;
+
+$navbar-padding-y: 1rem;
+$navbar-brand-font-size: 1.25rem;
+
+$btn-padding-x: 1.25rem;
+$btn-padding-y: 0.6rem;
+$btn-font-weight: 600;
