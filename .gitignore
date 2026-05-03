@@ -28,8 +28,13 @@ Thumbs.db
 .env.production
 .env.test
 
-# Configuración local del editor — cada dev tiene sus propias preferencias
-.vscode/
+# Configuración local del editor — versionamos solo lo compartible del workspace
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/*.code-snippets
 .idea/
 
 # Archivos generados por asistentes de IA — no aportan al código del proyecto
