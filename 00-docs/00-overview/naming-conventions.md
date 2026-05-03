@@ -17,6 +17,10 @@ This file defines directory and file naming rules for the repository.
 - Hooks: `useSomething.js` or `useSomething.jsx`.
 - Utility modules: `camelCase.js`.
 
+## Project Location
+
+Where a project should live (drill vs portfolio, one-project-one-folder rule, `package.json.name` requirements) is defined in [`projects-location-policy.md`](./projects-location-policy.md).
+
 ## Current Normalization Status
 
 - Completed: `01-git/04-cheatsheets` (fixed typo from `04-cheasheets`).

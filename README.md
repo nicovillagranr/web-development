@@ -14,6 +14,7 @@ en piezas listas para un portfolio profesional.
 - Repository overview / Vista general del repo: `00-docs/00-overview/readme.md`
 - Quick return guide / Guía de retoma rápida: `00-docs/00-overview/retoma-rapida.md`
 - Naming rules / Convenciones de nombres: `00-docs/00-overview/naming-conventions.md`
+- Projects location policy / Política de ubicación de proyectos: `00-docs/00-overview/projects-location-policy.md`
 - Session memory log / Registro de sesiones: `00-docs/00-overview/session-log.md`
 
 ## Repository Structure / Estructura del repositorio
