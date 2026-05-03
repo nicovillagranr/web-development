@@ -1,4 +1,4 @@
-﻿// ================= CONTEXTO MODULO =================
+// ================= CONTEXTO MODULO =================
 // Contenedor principal de pantallas Home.
 // Gestiona scroll horizontal, indice activo y dots de navegacion.
 // ================= IMPORTS =================
@@ -7,11 +7,8 @@ import { useDateTime } from "@features/time/hooks/useDateTime.jsx";
 import TopBar from "@screen1/header/TopBar";
 import Screen1 from "@screen1/Screen1.jsx";
 import Screen2 from "@screen2/Screen2.jsx";
-import s from "./Screens.module.css";
 
-// Cantidad total de pantallas horizontales.
 const SCREEN_COUNT = 2;
-// Pantalla inicial al montar (screen_1).
 const INITIAL_SCREEN_INDEX = 0;
 
 // ================= COMPONENT =================
@@ -25,17 +22,10 @@ export function Screens({
     onOpenRecipeSettings,
     onOpenSpotifySettings,
 }) {
-    // Referencia al contenedor scrollable horizontal.
     const scrollerRef = useRef(null);
-    // Indice activo para estado visual (dots) y reposicionamientos.
     const [activeIndex, setActiveIndex] = useState(INITIAL_SCREEN_INDEX);
-    // Unica instancia de useDateTime para toda la vista home.
     const { date, time } = useDateTime({ autoTime, manualDate, is24hFormat });
 
-    // Al montar:
-    // - posiciona el scroll en la pantalla inicial
-    // - sincroniza el indice activo
-    // requestAnimationFrame evita medir clientWidth antes del primer paint.
     useEffect(() => {
         const node = scrollerRef.current;
         if (!node) return;
@@ -51,9 +41,6 @@ export function Screens({
         return () => cancelAnimationFrame(id);
     }, []);
 
-    // Cuando cambia el tamano de ventana:
-    // - mantiene visible la pantalla actualmente activa
-    // - evita que el carrusel "salte" a una posicion incorrecta
     useEffect(() => {
         function handleResize() {
             const node = scrollerRef.current;
@@ -68,8 +55,6 @@ export function Screens({
         return () => window.removeEventListener("resize", handleResize);
     }, [activeIndex]);
 
-    // Deriva indice activo en base al scroll horizontal actual.
-    // Se usa para actualizar dots y estado interno de navegacion.
     const handleScroll = (event) => {
         const node = event.currentTarget;
         if (!node.clientWidth) return;
@@ -81,15 +66,18 @@ export function Screens({
         }
     };
 
-
     return (
-        <div className={s.screens}>
-            <header className={s.screens__header}>
+        <div className="h-full flex flex-col">
+            <header className="w-full flex flex-col px-4 py-2 gap-2">
                 <TopBar time={time} date={date} weather={weather} />
             </header>
 
-            <div ref={scrollerRef} onScroll={handleScroll} className={`${s.screens__scroller} no-scrollbar`}>
-                <section className={s.screens__section}>
+            <div
+                ref={scrollerRef}
+                onScroll={handleScroll}
+                className="flex-1 flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar"
+            >
+                <section className="h-full w-full shrink-0 snap-center">
                     <Screen1
                         time={time}
                         weather={weather}
@@ -100,20 +88,19 @@ export function Screens({
                     />
                 </section>
 
-                {/* Pantalla secundaria (modulo energia/consola) */}
-                <section className={s.screens__section}>
+                <section className="h-full w-full shrink-0 snap-center">
                     <Screen2 />
                 </section>
             </div>
 
-
-            <div className={s.screens__dots}>
+            <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
                 {Array.from({ length: SCREEN_COUNT }, (_, index) => (
-                    <span key={index}
-                        className={`${s.screens__dot} ${activeIndex === index ? s["screens__dot--active"] : s["screens__dot--inactive"]}`} />
+                    <span
+                        key={index}
+                        className={`h-1.5 w-1.5 rounded-full transition-colors ${activeIndex === index ? "bg-white" : "bg-white/25"}`}
+                    />
                 ))}
             </div>
-
         </div>
     );
 }

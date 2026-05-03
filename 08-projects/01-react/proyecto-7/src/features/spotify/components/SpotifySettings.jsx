@@ -6,7 +6,8 @@ import { useCallback } from "react";
 import { SiSpotify } from "react-icons/si";
 import SettingsHeader from "@ui/SettingsHeader.jsx";
 import { useEscapeKey } from "@hooks/useEscapeKey.jsx";
-import s from "./SpotifySettings.module.css";
+
+const PANEL_BASE = "absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out";
 
 // ================= COMPONENT =================
 function SpotifySettings({ isActive, onBack }) {
@@ -15,14 +16,14 @@ function SpotifySettings({ isActive, onBack }) {
     useEscapeKey(isActive, handleClose);
 
     return (
-        <section className={`${s["spotify-settings"]} ${isActive ? s["spotify-settings--active"] : s["spotify-settings--hidden"]}`}>
+        <section className={`${PANEL_BASE} ${isActive ? "translate-x-0" : "-translate-x-full"}`}>
 
             <SettingsHeader title="Spotify" onBack={handleClose} />
 
-            <div className={s["spotify-settings__content"]}>
-                <SiSpotify size={32} className={s["spotify-settings__icon"]} />
-                <p className={s["spotify-settings__title"]}>Sección en demo</p>
-                <p className={s["spotify-settings__desc"]}> La integración con Spotify está desactivada en esta versión.</p>
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center">
+                <SiSpotify size={32} className="text-[#1DB954]" />
+                <p className="text-sm font-medium">Sección en demo</p>
+                <p className="text-sm leading-relaxed">La integración con Spotify está desactivada en esta versión.</p>
             </div>
         </section>
     );

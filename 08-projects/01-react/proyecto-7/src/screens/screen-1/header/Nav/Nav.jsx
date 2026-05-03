@@ -5,9 +5,7 @@ import CardRecipe from "../../widgets/CardRecipe";
 import CardTime from "../../widgets/CardTime";
 import { CardWeather } from "../../widgets/CardWeather";
 import CardSpotify from "../../widgets/CardSpotify";
-import s from "./Nav.module.css";
 
-// Orden fijo de slots en el grid (col-span/row-span por posicion)
 const SLOT_CLASSES = [
     "col-span-1 row-span-2",
     "col-span-1 row-span-1",
@@ -16,7 +14,6 @@ const SLOT_CLASSES = [
 ];
 
 // ================= COMPONENT =================
-// Nav: parametros: { time, weather, onOpenTimeSettings, onOpenWeatherSettings, onOpenRecipeSettings, onOpenSpotifySettings }
 function Nav({
     time,
     weather,
@@ -33,8 +30,8 @@ function Nav({
     ];
 
     return (
-        <nav className={s.nav}>
-            <section className={s.nav__grid}>
+        <nav className="w-full">
+            <section className="grid grid-cols-2 grid-rows-3 gap-3 w-full h-52">
                 {cards.map((card, slotIndex) => (
                     <div key={card.id} className={SLOT_CLASSES[slotIndex]}>
                         <card.Component

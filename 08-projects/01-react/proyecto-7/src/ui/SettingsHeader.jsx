@@ -2,17 +2,16 @@
 // Header reutilizable para pantallas de ajustes.
 // Renderiza boton back y titulo de cada modulo de configuracion.
 import { FiChevronLeft } from "react-icons/fi";
-import s from "./SettingsHeader.module.css";
 
 // ================= FUNCION =================
 function SettingsHeader({ title, onBack }) {
     return (
-        <header className={s["settings-header"]}>
-            <button onClick={onBack} className={s["settings-header__button"]} aria-label="Volver">
-                <div className={s["settings-header__icon"]}>
+        <header className="h-16 flex flex-row items-center px-4 mt-4 mb-4">
+            <button onClick={onBack} className="flex items-center gap-3" aria-label="Volver">
+                <div className="w-10 h-10 flex items-center justify-center">
                     <FiChevronLeft size={22} />
                 </div>
-                <h2 className={s["settings-header__title"]}>{title}</h2>
+                <h2 className="text-lg font-medium">{title}</h2>
             </button>
         </header>
     );

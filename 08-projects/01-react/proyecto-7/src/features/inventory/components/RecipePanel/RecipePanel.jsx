@@ -10,21 +10,27 @@ import { useEscapeKey } from "@hooks/useEscapeKey.jsx";
 import { useInventoryRecipeSuggestions } from "@features/inventory/hooks/useInventoryRecipeSuggestions.jsx";
 import { useRecipeImage } from "@features/inventory/hooks/useRecipeImage.jsx";
 import { RECIPE_CATALOG, RECIPE_CATEGORIES } from "@features/inventory/constants/recipeSuggestions.js";
-import s from "./RecipePanel.module.css";
+
+// ================= CONSTANTS =================
+const FALLBACK_GRADIENT = "linear-gradient(145deg,#0D1B12 0%,#12221A 40%,#0A1510 100%)";
+const INGREDIENTS_LABEL = "text-[10px] uppercase tracking-[0.14em] text-white/35 font-medium mb-2.5";
+const INGREDIENTS_LABEL_SPACED = "text-[10px] uppercase tracking-[0.14em] text-white/35 font-medium mb-2";
+const INGREDIENTS_WRAP = "flex flex-wrap gap-1.5";
+const HERO_CHIP = "flex items-center gap-1 text-[10px] text-white/65 bg-black/50 backdrop-blur-sm border border-white/10 rounded-full px-2.5 py-1 leading-none";
 
 // ================= SUB-COMPONENTS: SHARED =================
 
 function CategoryNav({ activeCategory, onSelect }) {
     return (
-        <div className={`${s["recipe__category-nav"]} no-scrollbar`}>
+        <div className="flex gap-2 pl-2 pr-4 pb-3 overflow-x-auto shrink-0 no-scrollbar">
             {RECIPE_CATEGORIES.map(({ id, label }) => (
                 <button
                     key={id}
                     type="button"
                     onClick={() => onSelect(id)}
-                    className={`${s["recipe__category-btn"]} ${activeCategory === id
-                        ? s["recipe__category-btn--active"]
-                        : s["recipe__category-btn--inactive"]
+                    className={`shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-medium tracking-wide transition-all duration-200 border ${activeCategory === id
+                        ? "border-accent text-accent bg-accent/10"
+                        : "border-white/10 text-white/45 bg-white/6 hover:text-white/75 hover:bg-white/10"
                         }`}
                 >
                     {label}
@@ -36,11 +42,11 @@ function CategoryNav({ activeCategory, onSelect }) {
 
 function EmptyState() {
     return (
-        <div className={s.recipe__empty}>
-            <div className={s["recipe__empty-icon"]}>
+        <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
+            <div className="w-14 h-14 rounded-full bg-white/4 border border-white/8 flex items-center justify-center mb-4 text-xl">
                 🍽
             </div>
-            <p className={s["recipe__empty-text"]}>
+            <p className="text-[13px] text-white/35 leading-relaxed">
                 No hay recetas disponibles<br />para esta categoría.
             </p>
         </div>
@@ -49,11 +55,11 @@ function EmptyState() {
 
 function NoInventoryState() {
     return (
-        <div className={s.recipe__empty}>
-            <div className={s["recipe__empty-icon"]}>
+        <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
+            <div className="w-14 h-14 rounded-full bg-white/4 border border-white/8 flex items-center justify-center mb-4 text-xl">
                 🥦
             </div>
-            <p className={s["recipe__empty-text"]}>
+            <p className="text-[13px] text-white/35 leading-relaxed">
                 Agrega alimentos a tu inventario<br />para recibir recetas personalizadas.
             </p>
         </div>
@@ -64,33 +70,32 @@ function NoInventoryState() {
 
 function RecipeListCard({ recipe, onSelect }) {
     const imageUrl = useRecipeImage(recipe.title, recipe.imageQuery);
-    const fallbackGradient = "linear-gradient(145deg,#0D1B12 0%,#12221A 40%,#0A1510 100%)";
 
     return (
         <button
             type="button"
             onClick={() => onSelect(recipe)}
-            className={s["recipe__list-card"]}
+            className="rounded-xl overflow-hidden border border-white/8 active:scale-[0.97] transition-transform duration-150 text-left"
         >
             {/* Imagen cuadrada */}
             <div
-                className={s["recipe__list-card-image"]}
-                style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : fallbackGradient }}
+                className="aspect-square bg-cover bg-position-[center_60%]"
+                style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : FALLBACK_GRADIENT }}
             />
 
             {/* Info */}
-            <div className={s["recipe__list-card-info"]}>
+            <div className="px-2.5 py-2.5 bg-white/4">
                 {recipe.origin && (
-                    <span className={s["recipe__list-card-origin"]}>{recipe.origin}</span>
+                    <span className="text-[10px] text-white/40">{recipe.origin}</span>
                 )}
-                <h3 className={s["recipe__list-card-title"]} style={{ fontFamily: '"Fraunces", serif' }}>
+                <h3 className="text-[14px] font-semibold text-white/90 leading-tight mt-0.5 line-clamp-2" style={{ fontFamily: '"Fraunces", serif' }}>
                     {recipe.title}
                 </h3>
-                <span className={s["recipe__list-card-time"]}>⏱ {recipe.time}</span>
+                <span className="text-[11px] text-white/40 mt-1 block">⏱ {recipe.time}</span>
 
                 {/* Chip de cobertura de ingredientes */}
                 {recipe.matchCount > 0 && (
-                    <span className={s["recipe__list-card-chip"]}>
+                    <span className="inline-block mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
                         ✓ {recipe.matchCount}/{recipe.ingredients.length}
                     </span>
                 )}
@@ -103,7 +108,7 @@ function RecipeList({ recipes, onSelect }) {
     if (!recipes.length) return <EmptyState />;
 
     return (
-        <div className={s["recipe__list-grid"]}>
+        <div className="grid grid-cols-2 gap-3 px-4 pb-6">
             {recipes.map((recipe) => (
                 <RecipeListCard
                     key={recipe.id}
@@ -118,42 +123,40 @@ function RecipeList({ recipes, onSelect }) {
 // ================= SUB-COMPONENTS: DETALLE =================
 
 function RecipeHero({ recipe, imageUrl }) {
-    const fallbackGradient = "linear-gradient(145deg,#0D1B12 0%,#12221A 40%,#0A1510 100%)";
-
     return (
-        <div className={s.recipe__hero}>
+        <div className="relative h-52 mx-4 rounded-2xl overflow-hidden shrink-0">
             {/* Imagen o gradiente de fallback */}
             <div
-                className={s["recipe__hero-image"]}
+                className="absolute inset-0 bg-cover bg-position-[center_60%]"
                 style={{
-                    backgroundImage: imageUrl ? `url(${imageUrl})` : fallbackGradient,
+                    backgroundImage: imageUrl ? `url(${imageUrl})` : FALLBACK_GRADIENT,
                 }}
             />
 
             {/* Overlay superior suave */}
-            <div className={s["recipe__hero-overlay-top"]} />
+            <div className="absolute inset-x-0 top-0 h-20 bg-linear-to-b from-black/50 to-transparent" />
 
             {/* Overlay inferior fuerte para legibilidad del texto */}
-            <div className={s["recipe__hero-overlay-bottom"]} />
+            <div className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/95 via-black/50 to-transparent" />
 
             {/* Contenido */}
-            <div className={s["recipe__hero-content"]}>
+            <div className="absolute inset-x-0 bottom-0 px-4 pb-4">
                 {/* Chips de metadata */}
                 {(recipe.origin || recipe.time || recipe.servings) && (
-                    <div className={s["recipe__hero-chips"]}>
+                    <div className="flex items-center gap-1.5 mb-2.5">
                         {recipe.origin && (
-                            <span className={s["recipe__hero-chip"]}>
+                            <span className={HERO_CHIP}>
                                 {recipe.origin}
                             </span>
                         )}
                         {recipe.time && (
-                            <span className={s["recipe__hero-chip"]}>
+                            <span className={HERO_CHIP}>
                                 <span>⏱</span>
                                 <span>{recipe.time}</span>
                             </span>
                         )}
                         {recipe.servings && (
-                            <span className={s["recipe__hero-chip"]}>
+                            <span className={HERO_CHIP}>
                                 <span>🍽</span>
                                 <span>{recipe.servings} {recipe.servings === 1 ? "porción" : "porciones"}</span>
                             </span>
@@ -162,7 +165,7 @@ function RecipeHero({ recipe, imageUrl }) {
                 )}
 
                 {/* Título */}
-                <h2 className={s["recipe__hero-title"]} style={{ fontFamily: '"Fraunces", serif' }}>
+                <h2 className="text-[22px] font-semibold leading-tight text-white" style={{ fontFamily: '"Fraunces", serif' }}>
                     {recipe.title}
                 </h2>
             </div>
@@ -174,15 +177,15 @@ function IngredientSection({ matched, missing, allIngredients, isPersonalized })
     // Sin contexto de inventario → mostrar todos los ingredientes de forma neutral
     if (!isPersonalized) {
         return (
-            <div className={s["recipe__ingredients-section"]}>
-                <p className={s["recipe__ingredients-label"]}>
+            <div className="px-4">
+                <p className={INGREDIENTS_LABEL}>
                     Ingredientes
                 </p>
-                <div className={s["recipe__ingredients-wrap"]}>
+                <div className={INGREDIENTS_WRAP}>
                     {allIngredients.map((ing) => (
                         <span
                             key={ing}
-                            className={s["recipe__ingredient--neutral"]}
+                            className="px-3 py-2 rounded-full bg-white/6 border border-white/10 text-[12px] text-white/65 capitalize"
                         >
                             {ing}
                         </span>
@@ -193,19 +196,19 @@ function IngredientSection({ matched, missing, allIngredients, isPersonalized })
     }
 
     return (
-        <div className={s["recipe__ingredients-section--multi"]}>
+        <div className="px-4 space-y-3.5">
             {matched.length > 0 && (
                 <div>
-                    <p className={`${s["recipe__ingredients-label"]} ${s["recipe__ingredients-label--spaced"]}`}>
+                    <p className={INGREDIENTS_LABEL_SPACED}>
                         En tu inventario
                     </p>
-                    <div className={s["recipe__ingredients-wrap"]}>
+                    <div className={INGREDIENTS_WRAP}>
                         {matched.map((ing) => (
                             <span
                                 key={ing}
-                                className={s["recipe__ingredient--matched"]}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[12px] text-emerald-400 font-medium capitalize"
                             >
-                                <span className={s["recipe__ingredient-check"]}>✓</span>
+                                <span className="text-[9px] font-bold">✓</span>
                                 {ing}
                             </span>
                         ))}
@@ -215,16 +218,16 @@ function IngredientSection({ matched, missing, allIngredients, isPersonalized })
 
             {missing.length > 0 && (
                 <div>
-                    <p className={`${s["recipe__ingredients-label"]} ${s["recipe__ingredients-label--spaced"]}`}>
+                    <p className={INGREDIENTS_LABEL_SPACED}>
                         Necesitas conseguir
                     </p>
-                    <div className={s["recipe__ingredients-wrap"]}>
+                    <div className={INGREDIENTS_WRAP}>
                         {missing.map((ing) => (
                             <span
                                 key={ing}
-                                className={s["recipe__ingredient--missing"]}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-amber-500/8 border border-amber-500/20 text-[12px] text-amber-400/80 capitalize"
                             >
-                                <span className={s["recipe__ingredient-plus"]}>+</span>
+                                <span className="text-[9px]">+</span>
                                 {ing}
                             </span>
                         ))}
@@ -234,14 +237,14 @@ function IngredientSection({ matched, missing, allIngredients, isPersonalized })
 
             {matched.length === 0 && missing.length === 0 && allIngredients.length > 0 && (
                 <div>
-                    <p className={`${s["recipe__ingredients-label"]} ${s["recipe__ingredients-label--spaced"]}`}>
+                    <p className={INGREDIENTS_LABEL_SPACED}>
                         Ingredientes
                     </p>
-                    <div className={s["recipe__ingredients-wrap"]}>
+                    <div className={INGREDIENTS_WRAP}>
                         {allIngredients.map((ing) => (
                             <span
                                 key={ing}
-                                className={s["recipe__ingredient--neutral-dim"]}
+                                className="px-3 py-2 rounded-full bg-white/6 border border-white/10 text-[12px] text-white/60 capitalize"
                             >
                                 {ing}
                             </span>
@@ -255,13 +258,13 @@ function IngredientSection({ matched, missing, allIngredients, isPersonalized })
 
 function renderStepText(step) {
     const dotIndex = step.indexOf(". ");
-    if (dotIndex < 0) return <strong className={s["recipe__step-bold"]}>{step}</strong>;
+    if (dotIndex < 0) return <strong className="text-white/90">{step}</strong>;
 
     const firstSentence = step.slice(0, dotIndex + 1);
     const rest = step.slice(dotIndex + 1);
     return (
         <>
-            <strong className={s["recipe__step-bold"]}>{firstSentence}</strong>
+            <strong className="text-white/90">{firstSentence}</strong>
             {rest}
         </>
     );
@@ -269,27 +272,27 @@ function renderStepText(step) {
 
 function StepsSection({ steps }) {
     return (
-        <div className={s["recipe__steps-wrap"]}>
-            <p className={s["recipe__steps-label"]}>
+        <div className="px-4">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-white/35 font-medium mb-4">
                 Preparación
             </p>
             <ol className="space-y-0">
                 {steps.map((step, i) => (
-                    <li key={i} className={s.recipe__step}>
+                    <li key={i} className="relative flex gap-4 pb-5 last:pb-0">
                         {/* Línea conectora */}
                         {i < steps.length - 1 && (
-                            <div className={s["recipe__step-line"]} />
+                            <div className="absolute left-4.25 top-9 bottom-0 w-px bg-white/7" />
                         )}
 
                         {/* Número del paso */}
-                        <div className={s["recipe__step-number"]}>
-                            <span className={s["recipe__step-number-text"]}>
+                        <div className="relative z-10 shrink-0 w-8.5 h-8.5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mt-0.5">
+                            <span className="text-[10px] font-semibold text-white/35 tabular-nums">
                                 {String(i + 1).padStart(2, "0")}
                             </span>
                         </div>
 
                         {/* Texto del paso */}
-                        <p className={s["recipe__step-text"]}>
+                        <p className="text-[14px] text-white/80 leading-relaxed pt-1.5">
                             {renderStepText(step)}
                         </p>
                     </li>
@@ -309,11 +312,11 @@ function RecipeDetail({ recipe, imageUrl, isPersonalized, onBack }) {
         <>
             <SettingsHeader title={recipe.title} onBack={onBack} />
 
-            <div className={`${s["recipe__detail-scroll"]} no-scrollbar`}>
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar">
                 <div className="card-enter pb-8 space-y-5">
                     <RecipeHero recipe={recipe} imageUrl={imageUrl} />
 
-                    <div className="px-4"><div className={s["recipe__detail-divider"]} /></div>
+                    <div className="px-4"><div className="h-px bg-white/6" /></div>
 
                     <IngredientSection
                         matched={matched}
@@ -324,7 +327,7 @@ function RecipeDetail({ recipe, imageUrl, isPersonalized, onBack }) {
 
                     {steps.length > 0 && (
                         <>
-                            <div className="px-4"><div className={s["recipe__detail-divider"]} /></div>
+                            <div className="px-4"><div className="h-px bg-white/6" /></div>
                             <StepsSection steps={steps} />
                         </>
                     )}
@@ -373,7 +376,7 @@ function RecipePanel({ isActive, onBack }) {
 
     return (
         <section
-            className={`${s.recipe__panel} ${isActive ? s["recipe__panel--active"] : s["recipe__panel--hidden"]}`}
+            className={`absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out ${isActive ? "translate-x-0" : "-translate-x-full"}`}
         >
             {selectedRecipe ? (
                 <RecipeDetail
@@ -388,7 +391,7 @@ function RecipePanel({ isActive, onBack }) {
 
                     <CategoryNav activeCategory={activeCategory} onSelect={handleCategoryChange} />
 
-                    <div className={`${s["recipe__content-scroll"]} no-scrollbar`}>
+                    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar">
                         {showNoInventory ? (
                             <NoInventoryState />
                         ) : (

@@ -5,7 +5,6 @@
 // ================= IMPORTS =================
 import { FiZap } from "react-icons/fi";
 import SystemPanelCard from "../SystemPanelCard";
-import s from "./CardEnergy.module.css";
 
 const defaultRows = [
     { id: "actual",   label: "Actual",   value: "2.4 kWh", progress: 62 },
@@ -35,18 +34,16 @@ function CardEnergy({
             onClick={onClick}
             {...props}
         >
-            {/* Filas de consumo: label + valor + barra de progreso */}
-            <div className={s["card-energy__rows"]}>
+            <div className="space-y-1.5">
                 {rows.slice(0, 2).map((row) => (
                     <div key={row.id}>
-                        <div className={s["card-energy__row-header"]}>
-                            <span className={s["card-energy__label"]}>{row.label}</span>
-                            <span className={s["card-energy__value"]}>{row.value}</span>
+                        <div className="flex items-center justify-between mb-1">
+                            <span className="text-[12px] text-white/35">{row.label}</span>
+                            <span className="text-[12px] font-medium text-white/65 tabular-nums">{row.value}</span>
                         </div>
-                        {/* Barra de progreso */}
-                        <div className={s["card-energy__bar-track"]}>
+                        <div className="h-1 rounded-full bg-white/[0.08] overflow-hidden">
                             <div
-                                className={s["card-energy__bar-fill"]}
+                                className="h-full rounded-full bg-emerald-400/50"
                                 style={{ width: `${clampProgress(row.progress)}%` }}
                             />
                         </div>

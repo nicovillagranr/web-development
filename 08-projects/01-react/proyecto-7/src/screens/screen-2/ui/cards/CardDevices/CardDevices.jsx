@@ -5,7 +5,6 @@
 // ================= IMPORTS =================
 import { FiWifi } from "react-icons/fi";
 import SystemPanelCard from "../SystemPanelCard";
-import s from "./CardDevices.module.css";
 
 const defaultStats = [
     { id: "online",  label: "Online",  value: "8", valueClass: "text-accent/80"   },
@@ -31,15 +30,14 @@ function CardDevices({
             onClick={onClick}
             {...props}
         >
-            {/* Contadores de estado: online / standby / off */}
-            <div className={s["card-devices__stats"]}>
+            <div className="flex gap-2">
                 {stats.slice(0, 3).map((stat) => (
                     <div
                         key={stat.id}
-                        className={s["card-devices__pill"]}
+                        className="flex-1 rounded-lg border border-white/[0.06] bg-white/[0.04] px-2 py-1.5"
                     >
-                        <p className={s["card-devices__pill-label"]}>{stat.label}</p>
-                        <p className={`${s["card-devices__pill-value"]} ${stat.valueClass}`}>
+                        <p className="text-[11px] text-white/30 leading-none mb-1">{stat.label}</p>
+                        <p className={`text-sm font-semibold tabular-nums leading-none ${stat.valueClass}`}>
                             {stat.value}
                         </p>
                     </div>

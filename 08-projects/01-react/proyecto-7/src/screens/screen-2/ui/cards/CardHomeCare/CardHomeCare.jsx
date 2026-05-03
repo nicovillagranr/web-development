@@ -5,7 +5,6 @@
 // ================= IMPORTS =================
 import { FiAlertCircle, FiCheckCircle, FiDroplet, FiHome, FiWind } from "react-icons/fi";
 import SystemPanelCard from "../SystemPanelCard";
-import s from "./CardHomeCare.module.css";
 
 const defaultDevices = [
     { id: "family-hub", label: "Family Hub",    icon: FiHome,    status: "ok" },
@@ -31,19 +30,18 @@ function CardHomeCare({
             onClick={onClick}
             {...props}
         >
-            {/* Dispositivos en fila: ícono + nombre + estado */}
-            <div className={s["card-homecare__devices"]}>
+            <div className="flex items-center gap-4">
                 {devices.slice(0, 3).map((device) => {
                     const Icon = device.icon || FiHome;
                     const isOk = device.status === "ok";
 
                     return (
-                        <div key={device.id} className={s["card-homecare__device"]}>
-                            <Icon className={s["card-homecare__device-icon"]} aria-hidden="true" />
-                            <span className={s["card-homecare__device-label"]}>{device.label}</span>
+                        <div key={device.id} className="flex items-center gap-1.5">
+                            <Icon className="w-3 h-3 text-white/30" aria-hidden="true" />
+                            <span className="text-[12px] text-white/50 leading-none">{device.label}</span>
                             {isOk
-                                ? <FiCheckCircle className={`${s["card-homecare__status-icon"]} text-accent/70`} aria-label="OK" />
-                                : <FiAlertCircle className={`${s["card-homecare__status-icon"]} text-amber-400/80`} aria-label="Revisar" />
+                                ? <FiCheckCircle className="w-3 h-3 text-accent/70" aria-label="OK" />
+                                : <FiAlertCircle className="w-3 h-3 text-amber-400/80" aria-label="Revisar" />
                             }
                         </div>
                     );

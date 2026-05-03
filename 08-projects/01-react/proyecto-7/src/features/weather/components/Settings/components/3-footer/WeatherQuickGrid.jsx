@@ -11,12 +11,9 @@ import {
     getUvMeta,
 } from "./weather-quick-grid/config/metricThresholds.js";
 import { formatValue, normalizePercent } from "./weather-quick-grid/utils/metricFormatters.js";
-import s from "./WeatherQuickGrid.module.css";
 
 // ================= COMPONENT =================
-// WeatherQuickGrid: grid visual 2x3 con metricas actuales
 function WeatherQuickGrid({ weather }) {
-    // 1) Captura de metricas desde modelo weather (con fallback null).
     const uv = weather?.metrics?.uvIndex ?? null;
     const humidity = weather?.metrics?.humidity ?? null;
     const feelsLike = weather?.metrics?.feelsLike ?? null;
@@ -24,7 +21,6 @@ function WeatherQuickGrid({ weather }) {
     const aqi = weather?.metrics?.aqi ?? null;
     const uvDayScore = weather?.metrics?.uvDayScore ?? null;
 
-    // 2) Meta semantica de estado (label + color pill).
     const uvMeta = getUvMeta(uv);
     const humidityMeta = getHumidityMeta(humidity);
     const feelsLikeMeta = getFeelsLikeMeta(feelsLike);
@@ -32,7 +28,6 @@ function WeatherQuickGrid({ weather }) {
     const aqiMeta = getAqiMeta(aqi);
     const uvDayMeta = getUvDayMeta(uvDayScore);
 
-    // 3) Normalizacion de cada metrica a porcentaje para barras.
     const uvPercent = normalizePercent(uv, 0, 11);
     const humidityPercent = normalizePercent(humidity, 0, 100);
     const feelsLikePercent = normalizePercent(feelsLike, -10, 45);
@@ -41,9 +36,8 @@ function WeatherQuickGrid({ weather }) {
     const uvDayScorePercent = normalizePercent(uvDayScore, 0, 60);
 
     return (
-        <div className={s["weather-grid"]}>
-            {/* Grid de metricas (2 columnas mobile) */}
-            <div className={s["weather-grid__grid"]}>
+        <div className="px-4 mt-4 mb-4">
+            <div className="grid grid-cols-2 gap-3">
                 <MetricCard
                     label="Radiacion UV actual"
                     mobileLabel="Radiacion UV"
@@ -65,7 +59,7 @@ function WeatherQuickGrid({ weather }) {
                 <MetricCard
                     label="Temperatura percibida"
                     mobileLabel="Temp. percibida"
-                    valueNode={<>{formatValue(feelsLike)}{feelsLike !== null && feelsLike !== undefined ? "\u00B0" : ""}</>}
+                    valueNode={<>{formatValue(feelsLike)}{feelsLike !== null && feelsLike !== undefined ? "°" : ""}</>}
                     statusLabel={feelsLikeMeta.label}
                     statusTone={feelsLikeMeta.tone}
                     footer={<ProgressFooter percent={feelsLikePercent} fillClass="bg-linear-to-r from-cyan-300 via-lime-300 to-rose-400" />}

@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useInventory } from "../../hooks/useInventory.jsx";
 import { getExpiryMeta, NAME_EMOJI, TYPE_EMOJI, getTypeLabel } from "../../utils/inventoryUtils.js";
 import WizardModal from "../WizardModal";
-import s from "./InventoryMainForm.module.css";
 
 // ================= ITEM ROW =================
 const DOT_COLOR = {
@@ -19,32 +18,32 @@ const DOT_COLOR = {
 function ItemRow({ item, onRemove, getDaysToExpire }) {
     const days = getDaysToExpire(item.expiresAt);
     const { label, tone } = getExpiryMeta(days);
-    const nameKey = item.name.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nameKey = item.name.toLowerCase().trim().normalize("NFD").replace(/[̀-ͯ]/g, "");
     const emoji = NAME_EMOJI[nameKey] ?? TYPE_EMOJI[item.type] ?? "📦";
     const dotColor = DOT_COLOR[tone] ?? "bg-white/30";
 
     return (
-        <article className={`card-enter ${s["item-row"]}`}>
-            <span className={s["item-row__emoji"]}>{emoji}</span>
+        <article className="card-enter group flex items-center gap-3 px-2 py-2 border-b border-white/6 transition-colors hover:bg-white/5">
+            <span className="text-lg leading-none shrink-0">{emoji}</span>
 
-            <div className={s["item-row__info"]}>
-                <p className={s["item-row__name"]}>{item.name}</p>
-                <span className={s["item-row__type"]}>{getTypeLabel(item.type)}</span>
+            <div className="flex flex-col min-w-0 flex-1">
+                <p className="text-xs text-white font-medium truncate">{item.name}</p>
+                <span className="text-[10px] text-white/35">{getTypeLabel(item.type)}</span>
             </div>
 
-            <span className={s["item-row__quantity"]}>
+            <span className="text-[11px] text-white/50 shrink-0">
                 {item.quantity} {item.unit}
             </span>
 
-            <div className={s["item-row__expiry"]}>
-                <span className={`${s["item-row__dot"]} ${dotColor}`} />
-                <span className={`${s["item-row__expiry-label"]} ${tone}`}>{label}</span>
+            <div className="flex items-center gap-1.5 shrink-0">
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+                <span className={`text-[10px] whitespace-nowrap ${tone}`}>{label}</span>
             </div>
 
             <button
                 type="button"
                 onClick={() => onRemove(item.id)}
-                className={s["item-row__remove"]}
+                className="w-5 h-5 shrink-0 rounded-md text-[10px] text-white/0 group-hover:text-white/30 hover:text-white/70 transition-colors flex items-center justify-center leading-none"
                 aria-label={`Quitar ${item.name}`}
             >
                 ✕
@@ -70,20 +69,20 @@ function InventoryMainForm() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <section aria-label="Inventario de alimentos" className={s.inventory}>
+        <section aria-label="Inventario de alimentos" className="h-full rounded-2xl bg-surface border border-white/10 text-white p-4 flex flex-col">
 
             {/* Header */}
-            <div className={s.inventory__header}>
-                <span className={s["inventory__header-label"]}>Inventario</span>
-                <div className={s["inventory__header-info"]}>
+            <div className="flex items-center justify-between mb-3 shrink-0">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-white/40 font-medium">Inventario</span>
+                <div className="flex items-center gap-3">
                     {expiringSoonCount > 0 && (
-                        <span className={s["inventory__header-expiring"]}>{expiringSoonCount} por vencer</span>
+                        <span className="text-[11px] text-amber-400/90">{expiringSoonCount} por vencer</span>
                     )}
-                    <span className={s["inventory__header-count"]}>{items.length} items</span>
+                    <span className="text-[11px] text-white/50">{items.length} items</span>
                     <button
                         type="button"
                         onClick={() => setIsModalOpen(true)}
-                        className={s["inventory__add-btn"]}
+                        className="w-7 h-7 rounded-lg bg-white/[0.07] border border-white/9 text-white/60 hover:text-white hover:bg-white/12 transition-colors flex items-center justify-center text-base leading-none"
                         aria-label="Agregar alimento"
                     >
                         +
@@ -92,12 +91,12 @@ function InventoryMainForm() {
             </div>
 
             {/* Lista de alimentos */}
-            <div className={s["inventory__list-wrap"]}>
-                <div className={`${s["inventory__list-scroll"]} no-scrollbar`}>
+            <div className="flex-1 min-h-0 relative">
+                <div className="h-full overflow-y-auto no-scrollbar">
                     {items.length === 0 ? (
-                        <p className={s.inventory__empty}>Sin alimentos registrados.</p>
+                        <p className="text-xs text-white/50 text-center py-4">Sin alimentos registrados.</p>
                     ) : (
-                        <div className={s.inventory__list}>
+                        <div className="flex flex-col">
                             {items.map((item) => (
                                 <ItemRow
                                     key={item.id}
@@ -111,7 +110,7 @@ function InventoryMainForm() {
                 </div>
                 {/* Fade inferior — indica que hay más contenido al hacer scroll */}
                 {items.length > 0 && (
-                    <div className={s.inventory__fade} />
+                    <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-surface to-transparent pointer-events-none" />
                 )}
             </div>
 

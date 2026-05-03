@@ -3,7 +3,8 @@
 // Actualiza solo la porcion requerida del Date para evitar estados inconsistentes.
 // ================= IMPORTS =================
 import { FiX } from "react-icons/fi";
-import s from "./TimeEditorModal.module.css";
+
+const INPUT_CLS = "w-full h-12 px-4 rounded-lg bg-white/[0.08] border border-white/10 text-white outline-none focus:ring-1 focus:ring-accent/50";
 
 // ================= COMPONENTE =================
 function TimeEditorModal({
@@ -12,7 +13,6 @@ function TimeEditorModal({
     setManualDate,
     onClose,
 }) {
-    // updateDate: reemplaza anio/mes/dia y conserva la hora actual.
     const updateDate = (value) => {
         if (!value) return;
 
@@ -22,7 +22,6 @@ function TimeEditorModal({
         setManualDate(nextDate);
     };
 
-    // updateTime: reemplaza horas/minutos y conserva la fecha actual.
     const updateTime = (value) => {
         if (!value) return;
 
@@ -34,10 +33,10 @@ function TimeEditorModal({
     };
 
     return (
-        <div className={s["time-editor"]}>
-            <div className={s["time-editor__panel"]}>
-                <div className={s["time-editor__header"]}>
-                    <h3 className={s["time-editor__title"]}>
+        <div className="absolute inset-0 z-30 bg-black/40 flex items-center justify-center">
+            <div className="w-80 border border-white/10 backdrop-blur-xl rounded-xl p-4 space-y-4 bg-[var(--glass-dark)]">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-white">
                         {mode === "date" && "Ajustar Fecha"}
                         {mode === "time" && "Ajustar Hora"}
                     </h3>
@@ -45,7 +44,7 @@ function TimeEditorModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className={s["time-editor__close-btn"]}
+                        className="w-8 h-8 flex items-center justify-center rounded-full text-white/60 hover:bg-white/10 transition"
                     >
                         <FiX size={18} />
                     </button>
@@ -54,7 +53,7 @@ function TimeEditorModal({
                 {mode === "date" && (
                     <input
                         type="date"
-                        className={s["time-editor__input"]}
+                        className={INPUT_CLS}
                         value={manualDate.toISOString().split("T")[0]}
                         onChange={(event) => updateDate(event.target.value)}
                     />
@@ -63,7 +62,7 @@ function TimeEditorModal({
                 {mode === "time" && (
                     <input
                         type="time"
-                        className={s["time-editor__input"]}
+                        className={INPUT_CLS}
                         value={manualDate.toTimeString().slice(0, 5)}
                         onChange={(event) => updateTime(event.target.value)}
                     />

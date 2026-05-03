@@ -7,7 +7,12 @@ import { FiChevronRight } from "react-icons/fi";
 import SettingsHeader from "@ui/SettingsHeader.jsx";
 import { useEscapeKey } from "@hooks/useEscapeKey.jsx";
 import TimeEditorModal from "../TimeEditorModal";
-import s from "./TimeSettings.module.css";
+
+const PANEL_BASE = "absolute inset-0 z-20 flex flex-col bg-[#0D0F1A] text-white transition-transform duration-500 ease-out";
+const ROW = "flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06]";
+const ROW_BTN = "w-full flex items-center justify-between px-4 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06] transition-opacity duration-200";
+const TOGGLE = "relative w-11 h-6 rounded-full transition-colors duration-200";
+const KNOB = "absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200";
 
 // ================= COMPONENTE =================
 function TimeSettings({
@@ -36,23 +41,19 @@ function TimeSettings({
     };
 
     return (
-        <section
-            className={`${s["time-settings"]} ${isActive ? s["time-settings--active"] : s["time-settings--hidden"]}`}
-        >
+        <section className={`${PANEL_BASE} ${isActive ? "translate-x-0" : "-translate-x-full"}`}>
             <SettingsHeader title="Fecha y Hora" onBack={handleClose} />
 
-            <div className={s["time-settings__body"]}>
+            <div className="flex-1 p-4 space-y-2">
                 {/* Toggle: hora automática */}
-                <div className={s["time-settings__row"]}>
-                    <span className={s["time-settings__row-label"]}>Fecha y hora automáticas</span>
+                <div className={ROW}>
+                    <span className="text-sm text-white/80">Fecha y hora automáticas</span>
                     <button
                         type="button"
                         onClick={handleToggleAutoTime}
-                        className={`${s["time-settings__toggle"]} ${autoTime ? s["time-settings__toggle--on"] : s["time-settings__toggle--off"]}`}
+                        className={`${TOGGLE} ${autoTime ? "bg-green-500" : "bg-white/15"}`}
                     >
-                        <span
-                            className={`${s["time-settings__toggle-knob"]} ${autoTime ? s["time-settings__toggle-knob--on"] : ""}`}
-                        />
+                        <span className={`${KNOB} ${autoTime ? "translate-x-5" : ""}`} />
                     </button>
                 </div>
 
@@ -60,33 +61,31 @@ function TimeSettings({
                 <button
                     type="button"
                     onClick={() => setActiveEditor("date")}
-                    className={`${s["time-settings__row-btn"]} ${autoTime ? s["time-settings__row-btn--disabled"] : ""}`}
+                    className={`${ROW_BTN} ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
                 >
-                    <span className={s["time-settings__row-label"]}>Ajustar fecha</span>
-                    <FiChevronRight className={s["time-settings__row-btn-chevron"]} />
+                    <span className="text-sm text-white/80">Ajustar fecha</span>
+                    <FiChevronRight className="w-4 h-4 text-white/30" />
                 </button>
 
                 {/* Ajustar hora */}
                 <button
                     type="button"
                     onClick={() => setActiveEditor("time")}
-                    className={`${s["time-settings__row-btn"]} ${autoTime ? s["time-settings__row-btn--disabled"] : ""}`}
+                    className={`${ROW_BTN} ${autoTime ? "opacity-30 pointer-events-none" : ""}`}
                 >
-                    <span className={s["time-settings__row-label"]}>Ajustar hora</span>
-                    <FiChevronRight className={s["time-settings__row-btn-chevron"]} />
+                    <span className="text-sm text-white/80">Ajustar hora</span>
+                    <FiChevronRight className="w-4 h-4 text-white/30" />
                 </button>
 
                 {/* Toggle: formato 24h */}
-                <div className={s["time-settings__row"]}>
-                    <span className={s["time-settings__row-label"]}>Formato 24 horas</span>
+                <div className={ROW}>
+                    <span className="text-sm text-white/80">Formato 24 horas</span>
                     <button
                         type="button"
                         onClick={() => setIs24hFormat(!is24hFormat)}
-                        className={`${s["time-settings__toggle"]} ${is24hFormat ? s["time-settings__toggle--on"] : s["time-settings__toggle--off"]}`}
+                        className={`${TOGGLE} ${is24hFormat ? "bg-green-500" : "bg-white/15"}`}
                     >
-                        <span
-                            className={`${s["time-settings__toggle-knob"]} ${is24hFormat ? s["time-settings__toggle-knob--on"] : ""}`}
-                        />
+                        <span className={`${KNOB} ${is24hFormat ? "translate-x-5" : ""}`} />
                     </button>
                 </div>
             </div>

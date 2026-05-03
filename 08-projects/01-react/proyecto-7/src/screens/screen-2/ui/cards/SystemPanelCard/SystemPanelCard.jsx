@@ -6,17 +6,8 @@
 
 // ================= IMPORTS =================
 import { FiChevronRight } from "react-icons/fi";
-import s from "./SystemPanelCard.module.css";
 
 // ================= COMPONENT =================
-// Props:
-//   title        — nombre del módulo (uppercase)
-//   icon         — componente de react-icons
-//   accentClass  — clase Tailwind para la barra izquierda (ej: "bg-accent", "bg-amber-400")
-//   statusLabel  — texto de estado mostrado en la derecha del header
-//   statusClass  — clase de color para el statusLabel
-//   onClick      — handler del botón
-//   children     — contenido específico de cada módulo
 function SystemPanelCard({
     title,
     icon: Icon,
@@ -32,35 +23,31 @@ function SystemPanelCard({
             type="button"
             onClick={onClick}
             aria-disabled={!onClick}
-            className={s["system-card"]}
+            className="w-full text-left rounded-xl border border-white/[0.06] bg-surface/40 shadow-lg overflow-hidden active:scale-[0.98] transition-transform duration-150"
             {...props}
         >
-            <div className={s["system-card__row"]}>
-                {/* Barra de acento: color indica estado del módulo */}
-                <div className={`${s["system-card__accent"]} ${accentClass}`} />
+            <div className="flex">
+                <div className={`w-[3px] self-stretch shrink-0 ${accentClass}`} />
 
-                {/* Área de contenido */}
-                <div className={s["system-card__content"]}>
+                <div className="flex-1 px-3 py-3">
 
-                    {/* Cabecera del strip: icono + título + status + flecha */}
-                    <div className={s["system-card__header"]}>
-                        <div className={s["system-card__title-group"]}>
-                            {Icon && <Icon className={s["system-card__icon"]} aria-hidden="true" />}
-                            <span className={s["system-card__title"]}>
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                            {Icon && <Icon className="w-3 h-3 text-white/35" aria-hidden="true" />}
+                            <span className="text-[12px] uppercase tracking-[0.16em] text-white/40 font-medium">
                                 {title}
                             </span>
                         </div>
-                        <div className={s["system-card__status-group"]}>
+                        <div className="flex items-center gap-1.5">
                             {statusLabel && (
-                                <span className={`${s["system-card__status"]} ${statusClass}`}>
+                                <span className={`text-[12px] font-medium ${statusClass}`}>
                                     {statusLabel}
                                 </span>
                             )}
-                            <FiChevronRight className={s["system-card__chevron"]} aria-hidden="true" />
+                            <FiChevronRight className="w-3 h-3 text-white/20" aria-hidden="true" />
                         </div>
                     </div>
 
-                    {/* Contenido dinámico inyectado por cada card */}
                     {children}
 
                 </div>

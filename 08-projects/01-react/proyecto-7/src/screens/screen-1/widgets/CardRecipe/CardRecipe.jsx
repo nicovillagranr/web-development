@@ -7,8 +7,6 @@ import Card from "../Card";
 import { useInventoryRecipeSuggestions } from "@features/inventory/hooks/useInventoryRecipeSuggestions.jsx";
 import { useRecipeImage } from "@features/inventory/hooks/useRecipeImage.jsx";
 
-import s from "./CardRecipe.module.css";
-
 // ================= COMPONENT =================
 function CardRecipe({ className = "", ...props }) {
     const { recommendedRecipe } = useInventoryRecipeSuggestions();
@@ -16,29 +14,29 @@ function CardRecipe({ className = "", ...props }) {
     const imageUrl = useRecipeImage(recommendedRecipe?.title ?? null, recommendedRecipe?.imageQuery);
 
     return (
-        <Card as="button" className={`${s["card-recipe"]} ${className}`}
-            {...props}>
-
-            {/* Fondo: imagen de Unsplash o gradiente oscuro como fallback */}
+        <Card
+            as="button"
+            className={`w-full h-full rounded-xl relative overflow-hidden ${className}`}
+            {...props}
+        >
             <section
-                className={s["card-recipe__bg"]}
+                className="relative w-full h-full bg-cover bg-center"
                 style={{
                     backgroundImage: imageUrl
                         ? `url(${imageUrl})`
                         : "linear-gradient(160deg, #18112E 0%, #0C1522 55%, #0A1A18 100%)"
                 }}
             >
-                <div className={s["card-recipe__blur-circle"]} />
-                <div className={s["card-recipe__gradient"]} />
+                <div className="absolute top-0 left-0 w-24 h-24 rounded-full bg-violet-500/10 blur-2xl pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none bg-[linear-gradient(to_top,rgba(0,0,0,0.75)_0%,transparent_100%)]" />
 
-                <div className={s["card-recipe__info"]}>
-                    <div className={s["card-recipe__badge"]}>
-                        <h2 className={s["card-recipe__label"]}>Receta recomendada</h2>
-                        <p className={s["card-recipe__title"]}>{recipeTitle}</p>
+                <div className="absolute bottom-0 left-0 px-3 py-3 z-10">
+                    <div className="inline-block px-2 py-1.5 rounded-lg bg-black/50 backdrop-blur-md">
+                        <h2 className="text-[11px] font-medium tracking-[0.18em] text-green-400/70 text-left mb-0.5">Receta recomendada</h2>
+                        <p className="text-[11px] font-light text-white/90 text-left leading-tight">{recipeTitle}</p>
                     </div>
                 </div>
             </section>
-
         </Card>
     );
 }
