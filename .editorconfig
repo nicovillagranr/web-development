@@ -15,3 +15,12 @@ trim_trailing_whitespace = true  # Elimina espacios en blanco al final de las l√
 [*.md]
 # En Markdown, los espacios finales pueden ser saltos de l√≠nea intencionales
 trim_trailing_whitespace = false
+
+[*.{yml,yaml,json}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
