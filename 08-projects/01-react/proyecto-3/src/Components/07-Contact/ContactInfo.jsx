@@ -1,6 +1,5 @@
 // ContactInfo.jsx
-import locationIcon from "../../assets/icons/4-Contact/location.svg"
-import phoneIcon from "../../assets/icons/4-Contact/phone.svg"
+import { FaMapMarkerAlt, FaPhone } from "react-icons/fa"
 import { CONTACT_ADDRESS } from "./contactConstants"
 
 function ContactInfo({ onOpenMap }) {
@@ -14,12 +13,12 @@ function ContactInfo({ onOpenMap }) {
             </p>
 
             <div className="flex items-center gap-2">
-                <img src={locationIcon} alt="Location icon" className="w-5 h-5" />
+                <FaMapMarkerAlt className="w-5 h-5" />
                 <span className="text-lg">{CONTACT_ADDRESS}</span>
             </div>
 
             <div className="flex items-center gap-2">
-                <img src={phoneIcon} alt="Phone icon" className="w-5 h-5" />
+                <FaPhone className="w-5 h-5" />
                 <span className="text-lg">(+56) 9 1234 5678</span>
             </div>
 

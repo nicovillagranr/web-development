@@ -1,69 +1,16 @@
-import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
+
+import { useMediaPreferences } from "./useMediaPreferences"
+import { containerVariants, itemVariants, imageVariants } from "./heroVariants"
 
 import HeroVideoWebm from "../../assets/images/1-Hero/bg-video.webm"
 import HeroVideoMp4 from "../../assets/images/1-Hero/bg-video.mp4"
 import HeroImg from "../../assets/images/1-Hero/hero.webp"
 import businessImg from "../../assets/images/1-Hero/business.webp"
 
-// Variantes para el bloque de texto (staggered reveal)
-const containerVariants = {
-    hidden: {},
-    visible: {
-        transition: {
-            staggerChildren: 0.12,
-            delayChildren: 0.15,
-        }
-    }
-}
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 28 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
-    }
-}
-
-const imageVariants = {
-    hidden: { opacity: 0, x: 40 },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.3 }
-    }
-}
-
 function Hero() {
-    const [shouldUseStaticHero, setShouldUseStaticHero] = useState(false)
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
-
-        const updateMediaPreferences = () => {
-            setShouldUseStaticHero(mediaQuery.matches || Boolean(connection?.saveData))
-        }
-
-        updateMediaPreferences()
-        if (mediaQuery.addEventListener) {
-            mediaQuery.addEventListener("change", updateMediaPreferences)
-        } else {
-            mediaQuery.addListener(updateMediaPreferences)
-        }
-        connection?.addEventListener?.("change", updateMediaPreferences)
-
-        return () => {
-            if (mediaQuery.removeEventListener) {
-                mediaQuery.removeEventListener("change", updateMediaPreferences)
-            } else {
-                mediaQuery.removeListener(updateMediaPreferences)
-            }
-            connection?.removeEventListener?.("change", updateMediaPreferences)
-        }
-    }, [])
+    const shouldUseStaticHero = useMediaPreferences()
 
     // Cuando reduce-motion está activo, los elementos arrancan directamente en "visible"
     const animateState = shouldUseStaticHero ? "visible" : undefined
@@ -73,12 +20,12 @@ function Hero() {
             className="relative w-full min-h-[75vh] overflow-hidden flex items-center justify-center"
             aria-label="Hero Section"
         >
-            {/* Video optimizado: se desactiva con reduce-motion o save-data */}
+            {/* Video: solo renderiza si NO hay reduce-motion/saveData, y Tailwind lo muestra solo en desktop */}
             {!shouldUseStaticHero && (
                 <video
                     aria-hidden="true"
                     poster={HeroImg}
-                    className="hidden md:block absolute inset-0 h-full w-full object-cover"
+                    className="block absolute inset-0 h-full w-full object-cover"
                     autoPlay
                     loop
                     muted
@@ -90,19 +37,13 @@ function Hero() {
                 </video>
             )}
 
-            {/* Imagen de fondo (mobile y fallback) */}
-            <img
-                src={HeroImg}
-                alt="Hero background"
-                className={`absolute inset-0 h-full w-full object-cover ${shouldUseStaticHero ? "block" : "md:hidden"}`}
-            />
 
             {/* Overlay — gradiente + blur para suavizar compresión del video */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/10 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-black/10 backdrop-blur-sm" />
 
             {/* Línea decorativa vertical — tensión espacial */}
             <div
-                className="absolute left-[8%] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent hidden xl:block"
+                className="absolute left-[8%] top-0 bottom-0 w-px bg-linear-to-b from-transparent via-white/15 to-transparent hidden xl:block"
                 aria-hidden="true"
             />
 
@@ -193,8 +134,10 @@ function Hero() {
                             aria-hidden="true"
                         />
                         <img
-                            width={400}
-                            height={200}
+                            loading="lazy"
+                            decoding="async"
+                            width={300}
+                            height={300}
                             draggable="false"
                             src={businessImg}
                             alt="Compatible devices"

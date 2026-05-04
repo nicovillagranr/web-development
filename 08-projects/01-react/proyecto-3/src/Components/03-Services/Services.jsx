@@ -36,7 +36,7 @@ function Services() {
         <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
-            <SectionTitle className="text-black" title="What We Do" />
+            <SectionTitle className="text-black" title="What We Do" level={2} />
 
             {/* Services Cards */}
             <div className="w-[90%] mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -46,9 +46,13 @@ function Services() {
                     return (
                         <article key={service.id} className="flex flex-col items-center justify-center gap-4 p-6 md:p-10 rounded-lg bg-white shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                             <img
+                                loading="lazy"
+                                decoding="async"
+                                width="80"
+                                height="80"
                                 draggable="false"
                                 src={service.img}
-                                alt=""
+                                alt={service.title}
                                 aria-hidden="true"
                                 className="w-24 h-24 md:w-32 md:h-32"
                             />

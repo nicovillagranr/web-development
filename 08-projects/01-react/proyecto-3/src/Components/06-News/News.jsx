@@ -1,5 +1,6 @@
 // Importamos useRef para manejar el scroll
 import { useRef } from "react"
+import { FaCalendar, FaUser } from "react-icons/fa"
 
 // Importamos SectionTitle
 import SectionTitle from "../SectionTitle/SectionTitle.jsx"
@@ -8,10 +9,6 @@ import SectionTitle from "../SectionTitle/SectionTitle.jsx"
 import newsImage1 from "../../assets/images/5-News/news-1.webp"
 import newsImage2 from "../../assets/images/5-News/news-2.webp"
 import newsImage3 from "../../assets/images/5-News/news-3.webp"
-
-// Importamos los Icons de las tarjetas de noticias
-import calendarIcon from "../../assets/icons/3-News/calendar.svg"
-import userIcon from "../../assets/icons/3-News/user.svg"
 
 // Creamos el array de noticias para recorrerlo con un .map()
 const news = [
@@ -73,32 +70,32 @@ function News() {
         <section className="w-full min-h-[75vh] py-6 bg-primary flex flex-col items-center justify-center">
 
             {/* News Title */}
-            <SectionTitle className="text-white" title="Insights & Updates" />
+            <SectionTitle className="text-white" title="Insights & Updates" level={2} />
 
             {/* Cards */}
             <ul onWheel={handleWheel} ref={scrollRef} className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
 
                 {news.map((newItem) => (
-                    <li key={newItem.id} className="shrink-0 w-[85vw] sm:w-[300px] md:w-[360px]">
+                    <li key={newItem.id} className="shrink-0 w-[85vw] sm:w-75 md:w-90">
                         <article className="flex flex-col h-full">
 
                             {/* Imagen */}
                             <div className="w-full h-48 overflow-hidden">
-                                <img src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
+                                <img loading="lazy" decoding="async" width="200" height="200" draggable="false" src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
                             </div>
 
                             <h3 className="text-xl font-bold mt-4 mb-2 text-white line-clamp-2">{newItem.title}</h3>
-                            <p className="text-gray-200 text-xs line-clamp-3">{newItem.text}</p>
+                            <p className="text-gray-300 text-xs line-clamp-3">{newItem.text}</p>
 
                             {/* Autor y Fecha */}
-                            <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-200">
+                            <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-300">
                                 <div className="flex items-center gap-2">
-                                    <img src={userIcon} alt="" aria-hidden="true" className="w-5 h-5" />
+                                    <FaUser className="w-5 h-5" />
                                     <span>{newItem.author}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                    <img src={calendarIcon} alt="" aria-hidden="true" className="w-5 h-5" />
+                                    <FaCalendar className="w-5 h-5" />
                                     <time dateTime={newItem.datetime}>{newItem.date}</time>
                                 </div>
                             </div>

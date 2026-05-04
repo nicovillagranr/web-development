@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { validateContact } from "./ContactValidation"
+import { ContactValidation } from "./ContactValidation.jsx"
 
 function ContactForm() {
+    const { validate } = ContactValidation()
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -20,7 +22,7 @@ function ContactForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const validationErrors = validateContact(formData)
+        const validationErrors = validate(formData)
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             setStatus("idle")

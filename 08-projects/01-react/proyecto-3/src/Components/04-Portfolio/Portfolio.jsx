@@ -60,10 +60,17 @@ function PortfolioItem({ image, title, big }) {
     return (
         <article className={`group relative overflow-hidden ${big ? "aspect-4/3 sm:aspect-video lg:col-span-2" : "aspect-square"}`}>
             {/* Imagen */}
-            <img width={200} height={200} src={image} alt={title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            <img
+                loading="lazy"
+                decoding="async"
+                width={200}
+                height={200}
+                src={image}
+                alt={title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
 
             {/* Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-linear-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
                 <h3 className="max-w-[90%] text-center text-lg leading-snug font-semibold text-white">{title}</h3>
 
                 <div className="flex gap-4">
@@ -105,7 +112,7 @@ function Portfolio() {
     return (
         <section className="flex min-h-[75vh] w-full flex-col items-center bg-primary py-10">
             {/* Titulo */}
-            <SectionTitle className="text-white" title="Selected Work" />
+            <SectionTitle className="text-white" title="Selected Work" level={2} />
 
             {/* Grid */}
             <div className="mt-8 grid w-[80%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

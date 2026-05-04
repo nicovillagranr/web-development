@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import HouseIcon from "../../assets/icons/1-Header/house.svg"
+import { FaHome } from "react-icons/fa"
 
 const navLinks = [
     { to: "/services", label: "Services" },
@@ -15,10 +15,10 @@ function Footer() {
             {/* Logo */}
             <Link to="/" className="flex flex-col items-center sm:items-start gap-0.5">
                 <span className="flex items-center gap-1.5 text-white text-base font-bold tracking-widest uppercase">
-                    <img src={HouseIcon} alt="" aria-hidden="true" className="w-4 h-4 opacity-80" />
+                    <FaHome className="w-4 h-4 opacity-80" />
                     Projex
                 </span>
-                <span className="text-white/40 text-[10px] tracking-widest uppercase">
+                <span className="text-white/60 text-[10px] tracking-widest uppercase">
                     Building scalable web products
                 </span>
             </Link>
@@ -29,7 +29,7 @@ function Footer() {
                     <Link
                         key={to}
                         to={to}
-                        className="text-white/40 text-xs tracking-wide hover:text-primary transition-colors duration-200"
+                        className="text-white/60 text-xs tracking-wide hover:text-primary transition-colors duration-200"
                     >
                         {label}
                     </Link>
@@ -37,7 +37,7 @@ function Footer() {
             </nav>
 
             {/* Copyright */}
-            <p className="text-white/30 text-[10px] tracking-wide text-center sm:text-right">
+            <p className="text-white/60 text-[10px] tracking-wide text-center sm:text-right">
                 &copy; {new Date().getFullYear()} Nico Villagran
             </p>
 

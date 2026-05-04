@@ -1,5 +1,6 @@
 ﻿// Importamos SectionTitle
 import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import { FaTwitter, FaPinterest, FaFacebook, FaGoogle, FaLinkedin } from "react-icons/fa"
 
 // Importamos las imagenes de los miembros del equipo
 import member1img from "../../assets/images/4-Team/team__member-1.webp"
@@ -7,19 +8,21 @@ import member2img from "../../assets/images/4-Team/team__member-2.webp"
 import member3img from "../../assets/images/4-Team/team__member-3.webp"
 import member4img from "../../assets/images/4-Team/team__member-4.webp"
 
-// Importamos los iconos de redes sociales
-import twitterIcon from "../../assets/icons/2-Team/twitter.svg"
-import pinterestIcon from "../../assets/icons/2-Team/pinterest.svg"
-import facebookIcon from "../../assets/icons/2-Team/facebook.svg"
-import googleIcon from "../../assets/icons/2-Team/google.svg"
-import linkedinIcon from "../../assets/icons/2-Team/linkedin.svg"
+// Map de iconos por plataforma
+const socialIcons = {
+    Twitter: FaTwitter,
+    Pinterest: FaPinterest,
+    Facebook: FaFacebook,
+    Google: FaGoogle,
+    LinkedIn: FaLinkedin,
+}
 
 const socials = [
-    { platform: "Twitter", bg: "#1DA1F2", icon: twitterIcon },
-    { platform: "Pinterest", bg: "#E60023", icon: pinterestIcon },
-    { platform: "Facebook", bg: "#1877F2", icon: facebookIcon },
-    { platform: "Google", bg: "#DB4437", icon: googleIcon },
-    { platform: "LinkedIn", bg: "#0A66C2", icon: linkedinIcon },
+    { platform: "Twitter", bg: "#1DA1F2" },
+    { platform: "Pinterest", bg: "#E60023" },
+    { platform: "Facebook", bg: "#1877F2" },
+    { platform: "Google", bg: "#DB4437" },
+    { platform: "LinkedIn", bg: "#0A66C2" },
 ]
 
 const members = [
@@ -61,7 +64,7 @@ function Team() {
     return (
         <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center px-4 py-4">
             {/* Title */}
-            <SectionTitle className="text-black" title="People Behind the Product" />
+            <SectionTitle className="text-black" title="People Behind the Product" level={2} />
 
             {/* Members */}
             <ul className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-6">
@@ -69,6 +72,11 @@ function Team() {
                     <li key={member.id}>
                         <article className="flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white">
                             <img
+                                loading="lazy"
+                                decoding="async"
+                                width="200"
+                                height="200"
+                                draggable="false"
                                 src={member.img}
                                 alt={member.name}
                                 className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover border-4 border-primary"
@@ -82,22 +90,20 @@ function Team() {
 
                             {/* Social Media */}
                             <div className="flex gap-3 mt-auto pt-4">
-                                {member.socials.map((social) => (
-                                    <button
-                                        type="button"
-                                        key={social.platform}
-                                        aria-label={`${social.platform} demo`}
-                                        className="w-9 h-9 md:w-7 md:h-7 flex items-center justify-center rounded-full transition-transform hover:scale-110"
-                                        style={{ backgroundColor: social.bg }}
-                                    >
-                                        <img
-                                            src={social.icon}
-                                            alt=""
-                                            aria-hidden="true"
-                                            className="w-5 h-5 md:w-4 md:h-4"
-                                        />
-                                    </button>
-                                ))}
+                                {member.socials.map((social) => {
+                                    const IconComponent = socialIcons[social.platform]
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={social.platform}
+                                            aria-label={`${social.platform} demo`}
+                                            className="w-9 h-9 md:w-7 md:h-7 flex items-center justify-center rounded-full transition-transform hover:scale-110"
+                                            style={{ backgroundColor: social.bg }}
+                                        >
+                                            <IconComponent className="w-5 h-5 md:w-4 md:h-4 text-white" />
+                                        </button>
+                                    )
+                                })}
                             </div>
 
                             <div className="w-full mt-3">
