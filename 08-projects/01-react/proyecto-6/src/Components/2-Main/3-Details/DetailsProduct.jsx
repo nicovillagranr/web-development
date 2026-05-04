@@ -124,15 +124,15 @@ export const DetailsProduct = () => {
                     {/* Información Adicional */}
                     <div className="bg-stone-50 border border-stone-200 rounded-none p-6 space-y-4 mt-2">
                         <div className="flex items-start gap-4">
-                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-[90px]">Envío</span>
+                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-22.5">Envío</span>
                             <p className="font-body text-small text-stone-600">Envío gratis en compras mayores a $100</p>
                         </div>
                         <div className="flex items-start gap-4 border-t border-stone-200 pt-4">
-                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-[90px]">Retorno</span>
+                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-22.5">Retorno</span>
                             <p className="font-body text-small text-stone-600">Devolución gratuita en 30 días</p>
                         </div>
                         <div className="flex items-start gap-4 border-t border-stone-200 pt-4">
-                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-[90px]">Garantía</span>
+                            <span className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-ink min-w-22.5">Garantía</span>
                             <p className="font-body text-small text-stone-600">Garantía de 1 año en todos los productos</p>
                         </div>
                     </div>

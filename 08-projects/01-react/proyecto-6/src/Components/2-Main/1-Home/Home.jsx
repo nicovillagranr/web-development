@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom"
 import { categorias, campanas } from "./home.data"
 import { ROUTES } from "../../../utils/constants"
+import { CategoryCarousel } from "./CategoryCarousel"
 
 const HeroBanner = () => {
     return (
-        <section className="relative w-full h-[85vh] min-h-[540px] overflow-hidden">
+        <section className="relative w-full h-[85vh] min-h-135 overflow-hidden">
             <img src="https://picsum.photos/seed/hero/1920/1080" alt="Colección destacada" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/25" />
             <div className="relative z-10 h-full flex flex-col justify-center items-start gap-6 px-6 sm:px-10 lg:px-20 max-w-4xl">
@@ -25,30 +26,19 @@ const HeroBanner = () => {
 
 const CategoryGrid = () => {
     return (
-        <section className="px-4 sm:px-6 lg:px-10 py-20 lg:py-28">
+        <section className="px-4 sm:px-6 lg:px-10 py-20 lg:py-28 bg-stone dark:bg-ink border-t border-b border-paper">
             <div className="flex items-end justify-between mb-12">
                 <div className="flex flex-col gap-2">
-                    <span className="font-body text-eyebrow uppercase tracking-[0.28em] text-stone-600">Catálogo</span>
-                    <h2 className="font-heading font-normal text-3xl md:text-title text-ink">
+                    <span className="font-body text-eyebrow uppercase tracking-[0.28em] text-stone-600 dark:text-paper">Catálogo</span>
+                    <h2 className="font-heading font-normal text-3xl md:text-title text-ink dark:text-paper">
                         Compra por categoría
                     </h2>
                 </div>
-                <Link to={ROUTES.PRODUCTS} className="hidden sm:inline font-body text-[11px] text-ink hover:text-camel transition-colors duration-200 uppercase tracking-[0.22em] border-b border-ink hover:border-camel pb-1">
+                <Link to={ROUTES.PRODUCTS} className="hidden sm:inline font-body text-[11px] text-ink dark:text-paper hover:text-camel transition-colors duration-200 uppercase tracking-[0.22em] border-b border-ink hover:border-camel pb-1">
                     Ver todo
                 </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-                {categorias.map((cat) => (
-                    <Link key={cat.id} to={cat.href} className="group block">
-                        <div className="overflow-hidden aspect-[4/5] bg-stone-100">
-                            <img src={cat.image} alt={cat.title} className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-90" />
-                        </div>
-                        <h3 className="mt-4 font-body uppercase text-[11px] tracking-[0.22em] text-ink">
-                            {cat.title}
-                        </h3>
-                    </Link>
-                ))}
-            </div>
+            <CategoryCarousel items={categorias} title="" />
         </section>
     )
 }
@@ -66,7 +56,7 @@ const CampaignGrid = () => {
                 {campanas.map((camp) => (
                     <Link key={camp.id} to={camp.href} className="group relative block overflow-hidden aspect-video bg-stone-100">
                         <img src={camp.image} alt={camp.title} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-90" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
+                        <div className="absolute inset-0 bg-linear-to-r from-black/55 via-black/15 to-transparent" />
                         <div className="absolute inset-0 flex flex-col justify-center gap-3 px-8 lg:px-12">
                             <span className="font-body text-eyebrow uppercase tracking-[0.28em] text-paper/80 max-w-xs">
                                 {camp.subtitle}

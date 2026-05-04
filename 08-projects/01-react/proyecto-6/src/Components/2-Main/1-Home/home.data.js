@@ -23,6 +23,18 @@ export const categorias = [
         image: "https://picsum.photos/seed/accesorios/600/800",
         href: "/productos",
     },
+    {
+        id: "ofertas",
+        title: "Ofertas",
+        image: "https://picsum.photos/seed/ofertas/600/800",
+        href: "/productos",
+    },
+    {
+        id: "novedades",
+        title: "Novedades",
+        image: "https://picsum.photos/seed/novedades/600/800",
+        href: "/productos",
+    }
 ]
 
 export const campanas = [

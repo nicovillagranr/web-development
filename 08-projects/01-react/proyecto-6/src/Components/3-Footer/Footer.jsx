@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { instagramIcon, facebookIcon } from "../../assets/icons"
+import { FaInstagram, FaFacebookF } from "react-icons/fa"
 import { ROUTES } from "../../utils/constants"
 
 export const Footer = () => {
@@ -20,11 +20,11 @@ export const Footer = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <a href="#" aria-label="Instagram" className="w-10 h-10 flex items-center justify-center border border-ink rounded-none hover:bg-ink transition-colors duration-200 group">
-                        <img src={instagramIcon} alt="Instagram" className="w-4 h-4 group-hover:invert transition-[filter] duration-200" />
+                    <a href="#" aria-label="Instagram" className="w-10 h-10 flex items-center justify-center border border-ink dark:border-paper text-ink dark:text-paper hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors duration-200">
+                        <FaInstagram className="w-4 h-4" />
                     </a>
-                    <a href="#" aria-label="Facebook" className="w-10 h-10 flex items-center justify-center border border-ink rounded-none hover:bg-ink transition-colors duration-200 group">
-                        <img src={facebookIcon} alt="Facebook" className="w-4 h-4 group-hover:invert transition-[filter] duration-200" />
+                    <a href="#" aria-label="Facebook" className="w-10 h-10 flex items-center justify-center border border-ink dark:border-paper text-ink dark:text-paper hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors duration-200">
+                        <FaFacebookF className="w-4 h-4" />
                     </a>
                 </div>
 

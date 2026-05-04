@@ -8,9 +8,60 @@
     border-color 0.3s ease, box-shadow 0.3s ease, fill 0.3s ease;
 }
 
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+
+  /* ── Scrollbar (Firefox) ── */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-camel) var(--color-stone-100);
+  }
+
+  html.dark {
+    scrollbar-color: var(--color-camel) var(--color-stone-900);
+  }
+
+  /* ── Scrollbar (WebKit: Chrome, Edge, Safari) ── */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-stone-100);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-camel);
+    border: 2px solid var(--color-stone-100);
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-camel-deep);
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: var(--color-stone-900);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--color-camel);
+    border-color: var(--color-stone-900);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-camel-deep);
   }
 }
 
