@@ -59,7 +59,7 @@ const TECH_TEXT_COLOR = {
   neutral: "text-text-muted",
 };
 
-export default function ProjectCard({ project, index }) {
+export default function ProjectCard({ project, index, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "Mantenimiento";
   const demoHref = path.endsWith("/") ? path : `${path}/`;
@@ -69,7 +69,13 @@ export default function ProjectCard({ project, index }) {
       style={{ animationDelay: `${100 + index * 80}ms` }}>
       {image && (
         <div className="relative -mx-4 -mt-4">
-          <img src={image} alt={`Preview de ${name}`} className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          <img
+            src={image}
+            alt={`Preview de ${name}`}
+            className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            loading={priority ? "eager" : "lazy"}
+            fetchpriority={priority ? "high" : undefined}
+          />
           {repo && (
             <a
               href={repo}
