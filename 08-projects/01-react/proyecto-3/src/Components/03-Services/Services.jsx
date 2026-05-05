@@ -46,7 +46,6 @@ function Services() {
                     return (
                         <article key={service.id} className="flex flex-col items-center justify-center gap-4 p-6 md:p-10 rounded-lg bg-white shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                             <img
-                                loading="lazy"
                                 decoding="async"
                                 width="80"
                                 height="80"

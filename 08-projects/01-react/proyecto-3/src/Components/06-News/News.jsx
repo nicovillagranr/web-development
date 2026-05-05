@@ -81,7 +81,7 @@ function News() {
 
                             {/* Imagen */}
                             <div className="w-full h-48 overflow-hidden">
-                                <img loading="lazy" decoding="async" width="200" height="200" draggable="false" src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
+                                <img decoding="async" width="200" height="200" draggable="false" src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
                             </div>
 
                             <h3 className="text-xl font-bold mt-4 mb-2 text-white line-clamp-2">{newItem.title}</h3>

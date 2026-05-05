@@ -72,7 +72,6 @@ function Team() {
                     <li key={member.id}>
                         <article className="flex flex-col items-center text-center p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden bg-white">
                             <img
-                                loading="lazy"
                                 decoding="async"
                                 width="200"
                                 height="200"
