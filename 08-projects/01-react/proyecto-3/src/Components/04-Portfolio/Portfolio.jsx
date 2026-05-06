@@ -1,5 +1,5 @@
 ﻿// Importamos useState para mostrar feedback de demo
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // Importamos SectionTitle
 import SectionTitle from "../SectionTitle/SectionTitle.jsx"
@@ -54,8 +54,13 @@ function PortfolioItem({ image, title, big }) {
 
     const handleDemoClick = () => {
         setShowDemoMessage(true)
-        setTimeout(() => setShowDemoMessage(false), 3000)
     }
+
+    useEffect(() => {
+        if (!showDemoMessage) return
+        const id = setTimeout(() => setShowDemoMessage(false), 3000)
+        return () => clearTimeout(id)
+    }, [showDemoMessage])
 
     return (
         <article className={`group relative overflow-hidden ${big ? "aspect-4/3 sm:aspect-video lg:col-span-2" : "aspect-square"}`}>
