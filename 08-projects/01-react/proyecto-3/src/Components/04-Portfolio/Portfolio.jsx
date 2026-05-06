@@ -75,7 +75,7 @@ function PortfolioItem({ image, title, big }) {
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
 
             {/* Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-linear-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-linear-to-t from-black/70 via-black/40 to-black/20 px-5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                 <h3 className="max-w-[90%] text-center text-lg leading-snug font-semibold text-white">{title}</h3>
 
                 <div className="flex gap-4">
