@@ -76,6 +76,7 @@ function PortfolioItem({ image, title, big }) {
                 <div className="flex gap-4">
                     {/* Demo externa */}
                     <button
+                        aria-label={`View Demo: ${title}`}
                         type="button"
                         onClick={handleDemoClick}
                         className="bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-gray-200"
@@ -85,6 +86,7 @@ function PortfolioItem({ image, title, big }) {
 
                     {/* Detalle interno (demo) */}
                     <button
+                        aria-label={`Project Details: ${title}`}
                         type="button"
                         onClick={handleDemoClick}
                         className="border border-white px-4 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-black"
