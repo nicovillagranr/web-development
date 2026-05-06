@@ -6,7 +6,7 @@ function LogoSection() {
         <div className="flex items-center flex-1">
             <div className="flex flex-col">
                 <NavLink to="/" end className="flex items-center justify-center text-white text-xl tracking-widest">
-                    <FaHome className="w-5 h-5" />
+                    <FaHome className="w-5 h-5" aria-hidden="true" />
                     <span>Projex</span>
                 </NavLink>
                 <span className="text-white font-medium text-xs md:text-sm">Scalable Web Products</span>

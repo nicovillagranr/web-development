@@ -15,7 +15,7 @@ function Footer() {
             {/* Logo */}
             <Link to="/" className="flex flex-col items-center sm:items-start gap-0.5">
                 <span className="flex items-center gap-1.5 text-white text-base font-bold tracking-widest uppercase">
-                    <FaHome className="w-4 h-4 opacity-80" />
+                    <FaHome className="w-4 h-4 opacity-80" aria-hidden="true" />
                     Projex
                 </span>
                 <span className="text-white/60 text-[10px] tracking-widest uppercase">

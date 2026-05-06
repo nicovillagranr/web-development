@@ -13,12 +13,12 @@ function ContactInfo({ onOpenMap }) {
             </p>
 
             <div className="flex items-center gap-2">
-                <FaMapMarkerAlt className="w-5 h-5" />
+                <FaMapMarkerAlt className="w-5 h-5" aria-hidden="true" />
                 <span className="text-lg">{CONTACT_ADDRESS}</span>
             </div>
 
             <div className="flex items-center gap-2">
-                <FaPhone className="w-5 h-5" />
+                <FaPhone className="w-5 h-5" aria-hidden="true" />
                 <span className="text-lg">(+56) 9 1234 5678</span>
             </div>
 
