@@ -70,7 +70,7 @@ function News() {
         <section className="w-full min-h-[75vh] py-6 bg-primary flex flex-col items-center justify-center">
 
             {/* News Title */}
-            <SectionTitle className="text-white" title="Insights & Updates" level={2} />
+            <SectionTitle className="text-white" title="Insights & Updates" level={1} />
 
             {/* Cards */}
             <ul onWheel={handleWheel} ref={scrollRef} className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
@@ -90,12 +90,12 @@ function News() {
                             {/* Autor y Fecha */}
                             <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-300">
                                 <div className="flex items-center gap-2">
-                                    <FaUser className="w-5 h-5" />
+                                    <FaUser className="w-5 h-5" aria-hidden="true" />
                                     <span>{newItem.author}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                    <FaCalendar className="w-5 h-5" />
+                                    <FaCalendar className="w-5 h-5" aria-hidden="true" />
                                     <time dateTime={newItem.datetime}>{newItem.date}</time>
                                 </div>
                             </div>

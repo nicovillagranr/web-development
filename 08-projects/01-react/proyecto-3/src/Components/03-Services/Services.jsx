@@ -36,7 +36,7 @@ function Services() {
         <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center p-5">
 
             {/* Services Title */}
-            <SectionTitle className="text-black" title="What We Do" level={2} />
+            <SectionTitle className="text-black" title="What We Do" level={1} />
 
             {/* Services Cards */}
             <div className="w-[90%] mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">

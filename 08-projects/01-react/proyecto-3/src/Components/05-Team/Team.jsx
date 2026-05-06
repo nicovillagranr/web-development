@@ -64,7 +64,7 @@ function Team() {
     return (
         <section className="w-full min-h-[75vh] bg-surface flex flex-col items-center justify-center px-4 py-4">
             {/* Title */}
-            <SectionTitle className="text-black" title="People Behind the Product" level={2} />
+            <SectionTitle className="text-black" title="People Behind the Product" level={1} />
 
             {/* Members */}
             <ul className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mt-6">

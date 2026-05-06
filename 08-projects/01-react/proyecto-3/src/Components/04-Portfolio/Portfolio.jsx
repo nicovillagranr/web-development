@@ -119,7 +119,7 @@ function Portfolio() {
     return (
         <section className="flex min-h-[75vh] w-full flex-col items-center bg-primary py-10">
             {/* Titulo */}
-            <SectionTitle className="text-white" title="Selected Work" level={2} />
+            <SectionTitle className="text-white" title="Selected Work" level={1} />
 
             {/* Grid */}
             <div className="mt-8 grid w-[80%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
