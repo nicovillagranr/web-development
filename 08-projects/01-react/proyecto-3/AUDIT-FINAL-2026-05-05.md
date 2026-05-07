@@ -1,266 +1,167 @@
 # Auditoría Final — Proyecto 3 (React 19 + Tailwind v4 + Framer Motion)
 
 **Fecha:** 2026-05-05  
-**Auditoría actualizada:** 2026-05-05 (Auditoría técnica profunda)  
-**Estado:** ✅ **8.5/10 — PRODUCTION-READY CON FIXES URGENTES**  
-**Versión:** Post-revisión técnica completa
+**Última actualización:** 2026-05-07  
+**Estado:** ⚠️ **8.5/10 — PENDIENTES ANTES DE CERRAR**
 
 ---
 
-## 📊 Puntuación Final (Actualizada)
+## Puntuación Final
 
-| Métrica | Auditoría Anterior | Auditoría Actual | Lighthouse | Estado |
-|---------|-------------------|------------------|------------|--------|
-| **SEO** | 10/10 | 10/10 | 100/100 | ✅ |
-| **Accesibilidad** | 10/10 | 10/10 | 99/100 | ✅ |
-| **Performance** | 9.4/10 | 9.4/10 | 94/100 | ✅ |
-| **Best Practices** | 10/10 | 10/10 | 100/100 | ✅ |
-| **Funcionalidad Real** | N/A | 6/10 | N/A | ⚠️ |
-| **Testing** | N/A | 3/10 | N/A | ⚠️ |
-| **Documentación** | N/A | 5/10 | N/A | ⚠️ |
-| **PUNTUACIÓN FINAL** | **10.0/10** | **8.5/10** | **94, 99, 100, 100** | ⚠️ |
-
-**Cambio:** Bajó 1.5 puntos por problemas prácticos identificados
+| Métrica | Score | Lighthouse | Estado |
+|---------|-------|------------|--------|
+| **SEO** | 10/10 | 100/100 | ✅ |
+| **Accesibilidad** | 10/10 | 99/100 | ✅ |
+| **Performance** | 9.4/10 | 94/100 | ✅ |
+| **Best Practices** | 10/10 | 100/100 | ✅ |
+| **Funcionalidad Real** | 6/10 | N/A | ⚠️ |
+| **Testing** | 3/10 | N/A | ⚠️ |
+| **Documentación** | 5/10 | N/A | ⚠️ |
+| **PUNTUACIÓN FINAL** | **8.5/10** | 94, 99, 100, 100 | ⚠️ |
 
 ---
 
-## 🔴 PROBLEMAS CRÍTICOS ENCONTRADOS
+## Pendientes para llegar a 10/10
 
-### 1. ⛔ ContactForm Sin Botón Submit
+### 1. ContactForm — integración EmailJS (CRÍTICO)
 
-**Severidad:** CRÍTICA  
-**Ubicación:** `src/Components/07-Contact/ContactForm.jsx`  
-**Problema:** El formulario tiene inputs y validación, pero **NO HAY BOTÓN PARA ENVIAR**
+**Archivo:** `src/Components/07-Contact/ContactForm.jsx`
+
+El formulario tiene validación pero dos cosas faltan:
+
+**a) Botón submit** — No hay `<button type="submit">` dentro del `<form>`. El formulario es inutilizable.
+
+Ubicación: al final del `<form>`, después del bloque del textarea y antes del mensaje de success.
 
 ```jsx
-// LO QUE FALTA (línea ~125 en ContactForm.jsx)
 <button
   type="submit"
   disabled={status === "submitting"}
-  className="w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-primary/90 transition disabled:opacity-50"
+  className="w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-primary/90 transition disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
 >
   {status === "submitting" ? "Sending..." : "Send Message"}
 </button>
 ```
 
-**Impacto:** 
-- Usuarios NO PUEDEN enviar formulario
-- Funcionalidad completamente rota
-- Primera cosa que revisor verá
+**b) EmailJS real** — El `handleSubmit` actual simula el envío con `setTimeout`. Reemplazarlo con la llamada real:
 
-**Fix:** 1 componente, 8 líneas de código
+Pasos:
+1. Agregar `import emailjs from "@emailjs/browser"` al tope del archivo
+2. Crear `.env` en la raíz con las 3 variables (ver sección Variables de entorno)
+3. Reemplazar el `await new Promise(resolve => setTimeout(...))` por:
+
+```jsx
+try {
+    await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        { name: formData.name, email: formData.email, message: formData.message },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    setStatus("success")
+    setFormData({ name: "", email: "", message: "" })
+} catch {
+    setStatus("idle")
+}
+```
+
+**Variables de entorno** — Crear `.env` (gitignored) en raíz del proyecto:
+
+```
+VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
+VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxxxxxx
+```
+
+Obtener los valores desde emailjs.com → Email Services + Email Templates + Account > API Keys.
+
+El template de EmailJS debe tener las variables `{{name}}`, `{{email}}`, `{{message}}`.
 
 ---
 
-### 2. 📄 README.md Desactualizado
+### 2. Archivo `.env.example` (ALTO)
 
-**Severidad:** ALTA  
-**Ubicación:** `README.md`  
-**Problema:** 
-- Dice "Proyecto 1 | Tailwind Landing" (estamos en Proyecto 3)
-- Descripción no coincide con el proyecto actual
-- Sin instrucciones de setup
-- Sin .env.example
+**Archivo:** `.env.example` (crear en raíz)
 
-**Impacto:** Confusión para quien clone o revise el repo
+```
+VITE_EMAILJS_SERVICE_ID=
+VITE_EMAILJS_TEMPLATE_ID=
+VITE_EMAILJS_PUBLIC_KEY=
+```
 
-**Necesita:**
+Commitear este archivo (sin valores). El `.env` real va en `.gitignore`.
+
+---
+
+### 3. README.md desactualizado (ALTO)
+
+**Archivo:** `README.md`
+
+El README dice "Proyecto 1 | Tailwind Landing". Reemplazar con:
+
 ```markdown
 # Proyecto 3 — Projex Landing
 
-Web & Product Studio landing con React 19, Tailwind v4, y animaciones Framer Motion.
-
-## Características
-
-- ✅ Accesibilidad WCAG AAA (99/100)
-- ✅ SEO Optimizado (100/100 Lighthouse)
-- ✅ Performance Excellence (94/100)
-- ✅ Responsive Design
-- ✅ Contact Form con validación
+Web & Product Studio landing con React 19, Tailwind v4 y animaciones Framer Motion.
 
 ## Stack
 
-- React 19.2
-- Tailwind CSS 4.1
-- Framer Motion 12.24
-- React Router 7.11
-- Vite 7.2
+- React 19 · Tailwind CSS 4 · Framer Motion 12
+- React Router 7 · Vite · EmailJS
 
 ## Setup
 
 \`\`\`bash
+cp .env.example .env   # completar variables EmailJS
 npm install
 npm run dev
 \`\`\`
 
-## Build
+## Scripts
 
-\`\`\`bash
-npm run build
-npm run preview
-\`\`\`
+- `npm run dev` — dev server
+- `npm run build` — build producción
+- `npm run preview` — preview build
+- `npm run lint` — linting
 
-## Lint
+## Deploy
 
-\`\`\`bash
-npm run lint
-\`\`\`
-
----
-
-**Deploy:** https://nicovillagran.com/proyecto-3
-**Estado:** Production Ready (después de fixes)
+https://nicovillagran.com/proyecto-3
 ```
 
 ---
 
-### 3. 🧪 Sin Testing
+### 4. &amp; en Hero.jsx (BAJO)
 
-**Severidad:** MEDIA  
-**Problema:** Cero tests (unit, integration, e2e)  
-**Por qué importa:** Para un portfolio/primer empleo, los tests son diferenciador
+**Archivo:** `src/Components/02-Hero/Hero.jsx:71`
 
-**Necesita como mínimo:**
-- ContactValidation.test.js (validaciones)
-- ContactForm.test.js (integración)
-- Configurar Vitest + React Testing Library
+Cambiar `Web &amp; Product Studio` por `Web & Product Studio`. Funciona igual pero es innecesario en JSX.
 
 ---
 
-## 🟡 PROBLEMAS SECUNDARIOS
+## Lo que ya está bien (no tocar)
 
-### 4. Setup Instructions Faltantes
-- [ ] .env.example file
-- [ ] Installation steps en README
-- [ ] Explicar HashRouter para hosting estático
-
-### 5. Caracteres Especiales Innecesarios
-- **Ubicación:** `src/Components/02-Hero/Hero.jsx:71`
-- **Problema:** Usa `&amp;` en JSX (innecesario, aunque funciona)
-- **Fix:** Cambiar a `&` directo
-
-```jsx
-// ❌ Actual
-Web &amp; Product Studio
-
-// ✅ Mejor
-Web & Product Studio
-```
+- Accesibilidad: aria-hidden, aria-label, focus trap, group-focus-within ✅
+- SEO: H1 en todas las rutas, Open Graph, JSON-LD, favicon SVG ✅
+- Performance: WOFF2, lazy loading, preload LCP, prefetch ✅
+- Código: sin console errors, keys correctas, HTML semántico ✅
+- Fonts: TTF → WOFF2, 2MB → 325KB ✅
 
 ---
 
-## ✅ TRABAJO ANTERIOR VALIDADO
+## Checklist de cierre
 
-La auditoría de 2026-05-05 fue **extremadamente sólida** en estos aspectos:
+- [ ] Agregar botón submit en `ContactForm.jsx`
+- [ ] Integrar EmailJS (import + `emailjs.send` + try/catch)
+- [ ] Crear `.env` con las 3 variables reales
+- [ ] Crear `.env.example` para el repo
+- [ ] Verificar que llega el email end-to-end
+- [ ] Reemplazar `README.md`
+- [ ] Cambiar `&amp;` por `&` en `Hero.jsx:71`
 
-### Limpieza de Repositorio ✅
-- Fuentes optimizadas (TTF → WOFF2, 70-80% reducción)
-- Directorio `/fonts` optimizado: 2MB → 325KB
-- Solo Poppins Regular (400) + Bold (700)
-
-### Accesibilidad (A11y) ✅
-- aria-hidden en iconos decorativos
-- aria-label contextuales en Portfolio
-- Focus trap en menú móvil (focus-trap-react)
-- group-focus-within en overlays
-- Cleanup de setTimeout en Portfolio
-
-### SEO Optimization ✅
-- H1 en todas las rutas
-- Open Graph + Twitter Card completas
-- JSON-LD Schema para Google
-- Favicon SVG
-
-### Performance ✅
-- WOFF2 fonts solo
-- Lazy loading en imágenes
-- Preload LCP image
-- Prefetch smart en portfolio/services/team/news
-
-### Código Limpio ✅
-- Sin console errors/warnings
-- Keys correctas en .map()
-- HTML semántico
-- Memory leak prevention (clearTimeout)
-
----
-
-## 📈 Resumen por Categoría
-
-| Aspecto | Score | Status |
-|---------|-------|--------|
-| **SEO** | 10/10 | ✅ Perfect |
-| **Accessibility** | 10/10 | ✅ Perfect |
-| **Performance** | 9.4/10 | ✅ Excellent |
-| **Best Practices** | 10/10 | ✅ Perfect |
-| **Funcionalidad** | 6/10 | ⚠️ Broken form |
-| **Testing** | 3/10 | ⚠️ No tests |
-| **Documentación** | 5/10 | ⚠️ Outdated |
-| **Componentes** | 9/10 | ✅ Clean code |
-| **UX/UI** | 9/10 | ✅ Excellent |
-
----
-
-## 🎯 Checklist de Resolución
-
-### URGENTE (Antes de producción)
-- [ ] **Agregar botón Submit en ContactForm** (5 min)
-- [ ] **Actualizar README.md** (10 min)
-- [ ] **Agregar .env.example** (2 min)
-- [ ] Verificar funcionalidad de contacto end-to-end
-
-### IMPORTANTE (Antes de mostrar en portfolio)
-- [ ] Agregar tests básicos en ContactValidation (30 min)
-- [ ] Agregar tests en ContactForm (20 min)
-- [ ] Setup Vitest + React Testing Library (15 min)
-
-### NICE TO HAVE (Futuro)
-- [ ] E2E tests con Playwright/Cypress
-- [ ] Storybook para componentes
-- [ ] CI/CD pipeline (GitHub Actions)
-
----
-
-## 🚀 Conclusión
-
-### ¿Por qué 8.5/10 ahora?
-
-**Lo bueno (95%):**
-- Accesibilidad perfecta
-- SEO excelente
-- Performance premium
-- Código limpio y mantenible
-- Componentes bien estructurados
-- Animaciones responsivas
-
-**Lo faltante (5%):**
-- Formulario no funciona (botón submit falta)
-- Sin tests
-- README desactualizado
-- Sin setup instructions
-
-### Recomendación Final
-
-✅ **El proyecto es production-ready DESPUÉS DE 20 minutos de fixes**
-
-1. Agregar botón submit → Funcionalidad ✓
-2. Actualizar README → Documentación ✓
-3. Agregar tests básicos → Confianza ✓
-
-**Después de esos fixes: 10/10 y listo para portfolio/entrevistas**
-
-### Próximos Pasos
-
-1. **Hoy:** Fix del formulario + README
-2. **Esta semana:** Tests básicos
-3. **Deploy:** nicovillagran.com/proyecto-3
-
----
-
-**Status:** 🎯 **PORTFOLIO PROFESIONAL — 20 MINUTOS DE TRABAJO PENDIENTE**
+**Al completar todo: 10/10 — listo para portfolio y entrevistas.**
 
 ---
 
 Made with ❤️ by Nico Villagran  
-Proyecto-3 | Auditoría actualizada 2026-05-05  
-Rev: +1.5 (Auditoría técnica profunda)
+Proyecto-3 | Auditoría actualizada 2026-05-07

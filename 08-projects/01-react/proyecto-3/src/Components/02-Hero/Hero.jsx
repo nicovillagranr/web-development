@@ -68,7 +68,7 @@ function Hero() {
                             )}
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                         </span>
-                        Web &amp; Product Studio
+                        Web & Product Studio
                     </motion.span>
 
                     {/* H1 con palabra clave en color primario */}
