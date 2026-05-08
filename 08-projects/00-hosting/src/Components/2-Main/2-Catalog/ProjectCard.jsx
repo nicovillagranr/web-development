@@ -1,10 +1,5 @@
 import githubIcon from "../../../assets/icons/github.svg";
 
-const STATUS_STYLES = {
-  online: "border-emerald/30 bg-emerald-glow text-emerald",
-  maintenance: "border-amber/30 bg-amber-glow text-amber",
-};
-
 const CHIP_BASE = "rounded-badge border px-2 py-0.5 font-mono text-xs font-medium";
 
 const CHIP_CLASSES = {
@@ -30,6 +25,8 @@ const TECH_CATEGORY = {
   "SQLite": "amber",
   "EmailJS": "amber",
   "Node.js": "green",
+  "Supabase": "green",
+  "npm": "neutral",
   "Vercel": "mono",
   "Hostinger": "violet",
 };
@@ -38,7 +35,8 @@ const TECH_GROUP = {
   "React 19": "frontend",
   "Next.js 16": "frontend",
   "Tailwind v4": "frontend",
-  "Vite": "frontend",
+  "Vite": "tools",
+  "npm": "tools",
   "Framer Motion": "frontend",
   "React Router": "frontend",
   "React Icons": "frontend",
@@ -47,25 +45,23 @@ const TECH_GROUP = {
   "SQLite": "backend",
   "EmailJS": "backend",
   "Node.js": "backend",
-};
-
-const TECH_TEXT_COLOR = {
-  accent: "text-accent",
-  emerald: "text-emerald",
-  amber: "text-amber",
-  green: "text-green-400",
-  violet: "text-violet-400",
-  mono: "text-text-primary",
-  neutral: "text-text-muted",
+  "Supabase": "backend",
 };
 
 export default function ProjectCard({ project, index, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "Mantenimiento";
   const demoHref = path.endsWith("/") ? path : `${path}/`;
+  const grouped = stack.reduce((acc, t) => {
+    const g = TECH_GROUP[t];
+    if (g) (acc[g] ??= []).push(t);
+    return acc;
+  }, {});
 
   return (
-    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
+    <article
+      aria-label={name}
+      className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
       style={{ animationDelay: `${100 + index * 80}ms` }}>
       {image && (
         <div className="relative -mx-4 -mt-4">
@@ -92,27 +88,26 @@ export default function ProjectCard({ project, index, priority = false }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="rounded-badge border border-accent-border bg-accent-glow px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-accent">{type}
         </span>
-        <span className={`rounded-badge border px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[status]}`}>{statusLabel}</span>
+        <span className={`${CHIP_BASE} ${CHIP_CLASSES[status === "online" ? "emerald" : "amber"]}`}>{statusLabel}</span>
       </div>
 
       <h3 className="font-heading text-lg font-bold text-text-primary">{name}</h3>
       <p className="text-sm leading-relaxed text-text-secondary">{description}</p>
 
       <div className="font-mono text-xs leading-relaxed">
-        {["frontend", "backend"].map((group) => {
-          const techs = stack.filter((t) => TECH_GROUP[t] === group);
+        {["tools", "frontend", "backend"].map((group) => {
+          const techs = grouped[group] ?? [];
           if (techs.length === 0) return null;
           return (
             <div key={group}>
-              <div className="text-text-muted">$ {group}:</div>
-              <div className="flex flex-wrap gap-x-1.5 pl-3">
-                {techs.map((tech, i) => (
-                  <span key={tech}>
-                    <span className={TECH_TEXT_COLOR[TECH_CATEGORY[tech] ?? "neutral"]}>
+              <div className="text-text-muted">$ {group}</div>
+              <div className="flex flex-wrap gap-1.5 pl-3">
+                {techs.map((tech) => (
+                  <>
+                    <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
                       {tech}
                     </span>
-                    {i < techs.length - 1 && <span className="text-text-muted"> ·</span>}
-                  </span>
+                  </>
                 ))}
               </div>
             </div>
@@ -121,8 +116,10 @@ export default function ProjectCard({ project, index, priority = false }) {
         {deploy && (
           <div>
             <div className="text-text-muted">$ deploy:</div>
-            <div className={`pl-3 ${TECH_TEXT_COLOR[TECH_CATEGORY[deploy] ?? "neutral"]}`}>
-              {deploy}
+            <div className="pl-3">
+              <span className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[deploy] ?? "neutral"]}`}>
+                {deploy}
+              </span>
             </div>
           </div>
         )}

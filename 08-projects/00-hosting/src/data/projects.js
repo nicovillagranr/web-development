@@ -5,7 +5,7 @@ export const projects = [
     image: "/previews/proyecto-1.webp",
     description:
       "Landing de práctica para consolidar layout CSS con componentes React. Estructura modular por bloques (Header, Main, Card, Footer) y hojas de estilo desacopladas.",
-    stack: ["React 19", "Vite", "CSS modular"],
+    stack: ["Vite", "npm", "React 19", "CSS modular"],
     type: "Landing",
     status: "online",
     framework: "React",
@@ -18,7 +18,7 @@ export const projects = [
     image: "/previews/proyecto-2.webp",
     description:
       "Landing completa con secciones reutilizables: Hero, Features, Portfolio, Team, CTA y Testimonial. Enfoque en flex, grid y arquitectura CSS mantenible.",
-    stack: ["React 19", "Vite", "CSS modular"],
+    stack: ["Vite", "npm", "React 19", "CSS modular"],
     type: "Landing",
     status: "online",
     framework: "React",
@@ -31,7 +31,7 @@ export const projects = [
     image: "/previews/proyecto-3.webp",
     description:
       "Landing con composición utilitaria Tailwind, animaciones Framer Motion y navegación con React Router configurada para hosting estático.",
-    stack: ["React 19", "Tailwind v4", "Framer Motion", "React Router"],
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Router"],
     type: "Landing",
     status: "online",
     framework: "React",
@@ -44,7 +44,7 @@ export const projects = [
     image: "/previews/proyecto-4.webp",
     description:
       "Sitio corporativo para empresa exportadora con formulario de contacto funcional vía EmailJS, video de fondo en hero y sistema de diseño custom con Tailwind v4.",
-    stack: ["React 19", "Vite", "Tailwind v4", "EmailJS"],
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "EmailJS"],
     type: "Landing",
     status: "online",
     framework: "React",
@@ -57,7 +57,7 @@ export const projects = [
     image: "/previews/proyecto-5.webp",
     description:
       "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
-    stack: ["React 19", "Tailwind v4", "Framer Motion", "React Icons"],
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Icons"],
     type: "Landing",
     status: "online",
     framework: "React",
@@ -70,7 +70,7 @@ export const projects = [
     image: "/previews/proyecto-6.webp",
     description:
       "E-commerce de moda que consume mi propia Products API. Catálogo con filtros por categoría y tipo, ordenamiento por precio, detalle con selector de talla y galería de imágenes. SPA con React Router.",
-    stack: ["React 19", "Vite", "Tailwind v4", "React Router"],
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "React Router"],
     type: "E-commerce",
     status: "online",
     framework: "React",
@@ -78,17 +78,30 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-6",
   },
   {
-    name: "Smart Cooler UI",
+    name: "Sport Mindset",
     path: "/proyecto-7/",
+    image: "/previews/proyecto-6.webp",
+    description:
+      "E-commerce de bicicletas y accesorios con Supabase: 303 productos reales scrapeados de wisebikes.cl, catálogo con imágenes en Storage, filtros por categoría, carrito persistente en localStorage y detalle con galería.",
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Supabase", "React Router"],
+    type: "E-commerce",
+    status: "in-progress",
+    framework: "React",
+    deploy: "Hostinger",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-7",
+  },
+  {
+    name: "Smart Cooler UI",
+    path: "/proyecto-8/",
     image: "/previews/proyecto-7.webp",
     description:
       "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
-    stack: ["React 19", "Tailwind v4", "React Icons"],
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "React Icons"],
     type: "Dashboard",
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-7",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-8",
   },
   {
     name: "Users Fetch API",
@@ -96,7 +109,7 @@ export const projects = [
     image: "/previews/proyecto-8.webp",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
-    stack: ["Next.js 16", "Tailwind v4"],
+    stack: ["npm", "Next.js 16", "Tailwind v4"],
     type: "Full-stack",
     status: "online",
     framework: "Next.js",
@@ -109,7 +122,7 @@ export const projects = [
     image: "/previews/proyecto-9.webp",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
-    stack: ["Next.js 16", "Tailwind v4"],
+    stack: ["npm", "Next.js 16", "Tailwind v4"],
     type: "Full-stack",
     status: "online",
     framework: "Next.js",
