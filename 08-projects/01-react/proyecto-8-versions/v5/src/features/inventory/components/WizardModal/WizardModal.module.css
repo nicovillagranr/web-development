@@ -1,0 +1,101 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del WizardModal — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: wizard ─────────────────────────────────── */
+
+.wizard {
+    @apply absolute inset-0 z-30 flex items-end;
+}
+
+/* ─── Backdrop ──────────────────────────────────────── */
+
+.wizard__backdrop {
+    @apply absolute inset-0 bg-black/60 backdrop-blur-sm;
+}
+
+/* ─── Panel principal ───────────────────────────────── */
+
+.wizard__panel {
+    @apply relative w-full rounded-t-2xl border border-b-0 backdrop-blur-xl px-5 pt-5 pb-6;
+    background: var(--glass-dark);
+    border-color: var(--glass-border);
+}
+
+/* ─── Barra de progreso ─────────────────────────────── */
+
+.wizard__progress {
+    @apply flex gap-1.5 mb-5;
+}
+
+.wizard__progress-step {
+    @apply h-0.5 flex-1 rounded-full transition-colors duration-300;
+}
+
+.wizard__progress-step--active {
+    @apply bg-green-400;
+}
+
+.wizard__progress-step--inactive {
+    @apply bg-white/15;
+}
+
+/* ─── Etiqueta del paso ─────────────────────────────── */
+
+.wizard__step-label {
+    @apply text-[10px] uppercase tracking-[0.14em] text-white/40 mb-3;
+}
+
+/* ─── Inputs y selects compartidos ──────────────────── */
+
+.wizard__input {
+    @apply w-full h-11 rounded-xl bg-white/7 border border-white/8 px-3 text-sm text-white outline-none focus:border-green-400/40 transition-colors;
+}
+
+.wizard__input::placeholder {
+    @apply text-white/25;
+}
+
+.wizard__select {
+    @apply w-full h-11 rounded-xl bg-white/7 border border-white/8 px-3 text-sm text-white/80 outline-none focus:border-green-400/40 transition-colors;
+}
+
+.wizard__option {
+    @apply bg-[#0a0c14] text-white;
+}
+
+/* ─── Grid de 2 columnas (pasos 2 y 3) ─────────────── */
+
+.wizard__grid {
+    @apply grid grid-cols-2 gap-2;
+}
+
+/* ─── Error ─────────────────────────────────────────── */
+
+.wizard__error-zone {
+    @apply min-h-5 mt-2;
+}
+
+.wizard__error-msg {
+    @apply text-xs text-rose-400;
+}
+
+/* ─── Footer ────────────────────────────────────────── */
+
+.wizard__footer {
+    @apply flex gap-2 mt-5;
+}
+
+.wizard__btn-cancel {
+    @apply h-10 px-4 rounded-xl bg-white/5 border border-white/7 text-sm text-white/40 transition-colors;
+    &:hover {
+        @apply text-white/65 bg-white/8;
+    }
+}
+
+.wizard__btn-next {
+    @apply flex-1 h-10 rounded-xl bg-green-500/15 border border-green-400/25 text-sm text-green-300 transition-colors;
+    &:hover {
+        @apply bg-green-500/20 border-green-400/35;
+    }
+}

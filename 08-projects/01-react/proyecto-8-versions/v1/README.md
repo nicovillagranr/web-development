@@ -1,102 +1,57 @@
-# Versión 1: Rediseño UI Obsidian Premium
+﻿# Smart Cooler UI
 
-## 📌 Información del Commit
+Interfaz front-end para la pantalla de un refrigerador inteligente.
 
-**Hash:** `012ba`  
-**Mensaje:** `feat: rediseña UI del proyecto 4 con estética Obsidian Premium`  
-**Rama:** master  
+## Objetivo
 
----
+Aplicar arquitectura de componentes, estado local y estilos utilitarios en una UI funcional de producto.
 
-## 🎨 ¿Qué expone esta versión?
+## Stack
 
-Esta es la **etapa inicial con enfoque visual**. Demuestra:
+- React 19
+- Vite 7
+- Tailwind CSS 4
+- React Icons
+- ESLint 9
+- Open-Meteo API
 
-✅ **Paleta de colores profesional**
-- Colores oscuros inspirados en Obsidian
-- Contraste y legibilidad optimizados
-- Estética moderna y premium
+## Alcance implementado
 
-✅ **Diseño de UI completo**
-- Dashboard funcional con estética
-- Pantallas principales diseñadas
-- Componentes visuales pulidos
+- fecha y hora con modo automatico y manual
+- clima actual y pronostico diario/horario
+- metricas de clima (UV, humedad, sensacion termica, presion, AQI)
+- inventario de alimentos
+- lista de compras inteligente
+- reordenamiento de tarjetas persistido en localStorage
+- pantalla secundaria (`screen_2`) como prototipo visual
 
-✅ **Atención al detalle visual**
-- Espaciados consistentes
-- Tipografía clara
-- Jerarquía visual
+## Arquitectura resumida
 
----
+- `screen_1`: funcional, con features activas
+- `screen_2`: demostracion visual lista para evolucion funcional
+- organizacion modular por `layout`, `ui` y `features`
 
-## ❌ Lo que NO tiene esta versión
+## Checklist de validacion
 
-- ❌ Arquitectura escalable (estructura plana)
-- ❌ Documentación (CLAUDE.md)
-- ❌ CSS Modules (estilos globales)
-- ❌ Tests unitarios
-- ❌ Aliases de Vite
+- [ ] estado consistente entre tarjetas y modales
+- [ ] degradacion controlada ante error de API
+- [ ] persistencia local sin corrupcion de datos
+- [ ] responsive estable en el contenedor principal
 
----
+## Ejercicio propuesto
 
-## 📊 Estadísticas
+Implementar una card nueva de consumo energetico diario usando la misma arquitectura de `Card` y mantener persistencia de orden en dashboard.
 
-- **Archivos:** ~20
-- **Features:** 3 (inventory, time, weather)
-- **Estructura:** Plana (todo en src/components, src/hooks, etc.)
-- **Estilos:** CSS vanilla global
-- **Tests:** No
+## Solucion esperada
 
----
+- nueva card integrada sin romper cards existentes
+- logica desacoplada en su propio hook/componente
+- comportamiento coherente con el sistema visual actual
 
-## 🚀 Cómo ejecutar
+## Scripts
 
-```bash
-cd v1
-npm install
-npm run dev
-```
-
-Abre `http://localhost:5173/proyecto-4`
-
----
-
-## 🔍 Archivos importantes
-
-```
-v1/
-├── src/
-│   ├── assets/
-│   │   └── styles/
-│   │       └── App.css          ← Estilos principales (paleta Obsidian)
-│   ├── components/              ← Todos los componentes aquí (plano)
-│   │   ├── InventoryMainForm.jsx
-│   │   ├── TimeEditorModal.jsx
-│   │   ├── WeatherSettings.jsx
-│   │   └── ...
-│   └── hooks/                   ← Todos los hooks aquí
-│       ├── useInventory.jsx
-│       ├── useDateTime.jsx
-│       └── ...
-├── package.json
-└── vite.config.js
-```
-
----
-
-## 💡 Lo que aprendes de esta versión
-
-1. **Importancia del diseño visual** — UI atractiva es parte del 50% del proyecto
-2. **Cómo estructurar estilos globales** — aunque después verás por qué no escala
-3. **Paleta de colores profesional** — qué hace que un dashboard se vea "premium"
-4. **Componentes sin arquitectura** — código que funciona pero no escala
-
----
-
-## 🔄 Próxima versión
-
-En **v2** verás cómo esta estructura plana se convierte en **feature-first**, que es mucho más escalable.
-
----
-
-*Versión histórica guardada: 14 de abril de 2026*
+- `npm install`
+- `npm run dev`
+- `npm run lint`
+- `npm run build`
+- `npm run preview`

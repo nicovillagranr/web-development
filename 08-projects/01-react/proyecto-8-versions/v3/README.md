@@ -1,179 +1,57 @@
-# Versión 3: Documentación y Configuración Profesional
+﻿# Smart Cooler UI
 
-## 📌 Información del Commit
+Interfaz front-end para la pantalla de un refrigerador inteligente.
 
-**Hash:** `ba8c9`  
-**Mensaje:** `chore: proyecto-4 — actualiza config, gitignore y añade CLAUDE.md`  
-**Rama:** master  
+## Objetivo
 
----
-
-## 📝 ¿Qué expone esta versión?
-
-Esta es la **etapa de profesionalismo y documentación**. Demuestra:
-
-✅ **Documentación Arquitectónica (CLAUDE.md)**
-- Guía completa del proyecto
-- Explicación de decisiones
-- Patrones y convenciones
-- Stack técnico documentado
-
-✅ **Configuración Optimizada**
-- `jsconfig.json` con aliases
-- Imports limpios y legibles
-- Rutas predecibles
-
-✅ **Aliases de Vite**
-- `@shell` → `src/hardware`
-- `@features` → `src/features`
-- `@screen1` → `src/screens/screen-1`
-- `@hooks` → `src/hooks`
-- `@ui` → `src/ui`
-- `@assets` → `src/assets`
-
----
-
-## ❌ Lo que NO tiene esta versión
-
-- ❌ CSS Modules (estilos aún globales)
-- ❌ Tests unitarios
-- ❌ Componentes en carpetas (aún archivos planos)
-
----
-
-## 📊 Estadísticas
-
-- **Archivos:** ~50
-- **Features:** 4 (inventory, time, weather, spotify)
-- **Estructura:** Feature-first ✅
-- **Documentación:** CLAUDE.md ✅
-- **Aliases:** jsconfig.json ✅
-- **Estilos:** CSS global
-- **Tests:** No
-
----
-
-## 🚀 Cómo ejecutar
-
-```bash
-cd v3
-npm install
-npm run dev
-```
-
----
-
-## 📄 CLAUDE.md: Lo más importante
-
-Este archivo documenta:
-
-1. **¿Qué es el proyecto?** — Descripción clara
-2. **Stack técnico** — Versiones exactas
-3. **Scripts disponibles** — Cómo correr el proyecto
-4. **Arquitectura** — Cómo está organizado
-5. **Aliases** — Cómo usar los imports
-6. **Colores** — Paleta Tailwind
-7. **Convenciones** — Patrones de código
-8. **Tailwind v4** — Sintaxis correcta
-9. **Qué NO hacer** — Limitaciones intencionales
-
-```markdown
-# CLAUDE.md — proyecto-4
-
-## Qué es
-UI simulada de un refrigerador inteligente (Smart Cooler)...
+Aplicar arquitectura de componentes, estado local y estilos utilitarios en una UI funcional de producto.
 
 ## Stack
-| Tecnología | Versión |
-|---|---|
-| React | 19 |
-| Tailwind CSS | v4 |
-| Vite | 7 |
-| react-icons | v5 |
 
-## Arquitectura
-**Feature-first.** Cada dominio es autocontenido...
+- React 19
+- Vite 7
+- Tailwind CSS 4
+- React Icons
+- ESLint 9
+- Open-Meteo API
 
-## Aliases de Vite/jsconfig
-| Alias | Ruta |
-|---|---|
-| `@shell` | `src/hardware` |
-| `@features` | `src/features` |
-...
-```
+## Alcance implementado
 
----
+- fecha y hora con modo automatico y manual
+- clima actual y pronostico diario/horario
+- metricas de clima (UV, humedad, sensacion termica, presion, AQI)
+- inventario de alimentos
+- lista de compras inteligente
+- reordenamiento de tarjetas persistido en localStorage
+- pantalla secundaria (`screen_2`) como prototipo visual
 
-## 🔍 Archivos importantes
+## Arquitectura resumida
 
-```
-v3/
-├── CLAUDE.md              ← NUEVO: Documentación completa
-├── jsconfig.json          ← NUEVO: Aliases de Vite
-├── src/
-│   ├── features/
-│   ├── hardware/
-│   └── ...
-├── package.json
-└── vite.config.js
-```
+- `screen_1`: funcional, con features activas
+- `screen_2`: demostracion visual lista para evolucion funcional
+- organizacion modular por `layout`, `ui` y `features`
 
----
+## Checklist de validacion
 
-## 💡 Lo que aprendes de esta versión
+- [ ] estado consistente entre tarjetas y modales
+- [ ] degradacion controlada ante error de API
+- [ ] persistencia local sin corrupcion de datos
+- [ ] responsive estable en el contenedor principal
 
-1. **Documentación es código** — sin docs, el código es difícil de mantener
-2. **Cómo documentar decisiones** — CLAUDE.md explica el "por qué"
-3. **Aliases hacen código legible** — `import from '@features/inventory'` vs `import from '../../../features/inventory'`
-4. **Profesionalismo técnico** — esto es lo que esperan en empresas
+## Ejercicio propuesto
 
----
+Implementar una card nueva de consumo energetico diario usando la misma arquitectura de `Card` y mantener persistencia de orden en dashboard.
 
-## 🎯 Comparación de Imports
+## Solucion esperada
 
-**SIN aliases (v1-v2):**
-```jsx
-import { useInventory } from '../../../hooks/useInventory';
-import { inventoryUtils } from '../../../utils/inventoryUtils';
-```
+- nueva card integrada sin romper cards existentes
+- logica desacoplada en su propio hook/componente
+- comportamiento coherente con el sistema visual actual
 
-**CON aliases (v3+):**
-```jsx
-import { useInventory } from '@features/inventory/hooks';
-import { inventoryUtils } from '@features/inventory/utils';
-```
+## Scripts
 
-**Beneficios:**
-- ✅ Más legible
-- ✅ Fácil refactorizar rutas
-- ✅ Autocomplete mejor
-- ✅ Profesional
-
----
-
-## 📖 Qué contiene CLAUDE.md
-
-### Secciones principales:
-
-1. **Qué es** — descripción del proyecto
-2. **Stack** — versiones exactas
-3. **Scripts** — comandos disponibles
-4. **Arquitectura** — estructura general
-5. **Aliases** — tabla de imports
-6. **Colores (Tailwind)** — tokens de color
-7. **Variables CSS** — custom properties
-8. **Animaciones CSS** — clases disponibles
-9. **Convenciones de código** — patrones
-10. **Patrones de estado** — cómo manejar state
-11. **Tailwind v4** — sintaxis correcta
-12. **Qué NO hacer** — limitaciones
-
----
-
-## 🔄 Próxima versión
-
-En **v4** verás cómo esta documentación aún se mantiene y se agrega la **feature de Spotify**, demostrando que la arquitectura es escalable.
-
----
-
-*Versión histórica guardada: 14 de abril de 2026*
+- `npm install`
+- `npm run dev`
+- `npm run lint`
+- `npm run build`
+- `npm run preview`

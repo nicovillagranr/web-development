@@ -1,0 +1,44 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de Screen2 — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+@reference "../../assets/styles/App.css";
+
+/* ─── Block: screen2 ───────────────────────────────── */
+
+.screen2 {
+    @apply h-full px-4 pt-5 pb-4 text-white overflow-y-auto;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+
+.screen2__header {
+    @apply mb-5;
+}
+
+.screen2__header-row {
+    @apply flex items-center justify-between mb-4;
+}
+
+.screen2__title {
+    @apply text-[12px] uppercase tracking-[0.22em] text-white/30;
+}
+
+/* ─── Status badge (green pill) ────────────────────── */
+
+.screen2__status {
+    @apply flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/20;
+}
+
+.screen2__status-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-accent;
+}
+
+.screen2__status-label {
+    @apply text-[12px] text-accent font-medium;
+}
+
+/* ─── Card stack ───────────────────────────────────── */
+
+.screen2__cards {
+    @apply flex flex-col gap-2;
+}

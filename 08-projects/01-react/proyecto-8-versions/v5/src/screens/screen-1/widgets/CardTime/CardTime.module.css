@@ -1,0 +1,15 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de CardTime — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: card-time ─────────────────────────────── */
+
+.card-time {
+    @apply bg-[#111626] border border-white/6;
+}
+
+/* ─── Hora ─────────────────────────────────────────── */
+
+.card-time__time {
+    @apply text-3xl font-light tracking-tighter text-white tabular-nums;
+}

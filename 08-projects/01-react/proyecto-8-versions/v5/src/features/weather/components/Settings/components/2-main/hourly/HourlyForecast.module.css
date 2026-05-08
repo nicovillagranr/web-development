@@ -1,0 +1,39 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del HourlyForecast — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: hourly ────────────────────────────────── */
+
+.hourly {
+    @apply px-4 mt-4;
+}
+
+.hourly__card {
+    @apply backdrop-blur-xl bg-white/10 rounded-3xl p-5;
+}
+
+.hourly__title {
+    @apply text-sm opacity-70 mb-4;
+}
+
+.hourly__carousel {
+    @apply flex gap-3 overflow-x-auto overflow-y-hidden snap-x snap-mandatory -mx-5 px-5 scroll-px-5 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch];
+}
+
+.hourly__snap-item {
+    @apply snap-start shrink-0;
+}
+
+/* ─── MiniHourlyCard ───────────────────────────────── */
+
+.hourly__mini-card {
+    @apply rounded-2xl px-3 flex flex-col items-center;
+}
+
+.hourly__mini-card-hour {
+    @apply text-sm;
+}
+
+.hourly__mini-card-temp {
+    @apply text-lg font-light leading-none;
+}

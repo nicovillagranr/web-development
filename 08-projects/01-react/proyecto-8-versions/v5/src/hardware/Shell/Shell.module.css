@@ -1,0 +1,10 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos de Shell — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+@reference "../../assets/styles/App.css";
+
+/* ─── Block: shell ─────────────────────────────────── */
+
+.shell {
+    @apply relative w-120 h-dvh min-h-svh bg-dark overflow-hidden;
+}

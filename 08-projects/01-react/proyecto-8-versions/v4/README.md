@@ -1,144 +1,57 @@
-# Versión 4: Escalabilidad Validada - Feature Spotify
+﻿# Smart Cooler UI
 
-## 📌 Información del Commit
+Interfaz front-end para la pantalla de un refrigerador inteligente.
 
-**Hash:** `5901e`  
-**Mensaje:** `feat: proyecto-4 — agrega widget de Spotify y actualiza UI`  
-**Rama:** master  
+## Objetivo
 
----
+Aplicar arquitectura de componentes, estado local y estilos utilitarios en una UI funcional de producto.
 
-## ✨ ¿Qué expone esta versión?
+## Stack
 
-Esta es la **validación de que la arquitectura escala**. Demuestra:
+- React 19
+- Vite 7
+- Tailwind CSS 4
+- React Icons
+- ESLint 9
+- Open-Meteo API
 
-✅ **Nueva feature agregada sin quebrar nada**
-- `src/features/spotify/` — completamente nueva
-- Se integra perfectamente en la arquitectura feature-first
-- No requiere refactoring de código existente
+## Alcance implementado
 
-✅ **Escalabilidad demostrada**
-- Prueba de que feature-first funciona
-- Agregar feature = crear una carpeta
-- Independencia de features validada
+- fecha y hora con modo automatico y manual
+- clima actual y pronostico diario/horario
+- metricas de clima (UV, humedad, sensacion termica, presion, AQI)
+- inventario de alimentos
+- lista de compras inteligente
+- reordenamiento de tarjetas persistido en localStorage
+- pantalla secundaria (`screen_2`) como prototipo visual
 
-✅ **Mantenimiento de documentación**
-- CLAUDE.md sigue siendo válido
-- Arquitectura se mantiene consistente
-- Patrones se repiten exitosamente
+## Arquitectura resumida
 
----
+- `screen_1`: funcional, con features activas
+- `screen_2`: demostracion visual lista para evolucion funcional
+- organizacion modular por `layout`, `ui` y `features`
 
-## ❌ Lo que NO tiene esta versión
+## Checklist de validacion
 
-- ❌ CSS Modules (estilos aún globales)
-- ❌ Tests unitarios
-- ❌ Componentes en carpetas (aún archivos planos)
+- [ ] estado consistente entre tarjetas y modales
+- [ ] degradacion controlada ante error de API
+- [ ] persistencia local sin corrupcion de datos
+- [ ] responsive estable en el contenedor principal
 
----
+## Ejercicio propuesto
 
-## 📊 Estadísticas
+Implementar una card nueva de consumo energetico diario usando la misma arquitectura de `Card` y mantener persistencia de orden en dashboard.
 
-- **Archivos:** ~60
-- **Features:** 4 (inventory, time, weather, spotify) ✅
-- **Estructura:** Feature-first ✅
-- **Documentación:** CLAUDE.md ✅
-- **Aliases:** jsconfig.json ✅
-- **Estilos:** CSS global
-- **Tests:** No
+## Solucion esperada
 
----
+- nueva card integrada sin romper cards existentes
+- logica desacoplada en su propio hook/componente
+- comportamiento coherente con el sistema visual actual
 
-## 🚀 Cómo ejecutar
+## Scripts
 
-```bash
-cd v4
-npm install
-npm run dev
-```
-
----
-
-## 🎵 Nueva Feature: Spotify
-
-### Estructura de Spotify
-
-```
-src/features/spotify/
-├── components/
-│   └── SpotifySettings.jsx
-├── hooks/
-│   └── useSpotify.jsx (si lo hubiera)
-├── utils/
-│   └── spotifyUtils.js (si lo hubiera)
-└── constants/
-    └── spotifyConstants.js (si lo hubiera)
-```
-
-### Cómo se integra
-
-En `src/hardware/DeviceShell.jsx`:
-
-```jsx
-// Spotify se agrega como una más
-const [activeScreen, setActiveScreen] = useState(null);
-
-// En el state machine:
-{activeScreen === 'spotify' && (
-  <SpotifySettings onBack={handleBack} />
-)}
-```
-
-No requiere cambios en:
-- ❌ Hardware shell
-- ❌ Screen structure
-- ❌ State management global
-- ❌ Documentación
-
----
-
-## 💡 Lo que aprendes de esta versión
-
-1. **Escalabilidad real** — no es teoría, está validado
-2. **Patrón repetible** — agregar features es predecible
-3. **Independencia de features** — Spotify no conoce de Inventory
-4. **Mantenimiento a largo plazo** — el proyecto puede crecer
-
----
-
-## 🔄 Cómo comparar con v3
-
-**Cambios principales:**
-```bash
-# Archivos nuevos
-+ src/features/spotify/components/SpotifySettings.jsx
-+ src/features/spotify/hooks/ (si existen)
-+ src/features/spotify/utils/ (si existen)
-
-# Cambios en existentes
-~ src/hardware/DeviceShell.jsx (agrega case 'spotify')
-~ src/assets/styles/App.css (si hay estilos nuevos)
-```
-
----
-
-## 🎯 Por qué este commit demuestra escalabilidad
-
-**v1 → v2:** Estructura cambia dramáticamente (refactor)  
-**v2 → v3:** Se agrega documentación (solo archivos de config)  
-**v3 → v4:** Se agrega feature sin cambiar estructura ✅
-
-Esto demuestra que:
-- La arquitectura de v2 fue correcta
-- Nuevas features se agregan de forma predecible
-- Proyectos grandes son viables con esta estructura
-
----
-
-## 🔄 Próxima versión
-
-En **v5** verás el **pulido final** — CSS Modules, Tests, y la versión lista para producción.
-
----
-
-*Versión histórica guardada: 14 de abril de 2026*
+- `npm install`
+- `npm run dev`
+- `npm run lint`
+- `npm run build`
+- `npm run preview`

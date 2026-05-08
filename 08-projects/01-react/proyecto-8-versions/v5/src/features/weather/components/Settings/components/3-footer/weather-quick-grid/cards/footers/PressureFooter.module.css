@@ -1,0 +1,29 @@
+/* ================= CONTEXTO MODULO ================= */
+/* Estilos del PressureFooter — BEM + @apply (Tailwind v4) */
+@reference "tailwindcss";
+
+/* ─── Block: pressure-footer ───────────────────────── */
+
+.pressure-footer {
+    @apply h-full grid grid-rows-[1fr_auto];
+}
+
+.pressure-footer__bar-wrapper {
+    @apply flex items-end mt-2;
+}
+
+.pressure-footer__bar {
+    @apply relative h-1.5 w-full rounded-full bg-white/20;
+}
+
+.pressure-footer__center-mark {
+    @apply absolute left-1/2 top-1/2 h-3 w-px -translate-x-1/2 -translate-y-1/2 bg-white/40;
+}
+
+.pressure-footer__dot {
+    @apply absolute top-1/2 h-2.5 w-2.5 rounded-full bg-cyan-200 border border-cyan-50 -translate-y-1/2;
+}
+
+.pressure-footer__labels {
+    @apply mt-0.5 flex items-center justify-between text-[9px] leading-none opacity-70;
+}
