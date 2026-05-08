@@ -26,17 +26,17 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-2",
   },
   {
-    name: "Projex",
+    name: "NexusAI",
     path: "/proyecto-3/",
     image: "/previews/proyecto-3.webp",
     description:
-      "Landing con composición utilitaria Tailwind, animaciones Framer Motion y navegación con React Router configurada para hosting estático.",
-    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Router"],
+      "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Icons"],
     type: "Landing",
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-3",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
   },
   {
     name: "MGD Exports",
@@ -52,17 +52,17 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-4",
   },
   {
-    name: "NexusAI",
+    name: "Projex",
     path: "/proyecto-5/",
     image: "/previews/proyecto-5.webp",
     description:
-      "Landing de agencia IA con animaciones Framer Motion y estética dark premium. Estructura de conversión completa con secciones de servicios, proceso y FAQ.",
-    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Icons"],
+      "Landing con composición utilitaria Tailwind, animaciones Framer Motion, formulario de contacto con EmailJS y navegación con React Router configurada para hosting estático.",
+    stack: ["Vite", "npm", "React 19", "Tailwind v4", "Framer Motion", "React Router", "EmailJS"],
     type: "Landing",
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-3",
   },
   {
     name: "ShopReact",
@@ -80,7 +80,7 @@ export const projects = [
   {
     name: "Sport Mindset",
     path: "/proyecto-7/",
-    image: "/previews/proyecto-6.webp",
+    image: "/previews/proyecto-7.webp",
     description:
       "E-commerce de bicicletas y accesorios con Supabase: 303 productos reales scrapeados de wisebikes.cl, catálogo con imágenes en Storage, filtros por categoría, carrito persistente en localStorage y detalle con galería.",
     stack: ["Vite", "npm", "React 19", "Tailwind v4", "Supabase", "React Router"],
@@ -93,7 +93,7 @@ export const projects = [
   {
     name: "Smart Cooler UI",
     path: "/proyecto-8/",
-    image: "/previews/proyecto-7.webp",
+    image: "/previews/proyecto-8.webp",
     description:
       "Dashboard para refrigerador inteligente con clima en tiempo real (Open-Meteo), inventario, lista de compras y reordenamiento de tarjetas persistido en localStorage.",
     stack: ["Vite", "npm", "React 19", "Tailwind v4", "React Icons"],
@@ -106,7 +106,7 @@ export const projects = [
   {
     name: "Users Fetch API",
     path: "https://proyecto-1-next-nine.vercel.app/",
-    image: "/previews/proyecto-8.webp",
+    image: "/previews/proyecto-9.webp",
     description:
       "Listado de usuarios consumiendo JSONPlaceholder desde un Server Component de Next.js. Incluye manejo de error, 404 personalizado y layout con rutas anidadas.",
     stack: ["npm", "Next.js 16", "Tailwind v4"],
@@ -119,7 +119,7 @@ export const projects = [
   {
     name: "Falabella.com",
     path: "https://proyecto-next-2.vercel.app/",
-    image: "/previews/proyecto-9.webp",
+    image: "/previews/proyecto-10.webp",
     description:
       "Clon del e-commerce con categorías, productos destacados, rutas dinámicas (tienda, posts, usuarios, about) y API routes. Data estática servida desde módulos internos.",
     stack: ["npm", "Next.js 16", "Tailwind v4"],
