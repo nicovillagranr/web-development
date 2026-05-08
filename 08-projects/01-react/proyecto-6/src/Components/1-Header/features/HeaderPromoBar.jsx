@@ -1,6 +1,6 @@
 import { FiTruck, FiMapPin } from "react-icons/fi"
 
-export const PromoBar = () => {
+export const HeaderPromoBar = () => {
     return (
         <div className="bg-stone-100 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-900 px-4 sm:px-6 lg:px-10 py-1.5">
             <div className="flex items-center justify-between text-[11px] tracking-wide text-stone-600 dark:text-stone-300">

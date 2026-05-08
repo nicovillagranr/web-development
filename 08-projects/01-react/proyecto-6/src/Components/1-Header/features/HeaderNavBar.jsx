@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-
 import { ROUTES } from "../../../utils/constants"
 
 const linksClass = "font-body text-[11px] uppercase tracking-[0.18em] font-medium text-ink dark:text-paper hover:text-camel transition-colors duration-200"
 
-export const NavBar = () => {
+export const HeaderNavBar = () => {
     return (
         <nav className="hidden md:block">
             <ul className="flex justify-end lg:gap-10">

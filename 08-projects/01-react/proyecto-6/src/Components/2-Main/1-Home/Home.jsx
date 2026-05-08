@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { categorias, campanas } from "./home.data"
 import { ROUTES } from "../../../utils/constants"
-import { CategoryCarousel } from "./CategoryCarousel"
+import { Carousel } from "./Carousel"
 
 const HeroBanner = () => {
     return (
@@ -38,7 +38,7 @@ const CategoryGrid = () => {
                     Ver todo
                 </Link>
             </div>
-            <CategoryCarousel items={categorias} title="" />
+            <Carousel items={categorias} title="" />
         </section>
     )
 }

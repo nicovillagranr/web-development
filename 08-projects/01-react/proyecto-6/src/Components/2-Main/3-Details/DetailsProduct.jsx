@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { useProduct } from "./hooks/useProduct"
 import { SIZES } from "../../../utils/constants"
+import useCart from "../5-CartContext/useCart"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -9,6 +10,21 @@ export const DetailsProduct = () => {
     const { id } = useParams()
     const { data: producto, loading, error } = useProduct(id)
     const [selectedSize, setSelectedSize] = useState(null)
+
+    const { agregarProducto } = useCart()
+
+    const handleAgregarProducto = () => {
+        if (producto) {
+            agregarProducto({
+                id: producto.id,
+                image: producto.image,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                talla: selectedSize,
+                cantidad: 1
+            })
+        }
+    }
 
     if (loading) {
         return (
@@ -79,9 +95,7 @@ export const DetailsProduct = () => {
                         <h1 className="font-heading font-normal text-4xl lg:text-5xl text-ink mb-5 leading-[1.1]">
                             {producto.nombre}
                         </h1>
-                        <p className="font-body text-2xl text-ink">
-                            ${producto.precio}
-                        </p>
+                        <p className="font-body text-price text-ink -mt-2">{new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(producto.precio)}</p>
                     </div>
 
                     {/* Descripción */}
@@ -113,7 +127,7 @@ export const DetailsProduct = () => {
 
                     {/* Botones de Acción */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                        <button className="flex-1 bg-ink hover:bg-camel-deep text-paper font-body py-4 px-4 rounded-none transition-colors duration-300 uppercase tracking-[0.22em] text-[11px]">
+                        <button onClick={handleAgregarProducto} className="flex-1 bg-ink hover:bg-camel-deep text-paper font-body py-4 px-4 rounded-none transition-colors duration-300 uppercase tracking-[0.22em] text-[11px]">
                             Agregar al carrito
                         </button>
                         <button className="flex-1 border border-ink hover:bg-ink hover:text-paper text-ink font-body py-4 px-4 rounded-none transition-colors duration-300 uppercase tracking-[0.22em] text-[11px]">
