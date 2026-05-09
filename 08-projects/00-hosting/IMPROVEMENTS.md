@@ -32,4 +32,10 @@ Auditoría completa del 13 de mayo de 2026.
 
 ## ✅ Completados
 
-- **13-05-2026**: Punto #1 - Meta tags para SEO y redes sociales (Open Graph, Twitter Card, theme-color)
+- **13-05-2026**: Punto #1 - Meta tags para SEO y redes sociales
+  - Open Graph tags (og:type, og:title, og:description, og:url)
+  - Twitter Card
+  - Theme color y author
+  - og-image-square.png (1200x1200px) para WhatsApp/móvil
+  - og-image.png (1200x630px) como alternativa
+  - Funciona correctamente en WhatsApp, LinkedIn, Twitter
