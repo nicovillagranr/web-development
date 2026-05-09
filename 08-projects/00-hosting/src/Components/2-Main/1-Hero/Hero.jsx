@@ -1,7 +1,7 @@
 // Import de Hooks
 import { useMemo } from "react";
 // Import de datos
-import { projects } from "@/data/projects";
+import { useProjects } from "@/hooks/useProjects";
 
 function Stat({ value, label }) {
   return (
@@ -13,10 +13,11 @@ function Stat({ value, label }) {
 }
 
 export default function Hero() {
+  const { projects } = useProjects();
   // Se saca la cantidad de proyectos de la data
   const totalProjects = projects.length;
   // Se saca la cantidad de proyectos online de la data con un filtro
-  const onlineCount = useMemo(() => projects.filter((p) => p.status === "online").length, []);
+  const onlineCount = useMemo(() => projects.filter((p) => p.status === "online").length, [projects]);
   // Se obtiene la fecha actual
   const updatedAt = useMemo(() => new Date().toLocaleDateString("es-CL", { day: "numeric", month: "short" }), []);
 

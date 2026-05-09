@@ -37,6 +37,7 @@ const TECH_GROUP = {
   "Tailwind v4": "frontend",
   "Vite": "tools",
   "npm": "tools",
+  "json-server": "backend",
   "Framer Motion": "frontend",
   "React Router": "frontend",
   "React Icons": "frontend",
@@ -63,10 +64,10 @@ export default function ProjectCard({ project, index, priority = false }) {
       aria-label={name}
       className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
       style={{ animationDelay: `${100 + index * 80}ms` }}>
-      {image && (
+      {project.image && (
         <div className="relative -mx-4 -mt-4">
           <img
-            src={image}
+            src={project.image}
             alt={`Preview de ${name}`}
             className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             loading={priority ? "eager" : "lazy"}
