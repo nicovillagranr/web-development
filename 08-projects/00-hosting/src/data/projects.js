@@ -159,7 +159,7 @@ export const projects = [
     image: null,
     description:
       "API REST con 50 productos de moda (hombres, mujeres y niños). Cada producto expone nombre, categoría, tipo, descripción, imagen y precio — lista para consumir y filtrar en cualquier proyecto e-commerce.",
-    stack: ["Node.js"],
+    stack: ["Node.js", "json-server"],
     type: "REST API",
     status: "online",
     framework: "APIs",
