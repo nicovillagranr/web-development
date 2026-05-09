@@ -1,5 +1,19 @@
 export const projects = [
   {
+    id: 0,
+    name: "Portfolio Projects API",
+    path: "https://00-portfolio-projects-api.vercel.app/projects",
+    image: null,
+    description: "API REST que sirve los proyectos de mi portfolio con datos estructurados (nombre, descripción, tecnologías, links, estado).",
+    stack: ["Node.js", "json-server"],
+    type: "REST API",
+    status: "online",
+    framework: "APIs",
+    deploy: "Vercel",
+    repo: "https://github.com/nicovillagranr/APIs/tree/main/00-portfolio-projects",
+  },
+  {
+    id: 1,
     name: "Glossy Touch",
     path: "/proyecto-1/",
     image: "/previews/proyecto-1.webp",
@@ -13,6 +27,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-1",
   },
   {
+    id: 2,
     name: "ActiveBox",
     path: "/proyecto-2/",
     image: "/previews/proyecto-2.webp",
@@ -26,6 +41,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-2",
   },
   {
+    id: 3,
     name: "NexusAI",
     path: "/proyecto-3/",
     image: "/previews/proyecto-3.webp",
@@ -36,9 +52,10 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-3",
   },
   {
+    id: 4,
     name: "MGD Exports",
     path: "/proyecto-4/",
     image: "/previews/proyecto-4.webp",
@@ -52,6 +69,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-4",
   },
   {
+    id: 5,
     name: "Projex",
     path: "/proyecto-5/",
     image: "/previews/proyecto-5.webp",
@@ -62,9 +80,10 @@ export const projects = [
     status: "online",
     framework: "React",
     deploy: "Hostinger",
-    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-3",
+    repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-5",
   },
   {
+    id: 6,
     name: "ShopReact",
     path: "/proyecto-6/",
     image: "/previews/proyecto-6.webp",
@@ -78,6 +97,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-6",
   },
   {
+    id: 7,
     name: "Sport Mindset",
     path: "/proyecto-7/",
     image: "/previews/proyecto-7.webp",
@@ -91,6 +111,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-7",
   },
   {
+    id: 8,
     name: "Smart Cooler UI",
     path: "/proyecto-8/",
     image: "/previews/proyecto-8.webp",
@@ -104,6 +125,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/01-react/proyecto-8",
   },
   {
+    id: 9,
     name: "Users Fetch API",
     path: "https://proyecto-1-next-nine.vercel.app/",
     image: "/previews/proyecto-9.webp",
@@ -117,6 +139,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/02-next/proyecto-1",
   },
   {
+    id: 10,
     name: "Falabella.com",
     path: "https://proyecto-next-2.vercel.app/",
     image: "/previews/proyecto-10.webp",
@@ -130,6 +153,7 @@ export const projects = [
     repo: "https://github.com/nicovillagranr/web-development/tree/master/08-projects/02-next/proyecto-2",
   },
   {
+    id: 11,
     name: "Products API",
     path: "https://01-products-api.vercel.app/products",
     image: null,

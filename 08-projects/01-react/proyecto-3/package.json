@@ -1,6 +1,5 @@
 {
-  "name": "nexusai-landing",
-  "description": "Landing page for NexusAI - AI agency.",
+  "name": "react-portfolio-3",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@tailwindcss/vite": "^4.1.18",
+    "focus-trap-react": "^12.0.1",
     "framer-motion": "^12.24.7",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-icons": "^5.5.0",
+    "react-icons": "^5.6.0",
+    "react-router-dom": "^7.11.0",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

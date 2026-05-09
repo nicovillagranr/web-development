@@ -1,3 +1,6 @@
+// ================= CONTEXTO MODULO =================
+// Config de lint para JS/JSX.
+// Aplica reglas recomendadas de JS, React Hooks y React Refresh.
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -23,7 +26,7 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|^motion$' }],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
 ])

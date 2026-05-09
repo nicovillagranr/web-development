@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #ff5959;
+    --color-surface: #e8e8e8;
+    --color-dark: #1a1a1a;
+    --color-light: #ffffff;
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+}
+
+/* scroll invisible */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

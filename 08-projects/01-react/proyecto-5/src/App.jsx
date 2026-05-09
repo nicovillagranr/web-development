@@ -1,60 +1,31 @@
-import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+// ================= CONTEXTO MODULO =================
+// Componente raiz que compone todas las secciones de la landing page.
+import Navbar from './components/layout/Navbar'
+import Hero from './components/sections/Hero'
+import PainPoints from './components/sections/PainPoints'
+import Services from './components/sections/Services'
+import Process from './components/sections/Process'
+import Metrics from './components/sections/Metrics'
+import Testimonials from './components/sections/Testimonials'
+import Faq from './components/sections/Faq'
+import FinalCta from './components/sections/FinalCta'
+import Footer from './components/layout/Footer'
 
-import "./assets/styles/App.css";
-
-import Header from "./Components/01-Header/Header.jsx";
-import Hero from "./Components/02-Hero/Hero.jsx";
-import Services from "./Components/03-Services/Services.jsx";
-import Portfolio from "./Components/04-Portfolio/Portfolio.jsx";
-import Team from "./Components/05-Team/Team.jsx";
-import News from "./Components/06-News/News.jsx";
-import Contact from "./Components/07-Contact/Contact.jsx";
-import Footer from "./Components/08-Footer/Footer.jsx";
-import NotFound from "./Components/NotFound/404.jsx";
-
-const MotionMain = motion.main;
-
-function Page({ children }) {
+export default function App() {
+  // Orden de las secciones de la landing page:
+  // Navbar → Hero → PainPoints → Services → Process → Metrics → Testimonials → FAQ → FinalCta → Footer
   return (
-    <MotionMain
-      role="main"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.15, ease: "easeOut" }}
-    >
-      {children}
-    </MotionMain>
-  );
-}
-
-function AnimatedRoutes() {
-  const location = useLocation();
-
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="*" element={<Page><NotFound /></Page>} />
-        <Route path="/" element={<Page><Hero /></Page>} />
-        <Route path="/services" element={<Page><Services /></Page>} />
-        <Route path="/portfolio" element={<Page><Portfolio /></Page>} />
-        <Route path="/team" element={<Page><Team /></Page>} />
-        <Route path="/news" element={<Page><News /></Page>} />
-        <Route path="/contact" element={<Page><Contact /></Page>} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
-
-function App() {
-  return (
-    <HashRouter>
-      <Header />
-      <AnimatedRoutes />
+    <>
+      <Navbar />
+      <Hero />
+      <PainPoints />
+      <Services />
+      <Process />
+      <Metrics />
+      <Testimonials />
+      <Faq />
+      <FinalCta />
       <Footer />
-    </HashRouter>
-  );
+    </>
+  )
 }
-
-export default App;
