@@ -4,6 +4,8 @@ import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import styles from "./Preloader.module.css";
 
+import { version } from "../../../package.json"
+
 const LOGO_SRC = "/logo.png";
 
 gsap.registerPlugin(SplitText, CustomEase);
@@ -215,6 +217,8 @@ export default function Preloader({ onComplete }) {
 
     return (
         <div
+            role="status"
+            aria-label="cargando portafolio"
             ref={preloaderRef}
             className={`${styles.preloader} ${styles.initializing}`}
         >
@@ -223,7 +227,7 @@ export default function Preloader({ onComplete }) {
             </div>
 
             <div className={styles.row}>
-                <p>v1.0.0</p>
+                <p>v{version}</p>
                 <p>React</p>
                 <p>./portfolio</p>
                 <p>build:ok</p>
