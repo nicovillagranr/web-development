@@ -26,11 +26,13 @@ export default function Hero() {
       <span className="animate-fade-up inline-block rounded-full border border-amber bg-amber-glow px-3 py-1 font-mono text-xs font-medium tracking-wide text-amber">
         Open to work
       </span>
+      {/* H1: Nombre completo como heading principal para SEO (Google prioriza H1 para entender de qué trata la página) */}
       <h1 className="animate-fade-up delay-1 mt-5 max-w-[18ch] font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-        Proyectos web en producción.
+        Nico Villagrán
       </h1>
+      {/* Descripción profesional: incluye stack tecnológico (React, Next.js, TypeScript, JavaScript) para mejorar ranking en búsquedas específicas de esas tecnologías */}
       <p className="animate-fade-up delay-2 mt-4 max-w-[60ch] text-base leading-relaxed text-text-secondary md:text-lg">
-        Front-end con React enfocado en performance, accesibilidad y decisiones reales de arquitectura.
+        React • Next.js • TypeScript • JavaScript — Construyendo interfaces modernas
       </p>
 
       <div className="animate-fade-up delay-3 mt-6 flex flex-wrap items-center gap-3">

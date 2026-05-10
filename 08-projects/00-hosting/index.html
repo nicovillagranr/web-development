@@ -4,12 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portafolio de proyectos web desplegados en la nube — Nico Villagran" />
+  <!-- Meta description para SEO: incluye nombre completo + stack tecnológico para mejorar ranking en búsquedas de "Nico Villagrán", "React developer", etc -->
+  <meta name="description" content="Nico Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development" />
 
-  <!-- Open Graph -->
+  <!-- Open Graph: metadatos para redes sociales (Facebook, LinkedIn, WhatsApp) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Proyectos | Nico Villagran">
-  <meta property="og:description" content="Portafolio de proyectos web desplegados en la nube - Nico Villagran">
+  <!-- og:title: título que aparece al compartir en redes (con nombre completo para branding) -->
+  <meta property="og:title" content="Nico Villagrán | React & Next.js Developer">
+  <!-- og:description: descripción que aparece en preview de redes sociales, incluye skills principales -->
+  <meta property="og:description" content="Nico Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development">
 
   <!-- Imagen (cuadrado para WhatsApp/móvil) -->
   <meta property="og:image" content="https://nicovillagran.com/og-image-square.png">
@@ -19,10 +22,13 @@
 
   <meta property="og:url" content="https://nicovillagran.com">
 
-  <!-- Twitter Card -->
+  <!-- Twitter Card: metadatos específicos para compartir en Twitter/X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Proyectos | Nico Villagran">
-  <meta name="twitter:description" content="Portafolio de proyectos web desplegados en la nube - Nico Villagran">
+  <!-- twitter:title: título que ve en Twitter, con nombre completo para SEO personal -->
+  <meta name="twitter:title" content="Nico Villagrán | React & Next.js Developer">
+  <!-- twitter:description: descripción en Tweet, incluye skills principales -->
+  <meta name="twitter:description" content="Nico Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development">
+  <!-- twitter:image: imagen que aparece en preview de Tweet -->
   <meta name="twitter:image" content="https://nicovillagran.com/og-image-square.png">
 
   <!-- Theme -->
@@ -40,6 +46,28 @@
   <link rel="preload" as="image" href="/previews/proyecto-2.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/previews/proyecto-3.webp" fetchpriority="high">
   <title>Proyectos | Nico Villagran</title>
+
+  <!-- JSON-LD Structured Data: Le dice a Google exactamente quién eres (schema.org Person)
+       - Nombre: tu nombre completo como aparece en Google Search Results
+       - alternateName: variaciones de nombre para que Google entienda que son la misma persona
+       - jobTitle: título profesional visible en búsquedas
+       - skills: array de tecnologías para mejorar ranking en búsquedas específicas (React, Next.js, etc.)
+       - sameAs: URLs de redes sociales para verificación de identidad (agregar cuando tengas GitHub, LinkedIn)
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Nicolás Villagrán",
+    "alternateName": ["Nico Villagrán", "Nicolas Villagran", "Nico Villa", "Nicolás Villagran"],
+    "url": "https://nicovillagran.com",
+    "jobTitle": "React & Next.js Developer",
+    "description": "React & Next.js developer. TypeScript • JavaScript • Modern Web Development",
+    "image": "https://nicovillagran.com/logo.png",
+    "skills": ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion"],
+    "sameAs": []
+  }
+  </script>
 </head>
 
 <body>
