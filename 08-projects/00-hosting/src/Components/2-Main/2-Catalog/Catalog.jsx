@@ -1,17 +1,11 @@
-// Imports de Hooks
 import { useState } from "react";
-import { useProjects } from "@/hooks/useProjects";
-
-// Import de Componentes
 import ProjectCard from "./ProjectCard";
 
 const FILTERS = ["Todos", "React", "Next.js", "APIs"];
 const GROUP_ORDER = ["React", "Next.js", "APIs"];
 
-export default function Catalog() {
+export default function Catalog({ projects = [], loading = false, error = null }) {
   const [filter, setFilter] = useState("Todos");
-
-  const { projects, loading, error } = useProjects();
 
   const projectsByFramework = GROUP_ORDER.map((framework) => [
     framework,
@@ -19,7 +13,7 @@ export default function Catalog() {
   ]).filter(([, group]) => group.length > 0);
 
   if (loading) return <p>Cargando proyectos...</p>;
-  if (error) return <p>Error al cargar proyectos: {error.message}</p>;
+  if (error) return <p>Error al cargar proyectos: {error instanceof Error ? error.message : String(error)}</p>;
 
   const visibleGroups = filter === "Todos" ? projectsByFramework : [[null, projects.filter((p) => p.framework === filter)]];
 

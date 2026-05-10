@@ -1,5 +1,5 @@
 export const CONTACT = {
-  name: "Nico Villagran",
+  name: "Portafolio Profesional",
   // Correo profesional
   email: "nicovillagranroses@gmail.com",
   github: "https://github.com/nicovillagranr",

@@ -9,6 +9,7 @@ import Catalog from "@/Components/2-Main/2-Catalog/Catalog";
 import Footer from "@/Components/3-Footer/Footer";
 
 import { PRELOADER_KEY, THEME_KEY } from "./data/storageKeys";
+import { useProjects } from "@/hooks/useProjects";
 
 export default function App() {
 
@@ -19,6 +20,8 @@ export default function App() {
   const [theme, setTheme] = useState(
     () => localStorage.getItem(THEME_KEY) ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
   );
+
+  const { projects, loading: projectsLoading, error: projectsError } = useProjects();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -42,8 +45,8 @@ export default function App() {
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
       <Header theme={theme} onToggleTheme={toggleTheme} />
       <main className="container-page">
-        <Hero />
-        <Catalog />
+        <Hero projects={projects} />
+        <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
       </main>
       <Footer />
     </>

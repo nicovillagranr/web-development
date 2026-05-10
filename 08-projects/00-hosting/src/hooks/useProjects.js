@@ -8,7 +8,12 @@ export function useProjects() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        fetch(API)
+
+        // AbortController para cancelar la petición si el componente se desmonta
+        const controller = new AbortController()
+
+
+        fetch(API, { signal: controller.signal })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
@@ -19,10 +24,15 @@ export function useProjects() {
                 setProjects(data)
                 setLoading(false)
             })
-            .catch((error) => {
-                setError(error)
-                setLoading(false)
+            .catch((err) => {
+                if (err.name !== "AbortError") {
+                    setError(err)
+                    setLoading(false)
+                }
             })
+        return () => {
+            controller.abort()
+        }
     }, [])
 
     return { projects, loading, error }
