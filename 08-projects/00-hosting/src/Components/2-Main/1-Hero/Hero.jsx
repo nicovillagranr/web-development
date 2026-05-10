@@ -57,8 +57,8 @@ function PreviewAbout({ data, pulse }) {
 function PreviewStack({ data }) {
   const groups = [
     { label: "frontend", items: data.frontend.split(","), color: "accent" },
-    { label: "styling", items: data.styling.split(","), color: "emerald" },
-    { label: "backend", items: data.backend.split(","), color: "amber" },
+    { label: "markup", items: data.markup.split(","), color: "emerald" },
+    { label: "tools", items: data.tools.split(","), color: "amber" },
   ];
 
   const colorMap = {
@@ -259,9 +259,9 @@ export default function Hero({ projects = [] }) {
       name: "stack.json",
       icon: "⚡",
       fields: [
-        { k: "frontend", v: "React 19, Next.js, TypeScript", type: "str" },
-        { k: "styling", v: "Tailwind v4, Framer Motion", type: "str" },
-        { k: "backend", v: "Node.js, Supabase", type: "str" },
+        { k: "frontend", v: "React, Next.js, TypeScript, JavaScript", type: "str" },
+        { k: "markup", v: "HTML, CSS", type: "str" },
+        { k: "tools", v: "Git, Docker", type: "str" },
       ],
     },
     {
@@ -305,9 +305,9 @@ export default function Hero({ projects = [] }) {
     email: CONTACT.email,
     github: "github.com/nicovillagranr",
     linkedin: "in/nico-villagran",
-    frontend: "React 19, Next.js, TypeScript",
-    styling: "Tailwind v4, Framer Motion",
-    backend: "Node.js, Supabase",
+    frontend: "React, Next.js, TypeScript, JavaScript",
+    markup: "HTML, CSS",
+    tools: "Git, Docker",
   };
 
   return (
