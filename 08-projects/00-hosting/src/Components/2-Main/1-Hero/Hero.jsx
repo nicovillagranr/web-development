@@ -57,7 +57,7 @@ function PreviewAbout({ data, pulse }) {
 function PreviewStack({ data }) {
   const groups = [
     { label: "frontend", items: data.frontend.split(","), color: "accent" },
-    { label: "markup", items: data.markup.split(","), color: "emerald" },
+    { label: "styling", items: data.styling.split(","), color: "emerald" },
     { label: "tools", items: data.tools.split(","), color: "amber" },
   ];
 
@@ -260,7 +260,7 @@ export default function Hero({ projects = [] }) {
       icon: "⚡",
       fields: [
         { k: "frontend", v: "React, Next.js, TypeScript, JavaScript", type: "str" },
-        { k: "markup", v: "HTML, CSS", type: "str" },
+        { k: "styling", v: "Tailwind, Bootstrap, CSS Modules, BEM, UX", type: "str" },
         { k: "tools", v: "Git, Docker", type: "str" },
       ],
     },
@@ -306,7 +306,7 @@ export default function Hero({ projects = [] }) {
     github: "github.com/nicovillagranr",
     linkedin: "in/nico-villagran",
     frontend: "React, Next.js, TypeScript, JavaScript",
-    markup: "HTML, CSS",
+    styling: "Tailwind, Bootstrap, CSS Modules, BEM, UX",
     tools: "Git, Docker",
   };
 
