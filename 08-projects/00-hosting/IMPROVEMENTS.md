@@ -25,10 +25,10 @@ Auditoría completa del 13 de mayo de 2026 + actualización 09-05-2026.
 
 | # | Mejora | Effort | Impacto | Estado | Descripción |
 |---|--------|--------|--------|--------|-------------|
-| 5 | Centralizar localStorage keys | 5 min | Bajo | ⏳ Pendiente | Mover `PRELOADER_KEY` y `THEME_KEY` de App.jsx a `src/data/storageKeys.js` |
-| 9 | Leer versión desde package.json | 5 min | Bajo | ⏳ Pendiente | Preloader muestra "v1.0.0" hardcodeado. Leer desde `package.json` y actualizar versión a "1.0.0" |
-| 10 | ARIA mejorado en Preloader | 5 min | Bajo | ⏳ Pendiente | Agregar `role="status"` y `aria-label` al contenedor del preloader |
-| 13 | Agregar sitemap.xml + robots.txt | 10 min | Bajo | ⏳ Pendiente | Crear en `public/`. Para indexación en buscadores |
+| 5 | Centralizar localStorage keys | 5 min | Bajo | ✅ 09-05-2026 | Mover `PRELOADER_KEY` y `THEME_KEY` de App.jsx a `src/data/storageKeys.js` |
+| 9 | Leer versión desde package.json | 5 min | Bajo | ✅ 09-05-2026 | Preloader muestra "v1.0.0" hardcodeado. Leer desde `package.json` y actualizar versión a "1.0.0" |
+| 10 | ARIA mejorado en Preloader | 5 min | Bajo | ✅ 09-05-2026 | Agregar `role="status"` y `aria-label` al contenedor del preloader |
+| 13 | Agregar sitemap.xml + robots.txt | 10 min | Bajo | ✅ 09-05-2026 | Crear en `public/`. Para indexación en buscadores |
 
 ---
 
@@ -38,6 +38,14 @@ Auditoría completa del 13 de mayo de 2026 + actualización 09-05-2026.
 |---|--------|--------|--------|--------|-------------|
 | 2 | Error Boundary | 15 min | Alto | ⏳ Pendiente | Crear class component `ErrorBoundary.jsx`. Envolver Hero y Catalog. Evita crashes totales |
 | 8 | README.md completo | 15 min | Medio | ⏳ Pendiente | Documentar stack, setup, scripts, estructura. Profesionalidad |
+
+---
+
+## 🔵 SEO/CONTENIDO (20–30 min) — Mejorar indexación
+
+| # | Mejora | Effort | Impacto | Estado | Descripción |
+|---|--------|--------|--------|--------|-------------|
+| 16 | Mejorar descripción y contenido indexable | 25 min | Medio | ⏳ Pendiente | Meta description más descriptivo (skills + tech), H1 en Hero, JSON-LD para Person/Portfolio, descripciones en proyectos |
 
 ---
 
@@ -85,3 +93,9 @@ Auditoría completa del 13 de mayo de 2026 + actualización 09-05-2026.
   - og-image-square.png (1200x1200px) para WhatsApp/móvil
   - og-image.png (1200x630px) como alternativa
   - Funciona correctamente en WhatsApp, LinkedIn, Twitter
+
+- **09-05-2026**: Puntos #5, #9, #10, #13 - Mejoras simples completadas
+  - #5: `storageKeys.js` creado, constantes centralizadas y importadas en App.jsx
+  - #9: package.json actualizado a v1.0.0, Preloader usa `import { version }`
+  - #10: Preloader agregado `role="status"` y `aria-label="cargando portafolio"`
+  - #13: sitemap.xml y robots.txt creados en `public/`
