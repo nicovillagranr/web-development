@@ -78,7 +78,7 @@ function PreviewStack({ data }) {
       </div>
 
       <h2 className="font-heading text-2xl sm:text-4xl font-bold leading-tight text-text-primary">
-        Lo que <span className="bg-gradient-to-r from-accent via-emerald to-amber bg-clip-text text-transparent">construyo</span>
+        Lo que <span className="bg-linear-to-r from-accent via-emerald to-amber bg-clip-text text-transparent">construyo</span>
       </h2>
 
       <div className="flex flex-col gap-2 sm:gap-4">
@@ -133,12 +133,12 @@ function PreviewContact({ data }) {
       <div className="flex flex-col gap-2">
         {channels.map((c) => (
           <a key={c.label} href={c.href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 sm:gap-3 rounded-lg border px-2 sm:px-4 py-2 sm:py-3 transition-colors hover:opacity-80 ${colorMap[c.accent]}`}>
-            <span className="text-base sm:text-lg flex-shrink-0">{c.icon}</span>
+            <span className="text-base sm:text-lg shrink-0">{c.icon}</span>
             <div className="flex-1 min-w-0">
               <div className="font-mono text-xs uppercase tracking-widest text-current opacity-70">{c.label}</div>
               <div className="font-mono text-xs sm:text-sm text-current truncate">{c.value}</div>
             </div>
-            <span className="text-base sm:text-lg opacity-50 flex-shrink-0">→</span>
+            <span className="text-base sm:text-lg opacity-50 shrink-0">→</span>
           </a>
         ))}
       </div>
@@ -160,7 +160,7 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
     <div className="animate-fade-up delay-2 flex flex-col rounded-card border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
       {/* Traffic + Tabs */}
       <div className="flex items-center border-b border-line px-2 sm:px-4 gap-1 overflow-x-auto">
-        <div className="flex gap-1 py-2 pr-2 flex-shrink-0 sm:gap-1.5 sm:py-3 sm:pr-4">
+        <div className="flex gap-1 py-2 pr-2 shrink-0 sm:gap-1.5 sm:py-3 sm:pr-4">
           <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-accent/50" />
           <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-amber/50" />
           <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald/50" />
@@ -189,7 +189,7 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
       {/* Editor Body */}
       <div className="flex flex-1 overflow-hidden min-h-0">
         {/* Line Numbers */}
-        <div className="flex flex-col border-r border-line bg-base-900/50 px-1 sm:px-3 py-2 sm:py-4 text-right font-mono text-xs text-text-muted/40 select-none flex-shrink-0">
+        <div className="flex flex-col border-r border-line bg-base-900/50 px-1 sm:px-3 py-2 sm:py-4 text-right font-mono text-xs text-text-muted/40 select-none shrink-0">
           {Array.from({ length: fields.length + 2 }).map((_, i) => (
             <div key={i} className="h-5 sm:h-7">{i + 1}</div>
           ))}
@@ -212,7 +212,6 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
               </span>
             );
           })}
-          {"\n"}
           <span className="text-text-secondary">{"}"}</span>
         </pre>
       </div>
