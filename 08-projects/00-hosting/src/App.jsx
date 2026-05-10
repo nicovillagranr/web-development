@@ -8,8 +8,7 @@ import Hero from "@/Components/2-Main/1-Hero/Hero";
 import Catalog from "@/Components/2-Main/2-Catalog/Catalog";
 import Footer from "@/Components/3-Footer/Footer";
 
-const PRELOADER_KEY = "preloader:seen";
-const THEME_KEY = "theme:mode";
+import { PRELOADER_KEY, THEME_KEY } from "./data/storageKeys";
 
 export default function App() {
 
