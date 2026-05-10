@@ -12,6 +12,14 @@ function Stat({ value, label }) {
   );
 }
 
+function SkillBadge({ skill }) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-line-hover bg-surface/50 px-3 py-1.5 text-xs font-medium text-text-secondary hover:border-accent-border transition-colors">
+      {skill}
+    </span>
+  );
+}
+
 export default function Hero() {
   const { projects } = useProjects();
   // Se saca la cantidad de proyectos de la data
@@ -26,16 +34,24 @@ export default function Hero() {
       <span className="animate-fade-up inline-block rounded-full border border-amber bg-amber-glow px-3 py-1 font-mono text-xs font-medium tracking-wide text-amber">
         Open to work
       </span>
-      {/* H1: Nombre completo como heading principal para SEO (Google prioriza H1 para entender de qué trata la página) */}
+      {/* H1: Nombre completo como heading principal para SEO */}
       <h1 className="animate-fade-up delay-1 mt-5 max-w-[18ch] font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
         Nico Villagrán
       </h1>
-      {/* Descripción profesional: incluye stack tecnológico (React, Next.js, TypeScript, JavaScript) para mejorar ranking en búsquedas específicas de esas tecnologías */}
-      <p className="animate-fade-up delay-2 mt-4 max-w-[60ch] text-base leading-relaxed text-text-secondary md:text-lg">
-        React • Next.js • TypeScript • JavaScript — Construyendo interfaces modernas
+
+      {/* Subtítulo/tagline: define el diferencial del desarrollador */}
+      <p className="animate-fade-up delay-2 mt-3 text-base font-medium text-amber">
+        Frontend Developer obsesionado con detalles
       </p>
 
-      <div className="animate-fade-up delay-3 mt-6 flex flex-wrap items-center gap-3">
+      {/* Descripción expandida: años de experiencia + especialidades principales */}
+      <p className="animate-fade-up delay-2 mt-4 max-w-[70ch] text-base leading-relaxed text-text-secondary md:text-lg">
+        2 años construyendo interfaces modernas con <strong>React • Next.js • TypeScript • JavaScript</strong>.
+        Especializado en <strong>performance</strong>, <strong>animaciones fluidas</strong>,
+        <strong>diseño responsivo</strong> y <strong>accesibilidad web</strong>.
+      </p>
+
+      <div className="animate-fade-up delay-3 mt-8 flex flex-wrap items-center gap-3">
         <a href="#proyectos" className="hero-cta-shadow rounded-btn bg-linear-to-br from-accent to-cyan-400 px-5 py-2.5 text-sm font-bold text-base-900 transition-transform hover:-translate-y-0.5">
           Ver proyectos
         </a>
@@ -44,7 +60,21 @@ export default function Hero() {
         </a>
       </div>
 
-      <div className="animate-fade-up delay-4 mt-8 grid grid-cols-3 gap-2 px-2 sm:max-w-md sm:gap-3 sm:px-0">
+      {/* Sección de habilidades expandida: skills más allá del stack tecnológico */}
+      <div className="animate-fade-up delay-3 mt-10 space-y-3">
+        <p className="text-xs font-mono tracking-wide text-text-muted uppercase">Especialidades</p>
+        <div className="flex flex-wrap gap-2">
+          <SkillBadge skill="Frontend Development" />
+          <SkillBadge skill="Performance Optimization" />
+          <SkillBadge skill="Responsive Design" />
+          <SkillBadge skill="Smooth Animations" />
+          <SkillBadge skill="Web Accessibility" />
+          <SkillBadge skill="Component Architecture" />
+        </div>
+      </div>
+
+      {/* Stats: métricas dinámicas del portafolio */}
+      <div className="animate-fade-up delay-4 mt-12 grid grid-cols-3 gap-2 px-2 sm:max-w-md sm:gap-3 sm:px-0">
         <Stat value={totalProjects} label="Proyectos" />
         <Stat value={onlineCount} label="Online" />
         <Stat value={updatedAt} label="Actualizado" />
