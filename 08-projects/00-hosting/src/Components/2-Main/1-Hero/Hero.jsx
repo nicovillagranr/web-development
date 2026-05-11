@@ -15,7 +15,7 @@ function KPI({ label, value, accent = "primary" }) {
   );
 }
 
-function PreviewAbout({ data, pulse }) {
+function PreviewAbout({ data }) {
   return (
     <div className="flex flex-col gap-3 sm:gap-6">
       <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ function PreviewStack({ data }) {
       </div>
 
       <div className="font-mono text-xs text-text-muted">
-        learning: <span className="text-amber">TS patterns</span>
+        filosofía: <span className="text-amber">Nunca dejar de aprender</span>
       </div>
     </div>
   );
@@ -121,7 +121,7 @@ function PreviewContact({ data }) {
       <div className="flex items-center justify-between">
         <span className="inline-flex items-center gap-1.5 rounded-badge border border-accent-border bg-accent-glow px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-semibold text-accent">
           <span className="animate-pulse-dot inline-block h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-accent" />
-          &lt;6h
+          Seeking opportunities
         </span>
         <span className="font-mono text-xs text-text-muted hidden sm:inline">ContactCard.tsx</span>
       </div>
@@ -158,21 +158,15 @@ function PreviewContact({ data }) {
 function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
   return (
     <div className="animate-fade-up delay-2 flex flex-col rounded-card border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
-      {/* Traffic + Tabs */}
-      <div className="flex items-center border-b border-line px-2 sm:px-4 gap-1 overflow-x-auto">
-        <div className="flex gap-1 py-2 pr-2 shrink-0 sm:gap-1.5 sm:py-3 sm:pr-4">
-          <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-accent/50" />
-          <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-amber/50" />
-          <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald/50" />
-        </div>
-
-        <div className="flex overflow-x-auto">
+      {/* Title bar + Tabs */}
+      <div className="flex items-center border-b border-line px-2 sm:px-4 overflow-x-auto">
+        <div className="flex overflow-x-auto flex-1">
           {[
             { id: "about", name: "about.json", icon: "👤" },
             { id: "stack", name: "stack.json", icon: "⚡" },
             { id: "contact", name: "contact.json", icon: "✉" },
           ].map((t) => (
-            <button key={t.id} onClick={() => onTabChange(t.id)} className={`px-2 py-2 sm:px-3 sm:py-3 border-t-2 border-b border-b-transparent text-xs font-mono transition-colors whitespace-nowrap flex-shrink-0 ${tab.id === t.id ? "border-t-accent bg-accent/10 text-text-primary" : "border-t-transparent text-text-muted hover:text-text-secondary"}`}>
+            <button key={t.id} onClick={() => onTabChange(t.id)} className={`px-2 py-2 sm:px-3 sm:py-3 border-t-2 border-b border-b-transparent text-xs font-mono transition-colors whitespace-nowrap shrink-0 ${tab.id === t.id ? "border-t-accent bg-accent/10 text-text-primary" : "border-t-transparent text-text-muted hover:text-text-secondary"}`}>
               <span className="mr-0.5 sm:mr-1">{t.icon}</span>
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden text-xs">{t.id}</span>
@@ -180,9 +174,17 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
           ))}
         </div>
 
-        <div className="ml-auto flex items-center gap-1 text-xs font-mono text-emerald py-2 sm:py-3 px-1 sm:px-0 flex-shrink-0">
-          <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald animate-pulse-dot" />
-          <span className="hidden sm:inline">editing</span>
+        <div className="ml-auto flex items-center gap-2 py-2 sm:py-3 px-1 sm:px-0 shrink-0">
+          <div className="flex items-center gap-1 text-xs font-mono text-emerald hidden sm:flex">
+            <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald animate-pulse-dot" />
+            <span>editing</span>
+          </div>
+
+          <div className="flex items-center gap-0.5 pl-2 border-l border-line">
+            <button className="hover:bg-base-800/50 p-1 text-xs text-text-muted transition-colors">−</button>
+            <button className="hover:bg-base-800/50 p-1 text-xs text-text-muted transition-colors">□</button>
+            <button className="hover:bg-red-500/20 p-1 text-xs text-red-400 transition-colors">✕</button>
+          </div>
         </div>
       </div>
 
@@ -206,7 +208,9 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
                 <span className="hidden sm:inline">{"  "}</span>
                 <span className="text-text-primary">"{f.k}"</span>
                 <span className="text-text-secondary">:</span>
-                <span className={f.type === "num" ? "text-emerald" : "text-amber"}>{f.v}</span>
+                <span className={f.type === "num" ? "text-emerald" : "text-amber"}>
+                  {f.type === "str" ? `"${f.v}"` : f.v}
+                </span>
                 <span className="text-text-secondary">{i < fields.length - 1 ? "," : ""}</span>
                 {isActive && <span className="animate-blink text-accent">|</span>}
               </span>
@@ -278,8 +282,8 @@ export default function Hero({ projects = [] }) {
   const tab = TABS.find((t) => t.id === tabId);
 
   useEffect(() => {
-    setActiveIdx(0);
-    setPulse((p) => p + 1);
+    // setActiveIdx(0);
+    // setPulse((p) => p + 1);
 
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
@@ -312,13 +316,12 @@ export default function Hero({ projects = [] }) {
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
       <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
-        <EditorWindow tab={tab} fields={tab.fields} activeIdx={activeIdx} onTabChange={setTabId} />
-
         <div key={tabId} className="animate-fade-up delay-2">
           {tabId === "about" && <PreviewAbout data={data} pulse={pulse} />}
           {tabId === "stack" && <PreviewStack data={data} />}
           {tabId === "contact" && <PreviewContact data={data} />}
         </div>
+        <EditorWindow tab={tab} fields={tab.fields} activeIdx={activeIdx} onTabChange={setTabId} />
       </div>
     </section>
   );
