@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { CONTACT } from "@/data/contact";
 
 function KPI({ label, value, accent = "primary" }) {
   const colorMap = {
@@ -127,7 +126,7 @@ function PreviewContact({ data }) {
       </div>
 
       <h2 className="font-heading text-2xl sm:text-4xl font-bold leading-tight text-text-primary">
-        Hablemos. <span className="text-emerald">Santiago</span>
+        Hablemos. <span className="text-emerald">{data.name.split(" ")[0]}</span>
       </h2>
 
       <div className="flex flex-col gap-2">
@@ -234,7 +233,7 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
   );
 }
 
-export default function Hero({ projects = [] }) {
+export default function Hero({ projects = [], profile }) {
   const [tabId, setTabId] = useState("about");
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -247,7 +246,7 @@ export default function Hero({ projects = [] }) {
       name: "about.json",
       icon: "👤",
       fields: [
-        { k: "name", v: "Nico Villagrán", type: "str" },
+        { k: "name", v: profile?.name || "Portfolio", type: "str" },
         { k: "role", v: "Frontend Developer", type: "str" },
         { k: "based", v: "Santiago, CL", type: "str" },
         { k: "years", v: "2", type: "num" },
@@ -271,9 +270,9 @@ export default function Hero({ projects = [] }) {
       name: "contact.json",
       icon: "✉",
       fields: [
-        { k: "email", v: CONTACT.email, type: "str" },
-        { k: "github", v: CONTACT.github, type: "str" },
-        { k: "linkedin", v: CONTACT.linkedin, type: "str" },
+        { k: "email", v: profile?.email || "", type: "str" },
+        { k: "github", v: profile?.github || "", type: "str" },
+        { k: "linkedin", v: profile?.linkedin || "", type: "str" },
       ],
     },
   ];
@@ -296,16 +295,16 @@ export default function Hero({ projects = [] }) {
   }, [tabId, tab.fields.length]);
 
   const data = {
-    name: "Nico Villagrán",
+    name: profile?.name || "Portfolio",
     role: "Frontend Developer",
     based: "Santiago, CL",
     years: "2",
     projects: totalProjects,
     online: onlineCount,
     status: "open_to_work",
-    email: CONTACT.email,
-    github: CONTACT.github,
-    linkedin: CONTACT.linkedin,
+    email: profile?.email || "",
+    github: profile?.github || "",
+    linkedin: profile?.linkedin || "",
     frontend: "React, Next.js, TypeScript, JavaScript",
     styling: "Tailwind, Bootstrap, CSS Modules, BEM, UX",
     tools: "Git, Docker",
@@ -314,7 +313,7 @@ export default function Hero({ projects = [] }) {
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
       <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
-        <div key={tabId} className="animate-fade-up delay-2">
+        <div key={tabId} className="animate-fade-up delay-2 h-100 overflow-y-auto">
           {tabId === "about" && <PreviewAbout data={data} />}
           {tabId === "stack" && <PreviewStack data={data} />}
           {tabId === "contact" && <PreviewContact data={data} />}

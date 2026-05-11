@@ -10,10 +10,17 @@ const LOGO_SRC = "/logo.png";
 
 gsap.registerPlugin(SplitText, CustomEase);
 
-const TEXT_COLOR = "#ecf2ff";
-const TRACK_COLOR = "#1a2444";
+const getThemeColors = () => {
+  const isLight = document.documentElement.classList.contains("light");
+  return {
+    textColor: isLight ? "#1a73e8" : "#ecf2ff",
+    trackColor: isLight ? "#dadce0" : "#1a2444",
+  };
+};
 
 export default function Preloader({ onComplete }) {
+    const { textColor, trackColor } = getThemeColors();
+
     const preloaderRef = useRef(null);
     const btnRef = useRef(null);
     const trackRef = useRef(null);
@@ -261,7 +268,7 @@ export default function Preloader({ onComplete }) {
                             cy="160"
                             r="155"
                             fill="none"
-                            stroke={TRACK_COLOR}
+                            stroke={trackColor}
                             strokeWidth="2"
                             ref={trackRef}
                         />
@@ -270,7 +277,7 @@ export default function Preloader({ onComplete }) {
                             cy="160"
                             r="155"
                             fill="none"
-                            stroke={TEXT_COLOR}
+                            stroke={textColor}
                             strokeWidth="2"
                             ref={progressRef}
                         />

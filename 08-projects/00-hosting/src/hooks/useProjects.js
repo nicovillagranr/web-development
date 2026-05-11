@@ -1,27 +1,29 @@
 import { useState, useEffect } from "react"
 
-const API = "https://00-portfolio-projects-api.vercel.app/projects"
+const API_BASE = "https://00-portfolio-projects-api.vercel.app"
 
 export function useProjects() {
     const [projects, setProjects] = useState([])
+    const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
     useEffect(() => {
-
-        // AbortController para cancelar la petición si el componente se desmonta
         const controller = new AbortController()
 
-
-        fetch(API, { signal: controller.signal })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`)
+        Promise.all([
+            fetch(`${API_BASE}/projects`, { signal: controller.signal }),
+            fetch(`${API_BASE}/profile`, { signal: controller.signal })
+        ])
+            .then(([projectsRes, profileRes]) => {
+                if (!projectsRes.ok || !profileRes.ok) {
+                    throw new Error(`HTTP error! status: ${projectsRes.status}`)
                 }
-                return response.json()
+                return Promise.all([projectsRes.json(), profileRes.json()])
             })
-            .then((data) => {
-                setProjects(data)
+            .then(([projectsData, profileData]) => {
+                setProjects(projectsData)
+                setProfile(profileData)
                 setLoading(false)
             })
             .catch((err) => {
@@ -30,10 +32,11 @@ export function useProjects() {
                     setLoading(false)
                 }
             })
+
         return () => {
             controller.abort()
         }
     }, [])
 
-    return { projects, loading, error }
+    return { projects, profile, loading, error }
 }

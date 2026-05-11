@@ -22,7 +22,7 @@ export default function App() {
     () => localStorage.getItem(THEME_KEY) ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
   );
 
-  const { projects, loading: projectsLoading, error: projectsError } = useProjects();
+  const { projects, profile, loading: projectsLoading, error: projectsError } = useProjects();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -49,11 +49,11 @@ export default function App() {
         {/* Error Boundary tiene como propósito mostrar un componente alternativo en caso de error */}
         {/* De esta forma, si la lógica da error, no se muestra un pantallazo blanco al usuario */}
         <ErrorBoundary>
-          <Hero projects={projects} />
+          <Hero projects={projects} profile={profile} />
           <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
         </ErrorBoundary>
       </main>
-      <Footer />
+      <Footer theme={theme} profile={profile} />
     </>
   );
 }
