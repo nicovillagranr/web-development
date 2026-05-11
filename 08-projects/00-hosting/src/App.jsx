@@ -7,6 +7,7 @@ import Header from "@/Components/1-Header/Header";
 import Hero from "@/Components/2-Main/1-Hero/Hero";
 import Catalog from "@/Components/2-Main/2-Catalog/Catalog";
 import Footer from "@/Components/3-Footer/Footer";
+import ErrorBoundary from "@/Components/4-ErrorBoundary/ErrorBoundary";
 
 import { PRELOADER_KEY, THEME_KEY } from "./data/storageKeys";
 import { useProjects } from "@/hooks/useProjects";
@@ -45,8 +46,12 @@ export default function App() {
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
       <Header theme={theme} onToggleTheme={toggleTheme} />
       <main className="container-page">
-        <Hero projects={projects} />
-        <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
+        {/* Error Boundary tiene como propósito mostrar un componente alternativo en caso de error */}
+        {/* De esta forma, si la lógica da error, no se muestra un pantallazo blanco al usuario */}
+        <ErrorBoundary>
+          <Hero projects={projects} />
+          <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
+        </ErrorBoundary>
       </main>
       <Footer />
     </>
