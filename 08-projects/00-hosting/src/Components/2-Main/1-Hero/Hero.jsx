@@ -237,7 +237,6 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
 export default function Hero({ projects = [] }) {
   const [tabId, setTabId] = useState("about");
   const [activeIdx, setActiveIdx] = useState(0);
-  const [pulse, setPulse] = useState(0);
 
   const totalProjects = projects.length;
   const onlineCount = useMemo(() => projects.filter((p) => p.status === "online").length, [projects]);
@@ -273,8 +272,8 @@ export default function Hero({ projects = [] }) {
       icon: "✉",
       fields: [
         { k: "email", v: CONTACT.email, type: "str" },
-        { k: "github", v: "github.com/nicovillagranr", type: "str" },
-        { k: "linkedin", v: "in/nico-villagran", type: "str" },
+        { k: "github", v: CONTACT.github, type: "str" },
+        { k: "linkedin", v: CONTACT.linkedin, type: "str" },
       ],
     },
   ];
@@ -282,8 +281,8 @@ export default function Hero({ projects = [] }) {
   const tab = TABS.find((t) => t.id === tabId);
 
   useEffect(() => {
-    // setActiveIdx(0);
-    // setPulse((p) => p + 1);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveIdx(0);
 
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
@@ -291,7 +290,6 @@ export default function Hero({ projects = [] }) {
 
     const interval = setInterval(() => {
       setActiveIdx((i) => (i + 1) % tab.fields.length);
-      setPulse((p) => p + 1);
     }, 2000);
 
     return () => clearInterval(interval);
@@ -306,8 +304,8 @@ export default function Hero({ projects = [] }) {
     online: onlineCount,
     status: "open_to_work",
     email: CONTACT.email,
-    github: "github.com/nicovillagranr",
-    linkedin: "in/nico-villagran",
+    github: CONTACT.github,
+    linkedin: CONTACT.linkedin,
     frontend: "React, Next.js, TypeScript, JavaScript",
     styling: "Tailwind, Bootstrap, CSS Modules, BEM, UX",
     tools: "Git, Docker",
@@ -317,7 +315,7 @@ export default function Hero({ projects = [] }) {
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
       <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
         <div key={tabId} className="animate-fade-up delay-2">
-          {tabId === "about" && <PreviewAbout data={data} pulse={pulse} />}
+          {tabId === "about" && <PreviewAbout data={data} />}
           {tabId === "stack" && <PreviewStack data={data} />}
           {tabId === "contact" && <PreviewContact data={data} />}
         </div>
