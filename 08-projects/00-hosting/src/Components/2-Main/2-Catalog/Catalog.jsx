@@ -12,8 +12,20 @@ export default function Catalog({ projects = [], loading = false, error = null }
     projects.filter((p) => p.framework === framework),
   ]).filter(([, group]) => group.length > 0);
 
-  if (loading) return <p>Cargando proyectos...</p>;
-  if (error) return <p>Error al cargar proyectos: {error instanceof Error ? error.message : String(error)}</p>;
+  if (loading) return (
+    <section className="mt-10 min-h-[75vh] flex items-center justify-center" id="proyectos">
+      <div className="text-center">
+        <p className="text-lg text-text-secondary animate-fade-in">Cargando proyectos...</p>
+      </div>
+    </section>
+  );
+  if (error) return (
+    <section className="mt-10 min-h-[75vh] flex items-center justify-center" id="proyectos">
+      <div className="text-center">
+        <p className="text-lg text-text-secondary">Error al cargar proyectos: {error instanceof Error ? error.message : String(error)}</p>
+      </div>
+    </section>
+  );
 
   const visibleGroups = filter === "Todos" ? projectsByFramework : [[null, projects.filter((p) => p.framework === filter)]];
 
