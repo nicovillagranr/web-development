@@ -104,11 +104,9 @@ export default function ProjectCard({ project, index, priority = false }) {
               <div className="text-text-muted">$ {group}</div>
               <div className="flex flex-wrap gap-1.5 pl-3">
                 {techs.map((tech) => (
-                  <>
-                    <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
-                      {tech}
-                    </span>
-                  </>
+                  <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
+                    {tech}
+                  </span>
                 ))}
               </div>
             </div>
