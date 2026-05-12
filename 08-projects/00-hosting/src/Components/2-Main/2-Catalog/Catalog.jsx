@@ -20,7 +20,7 @@ export default function Catalog({ projects = [], loading = false, error = null }
     </section>
   );
   if (error) return (
-    <section className="mt-6 min-h-[75vh] flex items-center justify-center" id="proyectos">
+    <section className="mt-6 min-h-[75vh] flex items-center justify-center" id="proyectos" role="status" aria-live="polite">
       <div className="text-center">
         <p className="text-lg text-text-secondary">Error al cargar proyectos: {error instanceof Error ? error.message : String(error)}</p>
       </div>

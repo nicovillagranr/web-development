@@ -18,7 +18,13 @@ export default function Footer({ theme, profile }) {
   return (
     <footer id="contacto" className="mt-16 border-t border-line">
       <div className="container-page flex flex-wrap items-center justify-between gap-4 py-6">
-        <p className="text-sm text-text-secondary">&copy; {year} Desarrollado con ❤️ por {profile?.name || "Portafolio"}</p>
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="" aria-hidden="true" className="h-8 w-8 shrink-0 rounded-md" />
+          <div className="flex flex-col">
+            <span className="font-heading text-sm font-bold text-text-primary">{profile?.name || "Portafolio"}</span>
+            <span className="font-mono text-xs text-text-muted">{profile?.role || "Frontend Developer"} · &copy; {year}</span>
+          </div>
+        </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           {links.map(({ label, href, external }) => (

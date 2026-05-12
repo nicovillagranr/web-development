@@ -45,6 +45,17 @@
   <meta name="author" content="Nico Villagran">
 
 
+  <!-- Preconexión con la API de proyectos (cross-origin: el sitio vive en nicovillagran.com y la API en *.vercel.app)
+       Cuando React monta, useProjects dispara fetch() a /projects y /profile. Antes de bajar ese JSON, el navegador debe:
+         1) Resolver el DNS de la API (~20-120ms)
+         2) Abrir conexión TCP (~1 RTT)
+         3) Negociar handshake TLS (~1-2 RTT)
+       En total, ~100-400ms de "saludo" antes de pedir nada útil — y eso bloquea el primer render del Catalog.
+       Con preconnect, el navegador hace esos 3 pasos en paralelo al parseo del HTML, así cuando el fetch dispara la conexión ya está caliente.
+       dns-prefetch queda como fallback para navegadores antiguos que no soportan preconnect. -->
+  <link rel="preconnect" href="https://00-portfolio-projects-api.vercel.app" crossorigin>
+  <link rel="dns-prefetch" href="https://00-portfolio-projects-api.vercel.app">
+
   <!-- Favicon -->
   <link rel="icon" href="/logo.png" type="image/png" sizes="any">
   <link rel="apple-touch-icon" href="/logo.png">
@@ -74,7 +85,7 @@
     "skills": ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion", "React Router", "React Icons", "CSS modular", "EmailJS", "Supabase", "npm", "Vercel"],
     "sameAs": [
       "https://github.com/nicovillagranr",
-      "https://www.linkedin.com/in/nico-villagran/",
+      "https://www.linkedin.com/in/nico-villagran/"
     ]
   }
   </script>

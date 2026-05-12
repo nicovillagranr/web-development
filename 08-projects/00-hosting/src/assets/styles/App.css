@@ -1,6 +1,12 @@
+/* ============================================================
+   1. IMPORT — Tailwind CSS v4
+   ============================================================ */
 @import "tailwindcss";
 
-/* ── Local fonts (variable, single file per family) ── */
+
+/* ============================================================
+   2. FUENTES LOCALES — variable fonts, 1 archivo por familia
+   ============================================================ */
 @font-face {
   font-family: "Satoshi";
   src: url("@/assets/fonts/Satoshi-Variable.woff2") format("woff2");
@@ -22,8 +28,14 @@
   font-display: swap;
 }
 
+
+/* ============================================================
+   3. TOKENS DE DISEÑO (@theme) — paleta, tipografía, radios, sombras
+   Base del sistema visual (tema oscuro por defecto).
+   Tailwind v4 inlinea estos valores en las utilities.
+   ============================================================ */
 @theme {
-  /* ── Base palette — Vice City 2025 ── */
+  /* ── Paleta base — Vice City 2025 ── */
   --color-base-900: #080510;
   --color-base-800: #0f0a1a;
   --color-base-700: #180f2a;
@@ -31,12 +43,12 @@
   --color-surface: rgba(15, 10, 28, 0.75);
   --color-surface-strong: rgba(20, 14, 38, 0.88);
 
-  /* ── Text — neon white/pink ── */
+  /* ── Texto — neon white/pink ── */
   --color-text-primary: #fff8fb;
   --color-text-secondary: #ffb3d9;
   --color-text-muted: #c878a8;
 
-  /* ── Accents — hot magenta neon ── */
+  /* ── Acentos — hot magenta neon ── */
   --color-accent: #ff0077;
   --color-accent-glow: rgba(255, 0, 119, 0.18);
   --color-accent-border: rgba(255, 0, 119, 0.35);
@@ -45,43 +57,31 @@
   --color-amber: #e8ff00;
   --color-amber-glow: rgba(232, 255, 0, 0.15);
 
-  /* ── Borders ── */
+  /* ── Bordes ── */
   --color-line: rgba(255, 0, 119, 0.1);
   --color-line-hover: rgba(255, 0, 119, 0.22);
 
-  /* ── Fonts ── */
+  /* ── Tipografía ── */
   --font-heading: "Satoshi", sans-serif;
   --font-body: "Manrope", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  /* ── Radius ── */
+  /* ── Radios ── */
   --radius-card: 16px;
   --radius-badge: 999px;
   --radius-btn: 12px;
 
-  /* ── Shadows ── */
+  /* ── Sombras ── */
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.65);
   --shadow-glow: 0 0 60px rgba(255, 0, 119, 0.1);
 }
 
-/* ── Base styles (inside @layer so utilities can override) ── */
-@layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
 
-  body {
-    font-family: var(--font-body);
-    color: var(--color-text-primary);
-    line-height: 1.6;
-    background: var(--color-base-900);
-    min-height: 100dvh;
-  }
-}
-
-/* ── Light theme — Google ── */
+/* ============================================================
+   4. TEMA CLARO — overrides cuando html tiene .light
+   Sobreescribe las mismas variables del @theme; todo lo que
+   consume esas variables responde automáticamente.
+   ============================================================ */
 html.light {
   --color-base-900: #f0f6f8;
   --color-base-800: #f1f3f4;
@@ -105,10 +105,32 @@ html.light {
   --shadow-glow: none;
 }
 
-html.light body {
-  background: var(--color-base-900);
+
+/* ============================================================
+   5. ESTILOS BASE — defaults globales para html y body
+   Dentro de @layer base para que las utilities de Tailwind
+   los puedan sobreescribir sin pelear con specificity.
+   ============================================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background: var(--color-base-900);
+    min-height: 100dvh;
+  }
 }
 
+
+/* ============================================================
+   6. FONDO RAÍZ — gradientes radiales decorativos en #root
+   Dark y light tienen su propia mezcla de colores.
+   ============================================================ */
 #root {
   position: relative;
   background:
@@ -126,13 +148,23 @@ html.light #root {
     var(--color-base-900);
 }
 
-/* Tailwind v4 inlinea valores de @theme en utilities — forzamos box-shadow en light. */
+html.light body {
+  background: var(--color-base-900);
+}
+
+
+/* ============================================================
+   7. AJUSTES DE COMPONENTES POR TEMA
+   Tailwind v4 inlinea valores de @theme en las utilities en
+   build-time, por eso necesitamos forzar a mano ciertos
+   box-shadow en light (no se actualizan solos).
+   ============================================================ */
 html.light .shadow-card,
 html.light .hover\:shadow-glow:hover {
   box-shadow: none;
 }
 
-/* Hero CTA: sombra rosa solo en dark mode */
+/* Hero CTA: sombra rosa solo en dark */
 .hero-cta-shadow {
   box-shadow: 0 12px 28px rgba(255, 0, 119, 0.35);
 }
@@ -141,7 +173,10 @@ html.light .hero-cta-shadow {
   box-shadow: none;
 }
 
-/* ── Keyframes ── */
+
+/* ============================================================
+   8. KEYFRAMES — definiciones de animación reutilizables
+   ============================================================ */
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -177,7 +212,9 @@ html.light .hero-cta-shadow {
 }
 
 @keyframes blink {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
 
@@ -187,7 +224,9 @@ html.light .hero-cta-shadow {
 }
 
 @keyframes pulse-dot {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -198,13 +237,10 @@ html.light .hero-cta-shadow {
   }
 }
 
-/* ── Layout utilities ── */
-@utility container-page {
-  margin-inline: auto;
-  width: min(1150px, 92vw);
-}
 
-/* ── Animation utilities (inside @layer so they coexist with Tailwind) ── */
+/* ============================================================
+   9. UTILIDADES DE ANIMACIÓN — clases que aplican los keyframes
+   ============================================================ */
 @utility animate-fade-up {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -225,6 +261,10 @@ html.light .hero-cta-shadow {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+
+/* ============================================================
+   10. DELAYS DE ANIMACIÓN — escalonar entrada de elementos
+   ============================================================ */
 @utility delay-1 {
   animation-delay: 80ms;
 }
@@ -241,20 +281,19 @@ html.light .hero-cta-shadow {
   animation-delay: 320ms;
 }
 
-/* ── Reduced motion ── */
-@media (prefers-reduced-motion: reduce) {
-  @layer base {
 
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
+/* ============================================================
+   11. UTILIDADES DE LAYOUT
+   ============================================================ */
+@utility container-page {
+  margin-inline: auto;
+  width: min(1150px, 92vw);
 }
 
-/* ── Scrollbar styling ── */
+
+/* ============================================================
+   12. SCROLLBAR — apariencia consistente en Chrome y Firefox
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -275,8 +314,26 @@ html.light .hero-cta-shadow {
   filter: brightness(1.3);
 }
 
-/* Firefox scrollbar */
+/* Firefox */
 * {
   scrollbar-color: var(--color-accent) var(--color-surface);
   scrollbar-width: thin;
+}
+
+
+/* ============================================================
+   13. ACCESIBILIDAD — respetar prefers-reduced-motion
+   Anula todas las animaciones y transiciones para usuarios
+   que pidieron menos movimiento en su sistema operativo.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  @layer base {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

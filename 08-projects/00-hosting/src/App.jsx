@@ -48,7 +48,7 @@ export default function App() {
       <main className="container-page">
         {/* Error Boundary tiene como propósito mostrar un componente alternativo en caso de error */}
         {/* De esta forma, si la lógica da error, no se muestra un pantallazo blanco al usuario */}
-        <ErrorBoundary>
+        <ErrorBoundary profile={profile}>
           <Hero projects={projects} profile={profile} />
           <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
         </ErrorBoundary>

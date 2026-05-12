@@ -141,15 +141,6 @@ function PreviewContact({ data }) {
           </a>
         ))}
       </div>
-
-      <div className="flex flex-wrap gap-1.5 border-t border-dashed border-line-hover pt-3 sm:pt-4">
-        <span className="font-mono text-xs text-text-muted">pref:</span>
-        {["email", "whatsapp"].map((p) => (
-          <span key={p} className="rounded-badge border border-line-hover px-2 py-0.5 font-mono text-xs text-text-secondary">
-            {p}
-          </span>
-        ))}
-      </div>
     </div>
   );
 }
@@ -313,7 +304,7 @@ export default function Hero({ projects = [], profile }) {
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
       <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
-        <div key={tabId} className="animate-fade-up delay-2 h-100 overflow-y-auto">
+        <div key={tabId} className="animate-fade-up delay-2 h-75 md:h-100 overflow-y-auto">
           {tabId === "about" && <PreviewAbout data={data} />}
           {tabId === "stack" && <PreviewStack data={data} />}
           {tabId === "contact" && <PreviewContact data={data} />}
