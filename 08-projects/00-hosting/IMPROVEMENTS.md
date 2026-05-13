@@ -58,6 +58,8 @@
 | **H5**     | ErrorBoundary: console.error + error + componentStack                    | 13-05-2026 |
 | **O3**     | Catalog error: ícono ⚠ + animate-shake (1x) + aria-hidden                | 13-05-2026 |
 | **N4**     | Header: lee profile?.role con fallback (fuente única de verdad)         | 13-05-2026 |
+| **N3**     | Hero: activeIdx lifted to EditorWindow + key={tab.id} (sin eslint-disable) | 13-05-2026 |
+| **N6**     | API + Hero: `availability` en profile, consumido por `status`            | 13-05-2026 |
 
 ---
 
@@ -76,21 +78,19 @@
 | #      | Mejora                                                     | Esfuerzo | Impacto | Descripción                                                                                                                                                                          |
 | ------ | ---------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **A1** | **Tabs del Hero: A11y completa**                           | 30 min   | Alto    | Los `<button>` (Hero.jsx:167-173) faltan `role="tab"`, contenedor `role="tablist"`, `aria-selected`, navegación con flechas ←/→. **Bandera roja en entrevistas A11y-conscientes.**   |
-| **N3** | **Refactor Hero `useEffect`**                              | 10 min   | Medio   | Quitar `eslint-disable react-hooks/set-state-in-effect`. Usar `key={tabId}` o derivar.                                                                                               |
 | **H1** | **Tests para useProjects**                                 | 35 min   | Alto    | Vitest + @testing-library/react. Tests: loading, error, success, AbortController.                                                                                                    |
 | **H2** | **Tests para ProjectCard**                                 | 25 min   | Medio   | Renderizado, lazy loading, accessible links.                                                                                                                                         |
 | **H3** | **README.md profesional**                                  | 20 min   | Medio   | El actual es el template default de Vite. Stack, setup, scripts, estructura.                                                                                                         |
-| **N6** | **Hero: `status` hardcoded → profile.availability**        | 10 min   | Medio   | `Hero.jsx:241` tiene `status: "open_to_work"` clavado. Agregar campo `availability` a la API + consumir en Hero. Si conseguís trabajo, basta editar la API.                          |
 
-**Subtotal:** ~140 min.
+**Subtotal:** ~130 min.
 
-### 🟢 BAJO / NICE-TO-HAVE (~60 min)
+### 🟢 BAJO / NICE-TO-HAVE (~30 min)
 
 | #      | Mejora                                                  | Esfuerzo | Impacto | Descripción                                                                                                                                                                                       |
 | ------ | ------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-_Sin pendientes en esta categoría._
+| **L1** | **Landing custom para la API (Portfolio Projects API)** | 25 min   | Medio   | Hoy la card "Portfolio Projects API" del Catalog redirige a `/projects` → JSON crudo en pantalla, mala primera impresión (especialmente para no-devs/recruiters). Solución: crear `public/index.html` en `C:/apis/00-portfolio-projects/` con una landing simple (mismo theme oscuro del portfolio, título, 2 cards `/projects` y `/profile` con ejemplo de respuesta, link al repo, footer con nombre). Vercel sirve `public/` antes que json-server, así que `GET /` → landing y `GET /projects` sigue devolviendo JSON. Cambiar `db.json` del API: `"path": ".../projects"` → `"path": ".../"`. Ventaja extra: historia para entrevistas ("la API tiene su propio mini-frontend documental"). |
 
-**Subtotal:** 0 min.
+**Subtotal:** ~25 min.
 
 ---
 
@@ -111,6 +111,7 @@ _Sin pendientes en esta categoría._
 8. **N3** — refactor del useEffect del Hero.
 9. **P2 + D2 + D3** — performance y deploy.
 10. **N5 + O2 + O3** — polish.
+11. **L1** — landing custom para la API (deja de mostrar JSON crudo al click).
 
 ---
 

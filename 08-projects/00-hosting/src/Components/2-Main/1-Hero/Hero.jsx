@@ -145,7 +145,28 @@ function PreviewContact({ data }) {
   );
 }
 
-function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
+function EditorWindow({ tab, fields, onTabChange }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [prevTabId, setPrevTabId] = useState(tab.id);
+
+  // Reset activeIdx cuando cambia la tab (patrón "adjust state during render" de React docs)
+  if (prevTabId !== tab.id) {
+    setPrevTabId(tab.id);
+    setActiveIdx(0);
+  }
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setActiveIdx((i) => (i + 1) % fields.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [fields.length]);
+
   return (
     <div className="animate-fade-up delay-2 flex flex-col rounded-lg border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
       {/* Title bar + Tabs */}
@@ -226,7 +247,6 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
 
 export default function Hero({ projects = [], profile }) {
   const [tabId, setTabId] = useState("about");
-  const [activeIdx, setActiveIdx] = useState(0);
 
   const totalProjects = projects.length;
   const onlineCount = projects.filter((p) => p.status === "online").length;
@@ -238,7 +258,7 @@ export default function Hero({ projects = [], profile }) {
     years: profile?.years ?? 0,
     projects: totalProjects,
     online: onlineCount,
-    status: "open_to_work",
+    status: profile?.availability || "Cargando...",
     email: profile?.email || "",
     github: profile?.github || "",
     linkedin: profile?.linkedin || "",
@@ -286,21 +306,6 @@ export default function Hero({ projects = [], profile }) {
 
   const tab = TABS.find((t) => t.id === tabId);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setActiveIdx(0);
-
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setActiveIdx((i) => (i + 1) % tab.fields.length);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [tabId, tab.fields.length]);
-
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
       <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
@@ -309,7 +314,7 @@ export default function Hero({ projects = [], profile }) {
           {tabId === "stack" && <PreviewStack data={data} />}
           {tabId === "contact" && <PreviewContact data={data} />}
         </div>
-        <EditorWindow tab={tab} fields={tab.fields} activeIdx={activeIdx} onTabChange={setTabId} />
+        <EditorWindow tab={tab} fields={tab.fields} onTabChange={setTabId} />
       </div>
     </section>
   );
