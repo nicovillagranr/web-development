@@ -7,8 +7,8 @@ class ErrorBoundary extends React.Component {
         return { hasError: true, error: error.message };
     }
 
-    componentDidCatch() {
-        console.log("Error atrapado");
+    componentDidCatch(error, errorInfo) {
+        console.error("ErrorBoundary capturó un error:", error, errorInfo.componentStack);
     }
 
     handleReload = () => {

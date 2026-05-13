@@ -53,6 +53,11 @@
 | **D3**     | manifest.json + iconos PWA (favicon/ + site.webmanifest)                | 13-05-2026 |
 | **O2**     | 404 page custom + ErrorDocument en .htaccess                            | 13-05-2026 |
 | **B1**     | useProjects: error message reporta qué endpoint falló y su status       | 13-05-2026 |
+| **P2**     | Code-splitting: Catalog lazy + Suspense con placeholder min-h-[75vh]    | 13-05-2026 |
+| **A2**     | EditorWindow: botones decorativos → span aria-hidden + alineados        | 13-05-2026 |
+| **H5**     | ErrorBoundary: console.error + error + componentStack                    | 13-05-2026 |
+| **O3**     | Catalog error: ícono ⚠ + animate-shake (1x) + aria-hidden                | 13-05-2026 |
+| **N4**     | Header: lee profile?.role con fallback (fuente única de verdad)         | 13-05-2026 |
 
 ---
 
@@ -72,23 +77,20 @@
 | ------ | ---------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **A1** | **Tabs del Hero: A11y completa**                           | 30 min   | Alto    | Los `<button>` (Hero.jsx:167-173) faltan `role="tab"`, contenedor `role="tablist"`, `aria-selected`, navegación con flechas ←/→. **Bandera roja en entrevistas A11y-conscientes.**   |
 | **N3** | **Refactor Hero `useEffect`**                              | 10 min   | Medio   | Quitar `eslint-disable react-hooks/set-state-in-effect`. Usar `key={tabId}` o derivar.                                                                                               |
-| **N4** | **Header: leer role del profile**                          | 5 min    | Medio   | `Header.jsx:10` tiene `"Frontend Developer"` hardcoded mientras Footer lo lee de `profile.role`. Inconsistencia.                                                                     |
-| **A2** | **EditorWindow: botones decorativos**                      | 5 min    | Bajo    | `Hero.jsx:183-185` (`−`, `□`, `✕`) son `<button>` sin label → ruido para lectores de pantalla. Convertir a `<span aria-hidden="true">` o agrupar en `<div aria-hidden>`.             |
 | **H1** | **Tests para useProjects**                                 | 35 min   | Alto    | Vitest + @testing-library/react. Tests: loading, error, success, AbortController.                                                                                                    |
 | **H2** | **Tests para ProjectCard**                                 | 25 min   | Medio   | Renderizado, lazy loading, accessible links.                                                                                                                                         |
 | **H3** | **README.md profesional**                                  | 20 min   | Medio   | El actual es el template default de Vite. Stack, setup, scripts, estructura.                                                                                                         |
-| **H5** | **ErrorBoundary logging**                                  | 5 min    | Medio   | Cambiar `console.log` por `console.error` y agregar `errorInfo` + stack.                                                                                                             |
+| **N6** | **Hero: `status` hardcoded → profile.availability**        | 10 min   | Medio   | `Hero.jsx:241` tiene `status: "open_to_work"` clavado. Agregar campo `availability` a la API + consumir en Hero. Si conseguís trabajo, basta editar la API.                          |
 
-**Subtotal:** ~135 min.
+**Subtotal:** ~140 min.
 
 ### 🟢 BAJO / NICE-TO-HAVE (~60 min)
 
 | #      | Mejora                                                  | Esfuerzo | Impacto | Descripción                                                                                                                                                                                       |
 | ------ | ------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **P2** | **Code-splitting general**                              | 15 min   | Medio   | Catálogo + ErrorBoundary + Hero con `React.lazy` + Suspense. Mejora carga inicial.                                                                                                                |
-| **O3** | **Animación shake en error del Catalog**                | 10 min   | Bajo    | Ícono `⚠` con keyframe `shake` + `aria-hidden`.                                                                                                                                                   |
+_Sin pendientes en esta categoría._
 
-**Subtotal:** ~25 min.
+**Subtotal:** 0 min.
 
 ---
 

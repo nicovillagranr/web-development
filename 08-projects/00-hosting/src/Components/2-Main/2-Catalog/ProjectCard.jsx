@@ -71,7 +71,7 @@ export default function ProjectCard({ project, index, priority = false }) {
             alt={`Preview de ${name}`}
             className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             loading={priority ? "eager" : "lazy"}
-            fetchpriority={priority ? "high" : undefined}
+            fetchPriority={priority ? "high" : undefined}
           />
           {repo && (
             <a

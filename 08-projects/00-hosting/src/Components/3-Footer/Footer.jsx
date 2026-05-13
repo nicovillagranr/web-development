@@ -9,10 +9,10 @@ export default function Footer({ theme, profile }) {
   const year = new Date().getFullYear();
 
   const links = [
-    { label: "Email", href: `mailto:${profile?.email || "#"}` },
-    { label: "GitHub", href: profile?.github || "#", external: true },
-    { label: "LinkedIn", href: profile?.linkedin || "#", external: true },
-    { label: <ArrowUp theme={theme} />, href: "#hero" },
+    { id: "email", label: "Email", href: `mailto:${profile?.email || "#"}` },
+    { id: "github", label: "GitHub", href: profile?.github || "#", external: true },
+    { id: "linkedin", label: "LinkedIn", href: profile?.linkedin || "#", external: true },
+    { id: "top", label: <ArrowUp theme={theme} />, href: "#hero" },
   ];
 
   return (
@@ -27,8 +27,8 @@ export default function Footer({ theme, profile }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          {links.map(({ label, href, external }) => (
-            <a key={href} href={href} className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-text-secondary transition-all hover:border-accent-border hover:text-text-primary"
+          {links.map(({ id, label, href, external }) => (
+            <a key={id} href={href} className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-text-secondary transition-all hover:border-accent-border hover:text-text-primary"
               {...(external && { target: "_blank", rel: "noreferrer" })}>
               {label}
             </a>

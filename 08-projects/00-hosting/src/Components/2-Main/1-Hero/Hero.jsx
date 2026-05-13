@@ -170,10 +170,10 @@ function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
             <span>editing</span>
           </div>
 
-          <div className="flex items-center gap-0.5 pl-2 border-l border-line">
-            <button className="hover:bg-base-800/50 p-1 text-xs text-text-muted transition-colors">−</button>
-            <button className="hover:bg-base-800/50 p-1 text-xs text-text-muted transition-colors">□</button>
-            <button className="hover:bg-red-500/20 p-1 text-xs text-red-400 transition-colors">✕</button>
+          <div className="flex items-center gap-0.5 pl-2 border-l border-line" aria-hidden="true">
+            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-text-muted">−</span>
+            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-text-muted">□</span>
+            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-red-400">✕</span>
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 
 import "./assets/styles/App.css";
 
 import Header from "@/Components/1-Header/Header";
 import Hero from "@/Components/2-Main/1-Hero/Hero";
-import Catalog from "@/Components/2-Main/2-Catalog/Catalog";
+const Catalog = lazy(() => import("@/Components/2-Main/2-Catalog/Catalog"));
 import Footer from "@/Components/3-Footer/Footer";
 import ErrorBoundary from "@/Components/4-ErrorBoundary/ErrorBoundary";
 
@@ -33,13 +33,15 @@ export default function App() {
 
   return (
     <>
-      <Header theme={theme} onToggleTheme={toggleTheme} />
+      <Header theme={theme} onToggleTheme={toggleTheme} profile={profile} />
       <main className="container-page">
         {/* Error Boundary tiene como propósito mostrar un componente alternativo en caso de error */}
         {/* De esta forma, si la lógica da error, no se muestra un pantallazo blanco al usuario */}
         <ErrorBoundary profile={profile}>
           <Hero projects={projects} profile={profile} />
-          <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
+          <Suspense fallback={<div className="mt-6 min-h-[75vh]" aria-hidden="true" />}>
+            <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
+          </Suspense>
         </ErrorBoundary>
       </main>
       <Footer theme={theme} profile={profile} />
