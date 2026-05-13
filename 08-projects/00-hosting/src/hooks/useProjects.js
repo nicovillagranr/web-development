@@ -17,7 +17,10 @@ export function useProjects() {
         ])
             .then(([projectsRes, profileRes]) => {
                 if (!projectsRes.ok || !profileRes.ok) {
-                    throw new Error(`HTTP error! status: ${projectsRes.status}`)
+                    const failed = []
+                    if (!projectsRes.ok) failed.push(`projects:${projectsRes.status}`)
+                    if (!profileRes.ok) failed.push(`profile:${profileRes.status}`)
+                    throw new Error(`HTTP error — ${failed.join(", ")}`)
                 }
                 return Promise.all([projectsRes.json(), profileRes.json()])
             })

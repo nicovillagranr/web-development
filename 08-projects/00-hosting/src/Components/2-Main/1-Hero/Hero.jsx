@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 function KPI({ label, value, accent = "primary" }) {
   const colorMap = {
     primary: "text-text-primary",
-    cyan: "text-emerald",
+    emerald: "text-emerald",
     amber: "text-amber",
   };
   return (
@@ -37,7 +37,7 @@ function PreviewAbout({ data }) {
 
       <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-3 sm:py-4">
         <KPI label="proyectos" value={data.projects} />
-        <KPI label="online" value={data.online} accent="cyan" />
+        <KPI label="online" value={data.online} accent="emerald" />
         <KPI label="años" value={`${data.years}+`} accent="amber" />
       </div>
 
@@ -55,9 +55,9 @@ function PreviewAbout({ data }) {
 
 function PreviewStack({ data }) {
   const groups = [
-    { label: "frontend", items: data.frontend.split(","), color: "accent" },
-    { label: "styling", items: data.styling.split(","), color: "emerald" },
-    { label: "tools", items: data.tools.split(","), color: "amber" },
+    { label: "frontend", items: data.frontend, color: "accent" },
+    { label: "styling", items: data.styling, color: "emerald" },
+    { label: "tools", items: data.tools, color: "amber" },
   ];
 
   const colorMap = {
@@ -87,7 +87,7 @@ function PreviewStack({ data }) {
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {g.items.map((s) => (
                 <span key={s} className={`rounded-badge border px-2 py-0.5 sm:px-2.5 sm:py-1 font-mono text-xs ${colorMap[g.color]}`}>
-                  {s.trim()}
+                  {s}
                 </span>
               ))}
             </div>
@@ -105,8 +105,8 @@ function PreviewStack({ data }) {
 function PreviewContact({ data }) {
   const channels = [
     { icon: "✉", label: "email", value: data.email, href: `mailto:${data.email}`, accent: "accent" },
-    { icon: "⌬", label: "github", value: data.github, href: `https://${data.github}`, accent: "emerald" },
-    { icon: "⎘", label: "linkedin", value: data.linkedin, href: `https://linkedin.com/${data.linkedin}`, accent: "amber" },
+    { icon: "⌬", label: "github", value: data.github, href: data.github, accent: "emerald" },
+    { icon: "⎘", label: "linkedin", value: data.linkedin, href: data.linkedin, accent: "amber" },
   ];
 
   const colorMap = {
@@ -147,7 +147,7 @@ function PreviewContact({ data }) {
 
 function EditorWindow({ tab, fields, activeIdx, onTabChange }) {
   return (
-    <div className="animate-fade-up delay-2 flex flex-col rounded-card border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
+    <div className="animate-fade-up delay-2 flex flex-col rounded-lg border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
       {/* Title bar + Tabs */}
       <div className="flex items-center border-b border-line px-2 sm:px-4 overflow-x-auto">
         <div className="flex overflow-x-auto flex-1">
@@ -229,7 +229,23 @@ export default function Hero({ projects = [], profile }) {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const totalProjects = projects.length;
-  const onlineCount = useMemo(() => projects.filter((p) => p.status === "online").length, [projects]);
+  const onlineCount = projects.filter((p) => p.status === "online").length;
+
+  const data = {
+    name: profile?.name || "Portfolio",
+    role: profile?.role || "Frontend Developer",
+    based: profile?.based || "",
+    years: profile?.years ?? 0,
+    projects: totalProjects,
+    online: onlineCount,
+    status: "open_to_work",
+    email: profile?.email || "",
+    github: profile?.github || "",
+    linkedin: profile?.linkedin || "",
+    frontend: profile?.stack?.frontend ?? [],
+    styling: profile?.stack?.styling ?? [],
+    tools: profile?.stack?.tools ?? [],
+  };
 
   const TABS = [
     {
@@ -237,13 +253,13 @@ export default function Hero({ projects = [], profile }) {
       name: "about.json",
       icon: "👤",
       fields: [
-        { k: "name", v: profile?.name || "Portfolio", type: "str" },
-        { k: "role", v: "Frontend Developer", type: "str" },
-        { k: "based", v: "Santiago, CL", type: "str" },
-        { k: "years", v: "2", type: "num" },
-        { k: "projects", v: totalProjects, type: "num" },
-        { k: "online", v: onlineCount, type: "num" },
-        { k: "status", v: "open_to_work", type: "str" },
+        { k: "name", v: data.name, type: "str" },
+        { k: "role", v: data.role, type: "str" },
+        { k: "based", v: data.based, type: "str" },
+        { k: "years", v: data.years, type: "num" },
+        { k: "projects", v: data.projects, type: "num" },
+        { k: "online", v: data.online, type: "num" },
+        { k: "status", v: data.status, type: "str" },
       ],
     },
     {
@@ -251,9 +267,9 @@ export default function Hero({ projects = [], profile }) {
       name: "stack.json",
       icon: "⚡",
       fields: [
-        { k: "frontend", v: "React, Next.js, TypeScript, JavaScript", type: "str" },
-        { k: "styling", v: "Tailwind, Bootstrap, CSS Modules, BEM, UX", type: "str" },
-        { k: "tools", v: "Git, Docker", type: "str" },
+        { k: "frontend", v: data.frontend.join(", "), type: "str" },
+        { k: "styling", v: data.styling.join(", "), type: "str" },
+        { k: "tools", v: data.tools.join(", "), type: "str" },
       ],
     },
     {
@@ -261,9 +277,9 @@ export default function Hero({ projects = [], profile }) {
       name: "contact.json",
       icon: "✉",
       fields: [
-        { k: "email", v: profile?.email || "", type: "str" },
-        { k: "github", v: profile?.github || "", type: "str" },
-        { k: "linkedin", v: profile?.linkedin || "", type: "str" },
+        { k: "email", v: data.email, type: "str" },
+        { k: "github", v: data.github, type: "str" },
+        { k: "linkedin", v: data.linkedin, type: "str" },
       ],
     },
   ];
@@ -284,22 +300,6 @@ export default function Hero({ projects = [], profile }) {
 
     return () => clearInterval(interval);
   }, [tabId, tab.fields.length]);
-
-  const data = {
-    name: profile?.name || "Portfolio",
-    role: "Frontend Developer",
-    based: "Santiago, CL",
-    years: "2",
-    projects: totalProjects,
-    online: onlineCount,
-    status: "open_to_work",
-    email: profile?.email || "",
-    github: profile?.github || "",
-    linkedin: profile?.linkedin || "",
-    frontend: "React, Next.js, TypeScript, JavaScript",
-    styling: "Tailwind, Bootstrap, CSS Modules, BEM, UX",
-    tools: "Git, Docker",
-  };
 
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">

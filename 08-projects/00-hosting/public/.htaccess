@@ -1,3 +1,6 @@
+# Custom 404 page
+ErrorDocument 404 /404.html
+
 # HTML files — never cache (updated on every deploy)
 <FilesMatch "\.(html)$">
   Header set Cache-Control "no-cache, no-store, must-revalidate"
