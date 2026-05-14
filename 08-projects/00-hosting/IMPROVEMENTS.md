@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 12 de mayo de 2026 (sesión 6: Hero consume profile extendido del API)
-**Status general:** Base sólida. Hero refactorizado — `data` derivado del API, fuente única de verdad. Cierra H6, N2, D1. Quedan C5 + B1 (críticos) y alto/medio abajo.
+**Última auditoría:** 13 de mayo de 2026 (sesión 7: L1 — landing custom para la API)
+**Status general:** Base sólida. API ahora tiene landing presentable en su raíz (no más JSON crudo para no-devs). Cierra L1. Quedan C5 (crítico) y A1/H1/H2/H3 (alto).
 
 ---
 
@@ -60,6 +60,7 @@
 | **N4**     | Header: lee profile?.role con fallback (fuente única de verdad)         | 13-05-2026 |
 | **N3**     | Hero: activeIdx lifted to EditorWindow + key={tab.id} (sin eslint-disable) | 13-05-2026 |
 | **N6**     | API + Hero: `availability` en profile, consumido por `status`            | 13-05-2026 |
+| **L1**     | API: landing custom en `/` (HTML+CSS inline, ejemplos JSON, link al repo) | 13-05-2026 |
 
 ---
 
@@ -84,34 +85,24 @@
 
 **Subtotal:** ~130 min.
 
-### 🟢 BAJO / NICE-TO-HAVE (~30 min)
+### 🟢 BAJO / NICE-TO-HAVE
 
-| #      | Mejora                                                  | Esfuerzo | Impacto | Descripción                                                                                                                                                                                       |
-| ------ | ------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **L1** | **Landing custom para la API (Portfolio Projects API)** | 25 min   | Medio   | Hoy la card "Portfolio Projects API" del Catalog redirige a `/projects` → JSON crudo en pantalla, mala primera impresión (especialmente para no-devs/recruiters). Solución: crear `public/index.html` en `C:/apis/00-portfolio-projects/` con una landing simple (mismo theme oscuro del portfolio, título, 2 cards `/projects` y `/profile` con ejemplo de respuesta, link al repo, footer con nombre). Vercel sirve `public/` antes que json-server, así que `GET /` → landing y `GET /projects` sigue devolviendo JSON. Cambiar `db.json` del API: `"path": ".../projects"` → `"path": ".../"`. Ventaja extra: historia para entrevistas ("la API tiene su propio mini-frontend documental"). |
-
-**Subtotal:** ~25 min.
+_(vacío — L1 cerrado en sesión 7)_
 
 ---
 
 ## 🚀 Orden recomendado para entrevistas
 
 ### Si tienes 1 hora (mínimo viable):
-1. **B1** — bug del error message (5 min).
-2. **N4 + A2 + H5** — fixes cosméticos rápidos (~15 min).
-3. **A1** — tabs accesibles (~30 min).
+1. **A1** — tabs accesibles (~30 min). Bandera roja en entrevistas A11y.
+2. **C5** — Zod (~25 min). Validación antes de prod.
 
 ### Si tienes 1 día (impresiona en entrevista):
-4. **H1** — un solo archivo de tests transforma percepción.
-5. **H3** — README profesional. Primero que abren en GitHub.
-6. **C5** — Zod.
+3. **H1** — un solo archivo de tests transforma percepción.
+4. **H3** — README profesional. Primero que abren en GitHub.
 
 ### Si tienes 1 semana (production-grade):
-7. **H2** — tests adicionales.
-8. **N3** — refactor del useEffect del Hero.
-9. **P2 + D2 + D3** — performance y deploy.
-10. **N5 + O2 + O3** — polish.
-11. **L1** — landing custom para la API (deja de mostrar JSON crudo al click).
+5. **H2** — tests adicionales para ProjectCard.
 
 ---
 
@@ -126,6 +117,6 @@
 
 ---
 
-**Última actualización:** 12-05-2026 (sesión 6: H6 + N2 + D1 — Hero consume profile del API)
+**Última actualización:** 13-05-2026 (sesión 7: L1 — landing custom para la API)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** B1 → N4+A2+H5 → A1
+**Siguiente sesión recomendada:** A1 (tabs A11y) → C5 (Zod)

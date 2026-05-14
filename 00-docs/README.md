@@ -12,6 +12,7 @@ Central documentation hub for navigation, standards, and recovery workflows.
 ## References
 
 - `02-a11y/README.md` — Cheat-sheet de ARIA y accesibilidad (transversal a todos los proyectos).
+- `04-testing/manual-vitest-rtl.md` — Manual de testing desde cero (Vitest + React Testing Library).
 
 ## Module Entry Points
 
