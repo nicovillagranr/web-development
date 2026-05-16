@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 13 de mayo de 2026 (sesión 7: L1 — landing custom para la API)
-**Status general:** Base sólida. API ahora tiene landing presentable en su raíz (no más JSON crudo para no-devs). Cierra L1. Quedan C5 (crítico) y A1/H1/H2/H3 (alto).
+**Última auditoría:** 16 de mayo de 2026 (sesión 8: C5 — validación Zod de la API)
+**Status general:** Base sólida y lista para deploy. C5 cierra el último crítico: la respuesta de la API se valida con Zod antes de entrar al estado. Quedan A1/H1/H2/H3 (alto), ninguno bloqueante.
 
 ---
 
@@ -14,7 +14,7 @@
 | **SEO**                  | ⭐⭐⭐⭐ | JSON-LD con `alternateName`, OG dual (landscape+square), Twitter Cards, sitemap+robots      |
 | **Accesibilidad (A11y)** | ⭐⭐⭐   | ARIA en ErrorBoundary/Catalog OK, pero **tabs del Hero no son accesibles** (A1)             |
 | **Performance**          | ⭐⭐⭐⭐ | `fetchpriority`+lazy en cards, preconnect a API. GSAP eliminado → bundle ~50% más liviano   |
-| **Arquitectura**         | ⭐⭐⭐⭐ | React 19 + Tailwind v4 + Vite 8. **2 deps en runtime** (react, react-dom). Sin bloat        |
+| **Arquitectura**         | ⭐⭐⭐⭐ | React 19 + Tailwind v4 + Vite 8. **3 deps en runtime** (react, react-dom, zod). Sin bloat        |
 | **Estilos**              | ⭐⭐⭐⭐ | App.css reorganizado en 13 secciones, @theme + light override, animaciones custom           |
 | **Hook useProjects**     | ⭐⭐⭐   | AbortController + Promise.all OK, **pero bug menor en error reporting** (B1)                |
 
@@ -61,18 +61,15 @@
 | **N3**     | Hero: activeIdx lifted to EditorWindow + key={tab.id} (sin eslint-disable) | 13-05-2026 |
 | **N6**     | API + Hero: `availability` en profile, consumido por `status`            | 13-05-2026 |
 | **L1**     | API: landing custom en `/` (HTML+CSS inline, ejemplos JSON, link al repo) | 13-05-2026 |
+| **C5**     | Validación Zod: `ProjectsSchema`/`ProfileSchema` en `src/schemas/`, `.parse()` en useProjects | 16-05-2026 |
 
 ---
 
 ## 📌 Pendientes
 
-### 🔴 CRÍTICO — Antes de producción (~30 min)
+### 🔴 CRÍTICO — Antes de producción
 
-| #      | Mejora                                            | Esfuerzo | Impacto | Descripción                                                                                                                                                                                              |
-| ------ | ------------------------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **C5** | **Validación de datos API (Zod)**                 | 25 min   | Alto    | Instalar `zod`. Schemas para `Project[]` y `Profile` (incluye `role`, `based`, `years`, `stack`). Parsear respuesta antes de `setProjects`.                                                              |
-
-**Subtotal:** ~25 min para deploy sin riesgo.
+_(vacío — C5 cerrado en sesión 8)_
 
 ### 🟡 ALTO — Profesionalismo / entrevistas (~135 min)
 
@@ -108,7 +105,7 @@ _(vacío — L1 cerrado en sesión 7)_
 
 ## 📝 Notas técnicas
 
-- **Stack runtime:** React 19.2, Tailwind v4.2, Vite 8.0. **2 deps en `package.json`** (react, react-dom). GSAP eliminado en sesión 5.
+- **Stack runtime:** React 19.2, Tailwind v4.2, Vite 8.0. **3 deps en `package.json`** (react, react-dom, zod). GSAP eliminado en sesión 5.
 - **Bundle actual:** ~228 KB / ~69 KB gzipped (sin GSAP, ~50% más liviano que antes).
 - **Deployment:** `.htaccess` Apache listo. Para Vercel falta `vercel.json` (ver D2).
 - **API:** `https://00-portfolio-projects-api.vercel.app` — endpoints `/projects` y `/profile`. Repo en `C:/apis/00-portfolio-projects/`. Profile incluye `role`, `based`, `years`, `stack: {frontend, styling, tools}` (arrays nativos, consumidos por Hero).
@@ -117,6 +114,6 @@ _(vacío — L1 cerrado en sesión 7)_
 
 ---
 
-**Última actualización:** 13-05-2026 (sesión 7: L1 — landing custom para la API)
+**Última actualización:** 16-05-2026 (sesión 8: C5 — validación Zod de la API)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** A1 (tabs A11y) → C5 (Zod)
+**Siguiente sesión recomendada:** A1 (tabs A11y) → H1 (tests useProjects)

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import { ProjectsSchema } from "../schemas/projectsSchema"
+import { ProfileSchema } from "../schemas/profileSchema"
 
 const API_BASE = "https://00-portfolio-projects-api.vercel.app"
 
@@ -25,8 +27,10 @@ export function useProjects() {
                 return Promise.all([projectsRes.json(), profileRes.json()])
             })
             .then(([projectsData, profileData]) => {
-                setProjects(projectsData)
-                setProfile(profileData)
+                const profile = ProfileSchema.parse(profileData)
+                const projects = ProjectsSchema.parse(projectsData)
+                setProjects(projects)
+                setProfile(profile)
                 setLoading(false)
             })
             .catch((err) => {
