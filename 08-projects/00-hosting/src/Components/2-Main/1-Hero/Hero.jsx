@@ -2,8 +2,9 @@ import { useState } from "react";
 
 import PreviewPanel from "./PreviewPanel";
 import EditorWindow from "./EditorWindow";
+import HeroSkeleton from "./HeroSkeleton";
 
-export default function Hero({ projects = [], profile }) {
+export default function Hero({ projects = [], profile, loading = false }) {
   const [tabId, setTabId] = useState("about");
 
   const totalProjects = projects.length;
@@ -63,6 +64,8 @@ export default function Hero({ projects = [], profile }) {
   ];
 
   const tab = TABS.find((t) => t.id === tabId);
+
+  if (loading) return <HeroSkeleton />;
 
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">

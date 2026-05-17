@@ -33,12 +33,12 @@ export default function App() {
 
   return (
     <>
-      <Header theme={theme} onToggleTheme={toggleTheme} profile={profile} />
+      <Header theme={theme} onToggleTheme={toggleTheme} profile={profile} loading={projectsLoading} />
       <main className="container-page">
         {/* Error Boundary tiene como propósito mostrar un componente alternativo en caso de error */}
         {/* De esta forma, si la lógica da error, no se muestra un pantallazo blanco al usuario */}
         <ErrorBoundary profile={profile}>
-          <Hero projects={projects} profile={profile} />
+          <Hero projects={projects} profile={profile} loading={projectsLoading} />
           <Suspense fallback={<div className="mt-6 min-h-[75vh]" aria-hidden="true" />}>
             <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
           </Suspense>
