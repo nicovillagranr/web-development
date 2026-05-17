@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 16 de mayo de 2026 (sesión 8: C5 — validación Zod de la API)
-**Status general:** Base sólida y lista para deploy. C5 cierra el último crítico: la respuesta de la API se valida con Zod antes de entrar al estado. Quedan A1/H1/H2/H3 (alto), ninguno bloqueante.
+**Última auditoría:** 16 de mayo de 2026 (sesión 9: A1 — tabs accesibles + componetización Hero + skeletons)
+**Status general:** Base sólida y lista para deploy. A1 cierra la última deuda de A11y (tabs del Hero accesibles). Hero componetizado y con skeleton de carga. Quedan H1/H2/H3 (alto), ninguno bloqueante.
 
 ---
 
@@ -12,7 +12,7 @@
 | Área                     | Calidad  | Notas                                                                                       |
 | ------------------------ | -------- | ------------------------------------------------------------------------------------------- |
 | **SEO**                  | ⭐⭐⭐⭐ | JSON-LD con `alternateName`, OG dual (landscape+square), Twitter Cards, sitemap+robots      |
-| **Accesibilidad (A11y)** | ⭐⭐⭐   | ARIA en ErrorBoundary/Catalog OK, pero **tabs del Hero no son accesibles** (A1)             |
+| **Accesibilidad (A11y)** | ⭐⭐⭐⭐ | ARIA en ErrorBoundary/Catalog y **tabs del Hero accesibles** (patrón tablist completo, A1) |
 | **Performance**          | ⭐⭐⭐⭐ | `fetchpriority`+lazy en cards, preconnect a API. GSAP eliminado → bundle ~50% más liviano   |
 | **Arquitectura**         | ⭐⭐⭐⭐ | React 19 + Tailwind v4 + Vite 8. **3 deps en runtime** (react, react-dom, zod). Sin bloat        |
 | **Estilos**              | ⭐⭐⭐⭐ | App.css reorganizado en 13 secciones, @theme + light override, animaciones custom           |
@@ -62,6 +62,9 @@
 | **N6**     | API + Hero: `availability` en profile, consumido por `status`            | 13-05-2026 |
 | **L1**     | API: landing custom en `/` (HTML+CSS inline, ejemplos JSON, link al repo) | 13-05-2026 |
 | **C5**     | Validación Zod: `ProjectsSchema`/`ProfileSchema` en `src/schemas/`, `.parse()` en useProjects | 16-05-2026 |
+| **A1**     | Hero: tabs accesibles (role tab/tablist/tabpanel, aria-selected, aria-controls/labelledby, navegación ←/→, roving tabindex) | 16-05-2026 |
+| **REF1**   | Hero componetizado: `PreviewPanel.jsx` + `EditorWindow.jsx` (Hero.jsx 350 → 75 líneas)        | 16-05-2026 |
+| **UX1**    | Skeletons de carga: `HeroSkeleton.jsx` + skeleton inline en Header (above-the-fold)           | 16-05-2026 |
 
 ---
 
@@ -71,16 +74,15 @@
 
 _(vacío — C5 cerrado en sesión 8)_
 
-### 🟡 ALTO — Profesionalismo / entrevistas (~135 min)
+### 🟡 ALTO — Profesionalismo / entrevistas (~80 min)
 
 | #      | Mejora                                                     | Esfuerzo | Impacto | Descripción                                                                                                                                                                          |
 | ------ | ---------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **A1** | **Tabs del Hero: A11y completa**                           | 30 min   | Alto    | Los `<button>` (Hero.jsx:167-173) faltan `role="tab"`, contenedor `role="tablist"`, `aria-selected`, navegación con flechas ←/→. **Bandera roja en entrevistas A11y-conscientes.**   |
 | **H1** | **Tests para useProjects**                                 | 35 min   | Alto    | Vitest + @testing-library/react. Tests: loading, error, success, AbortController.                                                                                                    |
 | **H2** | **Tests para ProjectCard**                                 | 25 min   | Medio   | Renderizado, lazy loading, accessible links.                                                                                                                                         |
 | **H3** | **README.md profesional**                                  | 20 min   | Medio   | El actual es el template default de Vite. Stack, setup, scripts, estructura.                                                                                                         |
 
-**Subtotal:** ~130 min.
+**Subtotal:** ~80 min.
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
@@ -90,16 +92,12 @@ _(vacío — L1 cerrado en sesión 7)_
 
 ## 🚀 Orden recomendado para entrevistas
 
-### Si tienes 1 hora (mínimo viable):
-1. **A1** — tabs accesibles (~30 min). Bandera roja en entrevistas A11y.
-2. **C5** — Zod (~25 min). Validación antes de prod.
-
 ### Si tienes 1 día (impresiona en entrevista):
-3. **H1** — un solo archivo de tests transforma percepción.
-4. **H3** — README profesional. Primero que abren en GitHub.
+1. **H1** — un solo archivo de tests transforma percepción.
+2. **H3** — README profesional. Primero que abren en GitHub.
 
 ### Si tienes 1 semana (production-grade):
-5. **H2** — tests adicionales para ProjectCard.
+3. **H2** — tests adicionales para ProjectCard.
 
 ---
 
@@ -114,6 +112,6 @@ _(vacío — L1 cerrado en sesión 7)_
 
 ---
 
-**Última actualización:** 16-05-2026 (sesión 8: C5 — validación Zod de la API)
+**Última actualización:** 16-05-2026 (sesión 9: A1 + componetización Hero + skeletons)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** A1 (tabs A11y) → H1 (tests useProjects)
+**Siguiente sesión recomendada:** H1 (tests useProjects) → H3 (README)
