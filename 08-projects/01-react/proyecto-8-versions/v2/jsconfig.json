@@ -2,9 +2,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@screen1/*": ["src/Components/layout/screens/screen_1/*"],
-      "@screen2/*": ["src/Components/layout/screens/screen_2/*"],
+      "@screen1/*": ["src/screens/screen-1/*"],
+      "@screen2/*": ["src/screens/screen-2/*"],
       "@shared/*": ["src/Components/layout/*"],
+      "@shell/*": ["src/shell/*"],
+      "@features/*": ["src/features/*"],
+      "@ui/*": ["src/ui/*"],
       "@assets/*": ["src/assets/*"]
     }
   },
