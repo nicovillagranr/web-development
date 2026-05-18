@@ -9,7 +9,7 @@ import Footer from "@/Components/3-Footer/Footer";
 import ErrorBoundary from "@/Components/4-ErrorBoundary/ErrorBoundary";
 
 import { THEME_KEY } from "./data/storageKeys";
-import { useProjects } from "@/hooks/useProjects";
+import { usePortfolioData } from "@/hooks/usePortfolioData";
 
 export default function App() {
 
@@ -17,7 +17,7 @@ export default function App() {
     () => localStorage.getItem(THEME_KEY) ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
   );
 
-  const { projects, profile, loading: projectsLoading, error: projectsError } = useProjects();
+  const { projects, profile, loading: projectsLoading, error: projectsError } = usePortfolioData();
 
   useEffect(() => {
     const root = document.documentElement;

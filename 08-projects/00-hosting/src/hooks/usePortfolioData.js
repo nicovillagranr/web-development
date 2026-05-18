@@ -4,7 +4,7 @@ import { ProfileSchema } from "../schemas/profileSchema"
 
 const API_BASE = "https://00-portfolio-projects-api.vercel.app"
 
-export function useProjects() {
+export function usePortfolioData() {
     const [projects, setProjects] = useState([])
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -39,7 +39,6 @@ export function useProjects() {
                     setLoading(false)
                 }
             })
-
         return () => {
             controller.abort()
         }
