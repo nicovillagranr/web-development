@@ -10,17 +10,20 @@ export default function Hero({ projects = [], profile, loading = false }) {
   const totalProjects = projects.length;
   const onlineCount = projects.filter((p) => p.status === "online").length;
 
+  // Fallbacks "honestos": ante fallo de la API muestran "—" en vez de datos
+  // plausibles, para que el hueco delate el fallo y no lo disimule.
+  // Los `?? []` no son cosméticos: evitan que `.join()` crashee el render.
   const data = {
-    name: profile?.name || "Portfolio",
-    role: profile?.role || "Frontend Developer",
-    based: profile?.based || "",
-    years: profile?.years ?? 0,
+    name: profile?.name || "—",
+    role: profile?.role || "—",
+    based: profile?.based || "—",
+    years: profile?.years ?? "—",
     projects: totalProjects,
     online: onlineCount,
-    status: profile?.availability || "Cargando...",
-    email: profile?.email || "",
-    github: profile?.github || "",
-    linkedin: profile?.linkedin || "",
+    status: profile?.availability || "—",
+    email: profile?.email || "nicovillagranroses@gmail.com",
+    github: profile?.github || "https://github.com/nicovillagranr",
+    linkedin: profile?.linkedin || "https://www.linkedin.com/in/nico-villagran/",
     frontend: profile?.stack?.frontend ?? [],
     styling: profile?.stack?.styling ?? [],
     tools: profile?.stack?.tools ?? [],

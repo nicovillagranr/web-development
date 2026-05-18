@@ -36,7 +36,7 @@ function PreviewAbout({ data }) {
       <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-3 sm:py-4">
         <KPI label="proyectos" value={data.projects} />
         <KPI label="online" value={data.online} accent="emerald" />
-        <KPI label="años" value={`${data.years}+`} accent="amber" />
+        <KPI label="años" value={data.years === "—" ? "—" : `${data.years}+`} accent="amber" />
       </div>
 
       <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -124,7 +124,7 @@ function PreviewContact({ data }) {
       </div>
 
       <h2 className="font-heading text-2xl sm:text-4xl font-bold leading-tight text-text-primary">
-        Hablemos. <span className="text-emerald">{data.name.split(" ")[0]}</span>
+        Construyamos <span className="text-emerald">algo juntos</span>
       </h2>
 
       <div className="flex flex-col gap-2">
