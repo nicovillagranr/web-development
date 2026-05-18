@@ -68,7 +68,7 @@
 /* ── DM Serif Display (Regular 400) ── */
 @font-face {
   font-family: "DM Serif Display";
-  src: url("../fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf") format("truetype");
+  src: url("../fonts/DM_Serif_Display/DMSerifDisplay-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -77,7 +77,7 @@
 /* ── Inter Variable (todos los pesos en un solo archivo) ── */
 @font-face {
   font-family: "Inter";
-  src: url("../fonts/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  src: url("../fonts/Inter/Inter-VariableFont_opsz,wght.woff2") format("woff2");
   font-weight: 100 900;
   font-display: swap;
 }
