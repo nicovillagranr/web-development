@@ -17,7 +17,7 @@ export default function Footer({ theme, profile }) {
 
   return (
     <footer id="contacto" className="mt-16 border-t border-line">
-      <div className="container-page flex flex-wrap items-center justify-between gap-4 py-6">
+      <div className="container-page flex flex-col items-center gap-4 py-6 text-center sm:flex-row sm:flex-wrap sm:justify-between sm:text-left">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="" aria-hidden="true" className="h-8 w-8 shrink-0 rounded-md" />
           <div className="flex flex-col">
@@ -26,7 +26,7 @@ export default function Footer({ theme, profile }) {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center justify-center gap-2.5">
           {links.map(({ id, label, href, external }) => (
             <a key={id} href={href} className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-text-secondary transition-all hover:border-accent-border hover:text-text-primary"
               {...(external && { target: "_blank", rel: "noreferrer" })}>

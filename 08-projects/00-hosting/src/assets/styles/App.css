@@ -58,8 +58,8 @@
   --color-amber-glow: rgba(232, 255, 0, 0.15);
 
   /* ── Bordes ── */
-  --color-line: rgba(255, 0, 119, 0.1);
-  --color-line-hover: rgba(255, 0, 119, 0.22);
+  --color-line: rgba(255, 0, 119, 0.22);
+  --color-line-hover: rgba(255, 0, 119, 0.4);
 
   /* ── Tipografía ── */
   --font-heading: "Satoshi", sans-serif;

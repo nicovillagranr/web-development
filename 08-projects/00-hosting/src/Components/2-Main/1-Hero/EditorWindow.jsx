@@ -43,8 +43,8 @@ export default function EditorWindow({ tab, fields, onTabChange }) {
   return (
     <div className="animate-fade-up delay-2 flex flex-col rounded-lg border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
       {/* Title bar + Tabs */}
-      <div className="flex items-center border-b border-line px-2 sm:px-4 overflow-x-auto">
-        <div className="flex overflow-x-auto flex-1" role="tablist" aria-label="Secciones del perfil">
+      <div className="flex items-center border-b border-line overflow-x-auto">
+        <div className="flex flex-1 sm:overflow-x-auto" role="tablist" aria-label="Secciones del perfil">
           {TAB_ITEMS.map((t) => (
             <button
               role="tab"
@@ -55,25 +55,24 @@ export default function EditorWindow({ tab, fields, onTabChange }) {
               key={t.id}
               onClick={() => onTabChange(t.id)}
               onKeyDown={(e) => handleTabKey(e, t.id)}
-              className={`px-2 py-2 sm:px-3 sm:py-3 border-t-2 border-b border-b-transparent text-xs font-mono transition-colors whitespace-nowrap shrink-0 ${tab.id === t.id ? "border-t-accent bg-accent/10 text-text-primary" : "border-t-transparent text-text-muted hover:text-text-secondary"}`}>
+              className={`relative overflow-hidden px-2 py-2 sm:px-3 sm:py-3 border-t-2 border-r border-r-line border-b border-b-transparent text-xs font-mono transition-colors whitespace-nowrap flex-1 text-center sm:flex-none sm:text-left ${tab.id === t.id ? "border-t-accent bg-accent/10 text-text-primary" : "border-t-transparent text-text-muted hover:text-text-secondary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-accent after:origin-left after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100"}`}>
+              {tab.id !== t.id && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-1/2 top-0 -translate-x-1/2 animate-bounce text-sm sm:text-base leading-none text-accent motion-reduce:animate-none">
+                  ▾
+                </span>
+              )}
               <span className="mr-0.5 sm:mr-1">{t.icon}</span>
-              <span className="hidden sm:inline">{t.name}</span>
+              <span className="hidden sm:inline font-semibold">{t.name}</span>
               <span className="sm:hidden text-xs">{t.id}</span>
             </button>
           ))}
         </div>
 
-        <div className="ml-auto flex items-center gap-2 py-2 sm:py-3 px-1 sm:px-0 shrink-0">
-          <div className="flex items-center gap-1 text-xs font-mono text-emerald hidden sm:flex">
-            <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald animate-pulse-dot" />
-            <span>editing</span>
-          </div>
-
-          <div className="flex items-center gap-0.5 pl-2 border-l border-line" aria-hidden="true">
-            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-text-muted">−</span>
-            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-text-muted">□</span>
-            <span className="inline-flex h-5 w-5 items-center justify-center text-xs leading-none text-red-400">✕</span>
-          </div>
+        <div className="ml-auto flex items-center gap-1 text-xs font-mono text-emerald mr-4 py-2 sm:py-3 px-1 sm:px-0 shrink-0 hidden sm:flex">
+          <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald animate-pulse-dot" />
+          <span className="">editing</span>
         </div>
       </div>
 
