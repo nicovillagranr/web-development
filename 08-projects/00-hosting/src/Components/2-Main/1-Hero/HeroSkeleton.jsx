@@ -9,7 +9,7 @@ export default function HeroSkeleton() {
 
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero" aria-hidden="true">
-      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 md:grid-cols-[2fr_3fr] md:items-start">
         {/* Panel izquierdo — imita PreviewPanel (h-75 md:h-100, gap-3 sm:gap-6) */}
         <div className="flex h-75 flex-col gap-3 sm:gap-6 md:h-100">
           <div className="flex items-center justify-between">
@@ -36,15 +36,15 @@ export default function HeroSkeleton() {
         <div className="flex flex-col overflow-hidden rounded-lg border border-line bg-surface/60 max-h-96 sm:max-h-full">
           {/* Title bar + tabs */}
           <div className="flex items-center gap-2 border-b border-line px-2 py-2 sm:px-4 sm:py-2.5">
-            <div className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
-            <div className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
-            <div className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
+            <Block className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
+            <Block className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
+            <Block className="h-6 min-w-0 flex-1 rounded-md border border-line-hover sm:h-7 sm:max-w-24" />
             <Block className="ml-auto hidden h-4 w-16 sm:block" />
           </div>
 
           {/* Editor body — columna de números + líneas de código */}
           <div className="flex">
-            <div className="flex shrink-0 flex-col border-r border-line bg-base-900/50 px-1 py-2 sm:px-3 sm:py-4">
+            <div className="hidden shrink-0 flex-col border-r border-line bg-base-900/50 px-1 py-2 sm:flex sm:px-3 sm:py-4">
               {Array.from({ length: LINES }).map((_, i) => (
                 <div key={i} className="flex h-5 items-center justify-end sm:h-7">
                   <Block className="h-2.5 w-3" />

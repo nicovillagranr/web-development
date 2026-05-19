@@ -1,5 +1,27 @@
 import { useState, useEffect } from "react";
 
+// Una línea del editor: número + contenido en la misma fila flex, así ambos
+// crecen juntos cuando el contenido envuelve (un número por línea lógica,
+// como un editor con soft-wrap). El gutter de las filas apiladas forma la
+// columna continua (bg + borde derecho).
+function CodeLine({ n, active = false, children }) {
+  return (
+    <div className="flex">
+      <span className="hidden sm:block shrink-0 w-8 sm:w-12 select-none border-r border-line bg-base-900/50 px-1 sm:px-3 text-right text-xs text-text-muted/40">
+        {n}
+      </span>
+      {/* border-l-2 siempre presente (transparente si no está activa) para que
+          la línea activa no desplace el texto 2px al ciclar. text-indent
+          negativo + padding = sangría colgante: las líneas envueltas quedan
+          indentadas bajo el valor, no pegadas al gutter. */}
+      <span
+        className={`flex-1 whitespace-pre-wrap wrap-break-word border-l-2 pr-2 sm:pr-4 pl-[2.5em] indent-[-2em] ${active ? "border-accent bg-accent/10" : "border-transparent"}`}>
+        {children}
+      </span>
+    </div>
+  );
+}
+
 export default function EditorWindow({ tab, fields, onTabChange }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [prevTabId, setPrevTabId] = useState(tab.id);
@@ -76,36 +98,52 @@ export default function EditorWindow({ tab, fields, onTabChange }) {
         </div>
       </div>
 
-      {/* Editor Body */}
-      <div className="flex flex-1 overflow-hidden min-h-0">
-        {/* Line Numbers */}
-        <div className="flex flex-col border-r border-line bg-base-900/50 px-1 sm:px-3 py-2 sm:py-4 text-right font-mono text-xs text-text-muted/40 select-none shrink-0">
-          {Array.from({ length: fields.length + 2 }).map((_, i) => (
-            <div key={i} className="h-5 sm:h-7">{i + 1}</div>
-          ))}
-        </div>
-
-        {/* Code */}
-        <pre className="flex-1 overflow-auto p-2 sm:p-4 font-mono text-xs sm:text-sm leading-5 sm:leading-7 text-text-secondary">
+      {/* Editor Body — cada línea es una fila [número][contenido] */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 font-mono text-xs sm:text-sm leading-5 sm:leading-7 text-text-secondary">
+        <CodeLine n={1}>
           <span className="text-text-secondary">{"{"}</span>
-          {"\n"}
-          {fields.map((f, i) => {
-            const isActive = i === activeIdx;
-            return (
-              <span key={f.k} className={`block px-1 sm:px-2 -mx-1 sm:-mx-2 rounded transition-colors ${isActive ? "bg-accent/10 border-l-2 border-accent" : ""}`}>
-                <span className="hidden sm:inline">{"  "}</span>
-                <span className="text-text-primary">"{f.k}"</span>
-                <span className="text-text-secondary">:</span>
+        </CodeLine>
+
+        {fields.map((f, i) => {
+          const isActive = i === activeIdx;
+          const isLast = i === fields.length - 1;
+          return (
+            <CodeLine key={f.k} n={i + 2} active={isActive}>
+              <span className="hidden sm:inline">{"  "}</span>
+              <span className="text-text-primary">"{f.k}"</span>
+              <span className="text-text-secondary">: </span>
+              {/* Campo array: array JSON en una sola línea lógica que envuelve. */}
+              {f.type === "arr" ? (
+                <>
+                  <span className="text-text-secondary">[</span>
+                  {/* Cada tecnología + su coma van juntas en un span nowrap, así
+                      "React Router" nunca se parte. El espacio que sigue queda
+                      como texto suelto: ese es el punto donde la línea envuelve. */}
+                  {f.v.map((item, j) => (
+                    <span key={item}>
+                      <span className="whitespace-nowrap">
+                        <span className="text-amber">"{item}"</span>
+                        {j < f.v.length - 1 && <span className="text-text-secondary">,</span>}
+                      </span>
+                      {j < f.v.length - 1 ? " " : ""}
+                    </span>
+                  ))}
+                  <span className="text-text-secondary">]</span>
+                </>
+              ) : (
                 <span className={f.type === "num" ? "text-emerald" : "text-amber"}>
                   {f.type === "str" ? `"${f.v}"` : f.v}
                 </span>
-                <span className="text-text-secondary">{i < fields.length - 1 ? "," : ""}</span>
-                {isActive && <span className="animate-blink text-accent">|</span>}
-              </span>
-            );
-          })}
+              )}
+              <span className="text-text-secondary">{isLast ? "" : ","}</span>
+              {isActive && <span className="animate-blink text-accent">|</span>}
+            </CodeLine>
+          );
+        })}
+
+        <CodeLine n={fields.length + 2}>
           <span className="text-text-secondary">{"}"}</span>
-        </pre>
+        </CodeLine>
       </div>
 
       {/* Status Bar - Hidden on mobile */}
