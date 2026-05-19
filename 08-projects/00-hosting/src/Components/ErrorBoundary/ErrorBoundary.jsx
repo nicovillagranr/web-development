@@ -23,10 +23,7 @@ class ErrorBoundary extends React.Component {
         const email = this.props.profile?.email;
 
         return (
-            <div
-                role="alert"
-                aria-live="assertive"
-                className="my-8 rounded-card border border-line bg-surface/60 backdrop-blur p-6 sm:p-10"
+            <div role="alert" aria-live="assertive" className="h-screen my-8 rounded-card border border-line bg-surface/60 backdrop-blur p-6 sm:p-10"
             >
                 <div className="flex flex-col gap-4 sm:gap-6">
                     <div className="flex items-center gap-2">

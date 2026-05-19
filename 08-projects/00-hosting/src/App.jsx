@@ -1,12 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-
 import "./assets/styles/App.css";
 
 import Header from "@/Components/1-Header/Header";
 import Hero from "@/Components/2-Main/1-Hero/Hero";
 const Catalog = lazy(() => import("@/Components/2-Main/2-Catalog/Catalog"));
 import Footer from "@/Components/3-Footer/Footer";
-import ErrorBoundary from "@/Components/4-ErrorBoundary/ErrorBoundary";
+import ErrorBoundary from "@/Components/ErrorBoundary/ErrorBoundary";
 
 import { THEME_KEY } from "./data/storageKeys";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
