@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// Los shcema se usan para validar los datos que se reciben en el backend, y para generar la documentación de la API con OpenAPI (Swagger).
 export const ProjectSchema = z.object({
     id: z.number(),
     name: z.string(),

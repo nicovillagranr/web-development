@@ -12,10 +12,18 @@ const mockProfile = {
     years: 2,
     availability: "open_to_work",
     stack: {
-        frontend: ["React", "Vue", "Angular"],
-        styling: ["CSS", "Sass", "Tailwind"],
-        tools: ["Git", "Docker"]
-    }
+        languages: ["JavaScript", "TypeScript", "HTML", "CSS"],
+        frontend: ["React", "React Router", "Framer Motion", "Zod"],
+        styling: ["Tailwind", "Bootstrap", "CSS Modules", "BEM", "Sass", "Less"],
+        testing: ["Vitest", "Testing Library"],
+        tools: ["Git", "Vite", "npm", "ESLint", "Prettier", "Docker"],
+        copilots: ["Claude Code", "Claude Design"]
+    },
+    intro: {
+        about: "Desarrollador frontend basado en Santiago.",
+        stack: "Cada herramienta de este stack la elegí por una razón."
+    },
+    philosophy: "Nunca dejar de aprender"
 }
 
 const mockProjects = [

@@ -24,9 +24,15 @@ export default function Hero({ projects = [], profile, loading = false }) {
     email: profile?.email || "nicovillagranroses@gmail.com",
     github: profile?.github || "https://github.com/nicovillagranr",
     linkedin: profile?.linkedin || "https://www.linkedin.com/in/nico-villagran/",
+    languages: profile?.stack?.languages ?? [],
     frontend: profile?.stack?.frontend ?? [],
     styling: profile?.stack?.styling ?? [],
+    testing: profile?.stack?.testing ?? [],
     tools: profile?.stack?.tools ?? [],
+    copilots: profile?.stack?.copilots ?? [],
+    bioAbout: profile?.intro?.about || "—",
+    bioStack: profile?.intro?.stack || "—",
+    philosophy: profile?.philosophy || "—",
   };
 
   const TABS = [
@@ -49,9 +55,12 @@ export default function Hero({ projects = [], profile, loading = false }) {
       name: "stack.json",
       icon: "⚡",
       fields: [
-        { k: "frontend", v: data.frontend.join(", "), type: "str" },
-        { k: "styling", v: data.styling.join(", "), type: "str" },
-        { k: "tools", v: data.tools.join(", "), type: "str" },
+        { k: "languages", v: data.languages, type: "arr" },
+        { k: "frontend", v: data.frontend, type: "arr" },
+        { k: "styling", v: data.styling, type: "arr" },
+        { k: "testing", v: data.testing, type: "arr" },
+        { k: "tools", v: data.tools, type: "arr" },
+        { k: "copilots", v: data.copilots, type: "arr" },
       ],
     },
     {
@@ -72,7 +81,7 @@ export default function Hero({ projects = [], profile, loading = false }) {
 
   return (
     <section className="pt-8 md:pt-16 lg:pt-20" id="hero">
-      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 md:grid-cols-[2fr_3fr] md:items-start">
         <PreviewPanel tabId={tabId} data={data} />
         <EditorWindow tab={tab} fields={tab.fields} onTabChange={setTabId} />
       </div>
