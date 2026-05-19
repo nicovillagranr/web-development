@@ -6,7 +6,7 @@ function KPI({ label, value, accent = "primary" }) {
   };
   return (
     <div>
-      <div className={`font-heading text-2xl font-bold ${colorMap[accent]}`}>{value}</div>
+      <div className={`font-heading text-lg font-bold ${colorMap[accent]}`}>{value}</div>
       <div className="font-mono text-xs uppercase tracking-widest text-text-muted">{label}</div>
     </div>
   );
@@ -33,37 +33,18 @@ function PreviewAbout({ data }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-3 sm:py-4">
+      <p className="text-sm leading-relaxed text-text-secondary">{data.bioAbout}</p>
+
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-2 sm:py-3">
         <KPI label="proyectos" value={data.projects} />
         <KPI label="online" value={data.online} accent="emerald" />
         <KPI label="años" value={data.years === "—" ? "—" : `${data.years}+`} accent="amber" />
-      </div>
-
-      <div className="flex flex-wrap gap-2 sm:gap-3">
-        <a href="#proyectos" className="hero-cta-shadow rounded-btn bg-linear-to-br from-accent to-cyan-400 px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold text-base-900 transition-transform hover:-translate-y-0.5 sm:flex-1 text-center">
-          Trabajemos juntos
-        </a>
-        <a href="#proyectos" className="rounded-btn border border-line-hover bg-base-900/50 px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold text-text-primary transition-all hover:-translate-y-0.5 hover:border-accent-border sm:flex-1 text-center">
-          Ver proyectos
-        </a>
       </div>
     </div>
   );
 }
 
 function PreviewStack({ data }) {
-  const groups = [
-    { label: "frontend", items: data.frontend, color: "accent" },
-    { label: "styling", items: data.styling, color: "emerald" },
-    { label: "tools", items: data.tools, color: "amber" },
-  ];
-
-  const colorMap = {
-    accent: "border-accent-border bg-accent-glow text-accent",
-    emerald: "border-emerald bg-emerald-glow text-emerald",
-    amber: "border-amber bg-amber-glow text-amber",
-  };
-
   return (
     <div className="flex flex-col gap-3 sm:gap-6">
       <div className="flex items-center justify-between">
@@ -78,23 +59,10 @@ function PreviewStack({ data }) {
         Lo que <span className="bg-linear-to-r from-accent via-emerald to-amber bg-clip-text text-transparent">construyo</span>
       </h2>
 
-      <div className="flex flex-col gap-2 sm:gap-4">
-        {groups.map((g) => (
-          <div key={g.label}>
-            <div className="font-mono text-xs text-text-muted mb-1">$ {g.label}</div>
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
-              {g.items.map((s) => (
-                <span key={s} className={`rounded-badge border px-2 py-0.5 sm:px-2.5 sm:py-1 font-mono text-xs ${colorMap[g.color]}`}>
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <p className="text-sm leading-relaxed text-text-secondary">{data.bioStack}</p>
 
       <div className="font-mono text-xs text-text-muted">
-        filosofía: <span className="text-amber">Nunca dejar de aprender</span>
+        filosofía: <span className="text-amber">{data.philosophy}</span>
       </div>
     </div>
   );
@@ -144,17 +112,30 @@ function PreviewContact({ data }) {
 }
 
 export default function PreviewPanel({ tabId, data }) {
+  // Los tres paneles se renderizan a la vez, apilados en la misma celda de grid
+  // (col/row-start-1). La celda mide lo del más alto (about), así el contenedor
+  // tiene altura estable y el Hero no salta al cambiar de tab. Los inactivos van
+  // `invisible` (visibility:hidden): siguen ocupando espacio para el cálculo de
+  // altura, pero quedan fuera de la vista, del foco y del lector de pantalla.
+  const panels = [
+    { id: "about", el: <PreviewAbout data={data} /> },
+    { id: "stack", el: <PreviewStack data={data} /> },
+    { id: "contact", el: <PreviewContact data={data} /> },
+  ];
+
   return (
-    <div
-      key={tabId}
-      role="tabpanel"
-      id={`panel-${tabId}`}
-      aria-labelledby={`tab-${tabId}`}
-      tabIndex={0}
-      className="animate-fade-up delay-2 h-75 md:h-100 overflow-y-auto">
-      {tabId === "about" && <PreviewAbout data={data} />}
-      {tabId === "stack" && <PreviewStack data={data} />}
-      {tabId === "contact" && <PreviewContact data={data} />}
+    <div className="animate-fade-up delay-2 grid">
+      {panels.map((p) => (
+        <div
+          key={p.id}
+          role="tabpanel"
+          id={`panel-${p.id}`}
+          aria-labelledby={`tab-${p.id}`}
+          tabIndex={0}
+          className={`col-start-1 row-start-1 ${tabId === p.id ? "" : "invisible"}`}>
+          {p.el}
+        </div>
+      ))}
     </div>
   );
 }
