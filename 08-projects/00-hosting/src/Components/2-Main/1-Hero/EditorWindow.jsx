@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 
 // Una línea del editor: número + contenido en la misma fila flex, así ambos
 // crecen juntos cuando el contenido envuelve (un número por línea lógica,
@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 function CodeLine({ n, active = false, children }) {
   return (
     <div className="flex">
-      <span className="hidden sm:block shrink-0 w-8 sm:w-12 select-none border-r border-line bg-base-900/50 px-1 sm:px-3 text-right text-xs text-text-muted/40">
+      <span className="hidden sm:block shrink-0 w-8 sm:w-12 select-none border-r border-line bg-base-900/50 sm:px-3 text-right text-xs text-text-muted/40">
         {n}
       </span>
       {/* border-l-2 siempre presente (transparente si no está activa) para que
@@ -63,7 +63,7 @@ export default function EditorWindow({ tab, fields, onTabChange }) {
   };
 
   return (
-    <div className="animate-fade-up delay-2 flex flex-col rounded-lg border border-line bg-surface/60 backdrop-blur overflow-hidden max-h-96 sm:max-h-full">
+    <div className="animate-fade-up delay-2 flex flex-col min-w-0 rounded-lg border border-line bg-surface/60 backdrop-blur overflow-hidden  sm:max-h-full">
       {/* Title bar + Tabs */}
       <div className="flex items-center border-b border-line overflow-x-auto">
         <div className="flex flex-1 sm:overflow-x-auto" role="tablist" aria-label="Secciones del perfil">
@@ -104,46 +104,75 @@ export default function EditorWindow({ tab, fields, onTabChange }) {
           <span className="text-text-secondary">{"{"}</span>
         </CodeLine>
 
-        {fields.map((f, i) => {
-          const isActive = i === activeIdx;
-          const isLast = i === fields.length - 1;
-          return (
-            <CodeLine key={f.k} n={i + 2} active={isActive}>
-              <span className="hidden sm:inline">{"  "}</span>
-              <span className="text-text-primary">"{f.k}"</span>
-              <span className="text-text-secondary">: </span>
-              {/* Campo array: array JSON en una sola línea lógica que envuelve. */}
-              {f.type === "arr" ? (
-                <>
-                  <span className="text-text-secondary">[</span>
-                  {/* Cada tecnología + su coma van juntas en un span nowrap, así
-                      "React Router" nunca se parte. El espacio que sigue queda
-                      como texto suelto: ese es el punto donde la línea envuelve. */}
-                  {f.v.map((item, j) => (
-                    <span key={item}>
-                      <span className="whitespace-nowrap">
-                        <span className="text-amber">"{item}"</span>
-                        {j < f.v.length - 1 && <span className="text-text-secondary">,</span>}
-                      </span>
-                      {j < f.v.length - 1 ? " " : ""}
-                    </span>
-                  ))}
-                  <span className="text-text-secondary">]</span>
-                </>
-              ) : (
-                <span className={f.type === "num" ? "text-emerald" : "text-amber"}>
-                  {f.type === "str" ? `"${f.v}"` : f.v}
-                </span>
-              )}
-              <span className="text-text-secondary">{isLast ? "" : ","}</span>
-              {isActive && <span className="animate-blink text-accent">|</span>}
-            </CodeLine>
+        {(() => {
+          // Cuántas líneas ocupa un campo: los `arr` van en dos ("clave": en
+          // una, el array en la siguiente); el resto en una sola.
+          const span = (f) => (f.type === "arr" ? 2 : 1);
+          // Línea numerada donde empieza cada campo (la línea 1 es "{").
+          const lineStarts = fields.map(
+            (_, i) => 2 + fields.slice(0, i).reduce((sum, ff) => sum + span(ff), 0),
           );
-        })}
+          const closingLine = 2 + fields.reduce((sum, ff) => sum + span(ff), 0);
 
-        <CodeLine n={fields.length + 2}>
-          <span className="text-text-secondary">{"}"}</span>
-        </CodeLine>
+          return (
+            <>
+              {fields.map((f, i) => {
+                const isActive = i === activeIdx;
+                const isLast = i === fields.length - 1;
+                const n = lineStarts[i];
+
+                // Campo array: la clave en su línea y el array en la siguiente.
+                if (f.type === "arr") {
+                  return (
+                    <Fragment key={f.k}>
+                      <CodeLine n={n} active={isActive}>
+                        <span className="hidden sm:inline">{"  "}</span>
+                        <span className="text-text-primary">"{f.k}"</span>
+                        <span className="text-text-secondary">:</span>
+                      </CodeLine>
+                      <CodeLine n={n + 1} active={isActive}>
+                        <span className="hidden sm:inline">{"  "}</span>
+                        <span className="text-text-secondary">[</span>
+                        {/* Cada tecnología + su coma van juntas en un span
+                            nowrap, así "React Router" nunca se parte. El espacio
+                            que sigue queda suelto: ahí envuelve la línea. */}
+                        {f.v.map((item, j) => (
+                          <span key={item}>
+                            <span className="whitespace-nowrap">
+                              <span className="text-amber">"{item}"</span>
+                              {j < f.v.length - 1 && <span className="text-text-secondary">,</span>}
+                            </span>
+                            {j < f.v.length - 1 ? " " : ""}
+                          </span>
+                        ))}
+                        <span className="text-text-secondary">]</span>
+                        <span className="text-text-secondary">{isLast ? "" : ","}</span>
+                        {isActive && <span className="animate-blink text-accent">|</span>}
+                      </CodeLine>
+                    </Fragment>
+                  );
+                }
+
+                return (
+                  <CodeLine key={f.k} n={n} active={isActive}>
+                    <span className="hidden sm:inline">{"  "}</span>
+                    <span className="text-text-primary">"{f.k}"</span>
+                    <span className="text-text-secondary">: </span>
+                    <span className={f.type === "num" ? "text-emerald" : "text-amber"}>
+                      {f.type === "str" ? `"${f.v}"` : f.v}
+                    </span>
+                    <span className="text-text-secondary">{isLast ? "" : ","}</span>
+                    {isActive && <span className="animate-blink text-accent">|</span>}
+                  </CodeLine>
+                );
+              })}
+
+              <CodeLine n={closingLine}>
+                <span className="text-text-secondary">{"}"}</span>
+              </CodeLine>
+            </>
+          );
+        })()}
       </div>
 
       {/* Status Bar - Hidden on mobile */}
