@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 16 de mayo de 2026 (sesión 9: A1 — tabs accesibles + componetización Hero + skeletons)
-**Status general:** Base sólida y lista para deploy. A1 cierra la última deuda de A11y (tabs del Hero accesibles). Hero componetizado y con skeleton de carga. Quedan H1/H2/H3 (alto), ninguno bloqueante.
+**Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
+**Status general:** Base sólida y lista para deploy. **H1, H2 y H3 cerrados** (suite de 20 tests + README profesional). Quedan los 3 hallazgos de la auditoría: B2 y B3 (medio) y C6 (bajo), ninguno bloqueante.
 
 ---
 
@@ -9,14 +9,15 @@
 
 ### ✅ Fortalezas reales
 
-| Área                     | Calidad  | Notas                                                                                       |
-| ------------------------ | -------- | ------------------------------------------------------------------------------------------- |
-| **SEO**                  | ⭐⭐⭐⭐ | JSON-LD con `alternateName`, OG dual (landscape+square), Twitter Cards, sitemap+robots      |
-| **Accesibilidad (A11y)** | ⭐⭐⭐⭐ | ARIA en ErrorBoundary/Catalog y **tabs del Hero accesibles** (patrón tablist completo, A1) |
-| **Performance**          | ⭐⭐⭐⭐ | `fetchpriority`+lazy en cards, preconnect a API. GSAP eliminado → bundle ~50% más liviano   |
-| **Arquitectura**         | ⭐⭐⭐⭐ | React 19 + Tailwind v4 + Vite 8. **3 deps en runtime** (react, react-dom, zod). Sin bloat        |
-| **Estilos**              | ⭐⭐⭐⭐ | App.css reorganizado en 13 secciones, @theme + light override, animaciones custom           |
-| **Hook useProjects**     | ⭐⭐⭐   | AbortController + Promise.all OK, **pero bug menor en error reporting** (B1)                |
+| Área                       | Calidad  | Notas                                                                                       |
+| -------------------------- | -------- | ------------------------------------------------------------------------------------------- |
+| **SEO**                    | ⭐⭐⭐⭐ | JSON-LD con `alternateName`, OG dual (landscape+square), Twitter Cards, sitemap+robots      |
+| **Accesibilidad (A11y)**   | ⭐⭐⭐⭐ | ARIA en ErrorBoundary/Catalog y tabs del Hero accesibles (patrón tablist completo, A1)      |
+| **Performance**            | ⭐⭐⭐⭐ | `fetchpriority`+lazy en cards, preconnect a API, Catalog code-split. GSAP eliminado          |
+| **Arquitectura**           | ⭐⭐⭐⭐ | React 19 + Tailwind v4 + Vite 8. 3 deps en runtime (react, react-dom, zod). Sin bloat        |
+| **Estilos**                | ⭐⭐⭐⭐ | App.css reorganizado en 13 secciones, @theme + light override, animaciones custom           |
+| **Testing**                | ⭐⭐⭐⭐ | Vitest + Testing Library + jest-dom. 20 tests (hook + ProjectCard), lint y build limpios     |
+| **Hook usePortfolioData**  | ⭐⭐⭐⭐ | AbortController + Promise.all + validación Zod + error reporting por endpoint. Con tests     |
 
 ---
 
@@ -65,6 +66,16 @@
 | **A1**     | Hero: tabs accesibles (role tab/tablist/tabpanel, aria-selected, aria-controls/labelledby, navegación ←/→, roving tabindex) | 16-05-2026 |
 | **REF1**   | Hero componetizado: `PreviewPanel.jsx` + `EditorWindow.jsx` (Hero.jsx 350 → 75 líneas)        | 16-05-2026 |
 | **UX1**    | Skeletons de carga: `HeroSkeleton.jsx` + skeleton inline en Header (above-the-fold)           | 16-05-2026 |
+| **REF2**   | Hook `useProjects` renombrado a `usePortfolioData` (refleja que carga projects + profile)     | 18-05-2026 |
+| **REF3**   | ErrorBoundary movido a su propia carpeta `src/Components/ErrorBoundary/`                       | 19-05-2026 |
+| **B7**     | Hero/Footer: fallbacks honestos ("—") cuando falla la API                                     | 18-05-2026 |
+| **N7**     | API + perfil: stack reorganizado en 6 categorías (languages, frontend, styling, testing, tools, copilots) | 19-05-2026 |
+| **STY1**   | Restyling del Hero: EditorWindow y panel de preview renovados                                 | 19-05-2026 |
+| **H1**     | Tests del hook `usePortfolioData` (loading, success, error HTTP, abort al desmontar) — 4 tests | 18-05-2026 |
+| **TEST1**  | Config de testing: `@testing-library/jest-dom` + `src/setupTest.js` + `setupFiles` en vitest  | 21-05-2026 |
+| **H2**     | Tests de `ProjectCard` — 16 tests (imagen, badges, stack, enlaces, casos negativos)           | 21-05-2026 |
+| **STY2**   | EditorWindow: arrays del editor en dos líneas; fix de overflow del Hero (min-w-0)             | 21-05-2026 |
+| **H3**     | README.md profesional: stack, características, setup, estructura, datos, testing y deploy      | 21-05-2026 |
 
 ---
 
@@ -72,46 +83,44 @@
 
 ### 🔴 CRÍTICO — Antes de producción
 
-_(vacío — C5 cerrado en sesión 8)_
+_(vacío)_
 
-### 🟡 ALTO — Profesionalismo / entrevistas (~80 min)
+### 🟡 ALTO — Profesionalismo / entrevistas
 
-| #      | Mejora                                                     | Esfuerzo | Impacto | Descripción                                                                                                                                                                          |
-| ------ | ---------------------------------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **H1** | **Tests para useProjects**                                 | 35 min   | Alto    | Vitest + @testing-library/react. Tests: loading, error, success, AbortController.                                                                                                    |
-| **H2** | **Tests para ProjectCard**                                 | 25 min   | Medio   | Renderizado, lazy loading, accessible links.                                                                                                                                         |
-| **H3** | **README.md profesional**                                  | 20 min   | Medio   | El actual es el template default de Vite. Stack, setup, scripts, estructura.                                                                                                         |
-
-**Subtotal:** ~80 min.
+| #      | Mejora                          | Esfuerzo | Impacto | Descripción                                                                                                                                                       |
+| ------ | ------------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **B2** | **Schema vs componente: contrato inconsistente** | 15 min   | Medio   | `ProjectSchema` marca `repo`, `deploy` y `framework` como `z.string()` obligatorios, pero `ProjectCard` trata `repo`/`deploy` como opcionales (`{repo && ...}`) y `framework` ni se usa. Si la API omite un campo, `.parse()` lanza antes del render. Decidir: marcar `.optional()` en el schema o garantizar los campos en la API. |
+| **B3** | **Valor de `status` ambiguo**   | 10 min   | Medio   | `ProjectCard` y `Hero` asumen `status === "online"`; el mock del test del hook usa `status: "done"`. Si la API real devuelve `"done"`, todas las cards muestran "Mantenimiento" y `onlineCount` es siempre 0. Verificar qué devuelve `/projects` y alinear. |
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
-_(vacío — L1 cerrado en sesión 7)_
+| #      | Mejora                          | Esfuerzo | Impacto | Descripción                                                                                                       |
+| ------ | ------------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| **C6** | **Comentarios incorrectos en schemas** | 5 min    | Bajo    | `projectsSchema.js` y `profileSchema.js` tienen el typo "shcema/shema" y afirman que sirven "en el backend" y "para generar OpenAPI/Swagger" — falso: son schemas Zod de frontend consumidos por `usePortfolioData`. |
 
 ---
 
-## 🚀 Orden recomendado para entrevistas
+## 🚀 Orden recomendado
 
-### Si tienes 1 día (impresiona en entrevista):
-1. **H1** — un solo archivo de tests transforma percepción.
-2. **H3** — README profesional. Primero que abren en GitHub.
-
-### Si tienes 1 semana (production-grade):
-3. **H2** — tests adicionales para ProjectCard.
+1. **B3** — verificar el contrato de `status` con la API real (puede ser un bug visible hoy).
+2. **B2** — alinear `ProjectSchema` con el uso real de los campos opcionales.
+3. **C6** — limpieza de comentarios (rápido, mientras se toca B2).
 
 ---
 
 ## 📝 Notas técnicas
 
 - **Stack runtime:** React 19.2, Tailwind v4.2, Vite 8.0. **3 deps en `package.json`** (react, react-dom, zod). GSAP eliminado en sesión 5.
-- **Bundle actual:** ~228 KB / ~69 KB gzipped (sin GSAP, ~50% más liviano que antes).
-- **Deployment:** `.htaccess` Apache listo. Para Vercel falta `vercel.json` (ver D2).
-- **API:** `https://00-portfolio-projects-api.vercel.app` — endpoints `/projects` y `/profile`. Repo en `C:/apis/00-portfolio-projects/`. Profile incluye `role`, `based`, `years`, `stack: {frontend, styling, tools}` (arrays nativos, consumidos por Hero).
+- **Testing:** Vitest 4.1 + Testing Library + `@testing-library/jest-dom`. Setup en `src/setupTest.js` (registrado vía `setupFiles` en `vite.config.js`). 20 tests en 2 archivos: `usePortfolioData.test.js` (4) y `ProjectCard.test.jsx` (16).
+- **Bundle actual:** chunk principal ~283 KB / ~85 KB gzipped + Catalog (lazy) ~16 KB / ~3.6 KB gzipped. CSS ~40 KB / ~7.8 KB gzipped.
+- **Deployment:** `.htaccess` Apache listo en `public/`. Target decidido: Apache/Hostinger (no se usa Vercel para el front).
+- **API:** `https://00-portfolio-projects-api.vercel.app` — endpoints `/projects` y `/profile`. Repo en `C:/apis/00-portfolio-projects/`. Profile incluye `role`, `based`, `years`, `availability`, `intro`, `philosophy` y `stack` con **6 categorías** (languages, frontend, styling, testing, tools, copilots).
+- **Hook:** `usePortfolioData` — carga projects + profile en paralelo (`Promise.all`), valida con Zod, aborta al desmontar.
 - **Theme:** `localStorage("theme:mode")` + `prefers-color-scheme` fallback.
 - **CSS:** `App.css` reorganizado en 13 secciones numeradas (tokens → base → tema → componentes → animaciones → utilidades → UI global → A11y).
 
 ---
 
-**Última actualización:** 16-05-2026 (sesión 9: A1 + componetización Hero + skeletons)
+**Última actualización:** 21-05-2026 (sesión 10: tests hook + ProjectCard, restyling Hero, auditoría completa)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** H1 (tests useProjects) → H3 (README)
+**Siguiente sesión recomendada:** B3 (verificar contrato de `status`) → B2 (alinear schema con componente)
