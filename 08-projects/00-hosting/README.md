@@ -1,48 +1,135 @@
-# React + Vite
+# Portfolio — Proyectos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Página de proyectos del portfolio de Nicolás Villagrán. Una SPA en React que
+consume una API propia y presenta el perfil y los proyectos en un catálogo
+filtrable, con un Hero interactivo en forma de editor de código.
 
-Currently, two official plugins are available:
+**Demo:** [nicovillagran.com](https://nicovillagran.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Capa        | Tecnología                                              |
+| ----------- | ------------------------------------------------------- |
+| UI          | React 19.2                                              |
+| Build       | Vite 8                                                  |
+| Estilos     | Tailwind CSS v4.2 (`@theme`, modo claro/oscuro)         |
+| Validación  | Zod 4 (schemas de la respuesta de la API)               |
+| Testing     | Vitest 4 + Testing Library + jest-dom                   |
+| Lint        | ESLint 9 (flat config)                                  |
+| Deploy      | Apache / Hostinger (`.htaccess` incluido)               |
 
-## Expanding the ESLint configuration
+Solo 3 dependencias en runtime: `react`, `react-dom`, `zod`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
 
-## Problemas encontrados durante el desarrollo
+## Características
 
-### Prettier rompe arbitrary values de Tailwind al guardar
+- **Hero interactivo** — el perfil se muestra como un editor de código con
+  pestañas (`about.json`, `stack.json`, `contact.json`) navegables por teclado.
+- **Catálogo de proyectos** — cards con imagen, badges de tipo/estado, stack
+  agrupado y enlaces a demo y repositorio.
+- **Tema claro/oscuro** — persistido en `localStorage`, con fallback a
+  `prefers-color-scheme`.
+- **Accesibilidad** — patrón `tablist` completo en el Hero, roles ARIA y
+  `aria-live` en estados de carga y error.
+- **Performance** — `Catalog` cargado con `lazy` + `Suspense`, `fetchpriority`
+  y lazy loading en imágenes, `preconnect` a la API.
+- **Resiliencia** — `ErrorBoundary` global y fallbacks honestos ("—") cuando la
+  API falla, en vez de datos plausibles que oculten el problema.
+- **SEO + PWA** — JSON-LD (schema.org Person), Open Graph dual, Twitter Cards,
+  `sitemap.xml`, `robots.txt` y `site.webmanifest`.
 
-**Síntoma:** al hacer `Ctrl + S` sobre archivos `.css` que usan `@apply`, Prettier reformatea las funciones dentro de *arbitrary values* de Tailwind (ej: `shadow-[0_12px_28px_rgba(56,189,248,0.25)]`) agregando espacios después de cada coma. Tailwind no tolera espacios dentro de los `[...]`, así que la regla se rompe silenciosamente y también puede tumbar la siguiente regla del archivo.
+---
 
-**Causa:** Prettier formatea el CSS con reglas estándar (espacios tras comas en `rgba()`, `calc()`, etc.) sin entender que el contenido de los `[...]` de Tailwind es un token único.
+## Puesta en marcha
 
-**Soluciones posibles:**
+Requiere Node 20+.
 
-1. **Sacar el valor complejo del `@apply` y escribirlo como CSS plano** (opción aplicada en este proyecto). Así Prettier puede formatear libremente:
-   ```css
-   .button-light {
-       @apply rounded-btn bg-accent px-5 py-2.5 text-sm font-bold;
-       box-shadow: 0 12px 28px rgba(56, 189, 248, 0.25);
-   }
-   ```
+```bash
+npm install      # instalar dependencias
+npm run dev      # servidor de desarrollo
+```
 
-2. **Comentario `/* prettier-ignore */`** sobre la línea problemática.
+### Scripts
 
-3. **Desactivar format on save solo para CSS** en `.vscode/settings.json`:
-   ```json
-   { "[css]": { "editor.formatOnSave": false } }
-   ```
+| Script            | Descripción                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Servidor de desarrollo con HMR           |
+| `npm run build`   | Build de producción en `dist/`           |
+| `npm run preview` | Sirve el build de producción localmente  |
+| `npm run lint`    | Linter sobre todo el proyecto            |
+| `npm test`        | Tests con Vitest                         |
 
-4. **Instalar `prettier-plugin-tailwindcss`** (recomendado a largo plazo). Es un plugin de Prettier que entiende la sintaxis de Tailwind y además ordena las clases automáticamente. Se instala como dependencia del proyecto:
-   ```
-   npm i -D prettier-plugin-tailwindcss
-   ```
-   Prettier lo detecta automáticamente desde `node_modules` sin configuración adicional.
+---
 
+## Estructura
+
+```
+src/
+├── App.jsx                  Composición raíz: tema + datos + layout
+├── main.jsx                 Punto de entrada
+├── assets/                  Fuentes, iconos y App.css
+├── Components/
+│   ├── 1-Header/            Cabecera + toggle de tema
+│   ├── 2-Main/
+│   │   ├── 1-Hero/          Hero, EditorWindow, PreviewPanel, HeroSkeleton
+│   │   └── 2-Catalog/       Catalog, ProjectCard (+ tests)
+│   ├── 3-Footer/            Pie de página
+│   └── ErrorBoundary/       Captura de errores de render
+├── hooks/
+│   └── usePortfolioData.js  Carga de projects + profile (+ tests)
+├── schemas/                 Schemas Zod de la API
+└── data/                    Claves de localStorage centralizadas
+```
+
+---
+
+## Datos
+
+La app consume una API propia:
+
+```
+https://00-portfolio-projects-api.vercel.app
+  GET /projects   — lista de proyectos
+  GET /profile    — perfil (rol, ubicación, stack, intro)
+```
+
+El hook `usePortfolioData` pide ambos endpoints en paralelo con `Promise.all`,
+valida cada respuesta con Zod, cancela las peticiones al desmontar mediante
+`AbortController` y reporta en el error qué endpoint falló y con qué status.
+
+---
+
+## Testing
+
+20 tests con Vitest + Testing Library:
+
+- `usePortfolioData.test.js` — estados loading / success / error HTTP y
+  cancelación al desmontar.
+- `ProjectCard.test.jsx` — renderizado de imagen, badges, stack, enlaces y
+  casos negativos.
+
+```bash
+npm test
+```
+
+---
+
+## Deploy
+
+El build (`npm run build`) genera `dist/`, pensado para hosting estático Apache.
+El `.htaccess` en `public/` incluye el `ErrorDocument` de la página 404 custom y
+se copia al build automáticamente.
+
+---
+
+## Nota de desarrollo
+
+Prettier reformatea los *arbitrary values* de Tailwind dentro de `@apply`
+(ej. `shadow-[0_12px_28px_rgba(56,189,248,0.25)]`) añadiendo espacios tras las
+comas, lo que rompe la regla de forma silenciosa. La solución aplicada fue sacar
+esos valores complejos del `@apply` y escribirlos como CSS plano, además de usar
+`prettier-plugin-tailwindcss`, que entiende la sintaxis de Tailwind y ordena las
+clases automáticamente.
