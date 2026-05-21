@@ -33,7 +33,7 @@ function PreviewAbout({ data }) {
         </div>
       </div>
 
-      <p className="text-sm leading-relaxed text-text-secondary">{data.bioAbout}</p>
+      <p className="text-sm leading-relaxed text-text-secondary wrap-break-word">{data.bioAbout}</p>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-2 sm:py-3">
         <KPI label="proyectos" value={data.projects} />
@@ -124,7 +124,7 @@ export default function PreviewPanel({ tabId, data }) {
   ];
 
   return (
-    <div className="animate-fade-up delay-2 grid">
+    <div className="animate-fade-up delay-2 grid min-w-0">
       {panels.map((p) => (
         <div
           key={p.id}
@@ -132,7 +132,7 @@ export default function PreviewPanel({ tabId, data }) {
           id={`panel-${p.id}`}
           aria-labelledby={`tab-${p.id}`}
           tabIndex={0}
-          className={`col-start-1 row-start-1 ${tabId === p.id ? "" : "invisible"}`}>
+          className={`col-start-1 row-start-1 min-w-0 ${tabId === p.id ? "" : "invisible"}`}>
           {p.el}
         </div>
       ))}
