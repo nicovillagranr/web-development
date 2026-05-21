@@ -49,7 +49,7 @@ const TECH_GROUP = {
   "Supabase": "backend",
 };
 
-export default function ProjectCard({ project, index, priority = false }) {
+export default function ProjectCard({ project, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "Mantenimiento";
   const demoHref = path.endsWith("/") ? path : `${path}/`;
@@ -60,10 +60,7 @@ export default function ProjectCard({ project, index, priority = false }) {
   }, {});
 
   return (
-    <article
-      aria-label={name}
-      className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow"
-      style={{ animationDelay: `${100 + index * 80}ms` }}>
+    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow">
       {project.image && (
         <div className="relative -mx-4 -mt-4">
           <img
@@ -80,7 +77,7 @@ export default function ProjectCard({ project, index, priority = false }) {
               rel="noopener noreferrer"
               aria-label={`Repositorio de ${name} en GitHub`}
               className="absolute right-2 top-2 z-20 hidden h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100 group-hover:opacity-100 md:flex">
-              <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+              <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert" />
             </a>
           )}
         </div>
@@ -95,7 +92,7 @@ export default function ProjectCard({ project, index, priority = false }) {
       <h3 className="font-heading text-lg font-bold text-text-primary">{name}</h3>
       <p className="text-sm leading-relaxed text-text-secondary">{description}</p>
 
-      <div className="font-mono text-xs leading-relaxed">
+      <section aria-label="Stack tecnológico" className="font-mono text-xs leading-relaxed">
         {["tools", "frontend", "backend"].map((group) => {
           const techs = grouped[group] ?? [];
           if (techs.length === 0) return null;
@@ -122,7 +119,7 @@ export default function ProjectCard({ project, index, priority = false }) {
             </div>
           </div>
         )}
-      </div>
+      </section>
 
       <div className="mt-auto hidden items-center justify-between gap-2 pt-1 md:flex">
         <a
@@ -143,7 +140,7 @@ export default function ProjectCard({ project, index, priority = false }) {
             aria-label={`Repositorio de ${name} en GitHub`}
             className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100"
           >
-            <img src={githubIcon} alt="" className="h-5 w-5 invert" />
+            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert" />
           </a>
         )}
       </div>
@@ -156,7 +153,7 @@ export default function ProjectCard({ project, index, priority = false }) {
           aria-label={`Abrir demo de ${name}`}
           className="flex min-h-11 flex-1 items-center justify-center rounded-badge border border-accent-border bg-accent-glow px-3 text-sm font-semibold text-accent"
         >
-          Demo &rarr;
+          Abrir &rarr;
         </a>
         {repo && (
           <a
@@ -166,7 +163,7 @@ export default function ProjectCard({ project, index, priority = false }) {
             aria-label={`Repositorio de ${name} en GitHub`}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3"
           >
-            <img src={githubIcon} alt="" className="h-5 w-5" />
+            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5" />
           </a>
         )}
       </div>

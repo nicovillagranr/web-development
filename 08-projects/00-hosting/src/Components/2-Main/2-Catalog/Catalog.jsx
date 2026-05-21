@@ -66,7 +66,7 @@ export default function Catalog({ projects = [], loading = false, error = null }
             )}
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {group.map((project, i) => (
-                <ProjectCard key={project.name} project={project} index={i} priority={i < 3} />
+                <ProjectCard key={project.name} project={project} priority={i < 3} />
               ))}
             </div>
           </div>
