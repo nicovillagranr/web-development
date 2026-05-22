@@ -161,7 +161,7 @@ export default function ProjectCard({ project, priority = false }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Repositorio de ${name} en GitHub`}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3 [html.light_&]:border-2 [html.light_&]:border-text-muted"
           >
             <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert [html.light_&]:invert-0" />
           </a>
