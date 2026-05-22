@@ -60,7 +60,7 @@ export default function ProjectCard({ project, priority = false }) {
   }, {});
 
   return (
-    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-card border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow">
+    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-tl-[32px] rounded-tr-[4px] rounded-bl-[4px] rounded-br-[32px] border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow">
       {project.image && (
         <div className="relative -mx-4 -mt-4">
           <img
