@@ -23,5 +23,5 @@ export default defineConfig({
       "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
     },
   },
-  base: 'proyecto-7/',
+  base: '/proyecto-5/',
 })
