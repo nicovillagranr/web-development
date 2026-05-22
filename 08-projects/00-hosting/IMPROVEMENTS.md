@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
 **Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
-**Status general:** Base sólida y lista para deploy. **Sin pendientes** — todos los hallazgos de la auditoría (H1, H2, H3, B2, B3, C6) están cerrados. Suite de 20 tests, lint y build en verde.
+**Status general:** Base sólida y lista para deploy. Auditoría cerrada (H1-H3, B2, B3, C6) y portfolio curado: la API pasó de 12 a 8 entradas (6 proyectos + 2 APIs). Suite de 20 tests, lint y build en verde. **Pendiente:** re-deploy manual de 5 proyectos en Hostinger (DEP1).
 
 ---
 
@@ -79,6 +79,7 @@
 | **B2**     | ProjectSchema: `repo`, `deploy` y `framework` marcados como `.optional()` (alineados con el uso real del componente) | 21-05-2026 |
 | **B3**     | `status`: la API devuelve `online`/`in-progress`; el badge no-online ahora muestra "En desarrollo" (antes "Mantenimiento") y los mocks de test usan valores reales | 21-05-2026 |
 | **C6**     | Comentarios de los schemas corregidos: describían validación "en el backend" + OpenAPI; ahora reflejan que son schemas Zod de frontend usados por `usePortfolioData` | 21-05-2026 |
+| **CUR1**   | Curación del portfolio: descartados 4 proyectos (Glossy Touch, ActiveBox, MGD Exports, Users Fetch API); la API queda con 8 entradas (6 proyectos + 2 APIs al final), ids 0-7, imágenes y paths renumerados; `base` de Vite alineado en los 5 proyectos restantes | 21-05-2026 |
 
 ---
 
@@ -90,7 +91,9 @@ _(vacío)_
 
 ### 🟡 ALTO — Profesionalismo / entrevistas
 
-_(vacío)_
+| #        | Mejora                     | Esfuerzo | Impacto | Descripción                                                                                                                                                                                                                                  |
+| -------- | -------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **DEP1** | **Re-deploy en Hostinger** | manual   | Alto    | Tras renumerar los paths, rebuildizar y subir los 5 proyectos a sus carpetas nuevas (`/proyecto-1/`…`/proyecto-5/`) y borrar las huérfanas `/proyecto-6,7,8/`. El `base` de Vite ya está actualizado. Hasta hacerlo, los botones "Abrir demo" apuntan a contenido viejo. Trabajo manual del usuario. |
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
@@ -100,7 +103,7 @@ _(vacío)_
 
 ## 🚀 Orden recomendado
 
-_Sin pendientes. Todos los hallazgos de la auditoría de la sesión 10 están cerrados._
+1. **DEP1** — re-deploy de los 5 proyectos en Hostinger a sus carpetas nuevas (trabajo manual del usuario).
 
 ---
 
@@ -110,13 +113,13 @@ _Sin pendientes. Todos los hallazgos de la auditoría de la sesión 10 están ce
 - **Testing:** Vitest 4.1 + Testing Library + `@testing-library/jest-dom`. Setup en `src/setupTest.js` (registrado vía `setupFiles` en `vite.config.js`). 20 tests en 2 archivos: `usePortfolioData.test.js` (4) y `ProjectCard.test.jsx` (16).
 - **Bundle actual:** chunk principal ~283 KB / ~85 KB gzipped + Catalog (lazy) ~16 KB / ~3.6 KB gzipped. CSS ~40 KB / ~7.8 KB gzipped.
 - **Deployment:** `.htaccess` Apache listo en `public/`. Target decidido: Apache/Hostinger (no se usa Vercel para el front).
-- **API:** `https://00-portfolio-projects-api.vercel.app` — endpoints `/projects` y `/profile`. Repo en `C:/apis/00-portfolio-projects/`. Profile incluye `role`, `based`, `years`, `availability`, `intro`, `philosophy` y `stack` con **6 categorías** (languages, frontend, styling, testing, tools, copilots).
+- **API:** `https://00-portfolio-projects-api.vercel.app` — endpoints `/projects` y `/profile`. Repo en `C:/apis/00-portfolio-projects/`. Profile incluye `role`, `based`, `years`, `availability`, `intro`, `philosophy` y `stack` con **6 categorías** (languages, frontend, styling, testing, tools, copilots). Tras la curación, `/projects` devuelve **8 entradas** (6 proyectos + 2 APIs al final), ids 0-7; los 6 proyectos usan paths `/proyecto-1/`…`/proyecto-5/` (Hostinger) y URL de Vercel para Falabella.com.
 - **Hook:** `usePortfolioData` — carga projects + profile en paralelo (`Promise.all`), valida con Zod, aborta al desmontar.
 - **Theme:** `localStorage("theme:mode")` + `prefers-color-scheme` fallback.
 - **CSS:** `App.css` reorganizado en 13 secciones numeradas (tokens → base → tema → componentes → animaciones → utilidades → UI global → A11y).
 
 ---
 
-**Última actualización:** 21-05-2026 (sesión 10: tests hook + ProjectCard, restyling Hero, auditoría completa)
+**Última actualización:** 21-05-2026 (sesión 11: curación del portfolio — descarte de 4 proyectos y renumeración)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** sin pendientes abiertos — backlog de la auditoría cerrado.
+**Siguiente sesión recomendada:** DEP1 — re-deploy de los 5 proyectos en Hostinger.
