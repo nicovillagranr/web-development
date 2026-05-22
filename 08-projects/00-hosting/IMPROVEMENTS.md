@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
 **Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
-**Status general:** Base sólida y lista para deploy. Auditoría cerrada (H1-H3, B2, B3, C6) y portfolio curado: la API pasó de 12 a 8 entradas (6 proyectos + 2 APIs). Suite de 20 tests, lint y build en verde. **Pendiente:** re-deploy manual de 5 proyectos en Hostinger (DEP1).
+**Status general:** Base sólida y lista para deploy. Auditoría cerrada y portfolio curado (API con 8 entradas). Sesión 12: arreglos de iconos (PWA + GitHub), rediseño de la ProjectCard y hovers limitados a laptop. Suite de 20 tests, lint y build en verde. **Pendientes:** re-deploy manual en Hostinger (DEP1) y logo del Footer en tema claro (B10).
 
 ---
 
@@ -80,6 +80,11 @@
 | **B3**     | `status`: la API devuelve `online`/`in-progress`; el badge no-online ahora muestra "En desarrollo" (antes "Mantenimiento") y los mocks de test usan valores reales | 21-05-2026 |
 | **C6**     | Comentarios de los schemas corregidos: describían validación "en el backend" + OpenAPI; ahora reflejan que son schemas Zod de frontend usados por `usePortfolioData` | 21-05-2026 |
 | **CUR1**   | Curación del portfolio: descartados 4 proyectos (Glossy Touch, ActiveBox, MGD Exports, Users Fetch API); la API queda con 8 entradas (6 proyectos + 2 APIs al final), ids 0-7, imágenes y paths renumerados; `base` de Vite alineado en los 5 proyectos restantes | 21-05-2026 |
+| **STY3**   | ProjectCard: rediseño asimétrico — radios de esquina en diagonal (escala nombrada de Tailwind)                | 21-05-2026 |
+| **UX2**    | Footer: el enlace de GitHub pasa a icono tematizado (claro/oscuro) con la lógica de `arrow-up`                | 21-05-2026 |
+| **B8**     | Fix icono del PWA invisible al instalar: nuevo `icon.svg` (fondo `#080510` + logo); el manifest apunta al SVG | 21-05-2026 |
+| **B9**     | Iconos de GitHub de ProjectCard visibles en ambos temas (`invert` + `[html.light_&]:invert-0`); `github.svg` consolidado en `github-light.svg`; borde más marcado en tema claro | 21-05-2026 |
+| **UX3**    | Hover transforms limitados a anchos de laptop (`lg:`) en ProjectCard y ErrorBoundary — evita el "sticky hover" en táctil | 21-05-2026 |
 
 ---
 
@@ -97,13 +102,16 @@ _(vacío)_
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
-_(vacío)_
+| #       | Mejora                            | Esfuerzo | Impacto | Descripción                                                                                                                                                          |
+| ------- | --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **B10** | **Logo del Footer en tema claro** | 10 min   | Bajo    | `logo.png` (Footer) es el logo blanco sobre fondo transparente; en tema claro el fondo del footer es claro y el logo queda casi invisible. Mismo patrón que los iconos ya corregidos (PWA, GitHub). |
 
 ---
 
 ## 🚀 Orden recomendado
 
 1. **DEP1** — re-deploy de los 5 proyectos en Hostinger a sus carpetas nuevas (trabajo manual del usuario).
+2. **B10** — arreglar la visibilidad del logo del Footer en tema claro.
 
 ---
 
@@ -120,6 +128,6 @@ _(vacío)_
 
 ---
 
-**Última actualización:** 21-05-2026 (sesión 11: curación del portfolio — descarte de 4 proyectos y renumeración)
+**Última actualización:** 21-05-2026 (sesión 12: arreglos de iconos PWA/GitHub, rediseño ProjectCard, hovers solo en laptop)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** DEP1 — re-deploy de los 5 proyectos en Hostinger.
+**Siguiente sesión recomendada:** DEP1 (re-deploy en Hostinger) → B10 (logo del Footer en tema claro).
