@@ -1,8 +1,14 @@
 import arrowUpDark from "../../assets/icons/arrow-up-light.svg?url";
 import arrowUpLight from "../../assets/icons/arrow-up-dark.svg?url";
+import githubLight from "../../assets/icons/github-light.svg?url";
+import githubDark from "../../assets/icons/github-dark.svg?url";
 
 const ArrowUp = ({ theme }) => (
   <img src={theme === "light" ? arrowUpDark : arrowUpLight} alt="Scroll to top" className="h-4 w-4" />
+);
+
+const GitHubIcon = ({ theme }) => (
+  <img src={theme === "light" ? githubLight : githubDark} alt="GitHub" className="h-4 w-4" />
 );
 
 export default function Footer({ theme, profile }) {
@@ -10,7 +16,7 @@ export default function Footer({ theme, profile }) {
 
   const links = [
     { id: "email", label: "Email", href: `mailto:${profile?.email || "#"}` },
-    { id: "github", label: "GitHub", href: profile?.github || "#", external: true },
+    { id: "github", label: <GitHubIcon theme={theme} />, href: profile?.github || "#", external: true },
     { id: "linkedin", label: "LinkedIn", href: profile?.linkedin || "#", external: true },
     { id: "top", label: <ArrowUp theme={theme} />, href: "#hero" },
   ];
