@@ -56,14 +56,14 @@ class ErrorBoundary extends React.Component {
                         <button
                             type="button"
                             onClick={this.handleReload}
-                            className="hero-cta-shadow rounded-btn bg-linear-to-br from-accent to-cyan-400 px-4 py-2 text-xs sm:text-sm font-bold text-base-900 transition-transform hover:-translate-y-0.5"
+                            className="hero-cta-shadow rounded-btn bg-linear-to-br from-accent to-cyan-400 px-4 py-2 text-xs sm:text-sm font-bold text-base-900 transition-transform lg:hover:-translate-y-0.5"
                         >
                             Recargar página
                         </button>
                         {email && (
                             <a
                                 href={`mailto:${email}?subject=Error en portfolio`}
-                                className="rounded-btn border border-line-hover bg-base-900/50 px-4 py-2 text-xs sm:text-sm font-bold text-text-primary transition-all hover:-translate-y-0.5 hover:border-accent-border"
+                                className="rounded-btn border border-line-hover bg-base-900/50 px-4 py-2 text-xs sm:text-sm font-bold text-text-primary transition-all lg:hover:-translate-y-0.5 hover:border-accent-border"
                             >
                                 Reportar por email
                             </a>

@@ -60,13 +60,13 @@ export default function ProjectCard({ project, priority = false }) {
   }, {});
 
   return (
-    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 md:hover:-translate-y-1 md:hover:border-accent-border md:hover:bg-none md:hover:bg-accent-glow md:hover:shadow-glow">
+    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 lg:hover:-translate-y-1 lg:hover:border-accent-border lg:hover:bg-none lg:hover:bg-accent-glow lg:hover:shadow-glow">
       {project.image && (
         <div className="relative -mx-4 -mt-4">
           <img
             src={project.image}
             alt={`Preview de ${name}`}
-            className="aspect-video w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            className="aspect-video w-full object-cover object-top transition-transform duration-500 lg:group-hover:scale-105"
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : undefined}
           />
