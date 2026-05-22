@@ -16,8 +16,8 @@ export default function Footer({ theme, profile }) {
 
   const links = [
     { id: "email", label: "Email", href: `mailto:${profile?.email || "#"}` },
-    { id: "github", label: <GitHubIcon theme={theme} />, href: profile?.github || "#", external: true },
     { id: "linkedin", label: "LinkedIn", href: profile?.linkedin || "#", external: true },
+    { id: "github", label: <GitHubIcon theme={theme} />, href: profile?.github || "#", external: true },
     { id: "top", label: <ArrowUp theme={theme} />, href: "#hero" },
   ];
 
