@@ -35,7 +35,7 @@ const mockProjects = [
         description: "Landing page para una agencia de proyectos",
         stack: ["React", "Tailwind"],
         type: "landing",
-        status: "done",
+        status: "online",
         framework: "React",
         deploy: "https://example.com/projex",
         repo: "https://github.com/nico/projex"

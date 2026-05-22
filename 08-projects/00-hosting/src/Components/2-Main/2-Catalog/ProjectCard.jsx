@@ -51,7 +51,7 @@ const TECH_GROUP = {
 
 export default function ProjectCard({ project, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
-  const statusLabel = status === "online" ? "Online" : "Mantenimiento";
+  const statusLabel = status === "online" ? "Online" : "En desarrollo";
   const demoHref = path.endsWith("/") ? path : `${path}/`;
   const grouped = stack.reduce((acc, t) => {
     const g = TECH_GROUP[t];

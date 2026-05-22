@@ -96,12 +96,12 @@ describe("ProjectCard", () => {
         expect(onlineStatus).toBeInTheDocument();
     })
 
-    // Test 8: el badge de estado muestra "Mantenimiento" cuando status no es "online"
-    it("Renderiza el badge de estado 'Mantenimiento'", () => {
-        const projectMaintenance = { ...mockProject, status: "maintenance" };
-        render(<ProjectCard project={projectMaintenance} />);
-        const maintenanceStatus = screen.getByText("Mantenimiento");
-        expect(maintenanceStatus).toBeInTheDocument();
+    // Test 8: el badge de estado muestra "En desarrollo" cuando status no es "online"
+    it("Renderiza el badge de estado 'En desarrollo'", () => {
+        const projectEnDesarrollo = { ...mockProject, status: "in-progress" };
+        render(<ProjectCard project={projectEnDesarrollo} />);
+        const enDesarrolloStatus = screen.getByText("En desarrollo");
+        expect(enDesarrolloStatus).toBeInTheDocument();
     })
 
     // Test 9: el nombre del proyecto se renderiza en un <h3>
