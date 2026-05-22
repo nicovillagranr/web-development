@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
 **Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
-**Status general:** Base sólida y lista para deploy. **H1, H2 y H3 cerrados** (suite de 20 tests + README profesional). Quedan los 3 hallazgos de la auditoría: B2 y B3 (medio) y C6 (bajo), ninguno bloqueante.
+**Status general:** Base sólida y lista para deploy. **H1, H2, H3 y B2 cerrados** (suite de 20 tests + README profesional + schema alineado). Quedan B3 (medio) y C6 (bajo), ninguno bloqueante.
 
 ---
 
@@ -76,6 +76,7 @@
 | **H2**     | Tests de `ProjectCard` — 16 tests (imagen, badges, stack, enlaces, casos negativos)           | 21-05-2026 |
 | **STY2**   | EditorWindow: arrays del editor en dos líneas; fix de overflow del Hero (min-w-0)             | 21-05-2026 |
 | **H3**     | README.md profesional: stack, características, setup, estructura, datos, testing y deploy      | 21-05-2026 |
+| **B2**     | ProjectSchema: `repo`, `deploy` y `framework` marcados como `.optional()` (alineados con el uso real del componente) | 21-05-2026 |
 
 ---
 
@@ -89,7 +90,6 @@ _(vacío)_
 
 | #      | Mejora                          | Esfuerzo | Impacto | Descripción                                                                                                                                                       |
 | ------ | ------------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **B2** | **Schema vs componente: contrato inconsistente** | 15 min   | Medio   | `ProjectSchema` marca `repo`, `deploy` y `framework` como `z.string()` obligatorios, pero `ProjectCard` trata `repo`/`deploy` como opcionales (`{repo && ...}`) y `framework` ni se usa. Si la API omite un campo, `.parse()` lanza antes del render. Decidir: marcar `.optional()` en el schema o garantizar los campos en la API. |
 | **B3** | **Valor de `status` ambiguo**   | 10 min   | Medio   | `ProjectCard` y `Hero` asumen `status === "online"`; el mock del test del hook usa `status: "done"`. Si la API real devuelve `"done"`, todas las cards muestran "Mantenimiento" y `onlineCount` es siempre 0. Verificar qué devuelve `/projects` y alinear. |
 
 ### 🟢 BAJO / NICE-TO-HAVE
@@ -103,8 +103,7 @@ _(vacío)_
 ## 🚀 Orden recomendado
 
 1. **B3** — verificar el contrato de `status` con la API real (puede ser un bug visible hoy).
-2. **B2** — alinear `ProjectSchema` con el uso real de los campos opcionales.
-3. **C6** — limpieza de comentarios (rápido, mientras se toca B2).
+2. **C6** — limpieza de comentarios en los schemas (rápido).
 
 ---
 
@@ -123,4 +122,4 @@ _(vacío)_
 
 **Última actualización:** 21-05-2026 (sesión 10: tests hook + ProjectCard, restyling Hero, auditoría completa)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** B3 (verificar contrato de `status`) → B2 (alinear schema con componente)
+**Siguiente sesión recomendada:** B3 (verificar contrato de `status`) → C6 (limpieza de comentarios en schemas)

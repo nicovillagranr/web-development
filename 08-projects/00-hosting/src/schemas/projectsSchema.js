@@ -10,9 +10,9 @@ export const ProjectSchema = z.object({
     stack: z.array(z.string()),
     type: z.string(),
     status: z.string(),
-    framework: z.string(),
-    deploy: z.string(),
-    repo: z.string(),
+    framework: z.string().optional(),
+    deploy: z.string().optional(),
+    repo: z.string().optional(),
 })
 
 export const ProjectsSchema = z.array(ProjectSchema);
