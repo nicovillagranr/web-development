@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-// Los shema se usan para validar los datos que se reciben en el backend, y para generar la documentación de la API con OpenAPI (Swagger).
+// Schema de validación con Zod para la respuesta de /profile. Misma idea que
+// projectsSchema: los datos vienen de una API externa, así que se validan en
+// runtime con ProfileSchema.parse() antes de consumirlos. Si la forma no
+// coincide, el error salta aquí y no en mitad del render.
 export const ProfileSchema = z.object({
     name: z.string(),
     email: z.email(),

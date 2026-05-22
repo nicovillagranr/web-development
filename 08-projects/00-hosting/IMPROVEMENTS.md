@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
 **Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
-**Status general:** Base sólida y lista para deploy. **H1, H2, H3, B2 y B3 cerrados** (suite de 20 tests + README profesional + schema alineado + label de `status` corregido). Queda solo C6 (bajo), no bloqueante.
+**Status general:** Base sólida y lista para deploy. **Sin pendientes** — todos los hallazgos de la auditoría (H1, H2, H3, B2, B3, C6) están cerrados. Suite de 20 tests, lint y build en verde.
 
 ---
 
@@ -78,6 +78,7 @@
 | **H3**     | README.md profesional: stack, características, setup, estructura, datos, testing y deploy      | 21-05-2026 |
 | **B2**     | ProjectSchema: `repo`, `deploy` y `framework` marcados como `.optional()` (alineados con el uso real del componente) | 21-05-2026 |
 | **B3**     | `status`: la API devuelve `online`/`in-progress`; el badge no-online ahora muestra "En desarrollo" (antes "Mantenimiento") y los mocks de test usan valores reales | 21-05-2026 |
+| **C6**     | Comentarios de los schemas corregidos: describían validación "en el backend" + OpenAPI; ahora reflejan que son schemas Zod de frontend usados por `usePortfolioData` | 21-05-2026 |
 
 ---
 
@@ -93,15 +94,13 @@ _(vacío)_
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
-| #      | Mejora                          | Esfuerzo | Impacto | Descripción                                                                                                       |
-| ------ | ------------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
-| **C6** | **Comentarios incorrectos en schemas** | 5 min    | Bajo    | `projectsSchema.js` y `profileSchema.js` tienen el typo "shcema/shema" y afirman que sirven "en el backend" y "para generar OpenAPI/Swagger" — falso: son schemas Zod de frontend consumidos por `usePortfolioData`. |
+_(vacío)_
 
 ---
 
 ## 🚀 Orden recomendado
 
-1. **C6** — limpieza de comentarios en los schemas (rápido).
+_Sin pendientes. Todos los hallazgos de la auditoría de la sesión 10 están cerrados._
 
 ---
 
@@ -120,4 +119,4 @@ _(vacío)_
 
 **Última actualización:** 21-05-2026 (sesión 10: tests hook + ProjectCard, restyling Hero, auditoría completa)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** C6 (limpieza de comentarios en schemas)
+**Siguiente sesión recomendada:** sin pendientes abiertos — backlog de la auditoría cerrado.

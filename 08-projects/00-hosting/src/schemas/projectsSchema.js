@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-// Los shcema se usan para validar los datos que se reciben en el backend, y para generar la documentación de la API con OpenAPI (Swagger).
+// Schema de validación con Zod. La API es una fuente externa: nada garantiza
+// que su respuesta tenga siempre la forma esperada. Por eso usePortfolioData
+// llama a ProjectsSchema.parse() antes de usar los datos — si un campo falta o
+// llega con otro tipo, Zod lanza un error de inmediato (fail-fast) en vez de
+// dejar que un dato corrupto se propague y rompa el render más adelante.
 export const ProjectSchema = z.object({
     id: z.number(),
     name: z.string(),
