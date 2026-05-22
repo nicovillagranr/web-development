@@ -1,4 +1,4 @@
-import githubIcon from "../../../assets/icons/github.svg";
+import githubIcon from "../../../assets/icons/github-light.svg";
 
 const CHIP_BASE = "rounded-badge border px-2 py-0.5 font-mono text-xs font-medium";
 
