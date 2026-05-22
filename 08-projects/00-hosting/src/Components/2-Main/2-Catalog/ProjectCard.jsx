@@ -163,7 +163,7 @@ export default function ProjectCard({ project, priority = false }) {
             aria-label={`Repositorio de ${name} en GitHub`}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3"
           >
-            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5" />
+            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert [html.light_&]:invert-0" />
           </a>
         )}
       </div>
