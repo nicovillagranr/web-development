@@ -25,7 +25,7 @@ export default function Footer({ theme, profile }) {
     <footer id="contacto" className="mt-16 border-t border-line">
       <div className="container-page flex flex-col items-center gap-4 py-6 text-center sm:flex-row sm:flex-wrap sm:justify-between sm:text-left">
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="" aria-hidden="true" className="h-8 w-8 shrink-0 rounded-md" />
+          <img src="/logo.png" alt="" aria-hidden="true" className="h-8 w-8 shrink-0 rounded-md [html.light_&]:invert" />
           <div className="flex flex-col">
             <span className="font-heading text-sm font-bold text-text-primary">{profile?.name || "Portafolio"}</span>
             <span className="font-mono text-xs text-text-muted">{profile?.role || "Frontend Developer"} · &copy; {year}</span>
