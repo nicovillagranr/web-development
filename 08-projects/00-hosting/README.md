@@ -45,22 +45,22 @@ Solo 3 dependencias en runtime: `react`, `react-dom`, `zod`.
 
 ## Puesta en marcha
 
-Requiere Node 20+.
+Requiere Node 20+ y pnpm 10+ (declarado en `packageManager`).
 
 ```bash
-npm install      # instalar dependencias
-npm run dev      # servidor de desarrollo
+pnpm install     # instalar dependencias
+pnpm dev         # servidor de desarrollo
 ```
 
 ### Scripts
 
-| Script            | Descripción                              |
-| ----------------- | ---------------------------------------- |
-| `npm run dev`     | Servidor de desarrollo con HMR           |
-| `npm run build`   | Build de producción en `dist/`           |
-| `npm run preview` | Sirve el build de producción localmente  |
-| `npm run lint`    | Linter sobre todo el proyecto            |
-| `npm test`        | Tests con Vitest                         |
+| Script           | Descripción                              |
+| ---------------- | ---------------------------------------- |
+| `pnpm dev`       | Servidor de desarrollo con HMR           |
+| `pnpm build`     | Build de producción en `dist/`           |
+| `pnpm preview`   | Sirve el build de producción localmente  |
+| `pnpm lint`      | Linter sobre todo el proyecto            |
+| `pnpm test`      | Tests con Vitest                         |
 
 ---
 
@@ -112,14 +112,14 @@ valida cada respuesta con Zod, cancela las peticiones al desmontar mediante
   casos negativos.
 
 ```bash
-npm test
+pnpm test
 ```
 
 ---
 
 ## Deploy
 
-El build (`npm run build`) genera `dist/`, pensado para hosting estático Apache.
+El build (`pnpm build`) genera `dist/`, pensado para hosting estático Apache.
 El `.htaccess` en `public/` incluye el `ErrorDocument` de la página 404 custom y
 se copia al build automáticamente.
 

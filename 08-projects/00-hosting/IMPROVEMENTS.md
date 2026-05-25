@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 24 de mayo de 2026 (sesión 13: DEP1 y B10 cerrados — proyecto 10/10)
-**Status general:** Base sólida y desplegada. Auditoría cerrada, portfolio curado (API con 8 entradas) y los 5 proyectos en Hostinger ya apuntan a las carpetas correctas. Suite de 20 tests, lint y build en verde. **Pendiente:** sólo TOOL1 (migrar a pnpm, nice-to-have).
+**Última auditoría:** 25 de mayo de 2026 (sesión 14: TOOL1 cerrado — auditoría 100% completada)
+**Status general:** Base sólida y desplegada. Auditoría cerrada, portfolio curado (API con 8 entradas) y los 5 proyectos en Hostinger ya apuntan a las carpetas correctas. Suite de 20 tests, lint y build en verde. Package manager migrado a pnpm. **Sin pendientes.**
 
 ---
 
@@ -87,6 +87,7 @@
 | **UX3**    | Hover transforms limitados a anchos de laptop (`lg:`) en ProjectCard y ErrorBoundary — evita el "sticky hover" en táctil | 21-05-2026 |
 | **DEP1**   | Re-deploy en Hostinger: los 5 proyectos rebuilders + subidos a `/proyecto-1/`…`/proyecto-5/`; carpetas huérfanas eliminadas | 24-05-2026 |
 | **B10**    | Footer logo visible en tema claro: `[html.light_&]:invert` aplicado al `logo.png` (mismo patrón que B8/B9) | 24-05-2026 |
+| **TOOL1**  | Migración de npm a pnpm: `package-lock.json` eliminado, `pnpm install` (288 deps), `"packageManager": "pnpm@10.18.1"` añadido. Lint, 20 tests y build en verde | 25-05-2026 |
 
 ---
 
@@ -102,15 +103,13 @@ _(vacío)_
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
-| #       | Mejora                            | Esfuerzo | Impacto | Descripción                                                                                                                                                          |
-| ------- | --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TOOL1** | **Migrar de npm a pnpm**        | 15 min   | Bajo    | Borrar `package-lock.json` + `node_modules/`, ejecutar `pnpm install`, añadir `"packageManager": "pnpm@10.18.1"` al `package.json`. Ventaja real: resolución estricta de dependencias (sin paquetes fantasma) + instalación más rápida y con menos disco. Verificar con `pnpm lint && pnpm test && pnpm build && pnpm dev`. |
+_(vacío)_
 
 ---
 
 ## 🚀 Orden recomendado
 
-1. **TOOL1** — migrar el package manager de npm a pnpm (única tarea pendiente, nice-to-have).
+_(sin pendientes — auditoría cerrada)_
 
 ---
 
@@ -127,6 +126,6 @@ _(vacío)_
 
 ---
 
-**Última actualización:** 24-05-2026 (sesión 13: DEP1 re-deploy en Hostinger + B10 logo del Footer en tema claro)
+**Última actualización:** 25-05-2026 (sesión 14: TOOL1 — migración a pnpm completada)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** TOOL1 (migrar de npm a pnpm) — único pendiente nice-to-have.
+**Siguiente sesión recomendada:** ninguna — auditoría 100% cerrada.
