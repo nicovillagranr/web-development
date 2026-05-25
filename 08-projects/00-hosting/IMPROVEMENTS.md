@@ -1,7 +1,7 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
-**Última auditoría:** 21 de mayo de 2026 (sesión 10: tests de hook + ProjectCard, restyling Hero, auditoría completa)
-**Status general:** Base sólida y lista para deploy. Auditoría cerrada y portfolio curado (API con 8 entradas). Sesión 12: arreglos de iconos (PWA + GitHub), rediseño de la ProjectCard y hovers limitados a laptop. Suite de 20 tests, lint y build en verde. **Pendientes:** re-deploy manual en Hostinger (DEP1) y logo del Footer en tema claro (B10).
+**Última auditoría:** 24 de mayo de 2026 (sesión 13: DEP1 y B10 cerrados — proyecto 10/10)
+**Status general:** Base sólida y desplegada. Auditoría cerrada, portfolio curado (API con 8 entradas) y los 5 proyectos en Hostinger ya apuntan a las carpetas correctas. Suite de 20 tests, lint y build en verde. **Pendiente:** sólo TOOL1 (migrar a pnpm, nice-to-have).
 
 ---
 
@@ -85,6 +85,8 @@
 | **B8**     | Fix icono del PWA invisible al instalar: nuevo `icon.svg` (fondo `#080510` + logo); el manifest apunta al SVG | 21-05-2026 |
 | **B9**     | Iconos de GitHub de ProjectCard visibles en ambos temas (`invert` + `[html.light_&]:invert-0`); `github.svg` consolidado en `github-light.svg`; borde más marcado en tema claro | 21-05-2026 |
 | **UX3**    | Hover transforms limitados a anchos de laptop (`lg:`) en ProjectCard y ErrorBoundary — evita el "sticky hover" en táctil | 21-05-2026 |
+| **DEP1**   | Re-deploy en Hostinger: los 5 proyectos rebuilders + subidos a `/proyecto-1/`…`/proyecto-5/`; carpetas huérfanas eliminadas | 24-05-2026 |
+| **B10**    | Footer logo visible en tema claro: `[html.light_&]:invert` aplicado al `logo.png` (mismo patrón que B8/B9) | 24-05-2026 |
 
 ---
 
@@ -96,22 +98,19 @@ _(vacío)_
 
 ### 🟡 ALTO — Profesionalismo / entrevistas
 
-| #        | Mejora                     | Esfuerzo | Impacto | Descripción                                                                                                                                                                                                                                  |
-| -------- | -------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **DEP1** | **Re-deploy en Hostinger** | manual   | Alto    | Tras renumerar los paths, rebuildizar y subir los 5 proyectos a sus carpetas nuevas (`/proyecto-1/`…`/proyecto-5/`) y borrar las huérfanas `/proyecto-6,7,8/`. El `base` de Vite ya está actualizado. Hasta hacerlo, los botones "Abrir demo" apuntan a contenido viejo. Trabajo manual del usuario. |
+_(vacío)_
 
 ### 🟢 BAJO / NICE-TO-HAVE
 
 | #       | Mejora                            | Esfuerzo | Impacto | Descripción                                                                                                                                                          |
 | ------- | --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **B10** | **Logo del Footer en tema claro** | 10 min   | Bajo    | `logo.png` (Footer) es el logo blanco sobre fondo transparente; en tema claro el fondo del footer es claro y el logo queda casi invisible. Mismo patrón que los iconos ya corregidos (PWA, GitHub). |
+| **TOOL1** | **Migrar de npm a pnpm**        | 15 min   | Bajo    | Borrar `package-lock.json` + `node_modules/`, ejecutar `pnpm install`, añadir `"packageManager": "pnpm@10.18.1"` al `package.json`. Ventaja real: resolución estricta de dependencias (sin paquetes fantasma) + instalación más rápida y con menos disco. Verificar con `pnpm lint && pnpm test && pnpm build && pnpm dev`. |
 
 ---
 
 ## 🚀 Orden recomendado
 
-1. **DEP1** — re-deploy de los 5 proyectos en Hostinger a sus carpetas nuevas (trabajo manual del usuario).
-2. **B10** — arreglar la visibilidad del logo del Footer en tema claro.
+1. **TOOL1** — migrar el package manager de npm a pnpm (única tarea pendiente, nice-to-have).
 
 ---
 
@@ -128,6 +127,6 @@ _(vacío)_
 
 ---
 
-**Última actualización:** 21-05-2026 (sesión 12: arreglos de iconos PWA/GitHub, rediseño ProjectCard, hovers solo en laptop)
+**Última actualización:** 24-05-2026 (sesión 13: DEP1 re-deploy en Hostinger + B10 logo del Footer en tema claro)
 **Responsable:** Claude Code
-**Siguiente sesión recomendada:** DEP1 (re-deploy en Hostinger) → B10 (logo del Footer en tema claro).
+**Siguiente sesión recomendada:** TOOL1 (migrar de npm a pnpm) — único pendiente nice-to-have.
