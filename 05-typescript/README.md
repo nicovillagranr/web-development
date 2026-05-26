@@ -5,19 +5,19 @@ Ruta de aprendizaje progresiva de TypeScript, del cero a aplicarlo en proyectos 
 ## Setup inicial
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Cómo ejecutar cada archivo
 
 ```bash
-npx tsx 01-tipos-basicos/notas.ts
+pnpm tsx 01-tipos-basicos/notas.ts
 ```
 
 O para chequear tipos sin ejecutar (como lo haría el IDE):
 
 ```bash
-npm run check
+pnpm check
 ```
 
 ## Orden recomendado

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Aprendizaje progresivo de TypeScript",
   "type": "module",
+  "packageManager": "pnpm@10.18.1",
   "scripts": {
     "run": "tsx",
     "check": "tsc --noEmit",
