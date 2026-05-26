@@ -26,7 +26,8 @@ const TECH_CATEGORY = {
   "EmailJS": "amber",
   "Node.js": "green",
   "Supabase": "green",
-  "npm": "neutral",
+  "npm": "amber",
+  "pnpm": "amber",
   "Vercel": "mono",
   "Hostinger": "violet",
 };
@@ -37,6 +38,7 @@ const TECH_GROUP = {
   "Tailwind v4": "frontend",
   "Vite": "tools",
   "npm": "tools",
+  "pnpm": "tools",
   "json-server": "backend",
   "Framer Motion": "frontend",
   "React Router": "frontend",

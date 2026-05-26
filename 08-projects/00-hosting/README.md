@@ -48,9 +48,18 @@ Solo 3 dependencias en runtime: `react`, `react-dom`, `zod`.
 Requiere Node 20+ y pnpm 10+ (declarado en `packageManager`).
 
 ```bash
-pnpm install     # instalar dependencias
-pnpm dev         # servidor de desarrollo
+cp .env.example .env   # copiar plantilla de variables de entorno
+pnpm install           # instalar dependencias
+pnpm dev               # servidor de desarrollo
 ```
+
+### Variables de entorno
+
+| Variable          | Requerida | Descripción                                  |
+| ----------------- | --------- | -------------------------------------------- |
+| `VITE_API_BASE`   | sí        | URL base de la API de proyectos + perfil     |
+
+El `.env` no se commitea (está en `.gitignore`); usa `.env.example` como plantilla.
 
 ### Scripts
 

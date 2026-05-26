@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { ProjectsSchema } from "../schemas/projectsSchema"
 import { ProfileSchema } from "../schemas/profileSchema"
 
-const API_BASE = "https://00-portfolio-projects-api.vercel.app"
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export function usePortfolioData() {
     const [projects, setProjects] = useState([])
