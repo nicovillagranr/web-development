@@ -2,6 +2,7 @@
   "name": "nexusai-landing",
   "description": "Landing page for NexusAI - AI agency.",
   "private": true,
+  "packageManager": "pnpm@10.18.1",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
