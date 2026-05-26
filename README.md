@@ -43,14 +43,16 @@ en piezas listas para un portfolio profesional.
 ## Local Run / Ejecución local
 
 This repo contains multiple independent projects.
-Each one has its own `package.json`.
+Each one has its own `package.json` and declares `"packageManager": "pnpm@10.18.1"`.
+**All projects use pnpm**, not npm.
 
 Este repositorio contiene múltiples proyectos independientes.
-Cada uno tiene su propio `package.json`.
+Cada uno tiene su propio `package.json` y declara `"packageManager": "pnpm@10.18.1"`.
+**Todos los proyectos usan pnpm**, no npm.
 
 1. Open a project folder / Abrí la carpeta de un proyecto.
-2. Install dependencies / Instalá dependencias: `npm install`
-3. Run scripts / Ejecutá scripts: `npm run dev`, `npm run lint`, `npm run build`
+2. Install dependencies / Instalá dependencias: `pnpm install`
+3. Run scripts / Ejecutá scripts: `pnpm dev`, `pnpm lint`, `pnpm build`
 
 ## Repo Health Check / Chequeo de salud del repo
 
