@@ -1,11 +1,12 @@
 {
   "name": "proyecto-1-todo-app",
   "private": true,
+  "packageManager": "pnpm@10.18.1",
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run dev",
-    "install:all": "cd server && npm install && cd ../client && npm install"
+    "dev": "concurrently \"pnpm run dev:server\" \"pnpm run dev:client\"",
+    "dev:server": "cd server && pnpm dev",
+    "dev:client": "cd client && pnpm dev",
+    "install:all": "cd server && pnpm install && cd ../client && pnpm install"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

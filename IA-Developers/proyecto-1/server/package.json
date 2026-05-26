@@ -2,6 +2,7 @@
   "name": "todo-server",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.18.1",
   "scripts": {
     "dev": "node --watch index.js"
   },
