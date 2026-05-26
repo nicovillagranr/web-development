@@ -1,6 +1,7 @@
 {
   "name": "agencia-frontend-bootstrap",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.18.1",
   "private": true,
   "description": "Landing de agencia frontend construida 100% con Bootstrap 5.3 + Sass + Vite",
   "type": "module",

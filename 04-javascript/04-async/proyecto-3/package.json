@@ -1,6 +1,7 @@
 {
   "name": "js-async-drill-3",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.18.1",
   "description": "",
   "main": "index.js",
   "scripts": {

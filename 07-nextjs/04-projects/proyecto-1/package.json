@@ -1,6 +1,7 @@
 {
   "name": "next-drill-1",
   "version": "0.1.0",
+  "packageManager": "pnpm@10.18.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
