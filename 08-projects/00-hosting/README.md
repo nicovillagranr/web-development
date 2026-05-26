@@ -81,11 +81,11 @@ src/
 ├── main.jsx                 Punto de entrada
 ├── assets/                  Fuentes, iconos y App.css
 ├── Components/
-│   ├── 1-Header/            Cabecera + toggle de tema
-│   ├── 2-Main/
-│   │   ├── 1-Hero/          Hero, EditorWindow, PreviewPanel, HeroSkeleton
-│   │   └── 2-Catalog/       Catalog, ProjectCard (+ tests)
-│   ├── 3-Footer/            Pie de página
+│   ├── Header/              Cabecera + toggle de tema
+│   ├── Main/
+│   │   ├── Hero/            Hero, EditorWindow, PreviewPanel, HeroSkeleton
+│   │   └── Catalog/         Catalog, ProjectCard (+ tests)
+│   ├── Footer/              Pie de página
 │   └── ErrorBoundary/       Captura de errores de render
 ├── hooks/
 │   └── usePortfolioData.js  Carga de projects + profile (+ tests)
