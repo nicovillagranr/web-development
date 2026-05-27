@@ -44,6 +44,19 @@ function PreviewAbout({ data }) {
   );
 }
 
+function StackPillar({ label, items }) {
+  return (
+    <div className="min-w-0">
+      <div className="font-heading text-sm font-bold text-emerald">{label}</div>
+      <ul className="mt-1 flex flex-col gap-0.5 font-mono text-xs leading-relaxed text-text-muted">
+        {items.map((item) => (
+          <li key={item} className="break-words">{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function PreviewStack({ data }) {
   return (
     <div className="flex flex-col gap-3 sm:gap-6">
@@ -56,10 +69,16 @@ function PreviewStack({ data }) {
       </div>
 
       <h2 className="font-heading text-2xl sm:text-4xl font-bold leading-tight text-text-primary">
-        Lo que <span className="bg-linear-to-r from-accent via-emerald to-amber bg-clip-text text-transparent">construyo</span>
+        {data.stackHeading}
       </h2>
 
       <p className="text-sm leading-relaxed text-text-secondary">{data.bioStack}</p>
+
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-2 sm:py-3">
+        {data.stackPillars.map((p) => (
+          <StackPillar key={p.label} label={p.label} items={p.items} />
+        ))}
+      </div>
 
       <div className="font-mono text-xs text-text-muted">
         filosofía: <span className="text-amber">{data.philosophy}</span>

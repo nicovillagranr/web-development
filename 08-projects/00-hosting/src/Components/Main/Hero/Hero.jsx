@@ -32,6 +32,8 @@ export default function Hero({ projects = [], profile, loading = false }) {
     copilots: profile?.stack?.copilots ?? [],
     bioAbout: profile?.intro?.about || "—",
     bioStack: profile?.intro?.stack || "—",
+    stackHeading: profile?.intro?.stackHeading || "—",
+    stackPillars: profile?.intro?.stackPillars ?? [],
     philosophy: profile?.philosophy || "—",
   };
 

@@ -23,7 +23,12 @@ export const ProfileSchema = z.object({
     }),
     intro: z.object({
         about: z.string(),
-        stack: z.string()
+        stackHeading: z.string(),
+        stack: z.string(),
+        stackPillars: z.array(z.object({
+            label: z.string(),
+            items: z.array(z.string())
+        }))
     }),
     philosophy: z.string()
 })
