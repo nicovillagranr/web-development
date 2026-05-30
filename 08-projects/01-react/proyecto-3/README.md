@@ -1,46 +1,42 @@
-﻿# Proyecto 1 | Tailwind Landing
+# Projex — Landing Page
 
-Landing construida con React, Tailwind y animaciones para reforzar composicion utilitaria.
+Landing page de una agencia ficticia ("Projex"), construida con React 19 y Tailwind
+CSS v4. Proyecto de práctica enfocado en composición por secciones, sistema visual
+consistente y animaciones de entrada con Framer Motion.
 
-## Objetivo
+## Características
 
-Practicar diseño de una landing completa usando utilidades Tailwind con criterio de sistema visual.
+- **Secciones funcionales**: Hero, servicios, proyectos y contacto.
+- **Formulario de contacto funcional** con EmailJS (envío real de correos).
+- **Accesibilidad**: focus-trap en el menú/modal y navegación por teclado.
+- **Animaciones** de entrada con Framer Motion sin afectar la legibilidad.
+- **Responsive** en los anchos de uso común (mobile, tablet, desktop).
+- **Routing compatible con hosting estático** (HashRouter, base `/proyecto-3/`).
 
 ## Stack
 
-- React
-- Vite
-- Tailwind CSS
-- React Router
-- Framer Motion
+| Herramienta      | Versión | Uso                                  |
+| ---------------- | ------- | ------------------------------------ |
+| React            | 19.2    | UI por componentes                   |
+| Tailwind CSS     | 4.1     | Estilos utilitarios + sistema visual |
+| Framer Motion    | 12      | Animaciones                          |
+| React Router DOM | 7       | Navegación (HashRouter)              |
+| Vite             | 7       | Build y dev server                   |
+| EmailJS          | 4       | Formulario de contacto               |
 
-## Enfoque tecnico
+## Sistema visual
 
-- composicion por secciones funcionales
-- clases utilitarias consistentes
-- configuracion de `base` para despliegue estatico
-- navegacion compatible con hosting estatico
+- **Colores**: `primary` #ff5959, `surface` #E8E8E8, `dark` #1a1a1a, `light` #ffffff
+- **Tipografía**: Poppins (`font-size: 10px` en `body`, así `1rem = 10px`)
 
-## Checklist de validacion
+## Cómo ejecutar
 
-- [ ] secciones con jerarquia visual clara
-- [ ] utilidades tailwind reutilizadas y legibles
-- [ ] responsive correcto en anchos comunes
-- [ ] animaciones sin afectar legibilidad
+```bash
+pnpm install
+pnpm dev        # servidor de desarrollo
+pnpm build      # build de producción
+pnpm preview    # previsualizar el build
+pnpm lint       # linting con ESLint
+```
 
-## Ejercicio propuesto
-
-Crear una variante de hero con dos llamadas a la accion y comparar cual mantiene mejor claridad visual en mobile.
-
-## Solucion esperada
-
-- variante integrada sin romper navegacion ni estilos globales
-- mejor equilibrio entre contraste, espaciado y foco de accion
-- estructura de componentes mantenible
-
-## Scripts
-
-- `npm run dev`
-- `npm run build`
-- `npm run preview`
-- `npm run lint`
+> Demo: _(pendiente de publicar el enlace de despliegue)_
