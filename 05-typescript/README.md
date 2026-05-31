@@ -69,7 +69,8 @@ Cada concepto se trabaja en un ciclo de 3 pasos:
 
 - `01-tipos-basicos/` — ejercicios 01, 02, 03 aprobados (formato antiguo, denso). 04 en adelante con formato nuevo.
 - 04 (`readonly` vs `as const`), 05 (literales y unions), 06 (objetos: opcionales y `readonly` por propiedad), 07 (narrowing con `typeof` y `undefined`), 08 (uniones discriminadas) — APROBADOS.
-- 09 — funciones como valores: function types, callbacks (higher-order) y funciones que devuelven funciones.
+- 09 — funciones como valores — APROBADO. Reescrito como 10 drills en escalera (bloques A/B/C/D) porque la base de sintaxis `(...) => ...` no estaba sólida. Cubre: tipo a la izquierda, tipo de retorno, callbacks (`fn(valor)`, `fn(fn(n))`) y factories que devuelven funciones (closures). 10/10 tests en verde.
+- 10 — arrays + callbacks (map/filter/reduce) — APROBADO. Mismo formato escalera (9 drills, bloques A=map / B=filter / C=reduce / D=higher-order). Refuerza arrays tipados (`number[]`), transformar/seleccionar/combinar, recibir callbacks (`nums.map(fn)`) y encadenar (`.filter(...).length`). 9/9 tests en verde.
 - Próximos: genéricos, antes de saltar a React + TS.
 
 ---
