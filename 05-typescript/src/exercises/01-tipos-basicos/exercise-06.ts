@@ -114,10 +114,10 @@ export type User = {
 };
 
 export const juan: User = {
-  id: "user-1",
-  name: "Juan Villagrán",
-  email: "juan@mail",
-  phone: "123456789",
+  id: "u-1",
+  name: "Juan",
+  email: "juan@mail.com",
+  // Al ser una propiedad opcional, en este caso lo dejamos sin phone
 };
 
 
@@ -131,12 +131,14 @@ export const juan: User = {
 //    devuelva un NUEVO Article con `publishedAt` asignado (no mutar el
 //    original). Pista: usa spread `{ ...article, publishedAt: fechaIso }`.
 export type Article = {
-  // TODO
+  readonly slug: string;
+  title: string;
+  body: string;
+  publishedAt?: string;
 };
 
 export function publicar(article: Article, fechaIso: string) {
-  // TODO
-  return article;
+  return { ...article, publishedAt: fechaIso }
 }
 
 
@@ -148,9 +150,12 @@ export function publicar(article: Article, fechaIso: string) {
 //    Y exporta una constante `defaultSettings: Settings` con theme="light",
 //    sin language, version=1.
 export type Settings = {
-  // TODO
+  theme: "light" | "dark",
+  language?: string,
+  readonly version: number
 };
 
 export const defaultSettings: Settings = {
-  // TODO
+  theme: "light",
+  version: 1
 };

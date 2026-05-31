@@ -68,7 +68,9 @@ Cada concepto se trabaja en un ciclo de 3 pasos:
 ### Progresión actual
 
 - `01-tipos-basicos/` — ejercicios 01, 02, 03 aprobados (formato antiguo, denso). 04 en adelante con formato nuevo.
-- Próximos: repasos enfocados de `as const` vs `readonly`, unions literales, antes de saltar a funciones.
+- 04 (`readonly` vs `as const`), 05 (literales y unions), 06 (objetos: opcionales y `readonly` por propiedad), 07 (narrowing con `typeof` y `undefined`), 08 (uniones discriminadas) — APROBADOS.
+- 09 — funciones como valores: function types, callbacks (higher-order) y funciones que devuelven funciones.
+- Próximos: genéricos, antes de saltar a React + TS.
 
 ---
 
