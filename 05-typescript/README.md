@@ -71,7 +71,13 @@ Cada concepto se trabaja en un ciclo de 3 pasos:
 - 04 (`readonly` vs `as const`), 05 (literales y unions), 06 (objetos: opcionales y `readonly` por propiedad), 07 (narrowing con `typeof` y `undefined`), 08 (uniones discriminadas) — APROBADOS.
 - 09 — funciones como valores — APROBADO. Reescrito como 10 drills en escalera (bloques A/B/C/D) porque la base de sintaxis `(...) => ...` no estaba sólida. Cubre: tipo a la izquierda, tipo de retorno, callbacks (`fn(valor)`, `fn(fn(n))`) y factories que devuelven funciones (closures). 10/10 tests en verde.
 - 10 — arrays + callbacks (map/filter/reduce) — APROBADO. Mismo formato escalera (9 drills, bloques A=map / B=filter / C=reduce / D=higher-order). Refuerza arrays tipados (`number[]`), transformar/seleccionar/combinar, recibir callbacks (`nums.map(fn)`) y encadenar (`.filter(...).length`). 9/9 tests en verde.
-- Próximos: genéricos, antes de saltar a React + TS.
+- 11 — genéricos básicos — APROBADO. Formato escalera (7 drills, bloques A=identidad / B=`T` en arrays / C=varias etiquetas `<A,B>` / D=`<T,U>` + callbacks). Cubre `<T>` como parámetro de tipo inferido, `T[]` y `T | undefined`, mezclar genérico con tipo fijo (`repetir(valor: T, n: number)`), y que en `<T, U>` el tipo de salida `U` lo decide lo que retorna el callback. De paso se explicaron a fondo la ambigüedad de `undefined` en el borde de un array (vacío vs elemento undefined vs hueco/sparse) y `Array.from`. 7/7 tests en verde (65/65 en total).
+- 12 — constraints (`extends`) + literales + `keyof` + `T[K]` — EN CURSO. Es un ejercicio grande renumerado 1→31 (sin letras), por bloques:
+  - **1–13 (APROBADOS)**: `extends` para exigir forma/propiedad/método/tipo-con-nombre. Incluye los 10 drills de refuerzo de `extends` (4–13) y el alias `Identificable` reutilizado en 3 funciones (DRY, drill 10 + test `10b`).
+  - **14–21 (APROBADOS)**: escalera de `keyof` que costó mucho. Camino que hizo clic: un texto exacto es un tipo (literales/uniones, 14–15) → `keyof` genera la lista de llaves (16–17) → `T[K]` acceso indexado (18–19) → `propiedad` getter genérico (20) → `extraer` pluck con map (21).
+  - **22–31 (PENDIENTES)**: BLOQUE E, refuerzo de la lógica de `propiedad`/`extraer` con 10 drills simple→complejo (getters `T[K]`, `T[K]` como parámetro, pluck `T[K][]`, que el retorno lo manda el cuerpo no la clave, `T[K] | undefined`, dedupe con `Set`, dos claves `[T[K1], T[K2]]`, y capstone `buscarPor` con `find`).
+  - Notas didácticas clave: tipos literales como subtipo estrecho de `string` (analogía círculos / código de vestimenta), y que el tipo de salida en map/filter lo decide el callback.
+- Próximos: terminar 22–31. Luego utility types, antes de saltar a React + TS.
 
 ---
 
