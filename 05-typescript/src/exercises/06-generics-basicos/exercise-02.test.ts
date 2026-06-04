@@ -19,6 +19,11 @@ import {
   definirEstado,
   propiedad,
   extraer,
+  existeValor,
+  mostrarValor,
+  sonIguales,
+  contarVerdaderos,
+  textos,
   valorDe,
   igualA,
   mismaPropiedad,
@@ -29,8 +34,8 @@ import {
   valoresUnicos,
   dosValores,
   buscarPor,
-} from './exercise-12'
-import type { LlavesLibro, LlavesUsuario, TipoTitulo, TipoActivo } from './exercise-12'
+} from './exercise-02'
+import type { LlavesLibro, LlavesUsuario, TipoTitulo, TipoActivo } from './exercise-02'
 
 describe('exercise-12 — constraints (extends) y keyof', () => {
   // BLOQUE A — extends para exigir una forma con length
@@ -160,9 +165,37 @@ describe('exercise-12 — constraints (extends) y keyof', () => {
     expectTypeOf(extraer([{ name: 'Ana' }], 'name')).toEqualTypeOf<string[]>()
   })
 
-  // BLOQUE E — refuerzo keyof + T[K] + pluck (22–31)
+  // BLOQUE E — keyof con un solo genérico (warm-up, sin K ni T[K])
 
-  it('22) valorDe devuelve el valor de la clave con su tipo exacto', () => {
+  it('22) existeValor dice si el valor de la clave es verdadero', () => {
+    expect(existeValor({ nombre: 'Ana', activo: true }, 'activo')).toBe(true)
+    expect(existeValor({ nombre: 'Ana', activo: false }, 'activo')).toBe(false)
+    // @ts-expect-error "noExiste" no es una llave del objeto
+    existeValor({ nombre: 'Ana' }, 'noExiste')
+  })
+
+  it('23) mostrarValor devuelve el valor como texto', () => {
+    expect(mostrarValor({ edad: 30 }, 'edad')).toBe('30')
+    expect(mostrarValor({ nombre: 'Ana' }, 'nombre')).toBe('Ana')
+  })
+
+  it('24) sonIguales compara la misma clave entre dos objetos', () => {
+    expect(sonIguales({ id: 1 }, { id: 1 }, 'id')).toBe(true)
+    expect(sonIguales({ id: 1 }, { id: 2 }, 'id')).toBe(false)
+  })
+
+  it('25) contarVerdaderos cuenta los valores verdaderos de la columna', () => {
+    expect(contarVerdaderos([{ ok: true }, { ok: false }, { ok: true }], 'ok')).toBe(2)
+  })
+
+  it('26) textos convierte la columna a string[]', () => {
+    expect(textos([{ n: 1 }, { n: 2 }], 'n')).toEqual(['1', '2'])
+    expectTypeOf(textos([{ n: 1 }], 'n')).toEqualTypeOf<string[]>()
+  })
+
+  // BLOQUE F — refuerzo keyof + T[K] + pluck (27–36)
+
+  it('27) valorDe devuelve el valor de la clave con su tipo exacto', () => {
     const p = { nombre: 'Ana', edad: 30 }
     expect(valorDe(p, 'nombre')).toBe('Ana')
     expect(valorDe(p, 'edad')).toBe(30)
@@ -170,7 +203,7 @@ describe('exercise-12 — constraints (extends) y keyof', () => {
     expectTypeOf(valorDe(p, 'edad')).toEqualTypeOf<number>()
   })
 
-  it('23) igualA compara con un valor del tipo de la clave', () => {
+  it('28) igualA compara con un valor del tipo de la clave', () => {
     const p = { nombre: 'Ana', edad: 30 }
     expect(igualA(p, 'edad', 30)).toBe(true)
     expect(igualA(p, 'nombre', 'Luis')).toBe(false)
@@ -178,30 +211,30 @@ describe('exercise-12 — constraints (extends) y keyof', () => {
     igualA(p, 'edad', 'treinta')
   })
 
-  it('24) mismaPropiedad compara la misma clave entre dos objetos', () => {
+  it('29) mismaPropiedad compara la misma clave entre dos objetos', () => {
     expect(mismaPropiedad({ id: 1 }, { id: 1 }, 'id')).toBe(true)
     expect(mismaPropiedad({ id: 1 }, { id: 2 }, 'id')).toBe(false)
   })
 
-  it('25) columna saca el valor de la clave en cada objeto (pluck)', () => {
+  it('30) columna saca el valor de la clave en cada objeto (pluck)', () => {
     const arr = [{ precio: 100 }, { precio: 200 }]
     expect(columna(arr, 'precio')).toEqual([100, 200])
     expectTypeOf(columna(arr, 'precio')).toEqualTypeOf<number[]>()
   })
 
-  it('26) cuantosConValor cuenta los valores verdaderos', () => {
+  it('31) cuantosConValor cuenta los valores verdaderos', () => {
     const arr = [{ activo: true }, { activo: false }, { activo: true }]
     expect(cuantosConValor(arr, 'activo')).toBe(2)
     expectTypeOf(cuantosConValor(arr, 'activo')).toEqualTypeOf<number>()
   })
 
-  it('27) etiquetar convierte la columna a string[]', () => {
+  it('32) etiquetar convierte la columna a string[]', () => {
     const arr = [{ precio: 100 }, { precio: 200 }]
     expect(etiquetar(arr, 'precio')).toEqual(['100', '200'])
     expectTypeOf(etiquetar(arr, 'precio')).toEqualTypeOf<string[]>()
   })
 
-  it('28) primerValor devuelve el primero o undefined', () => {
+  it('33) primerValor devuelve el primero o undefined', () => {
     const arr = [{ n: 'Ana' }, { n: 'Lu' }]
     expect(primerValor(arr, 'n')).toBe('Ana')
     const vacio: { n: string }[] = []
@@ -209,19 +242,19 @@ describe('exercise-12 — constraints (extends) y keyof', () => {
     expectTypeOf(primerValor(arr, 'n')).toEqualTypeOf<string | undefined>()
   })
 
-  it('29) valoresUnicos elimina duplicados de la columna', () => {
+  it('34) valoresUnicos elimina duplicados de la columna', () => {
     const arr = [{ t: 'a' }, { t: 'b' }, { t: 'a' }]
     expect(valoresUnicos(arr, 't')).toEqual(['a', 'b'])
     expectTypeOf(valoresUnicos(arr, 't')).toEqualTypeOf<string[]>()
   })
 
-  it('30) dosValores devuelve dos claves como tupla tipada', () => {
+  it('35) dosValores devuelve dos claves como tupla tipada', () => {
     const p = { nombre: 'Ana', edad: 30 }
     expect(dosValores(p, 'nombre', 'edad')).toEqual(['Ana', 30])
     expectTypeOf(dosValores(p, 'nombre', 'edad')).toEqualTypeOf<[string, number]>()
   })
 
-  it('31) buscarPor encuentra el objeto por el valor de una clave', () => {
+  it('36) buscarPor encuentra el objeto por el valor de una clave', () => {
     const arr = [{ id: 1, n: 'Ana' }, { id: 2, n: 'Lu' }]
     expect(buscarPor(arr, 'id', 2)).toEqual({ id: 2, n: 'Lu' })
     expect(buscarPor(arr, 'id', 99)).toBeUndefined()

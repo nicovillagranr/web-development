@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 12 — Constraints (`extends`) y `keyof`
+ * EJERCICIO 02 — Constraints (`extends`) y `keyof`
  * =============================================================================
  *
  * ▸ EXPLICACIÓN — ¿qué es un constraint?
@@ -267,6 +267,9 @@ export type TipoActivo = Usuario["activo"]
 export function propiedad<T, K extends keyof T>(obj: T, key: K): T[K] {
   return obj[key]
 }
+propiedad({ name: "Ana", age: 30 }, "name") // "Ana" (string)
+propiedad({ name: "Ana", age: 30 }, "age")  // 30 (number)
+// propiedad({ name: "Ana" }, "edad")          // ❌ "edad" no está en el llavero
 
 
 /* ----------------------------------------------------------------------------
@@ -285,7 +288,60 @@ export function extraer<T, K extends keyof T>(arr: T[], key: K): T[K][] {
 
 
 /* ----------------------------------------------------------------------------
- * BLOQUE E — REFUERZO de keyof + T[K] + pluck (10 drills, simple → complejo)
+ * BLOQUE E — keyof con UN SOLO genérico (warm-up: sin K, sin T[K])
+ * ----------------------------------------------------------------------------
+ * Antes de volver al dúo <T, K>, fijamos `keyof T` a solas. Idea central:
+ * si tipas la clave como `keyof T`, le dices a TS "esta clave es UNA del llavero
+ * de T". A cambio, TS te deja hacer `obj[clave]` sin protestar.
+ *
+ * Aquí NO devolvemos el valor con su tipo exacto (eso es `T[K]`, lo retomamos en
+ * el BLOQUE F). Devolvemos siempre un tipo CONCRETO: boolean, string, number...
+ * Un solo genérico `<T>`. Nada de `K` todavía.
+ *
+ * Starter "flojo": la clave está tipada como `string`, y `obj[clave]` falla
+ * (TS: un string cualquiera NO es garantía de ser una llave de T). Tu único
+ * cambio: apretar `clave: string` → `clave: keyof T`. ❌ nada de `any` ni `as`.
+ * -------------------------------------------------------------------------- */
+
+// 22) ¿el valor de la clave es "verdadero"? Un solo genérico; la clave es keyof T.
+//     👉 Cambia `clave: string` por `clave: keyof T`. El retorno ya es boolean.
+//       existeValor({ nombre: "Ana", activo: true }, "activo") → true
+export function existeValor<T>(obj: T, clave: keyof T): boolean {
+  return Boolean(obj[clave])
+}
+existeValor({ nombre: "Ana", activo: true }, "activo") // true
+
+// 23) muestra el valor de la clave como texto. Mismo cambio en la firma.
+//       mostrarValor({ edad: 30 }, "edad") → "30"
+export function mostrarValor<T>(obj: T, clave: keyof T): string {
+  return String(obj[clave])
+}
+mostrarValor({ edad: 30, nombre: "Nico", activo: true }, "nombre") // "Nico"
+
+// 24) compara la MISMA clave entre dos objetos del mismo tipo.
+//       sonIguales({ id: 1 }, { id: 1 }, "id") → true
+export function sonIguales<T>(a: T, b: T, clave: keyof T): boolean {
+  return a[clave] === b[clave]
+}
+sonIguales({ id: 1 }, { id: 1 }, "id") // true
+sonIguales({ id: 1 }, { id: 2 }, "id") // false
+
+// 25) cuenta, en un array, cuántos objetos tienen valor "verdadero" en la clave.
+//       contarVerdaderos([{ ok: true }, { ok: false }], "ok") → 1
+export function contarVerdaderos<T>(arr: T[], clave: keyof T): number {
+  return arr.filter((obj) => Boolean(obj[clave])).length
+}
+contarVerdaderos([{ ok: true }, { ok: false }], "ok") // 1
+
+// 26) saca la columna de la clave y la convierte a texto (string[]).
+//       textos([{ n: 1 }, { n: 2 }], "n") → ["1", "2"]
+export function textos<T>(arr: T[], clave: keyof T): string[] {
+  return arr.map((obj) => String(obj[clave]))
+}
+textos([{ n: 1 }, { n: 2 }, { n: 3 }, { n: 4 }], "n") // ["1", "2", "3", "4"];
+
+/* ----------------------------------------------------------------------------
+ * BLOQUE F — REFUERZO de keyof + T[K] + pluck (10 drills, simple → complejo)
  * ----------------------------------------------------------------------------
  * Misma lógica que los drills 20 y 21, repetida con variaciones para que se
  * vuelva automática. En TODOS el patrón es el mismo:
@@ -301,23 +357,25 @@ export function extraer<T, K extends keyof T>(arr: T[], key: K): T[K][] {
 
 /* ── Getters sobre UN objeto (T[K]) ────────────────────────────────────── */
 
-// 22) El getter base (idéntico a `propiedad`, para arrancar en caliente):
+// 27) El getter base (idéntico a `propiedad`, para arrancar en caliente):
 //     devuelve el valor de `clave` conservando su tipo exacto.
 //     👉 Pon el portero `K extends keyof T` y el retorno `T[K]`.
 //       valorDe({ nombre: "Ana", edad: 30 }, "edad") → 30 (number)
-export function valorDe<T, K>(obj: T, clave: K): unknown {
+export function valorDe<T, K extends keyof T>(obj: T, clave: K): T[K] {
   return obj[clave]
 }
+valorDe({ nombre: "Ana", edad: 30 }, "edad") // 30 (number)
 
-// 23) Compara el valor de `clave` con un `valor` que TÚ pasas. Lo interesante:
+// 28) Compara el valor de `clave` con un `valor` que TÚ pasas. Lo interesante:
 //     `valor` debe ser del MISMO tipo que esa propiedad, no cualquier cosa.
 //     👉 Portero `K extends keyof T`; tipa `valor` como `T[K]`. El retorno ya es boolean.
 //       igualA({ edad: 30 }, "edad", 30) → true ; igualA(..., "edad", "x") → ❌ tipo
-export function igualA<T, K>(obj: T, clave: K, valor: unknown): boolean {
+export function igualA<T, K extends keyof T>(obj: T, clave: K, valor: T[K]): boolean {
   return obj[clave] === valor
 }
+igualA({ edad: 30 }, "edad", 30) // true
 
-// 24) Compara la MISMA clave entre DOS objetos del mismo tipo.
+// 29) Compara la MISMA clave entre DOS objetos del mismo tipo.
 //     👉 Solo falta el portero; el cuerpo ya compara a[clave] con b[clave].
 //       mismaPropiedad({ id: 1 }, { id: 1 }, "id") → true
 export function mismaPropiedad<T, K>(a: T, b: T, clave: K): boolean {
@@ -327,14 +385,14 @@ export function mismaPropiedad<T, K>(a: T, b: T, clave: K): boolean {
 
 /* ── "Pluck": sacar una columna de un array (T[K][]) ───────────────────── */
 
-// 25) El pluck base (idéntico a `extraer`): el valor de `clave` en cada objeto.
+// 30) El pluck base (idéntico a `extraer`): el valor de `clave` en cada objeto.
 //     👉 Portero + retorno `T[K][]`.
 //       columna([{ precio: 100 }, { precio: 200 }], "precio") → [100, 200] (number[])
 export function columna<T, K>(arr: T[], clave: K): unknown[] {
   return arr.map((obj) => obj[clave])
 }
 
-// 26) Cuenta cuántos objetos tienen un valor "verdadero" en esa clave (filter).
+// 31) Cuenta cuántos objetos tienen un valor "verdadero" en esa clave (filter).
 //     Aquí el retorno es `number`, NO `T[K][]`: el tipo de salida lo decide lo
 //     que la función devuelve, no la clave.
 //     👉 Solo falta el portero.
@@ -343,7 +401,7 @@ export function cuantosConValor<T, K>(arr: T[], clave: K): number {
   return arr.filter((obj) => Boolean(obj[clave])).length
 }
 
-// 27) Saca la columna y la convierte a texto con String(). El retorno es
+// 32) Saca la columna y la convierte a texto con String(). El retorno es
 //     `string[]` aunque la propiedad sea number: de nuevo, manda el callback.
 //     👉 Solo falta el portero (el retorno ya es string[]).
 //       etiquetar([{ precio: 100 }, { precio: 200 }], "precio") → ["100", "200"]
@@ -351,7 +409,7 @@ export function etiquetar<T, K>(arr: T[], clave: K): string[] {
   return arr.map((obj) => String(obj[clave]))
 }
 
-// 28) Devuelve el PRIMER valor de la columna, o undefined si el array está vacío.
+// 33) Devuelve el PRIMER valor de la columna, o undefined si el array está vacío.
 //     Recuerda (ej. 11): leer `arr[0]` con noUncheckedIndexedAccess da `T[K] | undefined`.
 //     👉 Portero + retorno `T[K] | undefined`.
 //       primerValor([{ n: "Ana" }, { n: "Lu" }], "n") → "Ana" ; primerValor([], "n") → undefined
@@ -359,7 +417,7 @@ export function primerValor<T, K>(arr: T[], clave: K): unknown {
   return arr.map((obj) => obj[clave])[0]
 }
 
-// 29) Saca la columna y elimina duplicados con un Set.
+// 34) Saca la columna y elimina duplicados con un Set.
 //     👉 Portero + retorno `T[K][]`.
 //       valoresUnicos([{ t: "a" }, { t: "b" }, { t: "a" }], "t") → ["a", "b"]
 export function valoresUnicos<T, K>(arr: T[], clave: K): unknown[] {
@@ -369,7 +427,7 @@ export function valoresUnicos<T, K>(arr: T[], clave: K): unknown[] {
 
 /* ── Combinaciones (más complejas) ─────────────────────────────────────── */
 
-// 30) DOS claves a la vez sobre un objeto: devuelve sus dos valores como tupla.
+// 35) DOS claves a la vez sobre un objeto: devuelve sus dos valores como tupla.
 //     Necesitas DOS etiquetas de clave, cada una con su propio portero.
 //     👉 `<T, K1 extends keyof T, K2 extends keyof T>`; retorno `[T[K1], T[K2]]`.
 //       dosValores({ nombre: "Ana", edad: 30 }, "nombre", "edad") → ["Ana", 30]
@@ -377,7 +435,7 @@ export function dosValores<T, K1, K2>(obj: T, k1: K1, k2: K2): unknown {
   return [obj[k1], obj[k2]]
 }
 
-// 31) CAPSTONE: busca en el array el primer objeto cuya `clave` valga `valor`
+// 36) CAPSTONE: busca en el array el primer objeto cuya `clave` valga `valor`
 //     (como buscar un usuario por id). Junta TODO: portero, `T[K]` en el
 //     parámetro `valor`, y `find`, que devuelve el objeto completo `T` o undefined.
 //     👉 Portero `K extends keyof T`; `valor: T[K]`; retorno `T | undefined`.
