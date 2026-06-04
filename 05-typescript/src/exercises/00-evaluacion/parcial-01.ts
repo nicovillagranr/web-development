@@ -15,6 +15,7 @@
  * No abras `parcial-01.test.ts`: tiene las respuestas. Cuando termines, te corrijo.
  * ===========================================================================*/
 
+
 /** Marcador de hueco sin responder. Reemplázalo por tu respuesta.
  *  Mientras quede algún `SIN_RESPONDER`, el ejercicio cuenta como no hecho. */
 // type SIN_RESPONDER = "⚠️ reemplázame por tu respuesta"
@@ -94,10 +95,10 @@ export const B3: "a" | "b" | "c" = "a" // ← pon "a", "b" o "c"
 
 // C1) Devuelve un array donde a cada número se le aplicó `fn` DOS veces.
 //       aplicaDosVeces([1, 2], (n) => n + 10) → [21, 22]
-export function aplicaDosVeces(nums: number[], fn: (n: number) => number,): number[] {
-  // completa aquí
-  return nums.map(fn) // ← provisional (solo la aplica una vez), cámbialo
+export function aplicaDosVeces(nums: number[], fn: (n: number) => number): number[] {
+  return nums.map((n) => fn(fn(n)))
 }
+aplicaDosVeces([1, 2], (n) => n + 10) // → [21, 22]
 
 
 // C2) Devuelve un array de strings "#<id>", aunque `id` sea number.
@@ -116,9 +117,10 @@ export function etiquetas(productos: { id: number }[]): string[] {
 //     valor con su tipo exacto y rechace claves que no existen. NO toques el cuerpo.
 //     Pista: `<T, K extends keyof T>` ... `: T[K]`
 //       tomar({ nombre: "Ana", edad: 30 }, "edad") → 30 (number)
-export function tomar<T, K>(obj: T, clave: K): unknown {
+export function tomar<T, K extends keyof T>(obj: T, clave: K): T[K] {
   return obj[clave] // dará error hasta que la firma sea correcta — es normal
 }
+tomar({ nombre: "Nico", edad: 23 }, "nombre") // resultado: "Nico" (string)
 
 
 // D2) Igual que D1 pero sobre un array: saca la columna `clave` de cada objeto,
@@ -150,7 +152,9 @@ export const D3: "a" | "b" | "c" = "a" // ← pon "a", "b" o "c"
 //       maximoPor([{ n: "a", v: 1 }, { n: "b", v: 9 }], "v") → { n: "b", v: 9 }
 export function maximoPor<T, K>(arr: T[], clave: K): T | undefined {
   return arr.reduce<T | undefined>((mejor, actual) => {
-    if (mejor === undefined) return actual
+    if (mejor === undefined) {
+      return actual
+    }
     return actual[clave] > mejor[clave] ? actual : mejor
   }, undefined)
 }
