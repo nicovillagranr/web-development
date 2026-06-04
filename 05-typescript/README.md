@@ -67,17 +67,40 @@ Cada concepto se trabaja en un ciclo de 3 pasos:
 
 ### Progresión actual
 
-- `01-tipos-basicos/` — ejercicios 01, 02, 03 aprobados (formato antiguo, denso). 04 en adelante con formato nuevo.
-- 04 (`readonly` vs `as const`), 05 (literales y unions), 06 (objetos: opcionales y `readonly` por propiedad), 07 (narrowing con `typeof` y `undefined`), 08 (uniones discriminadas) — APROBADOS.
-- 09 — funciones como valores — APROBADO. Reescrito como 10 drills en escalera (bloques A/B/C/D) porque la base de sintaxis `(...) => ...` no estaba sólida. Cubre: tipo a la izquierda, tipo de retorno, callbacks (`fn(valor)`, `fn(fn(n))`) y factories que devuelven funciones (closures). 10/10 tests en verde.
-- 10 — arrays + callbacks (map/filter/reduce) — APROBADO. Mismo formato escalera (9 drills, bloques A=map / B=filter / C=reduce / D=higher-order). Refuerza arrays tipados (`number[]`), transformar/seleccionar/combinar, recibir callbacks (`nums.map(fn)`) y encadenar (`.filter(...).length`). 9/9 tests en verde.
-- 11 — genéricos básicos — APROBADO. Formato escalera (7 drills, bloques A=identidad / B=`T` en arrays / C=varias etiquetas `<A,B>` / D=`<T,U>` + callbacks). Cubre `<T>` como parámetro de tipo inferido, `T[]` y `T | undefined`, mezclar genérico con tipo fijo (`repetir(valor: T, n: number)`), y que en `<T, U>` el tipo de salida `U` lo decide lo que retorna el callback. De paso se explicaron a fondo la ambigüedad de `undefined` en el borde de un array (vacío vs elemento undefined vs hueco/sparse) y `Array.from`. 7/7 tests en verde (65/65 en total).
-- 12 — constraints (`extends`) + literales + `keyof` + `T[K]` — EN CURSO. Es un ejercicio grande renumerado 1→31 (sin letras), por bloques:
-  - **1–13 (APROBADOS)**: `extends` para exigir forma/propiedad/método/tipo-con-nombre. Incluye los 10 drills de refuerzo de `extends` (4–13) y el alias `Identificable` reutilizado en 3 funciones (DRY, drill 10 + test `10b`).
-  - **14–21 (APROBADOS)**: escalera de `keyof` que costó mucho. Camino que hizo clic: un texto exacto es un tipo (literales/uniones, 14–15) → `keyof` genera la lista de llaves (16–17) → `T[K]` acceso indexado (18–19) → `propiedad` getter genérico (20) → `extraer` pluck con map (21).
-  - **22–31 (PENDIENTES)**: BLOQUE E, refuerzo de la lógica de `propiedad`/`extraer` con 10 drills simple→complejo (getters `T[K]`, `T[K]` como parámetro, pluck `T[K][]`, que el retorno lo manda el cuerpo no la clave, `T[K] | undefined`, dedupe con `Set`, dos claves `[T[K1], T[K2]]`, y capstone `buscarPor` con `find`).
+> **Nota de reorganización (jun 2026):** los ejercicios vivían todos en `01-tipos-basicos/`
+> como una escalera plana 01→12. Se reubicaron por tema a su carpeta correspondiente y se
+> renumeraron dentro de cada carpeta (empezando en `exercise-01`). Abajo se indica entre
+> paréntesis el nº plano antiguo para rastrear referencias didácticas internas que aún lo citan.
+
+- `01-tipos-basicos/` — **01–04 APROBADOS.** 01 inferencia vs anotación, 02 arrays/null/uniones simples, 03 tuplas/`readonly`/`as const`, 04 `readonly` vs `as const` (formato nuevo). 01–03 en formato antiguo denso; 04 en adelante, formato nuevo.
+- `02-funciones/` — **01 APROBADO** (antes 09). Funciones como valores, 10 drills en escalera (bloques A/B/C/D) porque la base de sintaxis `(...) => ...` no estaba sólida. Cubre: tipo a la izquierda, tipo de retorno, callbacks (`fn(valor)`, `fn(fn(n))`) y factories que devuelven funciones (closures). 10/10 tests.
+- `03-arrays/` — **01 APROBADO** (antes 10). Arrays + callbacks (map/filter/reduce), 9 drills en escalera (A=map / B=filter / C=reduce / D=higher-order). Refuerza arrays tipados (`number[]`), transformar/seleccionar/combinar, recibir callbacks (`nums.map(fn)`) y encadenar (`.filter(...).length`). 9/9 tests.
+- `04-objetos/` — **01 APROBADO** (antes 06). Objetos: shapes, opcionales y `readonly` por propiedad.
+- `05-unions-narrowing/` — **01 y 02 APROBADOS, 03 EN CURSO.** 01 (antes 05) tipos literales y unions de literales; 02 (antes 07) narrowing con `typeof` y `undefined`. **03 (refuerzo, jun 2026)** — narrowing con objetos y `null`: surgió en el parcial (B3) que no tenía claras dos herramientas. Cubre la trampa `typeof null === "object"` (descartar null con truthiness / `!== null`, NO con `typeof`) y el operador `in` para distinguir objetos sin tag. 6 drills (A=truthiness/null, B=trampa typeof null, C=operador `in`). PENDIENTE de resolver por el usuario.
+- `06-generics-basicos/` — **01 APROBADO, 02 EN CURSO.**
+  - 01 (antes 11) — genéricos básicos. 7 drills en escalera (A=identidad / B=`T` en arrays / C=varias etiquetas `<A,B>` / D=`<T,U>` + callbacks). Cubre `<T>` como parámetro inferido, `T[]` y `T | undefined`, mezclar genérico con tipo fijo (`repetir(valor: T, n: number)`), y que en `<T, U>` el tipo de salida `U` lo decide lo que retorna el callback. Se explicó a fondo la ambigüedad de `undefined` en el borde de un array (vacío vs elemento undefined vs hueco/sparse) y `Array.from`. 7/7 tests.
+  - 02 (antes 12) — constraints (`extends`) + literales + `keyof` + `T[K]`. Ejercicio grande con drills internos numerados 1→36 (sin letras), por bloques:
+    - **drills 1–13 (APROBADOS)**: `extends` para exigir forma/propiedad/método/tipo-con-nombre. Incluye los 10 drills de refuerzo de `extends` (4–13) y el alias `Identificable` reutilizado en 3 funciones (DRY, drill 10 + test `10b`).
+    - **drills 14–21 (APROBADOS)**: escalera de `keyof` que costó mucho. Camino que hizo clic: un texto exacto es un tipo (literales/uniones, 14–15) → `keyof` genera la lista de llaves (16–17) → `T[K]` acceso indexado (18–19) → `propiedad` getter genérico (20) → `extraer` pluck con map (21).
+    - **drills 22–28 (APROBADOS)**: BLOQUE E (`keyof T` con un solo genérico, retorno concreto: 22–26) + arranque del BLOQUE F (27 getter base `T[K]`, 28 `igualA` con `T[K]` en un parámetro para atar `valor` al tipo de la propiedad).
+    - **drills 29–36 (PENDIENTES)**: resto del BLOQUE F (dúo `<T, K extends keyof T>` + `T[K]`): `mismaPropiedad`, `columna` (`T[K][]`), `cuantosConValor`, `etiquetar`, `primerValor` (`T[K] | undefined`), `valoresUnicos` (dedupe con `Set`), `dosValores` (`[T[K1], T[K2]]`, dos porteros), y capstone `buscarPor` (`find`, `valor: T[K]`, retorno `T | undefined`).
   - Notas didácticas clave: tipos literales como subtipo estrecho de `string` (analogía círculos / código de vestimenta), y que el tipo de salida en map/filter lo decide el callback.
-- Próximos: terminar 22–31. Luego utility types, antes de saltar a React + TS.
+- `08-discriminated-unions/` — **01 y 02 APROBADOS.** 01 (antes 08) uniones discriminadas. **02 (refuerzo, jun 2026)** — discriminante-por-PROPIEDAD (mató el reflejo de `typeof figura` que falló en el parcial) + exhaustividad con `never`. 5 drills (A=narrowing por propiedad, B=patrón `never` con 3 y 4 variantes). El usuario hizo clic con el `never`: entendió que es chequeo en COMPILACIÓN (no runtime), que TS borra los tipos, y que `never` = "ya no queda ningún caso por atender". 5/5 tests.
+
+#### Parcial diagnóstico — `00-evaluacion/parcial-01` (EN CURSO, jun 2026)
+
+Examen escrito con autocorrección, nivel criba (~12 ítems). Formato simple: un hueco por ítem (tipos → reemplazar `SIN_RESPONDER`; opción múltiple → letra; código → completar cuerpo/firma; cada uno con su "Por qué" que revisa el coach). Corrección: tipos por `pnpm typecheck`, comportamiento por `pnpm test:run`. A1 va resuelta como ejemplo.
+
+- **A1, A2, A3 (inferencia) — APROBADAS.** widening en objeto, `as const`→literal, y `numerosA[0]` = `number | undefined` (costó: reforzar widening de array + `noUncheckedIndexedAccess`).
+- **B1 (`formatear`, narrowing primitivo) — APROBADA.** early return, narrowing por flujo de control.
+- **B2 (`area`, discriminated union + `never`) — APROBADA**, pero requirió todo el refuerzo de `08-discriminated-unions/exercise-02` (había salido con `typeof figura`).
+- **B3 (opción múltiple: cuál `typeof`/`in` NO estrecha bien) — PENDIENTE, bloqueada.** La respuesta es la opción que cae en la trampa `typeof null === "object"`. El usuario está haciendo primero el refuerzo `05-unions-narrowing/exercise-03` para no responder "al achunte"; al terminarlo, B3 sale solo.
+- **C1, C2, D1, D2, D3, E1 — SIN EMPEZAR.** (C=callbacks/arrays, D=genéricos/keyof/T[K] + criterio "cuándo NO genéricos", E=debugging de firma con `Record<K, number>`.)
+
+**Retomar la próxima sesión por aquí:** el usuario termina `05-unions-narrowing/exercise-03` (refuerzo narrowing) → vuelve a B3 del parcial → sigue C1.
+
+- Próximos (fuera del parcial): terminar drills 29–36 de `06-generics-basicos/exercise-02`. Luego `07-utility-types/`, antes de FASE 2 (React + TS).
+- **Pendiente de limpieza:** 5 referencias didácticas en `06-generics-basicos` (exercise-01 y -02) citan números planos viejos ("ejercicio 10/11/07"); actualizar a las rutas nuevas. Y borrar línea suelta `nombreTipo(...) // --- IGNORE ---` en `08-discriminated-unions/exercise-02.ts:73`.
 
 ---
 
