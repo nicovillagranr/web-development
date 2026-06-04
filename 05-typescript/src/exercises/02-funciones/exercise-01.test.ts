@@ -10,7 +10,7 @@ import {
   aplicarDosVeces,
   crearMultiplicador,
   crearRepetidor,
-} from './exercise-09'
+} from './exercise-01'
 
 describe('exercise-09 — funciones como valores', () => {
   // BLOQUE A

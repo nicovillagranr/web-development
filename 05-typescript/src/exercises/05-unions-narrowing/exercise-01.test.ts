@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
-import { start, move, ROLES } from './exercise-05'
-import type { Direction, Role } from './exercise-05'
+import { start, move, ROLES } from './exercise-01'
+import type { Direction, Role } from './exercise-01'
 
 describe('exercise-05 — tipos literales y unions', () => {
   it('Direction es un union literal de los 4 puntos cardinales', () => {

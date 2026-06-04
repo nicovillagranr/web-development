@@ -1,5 +1,5 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
-import { formatearPrecio, saludarUsuario, longitudMensaje } from './exercise-07'
+import { formatearPrecio, saludarUsuario, longitudMensaje } from './exercise-02'
 
 describe('exercise-07 — narrowing: estrechar un union antes de usarlo', () => {
   it('formatearPrecio formatea number con $ y 2 decimales', () => {

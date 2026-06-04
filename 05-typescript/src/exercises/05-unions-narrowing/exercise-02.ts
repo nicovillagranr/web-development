@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 07 — Narrowing: estrechar un union antes de usarlo
+ * EJERCICIO 02 — Narrowing: estrechar un union antes de usarlo
  * =============================================================================
  *
  * ▸ EXPLICACIÓN

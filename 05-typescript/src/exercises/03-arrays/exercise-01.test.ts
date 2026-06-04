@@ -9,7 +9,7 @@ import {
   concatenar,
   transformarCada,
   contarSi,
-} from './exercise-10'
+} from './exercise-01'
 
 describe('exercise-10 — arrays + callbacks (map/filter/reduce)', () => {
   // BLOQUE A — map

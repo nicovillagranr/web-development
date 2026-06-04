@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 06 — Objetos: shapes, opcionales y `readonly` por propiedad
+ * EJERCICIO 01 — Objetos: shapes, opcionales y `readonly` por propiedad
  * =============================================================================
  *
  * ▸ EXPLICACIÓN

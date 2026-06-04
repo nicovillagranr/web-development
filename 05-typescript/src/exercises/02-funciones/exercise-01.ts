@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 09 — Las funciones son valores (y se pueden pasar como ingrediente)
+ * EJERCICIO 01 — Las funciones son valores (y se pueden pasar como ingrediente)
  * =============================================================================
  *
  * ▸ EXPLICACIÓN

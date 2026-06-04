@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
-import { area, describir } from './exercise-08'
-import type { Figura } from './exercise-08'
+import { area, describir } from './exercise-01'
+import type { Figura } from './exercise-01'
 
 describe('exercise-08 — uniones discriminadas', () => {
   it('Figura es una unión discriminada por la propiedad "tipo"', () => {

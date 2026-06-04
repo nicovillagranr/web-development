@@ -7,7 +7,7 @@ import {
   repetir,
   mapear,
   primeroQueCumple,
-} from './exercise-11'
+} from './exercise-01'
 
 describe('exercise-11 — genéricos básicos', () => {
   // BLOQUE A — identidad

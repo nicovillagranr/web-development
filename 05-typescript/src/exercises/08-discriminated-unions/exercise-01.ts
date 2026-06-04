@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 08 — Uniones discriminadas (discriminated unions)
+ * EJERCICIO 01 — Uniones discriminadas (discriminated unions)
  * =============================================================================
  *
  * ▸ EXPLICACIÓN

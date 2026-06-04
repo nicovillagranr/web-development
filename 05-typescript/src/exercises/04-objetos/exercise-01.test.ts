@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
-import { juan, publicar, defaultSettings } from './exercise-06'
-import type { User, Article, Settings } from './exercise-06'
+import { juan, publicar, defaultSettings } from './exercise-01'
+import type { User, Article, Settings } from './exercise-01'
 
 describe('exercise-06 — objetos: opcionales y readonly por propiedad', () => {
   it('User tiene id readonly, name/email obligatorias, phone opcional', () => {

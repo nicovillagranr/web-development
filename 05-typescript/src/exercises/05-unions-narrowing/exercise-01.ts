@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 05 — Tipos literales y unions de literales      [APROBADO ✅]
+ * EJERCICIO 01 — Tipos literales y unions de literales      [APROBADO ✅]
  * =============================================================================
  *
  * ▸ EXPLICACIÓN
@@ -101,6 +101,7 @@ export const start: Direction = "up";
 export function move(direction: Direction, steps: number) {
   return `moviendo ${steps} pasos ${direction}`;
 }
+move("up", 3) // "moviendo 3 pasos up"
 
 // 3) Tienes esta lista fija de roles. Derívale un tipo `Role` SIN escribir
 //    a mano el union "admin" | "editor" | "viewer". Usa el truco del

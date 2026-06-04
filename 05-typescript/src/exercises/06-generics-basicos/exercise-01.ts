@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 11 — Genéricos básicos (un tipo como parámetro)
+ * EJERCICIO 01 — Genéricos básicos (un tipo como parámetro)
  * =============================================================================
  *
  * ▸ EXPLICACIÓN — ¿qué es un genérico?

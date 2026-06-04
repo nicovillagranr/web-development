@@ -1,5 +1,5 @@
 /* =============================================================================
- * EJERCICIO 10 — Arrays + callbacks (map / filter / reduce)
+ * EJERCICIO 01 — Arrays + callbacks (map / filter / reduce)
  * =============================================================================
  *
  * ▸ POR QUÉ ESTE EJERCICIO VIENE JUSTO DESPUÉS DEL 09
@@ -171,4 +171,4 @@ export function contarSi(nums: number[], cumple: (n: number) => boolean): number
   return nums.filter(cumple).length
 }
 const tablita = [1, 2, 3, 4]
-contarSi(tablita, (n) => n > 2)
+contarSi(tablita, (n) => n > 2) // (el 3 y el 4)
