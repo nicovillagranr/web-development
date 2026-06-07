@@ -213,3 +213,252 @@ export function procesar(r: Respuesta): string {
     return "ERR: " + r.error
   }
 }
+
+
+/* =============================================================================
+ * BLOQUE E — el `null` en la vida real: el borde de una API (escalera)
+ * =============================================================================
+ *
+ * Hasta aquí el `null` venía "de juguete". En tus proyectos reales el `null`
+ * NACE en el borde de una API: cuando haces `fetch(...).then(r => r.json())`,
+ * TS no sabe qué llega — entra como `any` y deja de protegerte. Por eso el crash
+ * de `null` casi siempre aparece justo después de leer datos de tu backend.
+ *
+ * La defensa profesional es DOBLE:
+ *   1) TIPAR la respuesta (`Proyecto | null`, no `any`) → TS te OBLIGA a tratar el null.
+ *   2) Descartar el null POR VALOR antes de tocar propiedades (lo del bloque A/B).
+ *
+ *
+ * ▸ DOS HERRAMIENTAS NUEVAS — `?.` (optional chaining) y `??` (nullish coalescing)
+ * ----------------------------------------------------------------------------
+ * Son el atajo idiomático para "si esto es null/undefined, no sigas / usa un
+ * respaldo". No reemplazan al narrowing, lo COMPLEMENTAN.
+ *
+ *   `obj?.prop`   → si `obj` es null o undefined, NO accede y devuelve `undefined`
+ *                   (en vez de reventar). Si no, devuelve `obj.prop`.
+ *
+ *       sesion.usuario?.nombre
+ *       // si usuario es null → undefined (no crash)
+ *       // si usuario existe  → el nombre
+ *
+ *   `a ?? b`      → si `a` es null o undefined, usa `b`; si no, usa `a`.
+ *                   (OJO: solo null/undefined disparan el respaldo. El 0 y el ""
+ *                    NO — para eso `??` es mejor que `||`, que también caería con 0.)
+ *
+ *       const nombre = sesion.usuario?.nombre ?? "invitado"
+ *       // junta las dos: "dame el nombre, y si no hay nadie, 'invitado'"
+ *
+ * 🔑 ANALOGÍA: `?.` es preguntar "¿estás ahí?" antes de tocar la puerta, en vez
+ * de tirarla abajo. `??` es el plan B por si la respuesta fue "no hay nadie".
+ *
+ *
+ * ▸ EJERCICIO — drills en escalera. EN ORDEN. ❌ nada de `any` ni `as`.
+ *    Cada función tiene `throw new Error("TODO ...")`: bórralo y complétala.
+ *    E1–E3: narrowing por valor (lo que ya sabes, ahora con datos de API).
+ *    E4–E6: introduce `?.` y `??` y los combina.
+ * ===========================================================================*/
+
+
+/* ── Proyecto 1: PORTFOLIO (info personal + proyectos web) ──────────────────── */
+
+// Un proyecto de tu portfolio. `repoUrl` puede venir null (proyecto privado).
+type Proyecto = { nombre: string; repoUrl: string | null }
+
+// E1) La API puede devolver `null` cuando el proyecto NO existe (GET /proyectos/999).
+//     Devuelve el nombre, o "Proyecto no encontrado" si es null.
+//     Descarta el null POR VALOR primero (no con typeof).
+//       tituloProyecto({ nombre: "Projex", repoUrl: null }) → "Projex"
+//       tituloProyecto(null)                                 → "Proyecto no encontrado"
+export function tituloProyecto(p: Proyecto | null): string {
+  if (p === null) {
+    return "Proyecto no encontrado"
+  }
+  return p.nombre
+}
+
+// E2) Aquí el proyecto SÍ existe, pero el campo `repoUrl` puede ser null.
+//     Devuelve la URL del repo, o "Sin repositorio" si es null.
+//       enlaceRepo({ nombre: "Projex", repoUrl: "github.com/x" }) → "github.com/x"
+//       enlaceRepo({ nombre: "Privado", repoUrl: null })          → "Sin repositorio"
+export function enlaceRepo(p: Proyecto): string {
+  if (p.repoUrl === null) {
+    return "Sin repositorio"
+  }
+  return p.repoUrl
+}
+
+/* ── Proyecto 2: E-COMMERCE junior ─────────────────────────────────────────── */
+
+// Un producto. `descuento` es null en la mayoría (no todos tienen oferta).
+type Producto = { nombre: string; precio: number; descuento: { porcentaje: number } | null }
+
+// E3) Devuelve el PRECIO FINAL. Si hay descuento, aplícalo; si es null, el precio
+//     tal cual. Descarta el null del descuento antes de leer `.porcentaje`.
+//     final = precio * (1 - porcentaje / 100)
+//       precioFinal({ nombre: "X", precio: 100, descuento: { porcentaje: 20 } }) → 80
+//       precioFinal({ nombre: "Y", precio: 100, descuento: null })               → 100
+export function precioFinal(p: Producto): number {
+  const descuento = p.descuento?.porcentaje ?? 0 // si p.descuento es null, descuento será 0
+  return p.precio * (1 - descuento / 100)
+}
+
+// E4) Sesión del usuario. `usuario` es null si nadie inició sesión.
+//     Devuelve el nombre, o "invitado". Aquí SÍ usa `?.` + `??` (una sola línea).
+//       saludoSesion({ usuario: { nombre: "Nico" } }) → "Nico"
+//       saludoSesion({ usuario: null })                → "invitado"
+type Sesion = { usuario: { nombre: string } | null }
+export function saludoSesion(s: Sesion): string {
+  const nombre = s.usuario?.nombre ?? "invitado"
+  return nombre
+}
+
+// E5) El carrito completo puede venir null (sesión nueva sin carrito creado).
+//     Devuelve CUÁNTOS items hay. Si el carrito es null → 0. Usa `?.` + `??`.
+//       cantidadItems({ items: [{ precio: 10 }, { precio: 5 }] }) → 2
+//       cantidadItems(null)                                       → 0
+type Carrito = { items: { precio: number }[] }
+export function cantidadItems(c: Carrito | null): number {
+  const items = c?.items ?? []
+  return items.length
+}
+cantidadItems({ items: [{ precio: 10 }, { precio: 5 }] }) // 2
+cantidadItems(null) // 0
+
+// E6) CAPSTONE — junta todo el bloque. El producto puede ser null (no encontrado),
+//     y si existe puede o no tener descuento. Devuelve la etiqueta de precio:
+//       - producto null            → "No disponible"
+//       - sin descuento            → "$<precio>"        (precio con 2 decimales)
+//       - con descuento            → "$<precioFinal>"   (ya rebajado, 2 decimales)
+//     Descarta el null del producto PRIMERO, luego el del descuento. Puedes
+//     reutilizar precioFinal si quieres (DRY), pero ojo: solo si p no es null.
+//       etiquetaPrecio(null)                                                   → "No disponible"
+//       etiquetaPrecio({ nombre: "X", precio: 100, descuento: null })          → "$100.00"
+//       etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }) → "$75.00"
+export function etiquetaPrecio(p: Producto | null): string {
+  if (p === null) {
+    return "No disponible"
+  }
+  const precio = precioFinal(p) // Se llama a una función que ya maneja el caso del descuento null, así que no hace falta chequearlo aquí
+  return `$${precio.toFixed(2)}`
+}
+etiquetaPrecio(null) // "No disponible"
+etiquetaPrecio({ nombre: "X", precio: 100, descuento: null }) // "$100.00"
+etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }) // "$75.00"
+
+/* =============================================================================
+ * BLOQUE F — sintaxis fina de `?.` y `??` (escalera de mecánica)
+ * =============================================================================
+ *
+ * Ya usaste `obj?.prop` y `a ?? b`. El `?.` tiene TRES formas según qué venga
+ * después, y todas siguen la misma regla: "si lo de la IZQUIERDA del `?.` es
+ * null/undefined, corta y devuelve undefined; si no, sigue".
+ *
+ *
+ * ▸ FORMA 1 — propiedad:  `obj?.prop`        (ya la conoces)
+ *     usuario?.nombre
+ *
+ * ▸ FORMA 2 — índice:     `obj?.[i]`         (acceso por índice/clave dinámica)
+ *     Cuando lo que puede ser null es el ARRAY/objeto que vas a indexar:
+ *       fotos?.[0]          // si fotos es null → undefined, si no → fotos[0]
+ *     OJO la sintaxis: el punto va ANTES del corchete → `?.[` , no `?[`.
+ *
+ * ▸ FORMA 3 — llamada:    `fn?.()`           (llamada opcional)
+ *     Cuando la función misma puede ser null/undefined:
+ *       onClick?.()         // si onClick existe → la llama; si no → undefined
+ *
+ *
+ * ▸ ENCADENAR — varios `?.` seguidos
+ * ----------------------------------------------------------------------------
+ * Cada `?.` protege UN salto. Si hay varios eslabones que pueden ser null,
+ * pones un `?.` en cada salto peligroso. En cuanto uno corta, todo el resto
+ * se salta y el resultado es `undefined`:
+ *
+ *   pedido.cliente?.direccion?.ciudad
+ *   // si cliente es null → undefined (no llega ni a mirar direccion)
+ *   // si direccion es null → undefined
+ *   // si todo existe → la ciudad
+ *
+ *
+ * ▸ RECORDATORIO — `??` reacciona SOLO a null/undefined (no al 0 ni al "")
+ * ----------------------------------------------------------------------------
+ *   0  ?? 99   // → 0    (0 NO es null/undefined, se respeta)
+ *   0  || 99   // → 99   (0 es falsy → ❌ lo pisa: bug típico con precios/stock)
+ *
+ *
+ * ▸ EJERCICIO — drills en escalera. EN ORDEN. ❌ nada de `any` ni `as`.
+ *    Borra el `throw` de cada función y complétala. Apóyate en las 3 formas.
+ * ===========================================================================*/
+
+
+// F1) ENCADENAR `?.` dos niveles. `cliente` puede ser null, y su `direccion`
+//     también. Devuelve la ciudad de envío, o "sin ciudad" si falta algún eslabón.
+//       ciudadEnvio({ cliente: { direccion: { ciudad: "Lima" } } }) → "Lima"
+//       ciudadEnvio({ cliente: { direccion: null } })               → "sin ciudad"
+//       ciudadEnvio({ cliente: null })                              → "sin ciudad"
+type Pedido = { cliente: { direccion: { ciudad: string } | null } | null }
+export function ciudadEnvio(p: Pedido): string {
+  const ciudad = p.cliente?.direccion?.ciudad ?? "sin ciudad"
+  return ciudad
+}
+
+// F2) LA TRAMPA DEL 0. `stock` puede ser un número (incluido 0) o null. Devuelve
+//     el stock tal cual, o -1 si es null. OJO: un producto con stock 0 está
+//     agotado pero EXISTE → debe devolver 0, no -1. (Pista: ¿`??` o `||`?)
+//       stockMostrado({ stock: 7 })    → 7
+//       stockMostrado({ stock: 0 })    → 0    ← ¡no -1!
+//       stockMostrado({ stock: null }) → -1
+type Inventario = { stock: number | null }
+export function stockMostrado(i: Inventario): number {
+  const stock = i.stock ?? -1
+  return stock
+}
+stockMostrado({ stock: 7 })    // 7 En un proyecto real puede ser mostrado con  estilos para resaltar que hay pocas unidades
+stockMostrado({ stock: 0 })    // 0 En un proyecto real puede ser mostrado como "Agotado"
+stockMostrado({ stock: null }) // -1 En un proyecto real puede ser mostrado como "No disponible" o algo así, para diferenciarlo del "Agotado"
+
+// F3) FORMA `?.[]`. `fotos` puede ser null (producto sin imágenes). Devuelve la
+//     primera foto (índice 0), o "placeholder.png" si no hay galería o está vacía.
+//     Necesitas indexar un array que puede ser null → sintaxis `fotos?.[0]`.
+//       portada({ fotos: ["a.png", "b.png"] }) → "a.png"
+//       portada({ fotos: [] })                 → "placeholder.png"
+//       portada({ fotos: null })               → "placeholder.png"
+type Galeria = { fotos: string[] | null }
+export function portada(g: Galeria): string {
+  throw new Error("TODO F3")
+}
+
+// F4) FORMA `?.()`. `onClick` es un callback que puede ser null (botón deshabilitado).
+//     Si existe, llámalo y devuelve lo que retorne; si es null, devuelve "sin acción".
+//       activar({ onClick: () => "guardado" }) → "guardado"
+//       activar({ onClick: null })             → "sin acción"
+type Boton = { onClick: (() => string) | null }
+export function activar(b: Boton): string {
+  throw new Error("TODO F4")
+}
+
+// F5) ENCADENAR + ÍNDICE. `carrito` puede ser null; si existe, su `items` puede
+//     estar vacío. Devuelve el nombre del PRIMER item, o "vacío" si no hay carrito
+//     o no hay items. (Encadena `?.` con el acceso por índice.)
+//       primerProducto({ carrito: { items: [{ nombre: "Té" }] } }) → "Té"
+//       primerProducto({ carrito: { items: [] } })                 → "vacío"
+//       primerProducto({ carrito: null })                          → "vacío"
+type Cuenta2 = { carrito: { items: { nombre: string }[] } | null }
+export function primerProducto(u: Cuenta2): string {
+  throw new Error("TODO F5")
+}
+
+// F6) CAPSTONE — junta las tres formas. La config puede tener `tema` null y un
+//     `obtenerDescuento` que puede ser null. Devuelve "<color> / <desc>%":
+//       - color: el del tema, o "default" si no hay tema.
+//       - desc:  lo que devuelva obtenerDescuento(), o 0 si no hay función.
+//                (CUIDADO: un descuento de 0% es válido → no lo pises.)
+//       resumenConfig({ tema: { color: "rojo" }, obtenerDescuento: () => 15 }) → "rojo / 15%"
+//       resumenConfig({ tema: null, obtenerDescuento: () => 0 })               → "default / 0%"
+//       resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     → "azul / 0%"
+type Configuracion = {
+  tema: { color: string } | null
+  obtenerDescuento: (() => number) | null
+}
+export function resumenConfig(c: Configuracion): string {
+  throw new Error("TODO F6")
+}

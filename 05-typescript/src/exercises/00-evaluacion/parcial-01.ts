@@ -105,7 +105,7 @@ aplicaDosVeces([1, 2], (n) => n + 10) // → [21, 22]
 //       etiquetas([{ id: 1 }, { id: 2 }]) → ["#1", "#2"]
 export function etiquetas(productos: { id: number }[]): string[] {
   // completa aquí
-  return productos.map((p) => String(p.id)) // ← provisional, cámbialo
+  return productos.map((p) => `#${p.id}`) // ← provisional, cámbialo
 }
 
 
@@ -126,8 +126,8 @@ tomar({ nombre: "Nico", edad: 23 }, "nombre") // resultado: "Nico" (string)
 // D2) Igual que D1 pero sobre un array: saca la columna `clave` de cada objeto,
 //     conservando su tipo (number[] / string[] / ...). Completa solo la firma.
 //       columna([{ v: 1 }, { v: 2 }], "v") → [1, 2] (number[])
-export function columna<T, K>(arr: T[], clave: K): unknown {
-  return arr.map((o) => o[clave]) // dará error hasta completar la firma — normal
+export function columna<T, K extends keyof T>(arr: T[], clave: K): T[K][] {
+  return arr.map((objeto) => objeto[clave]) // dará error hasta completar la firma — normal
 }
 
 

@@ -223,4 +223,4 @@ export function crearRepetidor(veces: number): (texto: string) => string {
   return (texto: string) => texto.repeat(veces);
 }
 const triple = crearRepetidor(3);
-triple("ab");
+triple("ab") // "ababab"
