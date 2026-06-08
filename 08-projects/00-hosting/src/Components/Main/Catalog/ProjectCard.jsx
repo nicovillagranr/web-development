@@ -7,7 +7,7 @@ const CHIP_CLASSES = {
   emerald: "border-emerald/30 bg-emerald-glow text-emerald",
   amber: "border-amber/30 bg-amber-glow text-amber",
   violet: "border-violet-500/30 bg-violet-500/15 text-violet-400",
-  green: "border-green-500/30 bg-green-500/15 text-green-400",
+  green: "border-green-500/30 bg-green-500/15 text-green-400 [html.light_&]:border-green-700/40 [html.light_&]:bg-green-700/10 [html.light_&]:text-green-700",
   mono: "border-text-primary/40 bg-text-primary/10 text-text-primary",
   neutral: "border-line bg-surface text-text-muted",
 };
