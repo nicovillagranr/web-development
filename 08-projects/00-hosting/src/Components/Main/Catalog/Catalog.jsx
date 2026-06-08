@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ProjectCard from "./ProjectCard";
+import CatalogSkeleton from "./CatalogSkeleton";
 
 const FILTERS = ["Todos", "React", "Next.js", "APIs"];
 const GROUP_ORDER = ["React", "Next.js", "APIs"];
@@ -12,13 +13,8 @@ export default function Catalog({ projects = [], loading = false, error = null }
     projects.filter((p) => p.framework === framework),
   ]).filter(([, group]) => group.length > 0);
 
-  if (loading) return (
-    <section className="mt-6 min-h-[75vh] flex items-center justify-center" id="proyectos">
-      <div className="text-center">
-        <p className="text-lg text-text-secondary animate-fade-in">Cargando proyectos...</p>
-      </div>
-    </section>
-  );
+  if (loading) return (<CatalogSkeleton />);
+
   if (error) return (
     <section className="mt-6 min-h-[75vh] flex items-center justify-center" id="proyectos" role="status" aria-live="polite">
       <div className="text-center">

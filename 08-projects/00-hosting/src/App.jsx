@@ -4,6 +4,7 @@ import "./assets/styles/App.css";
 import Header from "@/Components/Header/Header";
 import Hero from "@/Components/Main/Hero/Hero";
 const Catalog = lazy(() => import("@/Components/Main/Catalog/Catalog"));
+import CatalogSkeleton from "@/Components/Main/Catalog/CatalogSkeleton";
 import Footer from "@/Components/Footer/Footer";
 import ErrorBoundary from "@/Components/ErrorBoundary/ErrorBoundary";
 
@@ -36,7 +37,7 @@ export default function App() {
       <main className="container-page">
         <ErrorBoundary profile={profile}>
           <Hero projects={projects} profile={profile} loading={projectsLoading} />
-          <Suspense fallback={<div className="mt-6 min-h-[75vh]" aria-hidden="true" />}>
+          <Suspense fallback={<CatalogSkeleton />}>
             <Catalog projects={projects} loading={projectsLoading} error={projectsError} />
           </Suspense>
         </ErrorBoundary>
