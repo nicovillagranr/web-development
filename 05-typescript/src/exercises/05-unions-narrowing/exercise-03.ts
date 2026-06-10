@@ -417,14 +417,15 @@ stockMostrado({ stock: 0 })    // 0 En un proyecto real puede ser mostrado como 
 stockMostrado({ stock: null }) // -1 En un proyecto real puede ser mostrado como "No disponible" o algo así, para diferenciarlo del "Agotado"
 
 // F3) FORMA `?.[]`. `fotos` puede ser null (producto sin imágenes). Devuelve la
-//     primera foto (índice 0), o "placeholder.png" si no hay galería o está vacía.
+//     primera foto (índice 0), o "placeholder.webp" si no hay galería o está vacía.
 //     Necesitas indexar un array que puede ser null → sintaxis `fotos?.[0]`.
 //       portada({ fotos: ["a.png", "b.png"] }) → "a.png"
-//       portada({ fotos: [] })                 → "placeholder.png"
-//       portada({ fotos: null })               → "placeholder.png"
+//       portada({ fotos: [] })                 → "placeholder.webp"
+//       portada({ fotos: null })               → "placeholder.webp"
 type Galeria = { fotos: string[] | null }
 export function portada(g: Galeria): string {
-  throw new Error("TODO F3")
+  const foto = g.fotos?.[0] ?? "placeholder.webp"
+  return foto
 }
 
 // F4) FORMA `?.()`. `onClick` es un callback que puede ser null (botón deshabilitado).
@@ -433,7 +434,8 @@ export function portada(g: Galeria): string {
 //       activar({ onClick: null })             → "sin acción"
 type Boton = { onClick: (() => string) | null }
 export function activar(b: Boton): string {
-  throw new Error("TODO F4")
+  const accion = b.onClick?.() ?? "sin acción"
+  return accion
 }
 
 // F5) ENCADENAR + ÍNDICE. `carrito` puede ser null; si existe, su `items` puede
@@ -444,7 +446,7 @@ export function activar(b: Boton): string {
 //       primerProducto({ carrito: null })                          → "vacío"
 type Cuenta2 = { carrito: { items: { nombre: string }[] } | null }
 export function primerProducto(u: Cuenta2): string {
-  throw new Error("TODO F5")
+  return u.carrito?.items[0]?.nombre ?? "vacío"
 }
 
 // F6) CAPSTONE — junta las tres formas. La config puede tener `tema` null y un
@@ -460,5 +462,10 @@ type Configuracion = {
   obtenerDescuento: (() => number) | null
 }
 export function resumenConfig(c: Configuracion): string {
-  throw new Error("TODO F6")
+  const color = c.tema?.color ?? "default"
+  const descuento = c.obtenerDescuento?.() ?? 0
+  return `${color} / ${descuento}%`
 }
+resumenConfig({ tema: { color: "rojo" }, obtenerDescuento: () => 15 }) // "rojo / 15%"
+resumenConfig({ tema: null, obtenerDescuento: () => 0 })               // "default / 0%"
+resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     // "azul / 0%"

@@ -131,8 +131,8 @@ describe('exercise-03 — narrowing con objetos y null', () => {
 
   it('F3) portada usa ?.[] sobre un array que puede ser null', () => {
     expect(portada({ fotos: ['a.png', 'b.png'] })).toBe('a.png')
-    expect(portada({ fotos: [] })).toBe('placeholder.png')
-    expect(portada({ fotos: null })).toBe('placeholder.png')
+    expect(portada({ fotos: [] })).toBe('placeholder.webp')
+    expect(portada({ fotos: null })).toBe('placeholder.webp')
   })
 
   it('F4) activar usa ?.() para llamar un callback opcional', () => {
