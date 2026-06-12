@@ -85,9 +85,12 @@ export function area(figura: Figura): number {
 //     (a)  if (typeof x === "string") { x.trim() }      con  x: string | number
 //     (b)  if (typeof x === "object") { x.nombre }       con  x: { nombre: string } | null
 //     (c)  if ("radio" in f) { f.radio }                 con  f: Figura
-export const B3: "a" | "b" | "c" = "a" // ← pon "a", "b" o "c"
+export const B3: "a" | "b" | "c" = "b"
 // Por qué esa opción está rota:
-
+// Ante un typeof, null se disfraza de object. Esto es un quirk histórico de JavaScript
+// Cuando tipamos x: {nombre: string } | null, el chequeo typeof x === "object" no descarta el null: ambos miembros de la unión responden "object"
+// El filtro deja pasar los 2, y x.nombre puede ejecutarse sobre null -> reventará cuando el usuario utilice la app
+// Lo correcto sería hacer un chequeo typeof x === "object" && x !== null. Aquí nos aseguramos 100% que x es un objeto y no null
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * PARTE C — Funciones y arrays
@@ -104,9 +107,9 @@ aplicaDosVeces([1, 2], (n) => n + 10) // → [21, 22]
 // C2) Devuelve un array de strings "#<id>", aunque `id` sea number.
 //       etiquetas([{ id: 1 }, { id: 2 }]) → ["#1", "#2"]
 export function etiquetas(productos: { id: number }[]): string[] {
-  // completa aquí
-  return productos.map((p) => `#${p.id}`) // ← provisional, cámbialo
+  return productos.map((p) => `#${p.id}`);
 }
+etiquetas([{ id: 1 }, { id: 2 }]) // resultado: ["#1", "#2"]
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -117,28 +120,33 @@ export function etiquetas(productos: { id: number }[]): string[] {
 //     valor con su tipo exacto y rechace claves que no existen. NO toques el cuerpo.
 //     Pista: `<T, K extends keyof T>` ... `: T[K]`
 //       tomar({ nombre: "Ana", edad: 30 }, "edad") → 30 (number)
-export function tomar<T, K extends keyof T>(obj: T, clave: K): T[K] {
-  return obj[clave] // dará error hasta que la firma sea correcta — es normal
+export function tomar<Objeto, Llave extends keyof Objeto>(obj: Objeto, clave: Llave): Objeto[Llave] {
+  return obj[clave];
 }
 tomar({ nombre: "Nico", edad: 23 }, "nombre") // resultado: "Nico" (string)
-
+tomar({ nombre: "Natalia", edad: 23 }, "edad") // resultado: 23 (number)
 
 // D2) Igual que D1 pero sobre un array: saca la columna `clave` de cada objeto,
 //     conservando su tipo (number[] / string[] / ...). Completa solo la firma.
 //       columna([{ v: 1 }, { v: 2 }], "v") → [1, 2] (number[])
-export function columna<T, K extends keyof T>(arr: T[], clave: K): T[K][] {
-  return arr.map((objeto) => objeto[clave]) // dará error hasta completar la firma — normal
+export function columna<Objetos, Llave extends keyof Objetos>(arr: Objetos[], clave: Llave): Objetos[Llave][] {
+  return arr.map((objeto) => objeto[clave])
 }
-
+columna([{ v: 1 }, { v: 2 }], "v") // [1, 2]
+columna([{ numero: 1 }, { numero: 2 }, { animal: "perro" }], "numero") // [1, 2, undefined]. perro no tiene número, pero .map lo lee igual, como undefined
 
 // D3) ¿Cuál firma usa genéricos de forma INNECESARIA (el genérico no relaciona
 //     la entrada con la salida)? Pon la letra.
 //     (a)  function primero<T>(arr: T[]): T | undefined
 //     (b)  function imprimir<T>(x: T): void
 //     (c)  function mapear<T, U>(arr: T[], fn: (x: T) => U): U[]
-export const D3: "a" | "b" | "c" = "a" // ← pon "a", "b" o "c"
+export const D3: "a" | "b" | "c" = "b"
 // Por qué (y cuál sería la firma mínima sin genérico para esa función):
-
+// No sirve de nada pedir un parámetro de tipo y no usarlo.
+// El parámetro de tipo <T> captura/recuerda lo que entra. Y para este caso, no lo usamos.
+// firma mínima: function imprimir(x: unknown): void
+// <T>(x:T) -> acepta todo y recuerda que fue, pero aquí nadie usa el recuerdo -> hueco decorativo
+// (x: unknown) -> acepta todo sin recordar nada -> exactamente lo que esta función necesita, porque no hace nada con el tipo
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * PARTE E — Debugging: arregla la FIRMA, no el cuerpo
@@ -150,8 +158,8 @@ export const D3: "a" | "b" | "c" = "a" // ← pon "a", "b" o "c"
 //     compararla con `>`). Arregla SOLO la firma.
 //     Pista: en vez de `<T, K>`, piensa en `Record<K, number>`.
 //       maximoPor([{ n: "a", v: 1 }, { n: "b", v: 9 }], "v") → { n: "b", v: 9 }
-export function maximoPor<T, K>(arr: T[], clave: K): T | undefined {
-  return arr.reduce<T | undefined>((mejor, actual) => {
+export function maximoPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+  return arr.reduce<Objeto | undefined>((mejor, actual) => {
     if (mejor === undefined) {
       return actual
     }
@@ -159,3 +167,4 @@ export function maximoPor<T, K>(arr: T[], clave: K): T | undefined {
   }, undefined)
 }
 // Por qué el cuerpo obliga a que la propiedad sea `number` y no solo `keyof T`:
+// Requiere un number para poder hacer la comparación con >
