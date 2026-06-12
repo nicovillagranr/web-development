@@ -213,7 +213,9 @@ export function procesar(r: Respuesta): string {
     return "ERR: " + r.error
   }
 }
-
+procesar(null) // sin respuesta
+procesar({ ok: "listo" }) // OK: listo
+procesar({ error: "boom" }) // ERR: boom
 
 /* =============================================================================
  * BLOQUE E — el `null` en la vida real: el borde de una API (escalera)
