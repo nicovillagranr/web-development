@@ -158,7 +158,7 @@ export const D3: "a" | "b" | "c" = "b"
 //     compararla con `>`). Arregla SOLO la firma.
 //     Pista: en vez de `<T, K>`, piensa en `Record<K, number>`.
 //       maximoPor([{ n: "a", v: 1 }, { n: "b", v: 9 }], "v") → { n: "b", v: 9 }
-export function maximoPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function maximoPor<Objeto extends Record<Clave, number>, Clave extends string>(arr: Objeto[], clave: Clave): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
     if (mejor === undefined) {
       return actual
@@ -168,3 +168,4 @@ export function maximoPor<Objeto extends Record<Clave, number>, Clave extends ke
 }
 // Por qué el cuerpo obliga a que la propiedad sea `number` y no solo `keyof T`:
 // Requiere un number para poder hacer la comparación con >
+// keyof por sí solo no basta porque no sabe que es un number
