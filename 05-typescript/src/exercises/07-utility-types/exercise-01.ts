@@ -71,7 +71,7 @@ export type Coordenada = Record<"x" | "y", number>
 
 // 3) Fabrica `{ email: string; telefono: string }`. El Valor no tiene por qué
 //    ser number — aquí es string.
-export type Contacto = unknown
+export type Contacto = Record<"email" | "telefono", string>
 
 
 /* ---------------------------------------------------------------------------
@@ -105,26 +105,30 @@ export function conDescuento<Item extends Record<"precio", number>>(x: Item): nu
 //    👉 Aprieta los dos huecos con el dúo de arriba. Cuerpo intacto.
 //      leerNumero({ v: 7, n: "a" }, "v") → 7
 //      leerNumero({ v: 7, n: "a" }, "n") → ❌ "n" guarda string, no number
-export function leerNumero<Clave, Objeto>(obj: Objeto, clave: Clave): number {
+export function leerNumero<Objeto extends Record<Clave, number>, Clave extends string,>(obj: Objeto, clave: Clave): number {
   return obj[clave]
 }
+leerNumero({ a: 1, b: 2, c: 3 }, "a") // 1
 
 // 6) ¿La propiedad es positiva? AQUÍ está la respuesta al "Por qué" del E1:
 //    el cuerpo usa `>`, y `>` solo tiene sentido entre números — por eso el
 //    portero debe exigir number, no solo que la llave exista (keyof).
 //    👉 Mismo dúo.
 //      esPositivo({ stock: 3 }, "stock") → true ; ({ stock: 0 }, "stock") → false
-export function esPositivo<Clave, Objeto>(obj: Objeto, clave: Clave): boolean {
+export function esPositivo<Objeto extends Record<Clave, number>, Clave extends string>(obj: Objeto, clave: Clave): boolean {
   return obj[clave] > 0
 }
+esPositivo({ stock: 3 }, "stock") // true
+esPositivo({ stock: 0 }, "stock") // false
 
 // 7) Suma la columna `clave` de todos los objetos (tu alcancía de reduce:
 //    acumulador number, inicial 0). El `+` exige números igual que el `>`.
 //    👉 Mismo dúo. Fíjate que `arr` es `Objeto[]`.
 //      sumarColumna([{ v: 1 }, { v: 2 }], "v") → 3
-export function sumarColumna<Clave, Objeto>(arr: Objeto[], clave: Clave): number {
+export function sumarColumna<Objeto extends Record<Clave, number>, Clave extends string>(arr: Objeto[], clave: Clave): number {
   return arr.reduce((acum, obj) => acum + obj[clave], 0)
 }
+sumarColumna([{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }, { v: 5 }, { v: 6 }], "v") // 21
 
 // 8) CAPSTONE — `minimoPor`: el objeto con el MENOR valor en `clave`.
 //    Es el ESPEJO del E1 del parcial (aquél buscaba el mayor, este el menor).
@@ -133,7 +137,7 @@ export function sumarColumna<Clave, Objeto>(arr: Objeto[], clave: Clave): number
 //    👉 Mismo dúo; el retorno `Objeto | undefined` ya está (¿por qué
 //       `| undefined`? — mismo motivo que tu `buscarPor`: array vacío).
 //      minimoPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") → { n: "b", v: 1 }
-export function minimoPor<Clave, Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function minimoPor<Objeto extends Record<Clave, number>, Clave extends string>(arr: Objeto[], clave: Clave): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
     if (mejor === undefined) {
       return actual
@@ -141,3 +145,6 @@ export function minimoPor<Clave, Objeto>(arr: Objeto[], clave: Clave): Objeto | 
     return actual[clave] < mejor[clave] ? actual : mejor
   }, undefined)
 }
+minimoPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "b", v: 1 }
+minimoPor([], "v") // undefined
+minimoPor([{ n: "a", v: 3 }], "v") // undefined
