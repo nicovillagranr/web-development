@@ -22,6 +22,13 @@ import {
   activar,
   primerProducto,
   resumenConfig,
+  saludoG,
+  cantidadG,
+  textoG,
+  inicialG,
+  ciudadG,
+  inicialODefaultG,
+  ciudadODefaultG,
 } from './exercise-03'
 
 describe('exercise-03 — narrowing con objetos y null', () => {
@@ -150,5 +157,46 @@ describe('exercise-03 — narrowing con objetos y null', () => {
     expect(resumenConfig({ tema: { color: 'rojo' }, obtenerDescuento: () => 15 })).toBe('rojo / 15%')
     expect(resumenConfig({ tema: null, obtenerDescuento: () => 0 })).toBe('default / 0%')
     expect(resumenConfig({ tema: { color: 'azul' }, obtenerDescuento: null })).toBe('azul / 0%')
+  })
+
+  // BLOQUE G·1 — SOLO ?? (el respaldo)
+  it('G1) saludoG rellena el null con ??', () => {
+    expect(saludoG('Nico')).toBe('Nico')
+    expect(saludoG(null)).toBe('invitado')
+  })
+
+  it('G2) cantidadG respeta el 0 (?? no toca el 0, solo null)', () => {
+    expect(cantidadG(7)).toBe(7)
+    expect(cantidadG(0)).toBe(0)
+    expect(cantidadG(null)).toBe(0)
+  })
+
+  it('G3) textoG: ?? también caza undefined, no solo null', () => {
+    expect(textoG('hola')).toBe('hola')
+    expect(textoG(undefined)).toBe('(sin texto)')
+  })
+
+  // BLOQUE G·2 — SOLO ?. (acceso protegido): cuando corta, SALE undefined
+  it('G4) inicialG sin ?? devuelve undefined si el usuario es null', () => {
+    expect(inicialG({ nombre: 'Ana' })).toBe('Ana')
+    expect(inicialG(null)).toBeUndefined()
+  })
+
+  it('G5) ciudadG encadena ?. y devuelve undefined si algún eslabón corta', () => {
+    expect(ciudadG({ envio: { ciudad: 'Lima' } })).toBe('Lima')
+    expect(ciudadG({ envio: null })).toBeUndefined()
+    expect(ciudadG(null)).toBeUndefined()
+  })
+
+  // BLOQUE G·3 — JUNTOS (el relevo): ?. produce undefined, ?? lo recoge
+  it('G6) inicialODefaultG: el ?? recoge el undefined que dejó el ?.', () => {
+    expect(inicialODefaultG({ nombre: 'Ana' })).toBe('Ana')
+    expect(inicialODefaultG(null)).toBe('anónimo')
+  })
+
+  it('G7) ciudadODefaultG: un solo ?? tapa cualquier corte de la cadena', () => {
+    expect(ciudadODefaultG({ envio: { ciudad: 'Lima' } })).toBe('Lima')
+    expect(ciudadODefaultG({ envio: null })).toBe('sin ciudad')
+    expect(ciudadODefaultG(null)).toBe('sin ciudad')
   })
 })

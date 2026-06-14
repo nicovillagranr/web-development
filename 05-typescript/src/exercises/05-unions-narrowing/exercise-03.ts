@@ -340,7 +340,7 @@ export function etiquetaPrecio(p: Producto | null): string {
   if (p === null) {
     return "No disponible"
   }
-  const precio = precioFinal(p) // Se llama a una función que ya maneja el caso del descuento null, así que no hace falta chequearlo aquí
+  const precio = precioFinal(p)
   return `$${precio.toFixed(2)}`
 }
 etiquetaPrecio(null) // "No disponible"
@@ -471,3 +471,118 @@ export function resumenConfig(c: Configuracion): string {
 resumenConfig({ tema: { color: "rojo" }, obtenerDescuento: () => 15 }) // "rojo / 15%"
 resumenConfig({ tema: null, obtenerDescuento: () => 0 })               // "default / 0%"
 resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     // "azul / 0%"
+
+/* =============================================================================
+ * BLOQUE G — los DOS trabajos de `?.` y `??`, POR SEPARADO y luego juntos
+ * =============================================================================
+ *
+ * 🟢 POR QUÉ EXISTE ESTE BLOQUE
+ * ----------------------------------------------------------------------------
+ * Hasta ahora SIEMPRE los usaste pegados (`s.usuario?.nombre ?? "invitado"`),
+ * así que tu mente los lee como UN solo operador. No lo son. Hacen dos trabajos
+ * distintos y aquí los vas a usar uno SIN el otro para sentir la diferencia.
+ *
+ *
+ * ▸ LOS DOS TRABAJOS (la idea entera del bloque, en dos frases)
+ * ----------------------------------------------------------------------------
+ *   `?.`  = ACCESO PROTEGIDO. "Voy a leer algo de la izquierda; si la izquierda
+ *           es null/undefined, NO leo y dejo `undefined` en su lugar."
+ *           → su producto cuando corta es SIEMPRE `undefined`. No pone respaldos.
+ *
+ *   `??`  = RESPALDO. "Miro lo de mi izquierda; si es null/undefined, lo cambio
+ *           por el valor de respaldo; si no, lo dejo tal cual."
+ *           → no accede a nada, no protege nada. Solo rellena huecos.
+ *
+ *   El RELEVO: cuando van juntos, `?.` corre la posta y produce un `undefined`;
+ *   `??` lo recoge en la meta y lo cambia por el respaldo. Por eso `obj?.x ?? y`
+ *   nunca devuelve undefined: el `?.` genera el undefined y el `??` lo tapa.
+ *
+ *
+ * ▸ EJERCICIO — escalera, EN ORDEN. Borra el `throw` y completa.
+ *   ❌ Prohibido `any`, `as` y `if`. ❌ En G·1 NO uses `?.`. ❌ En G·2 NO uses `??`.
+ * ===========================================================================*/
+
+
+/* ---------------------------------------------------------------------------
+ * G·1 — SOLO `??` (el respaldo). El valor YA puede ser null por sí mismo, no hay
+ * nada anidado que proteger → aquí `?.` no pinta nada. Usa únicamente `??`.
+ * -------------------------------------------------------------------------- */
+
+// G1) `saludoG` — recibe un nombre que puede faltar (null). Devuelve el nombre,
+//     o "invitado" si es null. Una línea: `nombre ?? respaldo`.
+//       saludoG("Nico") → "Nico" ; saludoG(null) → "invitado"
+export function saludoG(nombre: string | null): string {
+  // Nombre es un string o es un null? Para eso usa `??`.
+  return nombre ?? "invitado"
+}
+
+// G2) `cantidadG` — una cantidad que puede ser null. Devuélvela, o 0 si es null.
+//     TRAMPA: una cantidad de 0 es un dato REAL (no es lo mismo que "no hay dato").
+//     `??` solo reacciona a null/undefined, así que el 0 se respeta. (Con `||` se
+//     rompería: 0 es falsy y lo pisaría.)
+//       cantidadG(7) → 7 ; cantidadG(0) → 0 ; cantidadG(null) → 0
+export function cantidadG(n: number | null): number {
+  return n ?? 0
+}
+
+// G3) `textoG` — ahora lo que puede faltar viene como `undefined` (no null).
+//     Devuelve el texto, o "(sin texto)". Comprueba que `??` caza undefined IGUAL
+//     que null: son los dos únicos casos que dispara.
+//       textoG("hola") → "hola" ; textoG(undefined) → "(sin texto)"
+export function textoG(t: string | undefined): string {
+  return t ?? "(sin texto)"
+}
+
+
+/* ---------------------------------------------------------------------------
+ * G·2 — SOLO `?.` (el acceso protegido), SIN `??`. Mira el tipo de RETORNO:
+ * termina en `| undefined`. Eso no es un descuido — es la PRUEBA de que cuando
+ * `?.` corta, lo que sale de la función es, literalmente, `undefined`.
+ * -------------------------------------------------------------------------- */
+
+type UsuarioG = { nombre: string }
+
+// G4) `inicialG` — el usuario puede ser null. Devuelve su `nombre`... pero SIN
+//     respaldo. Si el usuario es null, `?.` corta y la función devuelve `undefined`
+//     (por eso el retorno es `string | undefined`). Esto es `?.` desnudo: protege
+//     el acceso y no rellena nada.
+//       inicialG({ nombre: "Ana" }) → "Ana" ; inicialG(null) → undefined
+export function inicialG(u: UsuarioG | null): string | undefined {
+  return u?.nombre
+}
+
+type EnvioG = { envio: { ciudad: string } | null }
+// G5) `ciudadG` — dos eslabones que pueden ser null: el objeto entero y su `envio`.
+//     Encadena dos `?.` (uno por salto peligroso), todavía SIN `??`. Si cualquier
+//     eslabón corta → `undefined`.
+//       ciudadG({ envio: { ciudad: "Lima" } }) → "Lima"
+//       ciudadG({ envio: null })               → undefined
+//       ciudadG(null)                          → undefined
+export function ciudadG(p: EnvioG | null): string | undefined {
+  return p?.envio?.ciudad
+}
+
+
+/* ---------------------------------------------------------------------------
+ * G·3 — JUNTOS (el relevo). Son los GEMELOS de G4 y G5, pero ahora sí pones el
+ * `??` al final. Compara el tipo de retorno: ya no hay `| undefined`, porque el
+ * `??` recoge el undefined que produce el `?.` y lo cambia por el respaldo.
+ * -------------------------------------------------------------------------- */
+
+// G6) `inicialODefaultG` — gemelo de G4 + respaldo. `?.` genera el undefined cuando
+//     el usuario es null; `??` lo recoge y entrega "anónimo". Retorno: `string` a
+//     secas (ya nunca sale undefined).
+//       inicialODefaultG({ nombre: "Ana" }) → "Ana" ; inicialODefaultG(null) → "anónimo"
+export function inicialODefaultG(u: UsuarioG | null): string {
+  return u?.nombre ?? "anónimo"
+}
+
+// G7) `ciudadODefaultG` — gemelo de G5 + respaldo. La cadena de `?.` puede cortar
+//     en dos sitios; pase lo que pase produce undefined, y un único `??` al final
+//     lo tapa con "sin ciudad".
+//       ciudadODefaultG({ envio: { ciudad: "Lima" } }) → "Lima"
+//       ciudadODefaultG({ envio: null })               → "sin ciudad"
+//       ciudadODefaultG(null)                          → "sin ciudad"
+export function ciudadODefaultG(p: EnvioG | null): string {
+  return p?.envio?.ciudad ?? "sin ciudad"
+}
