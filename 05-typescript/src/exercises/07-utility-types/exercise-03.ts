@@ -51,6 +51,13 @@
 //    ya están; el cuerpo del bucle está VACÍO. Escribe la coronación: si el
 //    retador supera al campeón, písalo.
 //      mayorBucle([3, 1, 2]) → 3 ; mayorBucle([5]) → 5
+
+// infinity = el número más grande posible
+// -infinity = el número más pequeño posible
+
+// Esta función recibe un array de números. Se define una variable mayor que es el número más pequeño posible para hacer una comparación.
+// Se saca cada valor del array y se compara con el mayor. Si el valor es mayor que el mayor, se reemplaza el mayor por el valor actual.
+// Cuando se termina de recorrer todo el array de numbers, se devuelve el mayor.
 export function mayorBucle(nums: number[]): number {
   let mayor = -Infinity
   for (const valor of nums) {
@@ -68,9 +75,11 @@ mayorBucle([3, 1, 2]) // El mayor del bucle es 3
 //    y la coronación dentro del bucle.
 //      menorBucle([3, 1, 2]) → 1 ; menorBucle([5]) → 5
 export function menorBucle(nums: number[]): number {
-  let menor = Infinity // tope para un mínimo: cualquiera lo vence
+  let menor = Infinity
   for (const valor of nums) {
-    if (valor < menor) menor = valor
+    if (valor < menor) {
+      menor = valor
+    }
   }
   return menor
 }
@@ -82,7 +91,9 @@ export function menorBucle(nums: number[]): number {
 export function masLargaBucle(palabras: string[]): string {
   let masLarga = ""
   for (const palabra of palabras) {
-    if (palabra.length > masLarga.length) masLarga = palabra
+    if (palabra.length > masLarga.length) {
+      masLarga = palabra
+    }
   }
   return masLarga
 }
