@@ -165,25 +165,45 @@ type Producto = { nombre: string; precio: number }
 //      masBarato([{nombre:"a",precio:30},{nombre:"b",precio:10}]) → {nombre:"b",precio:10}
 //      masBarato([]) → undefined
 export function masBarato(productos: Producto[]): Producto | undefined {
-  return productos[0]
+  return productos.reduce<Producto | undefined>((acum, valor) => {
+    if (acum === undefined) {
+      return valor
+    }
+    return valor.precio < acum.precio ? valor : acum
+  }, undefined)
 }
+masBarato([{ nombre: "Coca Cola", precio: 100 }, { nombre: "Pepsi", precio: 30 }]) // resultado: { nombre: "Pepsi", precio: 30 }
+masBarato([
+  { nombre: "Papas Lays", precio: 50 },
+  { nombre: "Pepsi", precio: 30 },
+  { nombre: "Coca Cola", precio: 100 }])
+// resultado: { nombre: "Pepsi", precio: 30}
 
 // 10) `masCaro` — el producto de MAYOR precio, o undefined. Espejo del 9:
 //     cambia solo la comparación.
 //      masCaro([{nombre:"a",precio:30},{nombre:"b",precio:10}]) → {nombre:"a",precio:30}
 export function masCaro(productos: Producto[]): Producto | undefined {
-  return productos[0]
+  return productos.reduce<Producto | undefined>((acum, valor) => {
+    if (acum === undefined) {
+      return valor
+    }
+    return valor.precio > acum.precio ? valor : acum
+  }, undefined)
 }
 
 type Jugador = { nombre: string; vidas: number }
-
 // 11) `conMenosVidas` — el jugador con MENOS vidas, o undefined. Mismo patrón
 //     que el 9, otro contexto: ahora la propiedad numérica se llama `vidas`.
 //      conMenosVidas([{nombre:"ana",vidas:3},{nombre:"leo",vidas:1}]) → {nombre:"leo",vidas:1}
 export function conMenosVidas(jugadores: Jugador[]): Jugador | undefined {
-  return jugadores[0]
+  return jugadores.reduce<Jugador | undefined>((acum, valor) => {
+    if (acum === undefined) {
+      return valor
+    }
+    return valor.vidas < acum.vidas ? valor : acum
+  }, undefined)
 }
-
+conMenosVidas([{ nombre: "Joel", vidas: 3 }, { nombre: "Ellie", vidas: 1 }]) // resultado: { nombre: "Ellie", vidas: 1 }
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — la clave VARIABLE: el dúo genérico (esto YA es el drill 8 de ex-01)
@@ -198,19 +218,26 @@ export function conMenosVidas(jugadores: Jugador[]): Jugador | undefined {
 // 12) `menorPor` — el objeto con el MENOR valor en la columna `clave`. Es el
 //     GEMELO exacto de exercise-01 drill 8 (`minimoPor`). Aprieta la firma.
 //      menorPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"b",v:1}
-export function menorPor<Clave, Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function menorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
-    if (mejor === undefined) return actual
+    if (mejor === undefined) {
+      return actual
+    }
     return actual[clave] < mejor[clave] ? actual : mejor
   }, undefined)
 }
+menorPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "b", v: 1 }
+menorPor([], "v") // undefined
 
 // 13) `mayorPor` — el objeto con el MAYOR valor en `clave`. Es el ESPEJO: el
 //     mismísimo `maximoPor` del E1 del parcial. Mismo dúo, cuerpo con `>`.
 //      mayorPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"a",v:3}
-export function mayorPor<Clave, Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function mayorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
-    if (mejor === undefined) return actual
+    if (mejor === undefined) {
+      return actual
+    }
     return actual[clave] > mejor[clave] ? actual : mejor
   }, undefined)
 }
+mayorPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "a", v: 3 }

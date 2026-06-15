@@ -147,4 +147,125 @@ export function minimoPor<Objeto extends Record<Clave, number>, Clave extends st
 }
 minimoPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "b", v: 1 }
 minimoPor([], "v") // undefined
-minimoPor([{ n: "a", v: 3 }], "v") // undefined
+minimoPor([{ n: "a", v: 3 }], "v") // { n: "a", v: 3 }
+
+
+/* ---------------------------------------------------------------------------
+ * BLOQUE D — refuerzo del drill 8: el CAMPEÓN-OBJETO genérico, en 3 tramos
+ * ---------------------------------------------------------------------------
+ * El drill 8 junta DOS cosas difíciles a la vez y por eso se hace bola:
+ *   (1) la LÓGICA del campeón con inicial `undefined` (el reduce que arrastra
+ *       "el mejor hasta ahora", con portero del primer turno), y
+ *   (2) la FIRMA genérica (el dúo `<Objeto extends Record<Clave, number>,
+ *       Clave extends string>`).
+ * Aquí las separamos y luego las reunimos:
+ *   D·1 (D1–D2): tipos FIJOS, tú escribes el CUERPO  → practicas (1) sin (2).
+ *   D·2 (D3–D4): cuerpo DADO, tú aprietas la FIRMA   → practicas (2) sin (1).
+ *   D·3 (D5–D6): de cero, firma Y cuerpo             → el drill 8 entero.
+ *
+ * El patrón del CUERPO, siempre el mismo (apréndetelo como un gesto):
+ *     arr.reduce<T | undefined>((mejor, actual) => {
+ *       if (mejor === undefined) return actual   // 1er turno: no hay rival aún
+ *       return actual.<campo> <  mejor.<campo> ? actual : mejor   // ← o > para máx
+ *     }, undefined)
+ * ❌ Prohibido `any` y `as`.
+ * -------------------------------------------------------------------------- */
+
+
+/* ── D·1 — tipos FIJOS: tú escribes el CUERPO (la lógica del campeón) ── */
+
+type Paquete = { codigo: string; peso: number }
+
+// D1) `masPesado` — el paquete de MAYOR `peso`, o undefined si la lista está vacía.
+//     Tipos ya fijos (cero genéricos): concéntrate SOLO en el cuerpo campeón.
+//     El starter devuelve el primero (mal). Escribe el reduce con inicial undefined.
+//       masPesado([{codigo:"a",peso:2},{codigo:"b",peso:5}]) → {codigo:"b",peso:5}
+//       masPesado([]) → undefined
+export function masPesado(paquetes: Paquete[]): Paquete | undefined {
+  return paquetes.reduce<Paquete | undefined>((acum, paquete) => {
+    if (acum === undefined) {
+      return paquete
+    }
+    return paquete.peso > acum.peso ? paquete : acum
+  }, undefined)
+}
+masPesado([{ codigo: "a", peso: 2 }, { codigo: "b", peso: 5 }]) // {codigo:"b",peso:5} porque la función pide el paquete con mayor peso
+masPesado([]) // undefined
+masPesado([{ codigo: "solo", peso: 9 }]) // {codigo:"solo",peso:9}
+masPesado([{ codigo: "a", peso: 2 }, { codigo: "b", peso: 5 }, { codigo: "solo", peso: 9 }]) // {codigo:"solo",peso:9}s
+
+// D2) `masLigero` — el de MENOR `peso`, o undefined. Espejo del D1: cambia el `>`
+//     por `<`. Mismo tipo Paquete, mismo molde.
+//       masLigero([{codigo:"a",peso:2},{codigo:"b",peso:5}]) → {codigo:"a",peso:2}
+//       masLigero([]) → undefined
+export function masLigero(paquetes: Paquete[]): Paquete | undefined {
+  return paquetes.reduce<Paquete | undefined>((acum, paquete) => {
+    if (acum === undefined) {
+      return paquete
+    }
+    return paquete.peso < acum.peso ? paquete : acum
+  }, undefined)
+}
+masLigero([{ codigo: "a", peso: 2 }, { codigo: "b", peso: 5 }]) // {codigo:"a",peso:2}
+masLigero([]) // undefined
+
+/* ── D·2 — cuerpo DADO: tú aprietas la FIRMA (el dúo genérico) ── */
+
+// D3) `maximoPorD` — el objeto con MAYOR valor en `clave`. El CUERPO ya está bien
+//     escrito (es el campeón del D1, pero genérico). Lo único flojo es la firma:
+//     `<Clave, Objeto>` no exige nada → typecheck ROJO (TS2536, "Clave no indexa
+//     Objeto"). Apriétala con el dúo y el rojo desaparece.
+//       maximoPorD([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"a",v:3}
+export function maximoPorD<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+  return arr.reduce<Objeto | undefined>((mejor, actual) => {
+    if (mejor === undefined) {
+      return actual
+    }
+    return actual[clave] > mejor[clave] ? actual : mejor
+  }, undefined)
+}
+// La función recibe un array de objetos
+maximoPorD([{ n: "a", v: 3 }, { n: "b", v: 1 }, { n: "c", v: 2 }], "v") // {n:"a",v:3} Porque el v de "a" es 3, el de "b" es 1 y el de "c" es 2
+maximoPorD([], "v") // undefined
+
+// D4) `minimoPorD` — el objeto con MENOR valor en `clave`. Mismo caso que D3 con
+//     `<`. Aprieta la misma firma.
+//       minimoPorD([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"b",v:1}
+export function minimoPorD<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+  return arr.reduce<Objeto | undefined>((acum, actual) => {
+    if (acum === undefined) return actual
+    return actual[clave] < acum[clave] ? actual : acum
+  }, undefined)
+}
+minimoPorD([{ n: "a", v: 3 }, { n: "b", v: 1 }, { n: "c", v: 2 }], "v") // {n:"b",v:1}
+minimoPorD([], "v") // undefined
+
+/* ── D·3 — de CERO: firma Y cuerpo (el drill 8 completo) ── */
+
+// D5) `maxPor` — el objeto con MAYOR valor en `clave`, o undefined. Sin red:
+//     escribe TÚ la firma (el dúo) y el cuerpo (el campeón con inicial undefined).
+//     El starter devuelve el primero → test rojo hasta que lo hagas.
+//       maxPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"a",v:3}
+//       maxPor([], "v") → undefined
+export function maxPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+  return arr.reduce<Objeto | undefined>((acum, valor) => {
+    if (acum === undefined) {
+      return valor
+    }
+    return valor[clave] > acum[clave] ? valor : acum
+  }, undefined)
+}
+
+// D6) CAPSTONE — `minPor` — el objeto con MENOR valor en `clave`, o undefined.
+//     Igual que D5 con `<`. Es, letra por letra, el drill 8 (`minimoPor`) hecho
+//     de memoria. Si te sale solo, lo tienes consolidado.
+//       minPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"b",v:1}
+//       minPor([], "v") → undefined
+export function minPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+  return arr.reduce<Objeto | undefined>((acum, valor) => {
+    if (acum === undefined) {
+      return valor
+    }
+    return valor[clave] < acum[clave] ? valor : acum
+  }, undefined)
+}

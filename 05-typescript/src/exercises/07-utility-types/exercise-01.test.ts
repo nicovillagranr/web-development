@@ -8,6 +8,12 @@ import {
   esPositivo,
   sumarColumna,
   minimoPor,
+  masPesado,
+  masLigero,
+  maximoPorD,
+  minimoPorD,
+  maxPor,
+  minPor,
 } from './exercise-01'
 
 describe('07-utility-types / exercise-01 — Record', () => {
@@ -63,5 +69,52 @@ describe('07-utility-types / exercise-01 — Record', () => {
     expect(minimoPor(vacio, 'v')).toBeUndefined()
     // @ts-expect-error — "n" guarda string: no hay "menor" entre no-números
     minimoPor([{ n: 'a', v: 3 }], 'n')
+  })
+
+  /* ── BLOQUE D·1 — tipos fijos, cuerpo del campeón ── */
+
+  it('D1) masPesado devuelve el paquete de mayor peso, o undefined', () => {
+    expect(masPesado([{ codigo: 'a', peso: 2 }, { codigo: 'b', peso: 5 }])).toEqual({ codigo: 'b', peso: 5 })
+    expect(masPesado([{ codigo: 'solo', peso: 9 }])).toEqual({ codigo: 'solo', peso: 9 })
+    expect(masPesado([])).toBeUndefined()
+  })
+
+  it('D2) masLigero devuelve el paquete de menor peso, o undefined', () => {
+    // el más ligero NO es el primero, para que un starter `return paquetes[0]` falle
+    expect(masLigero([{ codigo: 'b', peso: 5 }, { codigo: 'a', peso: 2 }])).toEqual({ codigo: 'a', peso: 2 })
+    expect(masLigero([])).toBeUndefined()
+  })
+
+  /* ── BLOQUE D·2 — cuerpo dado, apretar la firma genérica ── */
+
+  it('D3) maximoPorD devuelve el objeto con mayor valor en la clave', () => {
+    expect(maximoPorD([{ n: 'a', v: 3 }, { n: 'b', v: 1 }], 'v')).toEqual({ n: 'a', v: 3 })
+    expect(maximoPorD([], 'v')).toBeUndefined()
+    // @ts-expect-error — "n" guarda string: no hay "mayor" entre no-números
+    maximoPorD([{ n: 'a', v: 3 }], 'n')
+  })
+
+  it('D4) minimoPorD devuelve el objeto con menor valor en la clave', () => {
+    expect(minimoPorD([{ n: 'a', v: 3 }, { n: 'b', v: 1 }], 'v')).toEqual({ n: 'b', v: 1 })
+    expect(minimoPorD([], 'v')).toBeUndefined()
+    // @ts-expect-error — "n" guarda string: no hay "menor" entre no-números
+    minimoPorD([{ n: 'a', v: 3 }], 'n')
+  })
+
+  /* ── BLOQUE D·3 — de cero: firma Y cuerpo (el drill 8 completo) ── */
+
+  it('D5) maxPor: firma y cuerpo de cero (máximo)', () => {
+    // el máximo NO es el primero, para que un starter `return arr[0]` falle
+    expect(maxPor([{ n: 'b', v: 1 }, { n: 'a', v: 3 }], 'v')).toEqual({ n: 'a', v: 3 })
+    expect(maxPor([], 'v')).toBeUndefined()
+    // @ts-expect-error — "n" guarda string
+    maxPor([{ n: 'a', v: 3 }], 'n')
+  })
+
+  it('D6) minPor: el drill 8 de memoria (mínimo)', () => {
+    expect(minPor([{ n: 'a', v: 3 }, { n: 'b', v: 1 }], 'v')).toEqual({ n: 'b', v: 1 })
+    expect(minPor([], 'v')).toBeUndefined()
+    // @ts-expect-error — "n" guarda string
+    minPor([{ n: 'a', v: 3 }], 'n')
   })
 })
