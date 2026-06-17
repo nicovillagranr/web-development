@@ -40,6 +40,9 @@ Thumbs.db
 # Librería de iconos local — se mantiene en disco como recurso, no se versiona (infla el repo)
 03-css/00-assets/icons/
 
+# Librería de fuentes local — mismo criterio que los iconos: recurso re-descargable, no se versiona (~464 MB)
+03-css/00-assets/fonts/
+
 # Assets pesados del curso 3D (Three.js Journey) — re-descargables, se quedan en disco pero no se versionan (inflaban el repo ~1 GB)
 04-javascript/05-libraries/3D/**/*.hdr
 04-javascript/05-libraries/3D/**/*.exr
