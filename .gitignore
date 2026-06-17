@@ -37,6 +37,9 @@ Thumbs.db
 !.vscode/*.code-snippets
 .idea/
 
+# Librería de iconos local — se mantiene en disco como recurso, no se versiona (infla el repo)
+03-css/00-assets/icons/
+
 # Archivos generados por asistentes de IA — no aportan al código del proyecto
 **/.agent/
 **/.agents/
