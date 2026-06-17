@@ -30,7 +30,6 @@ en piezas listas para un portfolio profesional.
 - `08-projects/`: Applied projects / Proyectos aplicados.
 - `09-docker/`: Docker guides and material / Guías y material de Docker.
 - `10-claudeCode/`: Claude Code notes and experiments / Notas y experimentos con Claude Code.
-- `portfolio/`: Portfolio site / Sitio de portfolio.
 - `scripts/`: Utility scripts for repo maintenance / Scripts de utilidad para mantenimiento del repo.
 
 ## Working Rules / Reglas de trabajo
