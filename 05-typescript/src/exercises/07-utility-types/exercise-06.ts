@@ -58,8 +58,9 @@ type Punto = { x: number; y: number }
 //       el resultado NO es el mismo objeto (otra caja, mismo contenido).
 //      copiar({ x: 3, y: 4 }) → { x: 3, y: 4 }  (pero es un objeto distinto)
 export function copiar(punto: Punto): Punto {
-  return punto
+  return { ...punto }
 }
+copiar({ x: 3, y: 4 }) // Al usar spread devuelve una copia del original
 
 // 2) `combinar` — copia `a` y pisa con `b` encima. Si los dos traen `x`,
 //    gana el `x` de `b` (va a la derecha).
@@ -67,17 +68,18 @@ export function copiar(punto: Punto): Punto {
 //      combinar({ x: 0, y: 0 }, { x: 5, y: 9 }) → { x: 5, y: 9 }
 //      combinar({ x: 1, y: 1 }, { x: 2, y: 2 }) → { x: 2, y: 2 }  (gana b)
 export function combinar(a: Punto, b: Punto): Punto {
-  return a
+  return { ...a, ...b }
 }
+combinar({ x: 0, y: 0 }, { x: 5, y: 9 }) // En este caso la función pide recibir 2 parámetros tipo Punto que reciben 2 argumentos. Punto es un objeto.
 
 // 3) `combinarTres` — encadena tres: `a`, luego `b` encima, luego `c` encima.
 //    Gana SIEMPRE el último que toca cada propiedad.
 //    👉 El starter ignora `b` y `c`. Encadena los tres spreads.
 //      combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 }) → { x: 9, y: 9 }
 export function combinarTres(a: Punto, b: Punto, c: Punto): Punto {
-  return a
+  return { ...a, ...b, ...c }
 }
-
+combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 })
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — el `Partial` a solas (piso de los TIPOS)
@@ -97,7 +99,7 @@ export function combinarTres(a: Punto, b: Punto, c: Punto): Punto {
 //      tomarParcial({})             → {}
 //      tomarParcial({ x: 5, y: 9 }) → { x: 5, y: 9 }
 export function tomarParcial(p: Punto): Partial<Punto> {
-  return p
+  return { ...p }
 }
 
 // 5) `combinarParciales` — junta DOS parches parciales. Fíjate bien en el
