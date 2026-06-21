@@ -98,9 +98,12 @@ combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 })
 //      tomarParcial({ x: 5 })       → { x: 5 }
 //      tomarParcial({})             → {}
 //      tomarParcial({ x: 5, y: 9 }) → { x: 5, y: 9 }
-export function tomarParcial(p: Punto): Partial<Punto> {
+export function tomarParcial(p: Partial<Punto>): Partial<Punto> {
   return { ...p }
 }
+tomarParcial({ x: 5 }) // Resultado: { x: 5 } // Partial lo acepta
+tomarParcial({}) // Resultado: {} // Partial lo acepta
+tomarParcial({ x: 5, y: 9 }) // Resultado: { x: 5, y: 9 } // Partial lo acepta
 
 // 5) `combinarParciales` — junta DOS parches parciales. Fíjate bien en el
 //    retorno: como NO hay base debajo, el resultado puede seguir incompleto
@@ -112,9 +115,10 @@ export function tomarParcial(p: Punto): Partial<Punto> {
 //      combinarParciales({ x: 5 }, { y: 9 }) → { x: 5, y: 9 }
 //      combinarParciales({ x: 1 }, { x: 2 }) → { x: 2 }   (gana el último)
 //      combinarParciales({}, { y: 7 })       → { y: 7 }
-export function combinarParciales(p1: Punto, p2: Punto): Partial<Punto> {
-  return p1
+export function combinarParciales(p1: Partial<Punto>, p2: Partial<Punto>): Partial<Punto> {
+  return { ...p1, ...p2 }
 }
+combinarParciales({ x: 5 }, { y: 9 })
 
 
 /* ---------------------------------------------------------------------------
@@ -135,9 +139,11 @@ export function combinarParciales(p1: Punto, p2: Punto): Partial<Punto> {
 //       (ahora ignora el parche).
 //      aplicarUnParche({ x: 0, y: 0 }, { x: 5 }) → { x: 5, y: 0 }  (y la pone la base)
 //      aplicarUnParche({ x: 3, y: 4 }, {})       → { x: 3, y: 4 }  (parche vacío: base intacta)
-export function aplicarUnParche(base: Punto, parche: Punto): Punto {
-  return base
+export function aplicarUnParche(base: Punto, parche: Partial<Punto>): Punto {
+  return { ...base, ...parche }
 }
+// Resultado: {x: 5, y: 0}. Al aplicar un parche parcial, se pueden recibir parciales
+aplicarUnParche({ x: 0, y: 0 }, { x: 5 })
 
 type Caja = { ancho: number; alto: number; color: string }
 
@@ -146,9 +152,11 @@ type Caja = { ancho: number; alto: number; color: string }
 //    👉 Mismos dos arreglos que el 6.
 //      aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" })
 //        → { ancho: 10, alto: 5, color: "azul" }
-export function aplicarUnParcheCaja(base: Caja, parche: Caja): Caja {
-  return base
+export function aplicarUnParcheCaja(base: Caja, parche: Partial<Caja>): Caja {
+  return { ...base, ...parche }
 }
+// Resultado: {ancho: 20, alto: 20, color: "azul"}
+aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" })
 
 
 /* ---------------------------------------------------------------------------
@@ -164,6 +172,8 @@ export function aplicarUnParcheCaja(base: Caja, parche: Caja): Caja {
 //       spreads en orden.
 //      aplicarDosParchesBis({ x: 0, y: 0 }, { x: 5 }, { y: 9 }) → { x: 5, y: 9 }
 //      aplicarDosParchesBis({ x: 0, y: 0 }, { x: 1 }, { x: 2 }) → { x: 2, y: 0 }  (gana el último)
-export function aplicarDosParchesBis(base: Punto, p1: Punto, p2: Punto): Punto {
-  return base
+export function aplicarDosParchesBis(base: Punto, p1: Partial<Punto>, p2: Partial<Punto>): Punto {
+  return { ...base, ...p1, ...p2 }
 }
+// Resultado: {x: 5, y: 9}
+aplicarDosParchesBis({ x: 0, y: 0 }, { x: 5 }, { y: 9 })
