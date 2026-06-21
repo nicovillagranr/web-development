@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Snapshot de datos generado en build (red de seguridad del fetch a la API).
+# Se regenera en cada `pnpm build`; no tiene sentido versionarlo.
+public/data-snapshot.json
+
 # Env files (la URL es pública pero no se commitea el .env real)
 .env
 .env.*

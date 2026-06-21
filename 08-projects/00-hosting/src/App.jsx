@@ -9,7 +9,7 @@ import Footer from "@/Components/Footer/Footer";
 import ErrorBoundary from "@/Components/ErrorBoundary/ErrorBoundary";
 
 import { THEME_KEY } from "./data/storageKeys";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { usePortfolioData } from "@/hooks/usePortfolioDataWithFallback";
 
 export default function App() {
 
