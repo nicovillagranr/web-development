@@ -61,23 +61,23 @@ interface ProductoConId extends Producto {
 //       (copia el producto pero se olvida del id).
 //      crear({ nombre: "Té", precio: 1000, categoria: "bebida" }, 7)
 //        → { nombre: "Té", precio: 1000, categoria: "bebida", id: 7 }
-export function crear(p: Producto, id: number): Producto {
-  return {}
+export function crear(p: Producto, id: number): ProductoConId {
+  return { ...p, id }
 }
 
 // 2) `esBebida` — true si la categoría es "bebida".
 //    👉 Dos arreglos: el tipo del parámetro (ahora `string`: acepta categorías
 //       inventadas) y el cuerpo (devuelve false siempre).
 //      esBebida("bebida") → true     esBebida("snack") → false
-export function esBebida(c: string): boolean {
-  return false
+export function esBebida(c: Categoria): boolean {
+  return c === "bebida"
 }
 
 // 3) `descripcion` — "<nombre>: $<precio>".
 //    👉 UN arreglo: el cuerpo (el starter solo devuelve el nombre).
 //      descripcion({ nombre: "Té", precio: 1000, categoria: "bebida" }) → "Té: $1000"
 export function descripcion(p: Producto): string {
-  return ""
+  return `${p.nombre}: $${p.precio}`
 }
 
 
@@ -90,10 +90,11 @@ export function descripcion(p: Producto): string {
 //       lista entera sin filtrar).
 //      porCategoria([{...id:1, categoria:"bebida"}, {...id:2, categoria:"snack"}], "bebida")
 //        → [ el de id 1 ]
-export function porCategoria(productos: ProductoConId[], cat: string): ProductoConId[] {
-  return []
+export function porCategoria(productos: ProductoConId[], cat: Categoria): ProductoConId[] {
+  return productos.filter((p) => p.categoria === cat)
 }
-
+// return: el de id 1
+porCategoria([{ nombre: "Té", precio: 1000, categoria: "bebida", id: 1 }, { nombre: "Papas", precio: 800, categoria: "snack", id: 2 }], "bebida")
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: oferta = categoría + precio máximo, devuelve nombres
@@ -106,13 +107,9 @@ export function porCategoria(productos: ProductoConId[], cat: string): ProductoC
 //    `precioMax`.
 //    👉 Dos arreglos: el tipo de retorno (ahora `ProductoConId[]`) y el cuerpo
 //       (no filtra ni se queda con el nombre).
-//      ofertasDe([{ id:1, nombre:"Té", precio:1000, categoria:"bebida" },
-//                 { id:2, nombre:"Cola", precio:2000, categoria:"bebida" }], "bebida", 1500)
-//        → ["Té"]
-export function ofertasDe(
-  productos: ProductoConId[],
-  cat: Categoria,
-  precioMax: number,
-): ProductoConId[] {
-  return []
+//      ofertasDe([{ id:1, nombre:"Té", precio:1000, categoria:"bebida" }, { id:2, nombre:"Cola", precio:2000, categoria:"bebida" }], "bebida", 1500) → ["Té"]
+export function ofertasDe(productos: ProductoConId[], cat: Categoria, precioMax: number): string[] {
+  return productos.filter((producto) => producto.categoria === cat && producto.precio <= precioMax).map((producto) => producto.nombre)
 }
+// return: ["Té"] porque su precio está por debajo del precioMax
+ofertasDe([{ id: 1, nombre: "Té", precio: 1000, categoria: "bebida" }, { id: 2, nombre: "Cola", precio: 2000, categoria: "bebida" }], "bebida", 1500)

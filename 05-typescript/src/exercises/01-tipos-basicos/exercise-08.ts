@@ -45,7 +45,7 @@
  * ===========================================================================*/
 
 
-const ROLES = ["admin", "editor", "lector"]
+const ROLES = ["admin", "editor", "lector"] as const
 type Rol = (typeof ROLES)[number]
 
 /* ---------------------------------------------------------------------------
@@ -61,8 +61,11 @@ type Rol = (typeof ROLES)[number]
 //       los tres literales y deje de aceptar basura como "jefe"; y escribe el cuerpo.
 //      esAdmin("admin") → true     esAdmin("lector") → false
 export function esAdmin(r: Rol): boolean {
-  return false
+  return r === "admin"
 }
+esAdmin("admin") // retorna true
+esAdmin("lector") // retorna false
+// esAdmin("Nico") // no compila, porque "Nico" no está en ROLES
 
 
 const TALLAS = ["S", "M", "L", "XL"] as const
@@ -72,8 +75,13 @@ type Talla = (typeof TALLAS)[number]
 //    👉 Dos arreglos: el tipo del parámetro (ahora `string`: traga cualquier cosa)
 //       y el cuerpo (devuelve 0 siempre).
 //      recargoTalla("XL") → 500     recargoTalla("M") → 0
-export function recargoTalla(t: string): number {
-  return 0
+export function recargoTalla(t: Talla): number {
+  if (t === "XL") {
+    return 500
+  }
+  else {
+    return 0
+  }
 }
 
 
@@ -86,14 +94,21 @@ export function recargoTalla(t: string): number {
 
 // 3) `etiquetaRol` — nombre largo de cada rol.
 //      etiquetaRol("admin") → "Administrador"   etiquetaRol("lector") → "Lector"
-export function etiquetaRol(r: string): string {
-  return ""
+export function etiquetaRol(r: Rol): string {
+  switch (r) {
+    case "admin":
+      return "Administrador"
+    case "editor":
+      return "Editor"
+    case "lector":
+      return "Lector"
+  }
 }
 
 // 4) `esTallaGrande` — true para L y XL.
 //      esTallaGrande("L") → true    esTallaGrande("S") → false
-export function esTallaGrande(t: string): boolean {
-  return false
+export function esTallaGrande(t: Talla): boolean {
+  return t === "L" || t === "XL"
 }
 
 
@@ -107,11 +122,7 @@ export function esTallaGrande(t: string): boolean {
 // 5) `nombresPorRol` — nombres de los usuarios que tienen el rol pedido.
 //    👉 Dos arreglos: el tipo de retorno (ahora devuelve la lista entera) y el
 //       cuerpo (no filtra ni se queda con el nombre).
-//      nombresPorRol([{ nombre: "Ana", rol: "admin" },
-//                     { nombre: "Leo", rol: "lector" }], "admin") → ["Ana"]
-export function nombresPorRol(
-  usuarios: { nombre: string; rol: Rol }[],
-  rol: Rol,
-): { nombre: string; rol: Rol }[] {
-  return []
+//      nombresPorRol([{ nombre: "Ana", rol: "admin" },{ nombre: "Leo", rol: "lector" }], "admin") → ["Ana"]
+export function nombresPorRol(usuarios: { nombre: string; rol: Rol }[], rol: Rol,): string[] {
+  return usuarios.filter((usuario) => usuario.rol === rol).map((u) => u.nombre)
 }

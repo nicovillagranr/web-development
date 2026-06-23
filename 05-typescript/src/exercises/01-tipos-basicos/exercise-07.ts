@@ -53,7 +53,7 @@ const CONFIG_BASE = { host: "localhost", port: 3000, https: false }
 
 // 👉 Hueco clave del BLOQUE A/C: deriva el tipo del valor de arriba en vez de
 //    escribirlo a mano. El starter solo declara `{ host: string }`.
-type Config = { host: string }
+type Config = typeof CONFIG_BASE
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — usar el tipo derivado como PARÁMETRO
@@ -67,19 +67,19 @@ type Config = { host: string }
 //       starter solo devuelve el host).
 //      describirConfig({ host: "localhost", port: 3000, https: false }) → "localhost:3000"
 export function describirConfig(c: Config): string {
-  return ""
+  return `${c.host}:${c.port}`
 }
 
 
 const PERFIL_BASE = { usuario: "ana", nivel: 7 }
 
 // 👉 Mismo hueco para el BLOQUE A (drill 2): deriva en vez de escribir a mano.
-type Perfil = { usuario: string }
+type Perfil = typeof PERFIL_BASE
 
 // 2) `resumenPerfil` — "usuario (nivel N)".
 //      resumenPerfil({ usuario: "ana", nivel: 7 }) → "ana (nivel 7)"
 export function resumenPerfil(p: Perfil): string {
-  return ""
+  return `${p.usuario} (nivel ${p.nivel})`
 }
 
 
@@ -95,13 +95,14 @@ export function resumenPerfil(p: Perfil): string {
 //       ni compila (faltan port y https).
 //      configPorDefecto() → { host: "localhost", port: 3000, https: false }
 export function configPorDefecto(): Config {
-  return {}
+  return { ...CONFIG_BASE }
 }
+
 
 // 4) `perfilPorDefecto` — refuerzo con el otro tipo derivado.
 //      perfilPorDefecto() → { usuario: "invitado", nivel: 0 }
-export function perfilPorDefecto(): Perfil {
-  return {}
+export function perfilPorDefecto2(): Perfil {
+  return { usuario: "invitado", nivel: 0 }
 }
 
 
@@ -116,5 +117,5 @@ export function perfilPorDefecto(): Perfil {
 //      conPuerto({ host: "localhost", port: 3000, https: false }, 8080)
 //        → { host: "localhost", port: 8080, https: false }
 export function conPuerto(c: Config, port: number): Config {
-  return {}
+  return { ...c, port }
 }

@@ -69,9 +69,13 @@ crearProducto("Té", 1000)
 //    👉 Dos arreglos: el tipo del parámetro (ahora solo exige `{ nombre }`, así
 //       que dentro no podrías leer `p.precio`) y el cuerpo (devuelve "").
 //      etiqueta({ nombre: "Té", precio: 1000 }) → "Té cuesta $1000"
-export function etiqueta(p: { nombre: string }): string {
-  return ""
+export function etiqueta(p: { nombre: string, precio: number }): string {
+  return `${p.nombre} cuesta $${p.precio}`
 }
+// Llamados (invocaciones)
+etiqueta({ nombre: "Té", precio: 1000 }) // → "Té cuesta $1000"
+etiqueta({ nombre: "Café", precio: 500 }) // → "Café cuesta $500"
+etiqueta({ nombre: "Pan", precio: 2000 }) // → "Pan cuesta $2000"
 
 
 type Estado = "activo" | "inactivo" | "baneado"
@@ -88,15 +92,27 @@ type Estado = "activo" | "inactivo" | "baneado"
 //    👉 Dos arreglos: el tipo del parámetro (ahora `string`: acepta basura) y el
 //       cuerpo (devuelve siempre true).
 //      puedeEntrar("activo") → true     puedeEntrar("baneado") → false
-export function puedeEntrar(estado: string): boolean {
-  return true
+export function puedeEntrar(estado: Estado): boolean {
+  // Todo lo que sea diferente a "baneado" dará true. Y si es diferente a los 3 argumentos de Estado el compilador de TypeScript no lo pasa
+  return estado !== "baneado"
 }
+puedeEntrar("activo") // return: true
+puedeEntrar("inactivo") // return: true
+puedeEntrar("baneado") // return: false
+// puedeEntrar("active") el compilador de TypeScript no lo pasa
 
 // 4) `colorDe` — color según el estado (activo→verde, inactivo→gris, baneado→rojo).
 //    👉 Mismo patrón: aprieta el parámetro a `Estado` y completa el cuerpo.
 //      colorDe("inactivo") → "gris"
-export function colorDe(estado: string): string {
-  return ""
+export function colorDe(estado: Estado): string {
+  switch (estado) {
+    case "activo":
+      return "verde"
+    case "inactivo":
+      return "gris"
+    case "baneado":
+      return "rojo"
+  }
 }
 
 
@@ -115,6 +131,9 @@ type Usuario = { nombre: string; estado: Estado }
 //       la lista entera sin filtrar ni quedarse con el nombre).
 //      nombresActivos([{ nombre: "Ana", estado: "activo" },
 //                      { nombre: "Leo", estado: "baneado" }]) → ["Ana"]
-export function nombresActivos(usuarios: Usuario[]): Usuario[] {
-  return []
+export function nombresActivos(usuarios: Usuario[]): string[] {
+  // Se filtran los usuarios activos
+  return usuarios.filter((usuario) => usuario.estado === "activo").map((u) => u.nombre)
 }
+// Return: ["Ana"]
+nombresActivos([{ nombre: "Ana", estado: "activo" }, { nombre: "Leo", estado: "baneado" }])

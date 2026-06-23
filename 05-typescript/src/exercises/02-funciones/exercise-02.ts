@@ -52,7 +52,7 @@
 //       `saludar("Ana")` (un solo argumento) sea válido, y (b) escribe el cuerpo.
 //      saludar("Ana") → "Hola, Ana"     saludar("Ana", "Hey") → "Hey, Ana"
 export function saludar(nombre: string, saludo: string): string {
-  return ""
+  return `${saludo}, ${nombre}`
 }
 saludar("Hola", "Nico") // → "Hola, Nico"
 
@@ -60,7 +60,7 @@ saludar("Hola", "Nico") // → "Hola, Nico"
 //    👉 Dos cosas: el valor por defecto de `exp` y el cuerpo.
 //      potencia(3) → 9     potencia(2, 3) → 8
 export function potencia(base: number, exp: number): number {
-  return 0
+  return base ** exp
 }
 
 
@@ -72,15 +72,15 @@ export function potencia(base: number, exp: number): number {
 //    👉 Dos arreglos: marca `sufijo` como opcional (`?`) y, en el cuerpo,
 //       contempla que pueda faltar (si no hay sufijo, devuelve solo el texto).
 //      etiqueta("Hola") → "Hola"     etiqueta("Hola", "!") → "Hola!"
-export function etiqueta(texto: string, sufijo: string): string {
-  return ""
+export function etiqueta(texto: string, sufijo?: string): string {
+  return texto + (sufijo ?? "")
 }
 
 // 4) `rango` — "min-max" si dan max; "min+" si no.
 //    👉 Dos cosas: marca `max` como opcional (`?`) y escribe el cuerpo (los dos casos).
 //      rango(10, 20) → "10-20"     rango(10) → "10+"
-export function rango(min: number, max: number): string {
-  return ""
+export function rango(min: number, max?: number): string {
+  return min + (max ??)
 }
 
 
