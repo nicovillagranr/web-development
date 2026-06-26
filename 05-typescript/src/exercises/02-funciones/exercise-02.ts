@@ -51,15 +51,13 @@
 //    👉 Dos cosas: (a) dale a `saludo` un valor por defecto `= "Hola"` para que
 //       `saludar("Ana")` (un solo argumento) sea válido, y (b) escribe el cuerpo.
 //      saludar("Ana") → "Hola, Ana"     saludar("Ana", "Hey") → "Hey, Ana"
-export function saludar(nombre: string, saludo: string): string {
+export function saludar(nombre: string, saludo = "Hola"): string {
   return `${saludo}, ${nombre}`
 }
-saludar("Hola", "Nico") // → "Hola, Nico"
-
 // 2) `potencia` — base elevada a `exp`; si no pasan exp, eleva al cuadrado (2).
 //    👉 Dos cosas: el valor por defecto de `exp` y el cuerpo.
 //      potencia(3) → 9     potencia(2, 3) → 8
-export function potencia(base: number, exp: number): number {
+export function potencia(base: number, exp = 2): number {
   return base ** exp
 }
 
@@ -80,7 +78,10 @@ export function etiqueta(texto: string, sufijo?: string): string {
 //    👉 Dos cosas: marca `max` como opcional (`?`) y escribe el cuerpo (los dos casos).
 //      rango(10, 20) → "10-20"     rango(10) → "10+"
 export function rango(min: number, max?: number): string {
-  return min + (max ??)
+  if (max === undefined) {
+    return `${min}+`
+  }
+  return `${min}-${max}`
 }
 
 
@@ -92,6 +93,6 @@ export function rango(min: number, max?: number): string {
 //    decimales.
 //    👉 Dos valores por defecto (`moneda = "$"`, `decimales = 2`) y escribe el cuerpo.
 //      formatearPrecio(5) → "$5.00"     formatearPrecio(5, "€", 1) → "€5.0"
-export function formatearPrecio(precio: number, moneda: string, decimales: number): string {
-  return ""
+export function formatearPrecio(precio: number, moneda = "$", decimales = 2): string {
+  return `${moneda}${precio.toFixed(decimales)}`
 }

@@ -58,14 +58,30 @@
 //       factory y súbelo en cada llamada.
 //      const c = crearContador(); c() → 1; c() → 2; c() → 3
 export function crearContador(): () => number {
-  return () => 1
+  let n = 0
+  return () => {
+    n = n + 1
+    return n
+  }
 }
+crearContador() // 0
+crearContador() // 0
+crearContador() // 0
+const c = crearContador()
+c()
+c()
+c()
+// 3
 
 // 2) `crearAcumulador` — devuelve una función que SUMA lo que reciba a un total y
 //    devuelve el total actualizado.
 //      const acum = crearAcumulador(); acum(5) → 5; acum(3) → 8; acum(10) → 18
 export function crearAcumulador(): (n: number) => number {
-  return (n: number) => n
+  let total = 0
+  return (n: number) => {
+    total = total + n
+    return total
+  }
 }
 
 
@@ -77,17 +93,24 @@ export function crearAcumulador(): (n: number) => number {
 //    llamada (empieza en true).
 //      const tic = crearAlternador(); tic() → true; tic() → false; tic() → true
 export function crearAlternador(): () => boolean {
-  return () => true
+  let comienzo = false
+  return () => {
+    comienzo = !comienzo
+    return comienzo
+  }
 }
 
 // 4) `crearLimitado` — devuelve una función que da true las primeras `max` veces y
 //    false a partir de ahí.
 //      const ok = crearLimitado(2); ok() → true; ok() → true; ok() → false
 export function crearLimitado(max: number): () => boolean {
-  return () => true
+  let base = 0
+  return () => {
+    base = base + 1
+
+    return base <= max
+  }
 }
-
-
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: contador configurable
  * -------------------------------------------------------------------------- */
@@ -96,5 +119,10 @@ export function crearLimitado(max: number): () => boolean {
 //    `paso` en `paso` (devuelve el valor ANTES de sumar, como un "coja turno").
 //      const c = crearContadorDesde(10, 5); c() → 10; c() → 15; c() → 20
 export function crearContadorDesde(inicio: number, paso: number): () => number {
-  return () => inicio
+  let base = inicio
+  return () => {
+    const actual = base
+    base = base + paso
+    return actual
+  }
 }

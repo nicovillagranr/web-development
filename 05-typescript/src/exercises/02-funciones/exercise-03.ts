@@ -50,16 +50,15 @@
 //    👉 Dos arreglos: el parámetro (ahora pide UN array, así que `sumarTodos(1,2,3)`
 //       no compila) → conviértelo en `...nums`. Y el cuerpo (devuelve 0).
 //      sumarTodos(1, 2, 3) → 6     sumarTodos() → 0
-export function sumarTodos(nums: number[]): number {
-  return 0
+export function sumarTodos(...nums: number[]): number {
+  return nums.reduce((acumulador, elemento) => acumulador + elemento, 0)
 }
 
 // 2) `concatenar` — une todas las palabras con un espacio.
 //      concatenar("hola", "qué", "tal") → "hola qué tal"
-export function concatenar(palabras: string[]): string {
-  return ""
+export function concatenar(...palabras: string[]): string {
+  return palabras.join(" ")
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — usar el array recogido + mezclar fijo con rest
@@ -69,15 +68,14 @@ export function concatenar(palabras: string[]): string {
 //    👉 Pista: con un array `nums`, `Math.max(...nums)` despliega el array en
 //       argumentos sueltos (el spread del otro lado).
 //      maximo(3, 9, 5) → 9
-export function maximo(nums: number[]): number {
-  return 0
+export function maximo(...nums: number[]): number {
+  return Math.max(...nums)
 }
-
 // 4) `etiquetar` — un prefijo FIJO seguido de los items separados por coma.
 //    👉 Aquí hay un parámetro normal (`prefijo`) Y un rest (`...items`).
 //      etiquetar("Tags", "a", "b", "c") → "Tags: a, b, c"
-export function etiquetar(prefijo: string, items: string[]): string {
-  return ""
+export function etiquetar(prefijo: string, ...items: string[]): string {
+  return `${prefijo}: ${items.join(", ")}`
 }
 
 
@@ -88,6 +86,9 @@ export function etiquetar(prefijo: string, items: string[]): string {
 // 5) `promedio` — la media (redondeada) de los números; 0 si no hay ninguno.
 //    👉 Junta `...nums`, súmalos y divide por `nums.length` (cuidado con el 0).
 //      promedio(2, 4, 6) → 4     promedio() → 0
-export function promedio(nums: number[]): number {
-  return 0
+export function promedio(...nums: number[]): number {
+  if (nums.length === 0) {
+    return 0
+  }
+  return Math.round(nums.reduce((acumulador, elemento) => acumulador + elemento, 0) / nums.length)
 }

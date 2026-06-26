@@ -101,7 +101,7 @@ export function configPorDefecto(): Config {
 
 // 4) `perfilPorDefecto` — refuerzo con el otro tipo derivado.
 //      perfilPorDefecto() → { usuario: "invitado", nivel: 0 }
-export function perfilPorDefecto2(): Perfil {
+export function perfilPorDefecto(): Perfil {
   return { usuario: "invitado", nivel: 0 }
 }
 

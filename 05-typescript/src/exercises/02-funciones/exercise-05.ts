@@ -55,13 +55,21 @@
 //    👉 Dos arreglos: el tipo de `accion` (ahora exige `=> number`, no acepta una
 //       acción de efecto) → ponlo `(n: number) => void`. Y el cuerpo (no recorre).
 //      const out: number[] = []; porCada([1,2,3], (n) => { out.push(n) })  → out = [1,2,3]
-export function porCada(nums: number[], accion: (n: number) => number): void {
+export function porCada(nums: number[], accion: (n: number) => void): void {
+  nums.forEach(accion)
 }
+porCada([1, 2, 3], (n) => {
+  console.log(n)
+})
 
 // 2) `cadaTexto` — lo mismo con strings.
 //      const out: string[] = []; cadaTexto(["a","b"], (t) => { out.push(t) }) → out = ["a","b"]
-export function cadaTexto(textos: string[], accion: (t: string) => number): void {
+export function cadaTexto(textos: string[], accion: (t: string) => void): void {
+  return textos.forEach(accion)
 }
+cadaTexto(["a", "b"], (t) => {
+  console.log(t)
+})
 
 
 /* ---------------------------------------------------------------------------
@@ -75,14 +83,26 @@ export function cadaTexto(textos: string[], accion: (t: string) => number): void
 //       devuelve una copia nueva) → ponlo `void`. Y el cuerpo (haz el efecto:
 //       empuja al registro que te pasan, no crees otro).
 //      const r: string[] = []; registrar(r, "hola"); registrar(r, "mundo")  → r = ["hola","mundo"]
-export function registrar(registro: string[], mensaje: string): string[] {
-  return []
+export function registrar(registro: string[], mensaje: string): void {
+  registro.push(mensaje)
 }
+const r: string[] = []
+registrar(r, "hola")
+registrar(r, "mundo")
+console.log(r)
 
 // 4) `repetirAccion` — ejecuta `accion` con los índices 0, 1, ..., veces-1.
 //      const out: number[] = []; repetirAccion(3, (i) => { out.push(i) }) → out = [0,1,2]
-export function repetirAccion(veces: number, accion: (i: number) => number): void {
+export function repetirAccion(veces: number, accion: (i: number) => void): void {
+  for (let i = 0; i < veces; i++) {
+    accion(i)
+  }
 }
+// return: [0,1,2]
+repetirAccion(3, (i) => {
+  console.log(i)
+})
+
 
 
 /* ---------------------------------------------------------------------------
@@ -92,5 +112,6 @@ export function repetirAccion(veces: number, accion: (i: number) => number): voi
 // 5) `porCadaPositivo` — ejecuta `accion` solo con los números > 0.
 //    👉 Combina el recorrido con un filtro dentro: si `n > 0`, llama a `accion`.
 //      const out: number[] = []; porCadaPositivo([1,-2,3,0], (n) => { out.push(n) }) → out = [1,3]
-export function porCadaPositivo(nums: number[], accion: (n: number) => number): void {
+export function porCadaPositivo(nums: number[], accion: (n: number) => void): void {
+  nums.filter(number => number > 0).forEach(accion)
 }

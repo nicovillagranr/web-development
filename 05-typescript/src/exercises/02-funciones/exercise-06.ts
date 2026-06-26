@@ -50,19 +50,18 @@
 //    👉 Dos arreglos: el tipo de `fn` (ahora solo recibe el item, no el índice) →
 //       añádele `, i: number`. Y el cuerpo (devuelve la lista igual).
 //      mapConIndice(["a","b","c"], (item, i) => `${i}:${item}`) → ["0:a","1:b","2:c"]
-export function mapConIndice(
-  items: string[],
-  fn: (item: string) => string,
-): string[] {
-  return []
+export function mapConIndice(items: string[], fn: (item: string, i: number) => string): string[] {
+  return items.map(fn)
 }
+// return: ["1 Hacer la cama", "2 Aspirar la casa", "3 Lavar la loza"]
+mapConIndice(["Hacer la cama", "Aspirar la casa", "Lavar la loza"], (item, i) => `${i + 1} ${item}`)
 
 // 2) `transformarA` — convierte una lista de números en una de strings.
 //    👉 Dos arreglos: el tipo de retorno (ahora `number[]`) y el cuerpo (devuelve
 //       los números sin transformar).
 //      transformarA([1, 2], (n) => `#${n}`) → ["#1", "#2"]
-export function transformarA(nums: number[], fn: (n: number) => string): number[] {
-  return []
+export function transformarA(nums: number[], fn: (n: number) => string): string[] {
+  return nums.map(fn)
 }
 
 
@@ -74,27 +73,21 @@ export function transformarA(nums: number[], fn: (n: number) => string): number[
 //    👉 UN arreglo: el cuerpo (el starter ignora los dos callbacks y devuelve `n`).
 //      aplicarSegun(5, true, (n) => n + 1, (n) => n - 1) → 6
 //      aplicarSegun(5, false, (n) => n + 1, (n) => n - 1) → 4
-export function aplicarSegun(
-  n: number,
-  cond: boolean,
-  siVerdad: (n: number) => number,
-  siFalso: (n: number) => number,
-): number {
-  return 0
+export function aplicarSegun(n: number, cond: boolean, siVerdad: (n: number) => number, siFalso: (n: number) => number): number {
+  return cond ? siVerdad(n) : siFalso(n)
 }
+aplicarSegun(5, true, (n) => n + 1, (n) => n - 1)
 
 // 4) `primerQueCumple` — el primer número que cumple, o undefined si ninguno.
 //    👉 Dos arreglos: el tipo de retorno (un `number` a secas no puede expresar
 //       "puede no haber") → ponlo `number | undefined`. Y el cuerpo (usa `.find`).
 //      primerQueCumple([1, 2, 3, 4], (n) => n > 2) → 3
 //      primerQueCumple([1, 2], (n) => n > 5) → undefined
-export function primerQueCumple(
-  nums: number[],
-  cumple: (n: number) => boolean,
-): number {
-  return 0
+export function primerQueCumple(nums: number[], cumple: (n: number) => boolean): number | undefined {
+  return nums.find(cumple)
 }
-
+primerQueCumple([1, 2, 3, 4], (n) => n > 2) // 3
+primerQueCumple([], (n) => n > 2) // undefined
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: dos callbacks encadenados (transformar y luego decidir)
@@ -104,10 +97,12 @@ export function primerQueCumple(
 //    👉 Dos arreglos: el tipo de retorno (`number[]`) y el cuerpo (map con
 //       `transformar`, luego filter con `mantener`).
 //      mapYfiltra([1, 2, 3], (n) => n * 10, (n) => n > 15) → [20, 30]
-export function mapYfiltra(
-  nums: number[],
-  transformar: (n: number) => number,
-  mantener: (n: number) => boolean,
-): number[] {
-  return []
+
+// Función con 3 parámetros:
+// 1er Parámetro solicita array de números.
+// 2do Parámetro solicita callback de transformación.
+// 3er Parámetro solicita
+export function mapYfiltra(nums: number[], transformar: (n: number) => number, mantener: (n: number) => boolean,): number[] {
+  return nums.map(transformar).filter(mantener)
 }
+mapYfiltra([1, 2, 3], (n) => n * 10, (n) => n > 15) // [20, 30]
