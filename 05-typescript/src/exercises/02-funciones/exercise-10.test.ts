@@ -4,10 +4,12 @@ import {
   aplicarVarios,
   crearPipeline,
   aplicarYregistrar,
+  crearCaja,
+  crearContadorObj,
   crearProcesador,
 } from './exercise-10'
 
-describe('02-funciones / exercise-10 — capstone: procesador de pasos', () => {
+describe('02-funciones / exercise-10 — capstone: procesador de pasos [reforzado]', () => {
   /* ── BLOQUE A — del paso suelto a la lista variable ── */
 
   it('1) aplicarUno aplica un solo paso', () => {
@@ -33,9 +35,33 @@ describe('02-funciones / exercise-10 — capstone: procesador de pasos', () => {
     expect(reg).toEqual([4, 8])
   })
 
-  /* ── BLOQUE C — capstone: procesador con contador ── */
+  /* ── BLOQUE C — calentamiento: objeto de funciones que comparten estado ── */
 
-  it('5) crearProcesador procesa y cuenta los usos', () => {
+  it('5) crearCaja comparte un texto entre guardar y ver', () => {
+    const c = crearCaja()
+    c.guardar('hola')
+    expect(c.ver()).toBe('hola')
+    c.guardar('adios')
+    expect(c.ver()).toBe('adios')
+  })
+
+  it('5b) cada caja es independiente', () => {
+    const a = crearCaja()
+    const b = crearCaja()
+    a.guardar('A')
+    expect(b.ver()).toBe('') // b tiene su propia caja
+  })
+
+  it('6) crearContadorObj comparte un número entre incrementar y valor', () => {
+    const c = crearContadorObj()
+    c.incrementar()
+    c.incrementar()
+    expect(c.valor()).toBe(2)
+  })
+
+  /* ── BLOQUE D — capstone: procesador con contador ── */
+
+  it('7) crearProcesador procesa y cuenta los usos', () => {
     const proc = crearProcesador([(n) => n + 1, (n) => n * 2])
     expect(proc.ejecutar(3)).toBe(8)
     expect(proc.ejecutar(10)).toBe(22)
