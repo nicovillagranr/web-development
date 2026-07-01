@@ -5,6 +5,11 @@ import {
   masCaro,
   valorInventario,
   catalogoDisponible,
+  elMayor,
+  sinCampeon,
+  sumarDesde,
+  elegirCampeon,
+  masCaroDesarmado,
 } from './exercise-10'
 import type { Producto } from './exercise-10'
 
@@ -35,5 +40,36 @@ describe('03-arrays / exercise-10 — capstone catálogo', () => {
 
   it('5) catalogoDisponible', () => {
     expect(catalogoDisponible(tienda)).toBe('Pan ($2), Huevos ($4)')
+  })
+})
+
+describe('03-arrays / exercise-10 — BLOQUE R (refuerzo reduce-campeón)', () => {
+  const pan = tienda[0] // precio 2
+  const huevos = tienda[2] // precio 4
+
+  it('R1) elMayor', () => {
+    expect(elMayor(3, 8)).toBe(8)
+    expect(elMayor(10, 2)).toBe(10)
+  })
+
+  it('R2) sinCampeon', () => {
+    expect(sinCampeon(undefined)).toBe(true)
+    expect(sinCampeon(pan)).toBe(false)
+  })
+
+  it('R3) sumarDesde', () => {
+    expect(sumarDesde([1, 2, 3], 0)).toBe(6)
+    expect(sumarDesde([1, 2, 3], 10)).toBe(16)
+  })
+
+  it('R4) elegirCampeon', () => {
+    expect(elegirCampeon(undefined, pan)).toBe(pan) // no había campeón → entra pan
+    expect(elegirCampeon(pan, huevos)).toBe(huevos) // huevos es más caro
+    expect(elegirCampeon(huevos, pan)).toBe(huevos) // pan no supera → sigue huevos
+  })
+
+  it('R5) masCaroDesarmado', () => {
+    expect(masCaroDesarmado(tienda)?.nombre).toBe('Huevos')
+    expect(masCaroDesarmado([])).toBeUndefined()
   })
 })

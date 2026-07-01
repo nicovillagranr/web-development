@@ -34,27 +34,29 @@
 // 1) `primerosTres` — los primeros 3 elementos.
 //    primerosTres([1, 2, 3, 4, 5]) → [1, 2, 3]
 export function primerosTres(nums: number[]): number[] {
-  return nums
+  return nums.slice(0, 3)
 }
+primerosTres([1, 2, 3, 4, 5]) // return: [1, 2, 3]
 
 // 2) `sinElPrimero` — todos menos el primero.
 //    sinElPrimero([1, 2, 3]) → [2, 3]
 export function sinElPrimero(nums: number[]): number[] {
-  return nums
+  return nums.slice(1)
 }
+sinElPrimero([1, 2, 3]) // return: [2, 3]
 
 /* --- BLOQUE B — spread: insertar sin mutar --- */
 
 // 3) `agregarAlFinal` — una copia con `x` al final.
 //    agregarAlFinal([1, 2], 9) → [1, 2, 9]   (y el original NO cambia)
 export function agregarAlFinal(nums: number[], x: number): number[] {
-  return nums
+  return [...nums, x]
 }
 
 // 4) `agregarAlInicio` — una copia con `x` al inicio.
 //    agregarAlInicio([1, 2], 9) → [9, 1, 2]
 export function agregarAlInicio(nums: number[], x: number): number[] {
-  return nums
+  return [x, ...nums]
 }
 
 /* --- BLOQUE C — CAPSTONE: quitar por índice sin mutar --- */
@@ -63,5 +65,6 @@ export function agregarAlInicio(nums: number[], x: number): number[] {
 //    (junta el trozo de antes + el trozo de después)
 //    quitarEn([10, 20, 30, 40], 1) → [10, 30, 40]
 export function quitarEn(nums: number[], i: number): number[] {
-  return nums
+  return [...nums.slice(0, i), ...nums.slice(i + 1)]
 }
+quitarEn([10, 20, 30, 40], 2) // return: [10, 20, 40] la posición 2 quitó el 30
