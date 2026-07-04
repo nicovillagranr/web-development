@@ -34,13 +34,21 @@
 // 1) `formatear` — number → "$<n>" ; string → tal cual.
 //    formatear(5) → "$5" ; formatear("hola") → "hola"
 export function formatear(x: string | number): string {
-  return ''
+  if (typeof x === "string") {
+    return x
+  }
+  return `$${x}`
 }
+formatear("hola") // "hola"
+formatear(290) // "$290"
 
 // 2) `longitudOValor` — string → su longitud ; number → el número.
 //    longitudOValor("hola") → 4 ; longitudOValor(7) → 7
 export function longitudOValor(x: string | number): number {
-  return 0
+  if (typeof x === "string") {
+    return x.length
+  }
+  return x
 }
 
 /* --- BLOQUE B — devolver la unión, y mapear --- */
@@ -48,14 +56,23 @@ export function longitudOValor(x: string | number): number {
 // 3) `duplicar` — number → n*2 ; string → repetido dos veces.
 //    duplicar(5) → 10 ; duplicar("ab") → "abab"
 export function duplicar(x: string | number): string | number {
-  return x
+  if (typeof x === "string") {
+    return x + x
+  }
+  return x * 2
 }
 
 // 4) `aTexto` — formatea cada elemento: number → "#<n>" ; string → MAYÚSCULAS.
 //    aTexto([1, "ab"]) → ["#1", "AB"]
 export function aTexto(xs: (string | number)[]): string[] {
-  return []
+  return xs.map((elemento) => {
+    if (typeof elemento === "string") {
+      return elemento.toUpperCase()
+    }
+    return `#${elemento}`
+  })
 }
+aTexto(["hola", 5, "HOLA", 5, 5]) // ["HOLA", "#5", "HOLA", "#5", "#5"]
 
 /* --- BLOQUE C — CAPSTONE: filtrar por tipo + reducir --- */
 
@@ -63,5 +80,5 @@ export function aTexto(xs: (string | number)[]): string[] {
 //    (usa un predicado de tipo en el filter)
 //    sumarNumeros([1, "x", 2, "y", 3]) → 6
 export function sumarNumeros(xs: (string | number)[]): number {
-  return 0
+  return xs.filter((x): x is number => typeof x === "number").reduce((a, b) => a + b, 0)
 }

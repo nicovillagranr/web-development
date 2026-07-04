@@ -37,13 +37,27 @@ export type Plan = 'free' | 'pro' | 'enterprise'
 // 1) `colorHex` — el hex de cada color.
 //    colorHex("rojo") → "#ff0000"
 export function colorHex(c: Color): string {
-  return ''
+  switch (c) {
+    case 'rojo':
+      return '#ff0000'
+    case 'verde':
+      return '#00ff00'
+    case 'azul':
+      return '#0000ff'
+  }
 }
 
 // 2) `etiquetaEstado` — texto legible de cada estado.
 //    etiquetaEstado("activo") → "Activo"
 export function etiquetaEstado(e: Estado): string {
-  return ''
+  switch (e) {
+    case 'activo':
+      return 'Activo'
+    case 'inactivo':
+      return 'Inactivo'
+    case 'pendiente':
+      return 'Pendiente'
+  }
 }
 
 /* --- BLOQUE B — literal → número, y comparación simple --- */
@@ -51,13 +65,20 @@ export function etiquetaEstado(e: Estado): string {
 // 3) `descuentoPorPlan` — % de descuento por plan (free 0, pro 10, enterprise 20).
 //    descuentoPorPlan("pro") → 10
 export function descuentoPorPlan(p: Plan): number {
-  return 0
+  switch (p) {
+    case 'free':
+      return 0
+    case 'pro':
+      return 10
+    case 'enterprise':
+      return 20
+  }
 }
 
 // 4) `esActivo` — ¿el estado es "activo"?
 //    esActivo("activo") → true ; esActivo("pendiente") → false
 export function esActivo(e: Estado): boolean {
-  return false
+  return e === 'activo'
 }
 
 /* --- BLOQUE C — CAPSTONE: reusar un mapeo --- */
@@ -65,5 +86,5 @@ export function esActivo(e: Estado): boolean {
 // 5) `badge` — "Etiqueta (clave)" reusando etiquetaEstado.
 //    badge("activo") → "Activo (activo)"
 export function badge(e: Estado): string {
-  return ''
+  return `${etiquetaEstado(e)} (${e})`
 }

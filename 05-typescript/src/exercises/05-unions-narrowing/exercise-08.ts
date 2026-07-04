@@ -31,13 +31,13 @@
 // 1) `esString` — ¿es un string?
 //    esString("a") → true ; esString(5) → false
 export function esString(x: unknown): x is string {
-  return false
+  return typeof x === "string"
 }
 
 // 2) `esNumero` — ¿es un number?
 //    esNumero(5) → true ; esNumero("a") → false
 export function esNumero(x: unknown): x is number {
-  return false
+  return typeof x === "number"
 }
 
 /* --- BLOQUE B — usar los porteros en filter --- */
@@ -45,13 +45,13 @@ export function esNumero(x: unknown): x is number {
 // 3) `soloStrings` — quédate solo con los strings (resultado `string[]`).
 //    soloStrings([1, "a", 2, "b"]) → ["a", "b"]
 export function soloStrings(xs: unknown[]): string[] {
-  return []
+  return xs.filter(esString)
 }
 
 // 4) `soloNumeros` — quédate solo con los números (resultado `number[]`).
 //    soloNumeros([1, "a", 2, "b"]) → [1, 2]
 export function soloNumeros(xs: unknown[]): number[] {
-  return []
+  return xs.filter(esNumero)
 }
 
 /* --- BLOQUE C — CAPSTONE: contar por tipo --- */
@@ -59,5 +59,14 @@ export function soloNumeros(xs: unknown[]): number[] {
 // 5) `contarTipos` — cuántos strings y cuántos números hay.
 //    contarTipos([1, "a", 2, "b", "c"]) → { strings: 3, numeros: 2 }
 export function contarTipos(xs: unknown[]): { strings: number; numeros: number } {
-  return { strings: 0, numeros: 0 }
+  return xs.reduce((acum: { strings: number; numeros: number }, valor) => {
+    if (esString(valor)) {
+      return { ...acum, strings: acum.strings + 1 }
+    } else {
+      if (esNumero(valor)) {
+        return { ...acum, numeros: acum.numeros + 1 }
+      }
+    }
+    return acum
+  }, { strings: 0, numeros: 0 })
 }

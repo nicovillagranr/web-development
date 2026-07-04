@@ -29,27 +29,34 @@
 // 1) `aLista` — siempre un array (envuelve el suelto).
 //    aLista("a") → ["a"] ; aLista(["a", "b"]) → ["a", "b"]
 export function aLista(x: string | string[]): string[] {
-  return []
+  return Array.isArray(x) ? x : [x]
 }
+aLista('a') // ["a"]
+aLista(['a', 'b']) // ["a", "b"]
 
 // 2) `cuantos` — cuántos elementos hay (un suelto cuenta como 1).
 //    cuantos("a") → 1 ; cuantos(["a", "b"]) → 2
 export function cuantos(x: string | string[]): number {
-  return 0
+  return Array.isArray(x) ? x.length : 1
 }
+cuantos('a') // 1
+cuantos(['a', 'b']) // 2
 
 /* --- BLOQUE B — leer con cuidado --- */
 
 // 3) `primero` — el primer elemento (o el suelto), "" si lista vacía.
 //    primero("a") → "a" ; primero(["x", "y"]) → "x" ; primero([]) → ""
 export function primero(x: string | string[]): string {
-  return ''
+  return aLista(x)[0] ?? "" // Si hay indice 0, lo devuelve; si no, ""
 }
+primero('a') // "a"
+primero(['x', 'y']) // "x"
+primero([]) // ""
 
 // 4) `normalizarTodos` — aplana una lista de "uno o varios" en una sola lista.
 //    normalizarTodos(["a", ["b", "c"]]) → ["a", "b", "c"]
 export function normalizarTodos(xs: (string | string[])[]): string[] {
-  return []
+  return xs.flat()
 }
 
 /* --- BLOQUE C — CAPSTONE: normalizar + unir --- */
@@ -57,5 +64,7 @@ export function normalizarTodos(xs: (string | string[])[]): string[] {
 // 5) `unirTodo` — junta todo en un texto con `sep` (sea suelto o lista).
 //    unirTodo(["a", "b"], "-") → "a-b" ; unirTodo("solo", "-") → "solo"
 export function unirTodo(x: string | string[], sep: string): string {
-  return ''
+  return aLista(x).join(sep)
 }
+unirTodo(['a', 'b'], '-') // "a-b"
+unirTodo('solo', '-') // "solo"

@@ -35,27 +35,28 @@ export type Empresa = { ruc: string }
 // 1) `area` — área del cuadrado (lado²) o del rectángulo (ancho*alto).
 //    area({ lado: 3 }) → 9 ; area({ ancho: 2, alto: 5 }) → 10
 export function area(f: Cuadrado | Rectangulo): number {
-  return 0
+  return "lado" in f ? f.lado * f.lado : f.ancho * f.alto
 }
 
 // 2) `perimetro` — perímetro del cuadrado (4*lado) o del rectángulo (2*(ancho+alto)).
 //    perimetro({ lado: 3 }) → 12 ; perimetro({ ancho: 2, alto: 5 }) → 14
 export function perimetro(f: Cuadrado | Rectangulo): number {
-  return 0
+  return "lado" in f ? 4 * f.lado : 2 * (f.ancho + f.alto)
 }
+
 
 /* --- BLOQUE B — otra unión, y texto --- */
 
 // 3) `identificador` — el email (usuario) o el ruc (empresa).
 //    identificador({ email: "x@y" }) → "x@y" ; identificador({ ruc: "123" }) → "123"
 export function identificador(e: Usuario | Empresa): string {
-  return ''
+  return "email" in e ? e.email : e.ruc
 }
 
 // 4) `descripcion` — "cuadrado de N" o "rect AxB".
 //    descripcion({ lado: 3 }) → "cuadrado de 3" ; descripcion({ ancho: 2, alto: 5 }) → "rect 2x5"
 export function descripcion(f: Cuadrado | Rectangulo): string {
-  return ''
+  return "lado" in f ? `cuadrado de ${f.lado}` : `rect ${f.ancho}x${f.alto}`
 }
 
 /* --- BLOQUE C — CAPSTONE: sumar áreas mezcladas --- */
@@ -63,5 +64,5 @@ export function descripcion(f: Cuadrado | Rectangulo): string {
 // 5) `areaTotal` — la suma de áreas de una lista de figuras mezcladas.
 //    areaTotal([{ lado: 2 }, { ancho: 2, alto: 3 }]) → 10
 export function areaTotal(figuras: (Cuadrado | Rectangulo)[]): number {
-  return 0
+  return figuras.map(area).reduce((a, b) => a + b, 0)
 }
