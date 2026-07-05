@@ -31,7 +31,7 @@
 // 1) `contar` — cuántas veces aparece cada palabra.
 //    contar(["a", "b", "a"]) → { a: 2, b: 1 }
 export function contar(palabras: string[]): Record<string, number> {
-  return {}
+  return palabras.reduce((acc, p) => ({ ...acc, [p]: (acc[p] ?? 0) + 1 }), {})
 }
 
 /* --- BLOQUE B — leer el diccionario (con guard) --- */

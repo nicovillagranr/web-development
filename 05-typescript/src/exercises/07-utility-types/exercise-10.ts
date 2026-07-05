@@ -58,17 +58,19 @@ type Borrador = { titulo?: string; cuerpo?: string; autor?: string }
 //    👉 Dos arreglos: el tipo del parámetro (ahora acepta campos opcionales, así
 //       que el test podría colar un borrador a medias) y el cuerpo (devuelve "").
 //      publicar({ titulo: "Hola", cuerpo: "texto", autor: "Ana" }) → "Hola por Ana"
-export function publicar(b: Borrador): string {
-  return ""
+export function publicar(b: Required<Borrador>): string {
+  return `${b.titulo} por ${b.autor}`
 }
+publicar({ titulo: 'Hola', cuerpo: 'texto', autor: 'Ana' }) // return: "Hola por Ana"
 
 type Pedido = { producto?: string; cantidad?: number }
 
 // 2) `confirmar` — refuerzo: recibe un pedido COMPLETO y devuelve el resumen.
 //      confirmar({ producto: "Té", cantidad: 3 }) → "3x Té"
-export function confirmar(p: Pedido): string {
-  return ""
+export function confirmar(p: Required<Pedido>): string {
+  return `${p.cantidad}x ${p.producto}`
 }
+confirmar({ producto: 'Té', cantidad: 3 }) // return: "3x Té"
 
 
 /* ---------------------------------------------------------------------------
@@ -84,14 +86,14 @@ export function confirmar(p: Pedido): string {
 //       starter se deja `cuerpo` y `autor`).
 //      crearBorrador("Hola", "texto", "Ana")
 //        → { titulo: "Hola", cuerpo: "texto", autor: "Ana" }
-export function crearBorrador(titulo: string, cuerpo: string, autor: string): Borrador {
-  return { titulo }
+export function crearBorrador(titulo: string, cuerpo: string, autor: string): Required<Borrador> {
+  return { titulo, cuerpo, autor }
 }
 
 // 4) `crearPedido` — refuerzo: devuelve un pedido COMPLETO.
 //      crearPedido("Té", 3) → { producto: "Té", cantidad: 3 }
-export function crearPedido(producto: string, cantidad: number): Pedido {
-  return { producto }
+export function crearPedido(producto: string, cantidad: number): Required<Pedido> {
+  return { producto, cantidad }
 }
 
 
@@ -111,6 +113,6 @@ export function crearPedido(producto: string, cantidad: number): Pedido {
 //       defaults tal cual). Pista: `borrador.titulo ?? defaults.titulo`, etc.
 //      completar({ titulo: "Mío" }, { titulo: "X", cuerpo: "C", autor: "A" })
 //        → { titulo: "Mío", cuerpo: "C", autor: "A" }
-export function completar(borrador: Borrador, defaults: Borrador): Borrador {
-  return defaults
+export function completar(borrador: Borrador, defaults: Required<Borrador>): Required<Borrador> {
+  return { titulo: borrador.titulo ?? defaults.titulo, cuerpo: borrador.cuerpo ?? defaults.cuerpo, autor: borrador.autor ?? defaults.autor }
 }

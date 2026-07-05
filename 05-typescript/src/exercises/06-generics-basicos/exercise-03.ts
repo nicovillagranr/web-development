@@ -30,33 +30,36 @@
 // 1) `primero` — el primer elemento, o undefined si vacío.
 //    primero([1, 2, 3]) → 1 ; primero([]) → undefined
 export function primero<T>(xs: T[]): T | undefined {
-  return undefined
+  return xs[0]
 }
 
 // 2) `ultimo` — el último elemento, o undefined si vacío.
 //    ultimo(["a", "b"]) → "b" ; ultimo([]) → undefined
 export function ultimo<T>(xs: T[]): T | undefined {
-  return undefined
+  return xs[xs.length - 1]
 }
+ultimo([]) // undefined
+ultimo([1, 2, 3, 4, 5, 6, 7, 8]) // 8
 
 /* --- BLOQUE B — construir arrays --- */
 
 // 3) `envolver` — mete `x` en una lista de uno.
 //    envolver(5) → [5]
 export function envolver<T>(x: T): T[] {
-  return []
+  return [x]
 }
 
 // 4) `repetir` — `x` repetido `n` veces.
 //    repetir("x", 3) → ["x", "x", "x"]
 export function repetir<T>(x: T, n: number): T[] {
-  return []
+  return Array(n).fill(x) // Array(n) crea un array vacío de longitud n, y fill(x) rellena con x
 }
+repetir('x', 3) // ['x', 'x', 'x']
 
 /* --- BLOQUE C — CAPSTONE: recortar --- */
 
 // 5) `tomar` — los primeros `n` elementos.
 //    tomar([1, 2, 3, 4], 2) → [1, 2]
 export function tomar<T>(xs: T[], n: number): T[] {
-  return []
+  return xs.slice(0, n)
 }

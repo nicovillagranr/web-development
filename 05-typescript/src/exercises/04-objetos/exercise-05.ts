@@ -30,27 +30,33 @@
 // 1) `clavesDe` — las claves del objeto.
 //    clavesDe({ a: 1, b: 2 }) → ["a", "b"]
 export function clavesDe(obj: Record<string, number>): string[] {
-  return []
+  return Object.keys(obj)
 }
+// return: ["a", "b"]
+clavesDe({ a: 1, b: 2 })
 
 // 2) `valoresDe` — los valores del objeto.
 //    valoresDe({ a: 1, b: 2 }) → [1, 2]
 export function valoresDe(obj: Record<string, number>): number[] {
-  return []
+  return Object.values(obj)
 }
+// return: [1, 2]
+valoresDe({ a: 1, b: 2 })
 
 /* --- BLOQUE B — values + reduce, y entries --- */
 
 // 3) `sumaDeValores` — la suma de todos los valores.
 //    sumaDeValores({ a: 1, b: 2, c: 3 }) → 6
 export function sumaDeValores(obj: Record<string, number>): number {
-  return 0
+  return Object.values(obj).reduce((acumulador, valor) => acumulador + valor, 0)
 }
+// return: 6
+sumaDeValores({ a: 1, b: 2, c: 3 })
 
 // 4) `paresClaveValor` — los pares [clave, valor].
 //    paresClaveValor({ a: 1 }) → [["a", 1]]
 export function paresClaveValor(obj: Record<string, number>): [string, number][] {
-  return []
+  return Object.entries(obj)
 }
 
 /* --- BLOQUE C — CAPSTONE: entries + map + join --- */
@@ -58,5 +64,5 @@ export function paresClaveValor(obj: Record<string, number>): [string, number][]
 // 5) `describir` — "clave=valor" de cada par, unidos por ", ".
 //    describir({ a: 1, b: 2 }) → "a=1, b=2"
 export function describir(obj: Record<string, number>): string {
-  return ''
+  return Object.entries(obj).map(([clave, valor]) => `${clave}=${valor}`).join(", ")
 }

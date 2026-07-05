@@ -29,27 +29,29 @@
 // 1) `mapear` — transforma cada elemento con `fn`.
 //    mapear([1, 2], (n) => n * 2) → [2, 4]
 export function mapear<T, U>(xs: T[], fn: (x: T) => U): U[] {
-  return []
+  return xs.map((x) => fn(x))
 }
+mapear([1, 2], (n) => n * 2) // [2, 4]
 
 // 2) `filtrar` — quédate con los que cumplen `pred`.
 //    filtrar([1, 2, 3], (n) => n > 1) → [2, 3]
 export function filtrar<T>(xs: T[], pred: (x: T) => boolean): T[] {
-  return []
+  return xs.filter((x) => pred(x))
 }
+filtrar([1, 2, 3], (n) => n > 1) // [2, 3]
 
 /* --- BLOQUE B — find y contar --- */
 
 // 3) `encontrar` — el primero que cumple, o undefined.
 //    encontrar([1, 2, 3], (n) => n > 1) → 2 ; encontrar([1], (n) => n > 5) → undefined
 export function encontrar<T>(xs: T[], pred: (x: T) => boolean): T | undefined {
-  return undefined
+  return xs.find((x) => pred(x))
 }
 
 // 4) `contarSi` — cuántos cumplen `pred`.
 //    contarSi([1, 2, 3, 4], (n) => n % 2 === 0) → 2
 export function contarSi<T>(xs: T[], pred: (x: T) => boolean): number {
-  return 0
+  return xs.filter((x) => pred(x)).length
 }
 
 /* --- BLOQUE C — CAPSTONE: map + filter encadenados --- */
@@ -57,5 +59,5 @@ export function contarSi<T>(xs: T[], pred: (x: T) => boolean): number {
 // 5) `mapearYfiltrar` — transforma con `fn` y luego deja los que cumplen `pred`.
 //    mapearYfiltrar([1, 2, 3], (n) => n * 10, (n) => n > 15) → [20, 30]
 export function mapearYfiltrar<T, U>(xs: T[], fn: (x: T) => U, pred: (u: U) => boolean): U[] {
-  return []
+  return xs.map((x) => fn(x)).filter((u) => pred(u))
 }

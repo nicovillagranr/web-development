@@ -59,18 +59,23 @@ type Usuario = { id: number; nombre: string; email: string; password: string }
 //       incluido) y el cuerpo (ahora ignora el id y devuelve datos a secas).
 //      crearUsuario({ nombre: "Ana", email: "a@a.com", password: "123" }, 1)
 //        → { id: 1, nombre: "Ana", email: "a@a.com", password: "123" }
-export function crearUsuario(datos: Usuario, id: number): Usuario {
-  return datos
+export function crearUsuario(datos: Omit<Usuario, "id">, id: number): Usuario {
+  return { id, ...datos }
 }
+// Al omitir id. Creamos un usuario con el id del parámetro de la función y los demás datos.
+// return: { id: 1, nombre: "Ana", email: "a@a.com", password: "123" }
+crearUsuario({ nombre: "Ana", email: "a@a.com", password: "123" }, 1)
 
 type Producto = { sku: string; nombre: string; precio: number; stock: number }
 
 // 2) `crearProducto` — refuerzo: recibe los datos SIN sku, más el `sku` aparte.
 //      crearProducto({ nombre: "Té", precio: 1000, stock: 5 }, "TE-01")
 //        → { sku: "TE-01", nombre: "Té", precio: 1000, stock: 5 }
-export function crearProducto(datos: Producto, sku: string): Producto {
-  return datos
+export function crearProducto(datos: Omit<Producto, "sku">, sku: string): Producto {
+  return { sku, ...datos }
 }
+crearProducto({ nombre: "Té", precio: 1000, stock: 5 }, "TE-01")
+crearProducto({ nombre: "Coca Cola", precio: 100, stock: 5 }, "CC-01")
 
 
 /* ---------------------------------------------------------------------------
@@ -79,21 +84,25 @@ export function crearProducto(datos: Producto, sku: string): Producto {
  * Recibes el objeto entero y devuelves una copia sin el campo sensible.
  * -------------------------------------------------------------------------- */
 
+// type Usuario = { id: number; nombre: string; email: string; password: string }
+
 // 3) `sinPassword` — recibe un Usuario y devuelve una copia SIN `password`
 //    (lo que mandarías por la red al frontend).
 //    👉 Dos arreglos: el tipo de retorno (ahora promete el Usuario ENTERO) y el
 //       cuerpo (ahora devuelve el usuario entero, password incluido).
 //      sinPassword({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
 //        → { id: 1, nombre: "Ana", email: "a@a.com" }
-export function sinPassword(u: Usuario): Usuario {
-  return u
+export function sinPassword(u: Usuario): Omit<Usuario, "password"> {
+  return { id: u.id, nombre: u.nombre, email: u.email }
 }
+// return: { id: 1, nombre: "Ana", email: "a@a.com" }
+sinPassword({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
 
 // 4) `productoVisible` — refuerzo: devuelve el Producto SIN `sku` (interno).
 //      productoVisible({ sku: "TE-01", nombre: "Té", precio: 1000, stock: 5 })
 //        → { nombre: "Té", precio: 1000, stock: 5 }
-export function productoVisible(p: Producto): Producto {
-  return p
+export function productoVisible(p: Producto): Omit<Producto, "sku"> {
+  return { nombre: p.nombre, precio: p.precio, stock: p.stock }
 }
 
 
@@ -108,6 +117,9 @@ export function productoVisible(p: Producto): Producto {
 //    los Usuarios completos, con id = posición + 1.
 //      registrarUsuarios([{ nombre: "Ana", email: "a@a.com", password: "x" }])
 //        → [{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }]
-export function registrarUsuarios(altas: Usuario[]): Usuario[] {
-  return altas
+export function registrarUsuarios(altas: Omit<Usuario, "id">[]): Usuario[] {
+  return altas.map((usuario, i) => crearUsuario(usuario, i + 1))
 }
+// return: [{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }]
+// return: [{ id: 2, nombre: "Leo", email: "l@l.com", password: "y" }]
+registrarUsuarios([{ nombre: "Ana", email: "a@a.com", password: "x" }, { nombre: "Leo", email: "l@l.com", password: "y" },])

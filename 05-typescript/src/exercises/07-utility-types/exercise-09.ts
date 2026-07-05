@@ -63,16 +63,16 @@ type Config = { tema: string; idioma: string; fuente: number }
 //       cuerpo (ahora devuelve el MISMO objeto en vez de una copia).
 //      congelarConfig({ tema: "claro", idioma: "es", fuente: 14 })
 //        → { tema: "claro", idioma: "es", fuente: 14 }  (pero ya no se puede reasignar)
-export function congelarConfig(c: Config): Config {
-  return c
+export function congelarConfig(c: Config): Readonly<Config> {
+  return { tema: c.tema, idioma: c.idioma, fuente: c.fuente }
 }
 
 type Punto = { x: number; y: number }
 
 // 2) `congelarPunto` — refuerzo, otro tipo: devuelve el Punto sellado (copia).
 //      congelarPunto({ x: 3, y: 4 }) → { x: 3, y: 4 }  (solo lectura)
-export function congelarPunto(p: Punto): Punto {
-  return p
+export function congelarPunto(p: Punto): Readonly<Punto> {
+  return { x: p.x, y: p.y }
 }
 
 
@@ -89,20 +89,19 @@ export function congelarPunto(p: Punto): Punto {
 //       MUTA con `p.x = ...`) y el cuerpo (debe devolver un objeto NUEVO por
 //       spread, sin tocar el original).
 //      moverDerecha({ x: 0, y: 0 }) → { x: 1, y: 0 }  (y el original sigue { x: 0, y: 0 })
-export function moverDerecha(p: Punto): Punto {
-  p.x = p.x + 1
-  return p
+export function moverDerecha(p: Readonly<Punto>): Punto {
+  return { ...p, x: p.x + 1 }
 }
+moverDerecha({ x: 0, y: 0 }) // → { x: 1, y: 0 }
+moverDerecha({ x: 5, y: 5 }) // → { x: 6, y: 5 }
 
 type Caja = { ancho: number; alto: number }
 
 // 4) `escalar` — refuerzo: recibe una Caja que NO debe mutar y un `factor`;
 //    devuelve una caja NUEVA con ambas medidas multiplicadas.
 //      escalar({ ancho: 2, alto: 3 }, 10) → { ancho: 20, alto: 30 }
-export function escalar(c: Caja, factor: number): Caja {
-  c.ancho = c.ancho * factor
-  c.alto = c.alto * factor
-  return c
+export function escalar(c: Readonly<Caja>, factor: number): Caja {
+  return { ...c, ancho: c.ancho * factor, alto: c.alto * factor }
 }
 
 
@@ -113,13 +112,15 @@ export function escalar(c: Caja, factor: number): Caja {
  * cambiado. No puedes tocar la base: tienes que crear otra (spread + pisar).
  * -------------------------------------------------------------------------- */
 
+// type Config = { tema: string; idioma: string; fuente: number }
+
 // 5) `cambiarTema` — recibe una Config sellada y un `tema` nuevo; devuelve una
 //    Config NUEVA (también sellada) con el tema cambiado y el resto igual.
 //    👉 Arreglos: tipo del parámetro (sellado), tipo de retorno (sellado) y el
 //       cuerpo (el starter muta la base; usa spread).
 //      cambiarTema({ tema: "claro", idioma: "es", fuente: 14 }, "oscuro")
 //        → { tema: "oscuro", idioma: "es", fuente: 14 }
-export function cambiarTema(base: Config, tema: string): Config {
-  base.tema = tema
-  return base
+export function cambiarTema(base: Readonly<Config>, tema: string): Readonly<Config> {
+  return { ...base, tema: tema, idioma: base.idioma, fuente: base.fuente }
 }
+cambiarTema({ tema: 'claro', idioma: 'es', fuente: 14 }, 'oscuro') // → { tema: "oscuro", idioma: "es", fuente: 14 } inmutable

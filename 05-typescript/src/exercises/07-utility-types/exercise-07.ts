@@ -60,8 +60,8 @@ type Usuario = { id: number; nombre: string; email: string; password: string }
 //       cuerpo (ahora devuelve el usuario entero → filtraría datos sensibles).
 //      vistaPublica({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
 //        → { id: 1, nombre: "Ana" }
-export function vistaPublica(u: Usuario): Usuario {
-  return u
+export function vistaPublica(u: Usuario): Pick<Usuario, "id" | "nombre"> {
+  return { id: u.id, nombre: u.nombre }
 }
 
 type Producto = { nombre: string; precio: number; stock: number; sku: string }
@@ -70,8 +70,8 @@ type Producto = { nombre: string; precio: number; stock: number; sku: string }
 //    solo `nombre` y `precio` (lo que se ve en una tarjeta de tienda).
 //      tarjetaProducto({ nombre: "Té", precio: 1000, stock: 5, sku: "TE-01" })
 //        → { nombre: "Té", precio: 1000 }
-export function tarjetaProducto(p: Producto): Producto {
-  return p
+export function tarjetaProducto(p: Producto): Pick<Producto, "nombre" | "precio"> {
+  return { nombre: p.nombre, precio: p.precio }
 }
 
 
@@ -88,14 +88,14 @@ export function tarjetaProducto(p: Producto): Producto {
 //    👉 Dos arreglos: el tipo del parámetro (ahora exige el Producto ENTERO) y el
 //       cuerpo (ahora devuelve "").
 //      etiquetaPrecio({ nombre: "Té", precio: 1000 }) → "Té: $1000"
-export function etiquetaPrecio(p: Producto): string {
-  return ""
+export function etiquetaPrecio(p: Pick<Producto, "nombre" | "precio">): string {
+  return `${p.nombre}: $${p.precio}`
 }
 
 // 4) `infoStock` — refuerzo: solo necesita `nombre` y `stock`.
 //      infoStock({ nombre: "Té", stock: 5 }) → "Té: 5 en stock"
-export function infoStock(p: Producto): string {
-  return ""
+export function infoStock(p: Pick<Producto, "nombre" | "stock">): string {
+  return `${p.nombre}: ${p.stock} en stock`
 }
 
 
@@ -106,10 +106,12 @@ export function infoStock(p: Producto): string {
  * retorno es ahora "un array de vistas": el `[]` va FUERA del `Pick`.
  * -------------------------------------------------------------------------- */
 
+// type Usuario = { id: number; nombre: string; email: string; password: string }
+
 // 5) `listaPublica` — recibe un array de Usuarios completos y devuelve un array
 //    de vistas públicas (solo `id` y `nombre`).
 //      listaPublica([{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }])
 //        → [{ id: 1, nombre: "Ana" }]
-export function listaPublica(usuarios: Usuario[]): Usuario[] {
-  return usuarios
+export function listaPublica(usuarios: Usuario[]): Pick<Usuario, "id" | "nombre">[] {
+  return usuarios.map((usuario) => vistaPublica(usuario))
 }

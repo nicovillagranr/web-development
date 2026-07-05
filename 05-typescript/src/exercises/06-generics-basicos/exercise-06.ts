@@ -28,7 +28,7 @@
 // 1) `unicos` — la lista sin duplicados.
 //    unicos([1, 1, 2, 3, 3]) → [1, 2, 3]
 export function unicos<T>(xs: T[]): T[] {
-  return []
+  return xs.filter((x, i) => xs.indexOf(x) === i)
 }
 
 // 2) `incluye` — ¿está `x` en la lista?
