@@ -34,7 +34,7 @@ export function unicos<T>(xs: T[]): T[] {
 // 2) `incluye` — ¿está `x` en la lista?
 //    incluye([1, 2, 3], 2) → true ; incluye([1], 9) → false
 export function incluye<T>(xs: T[], x: T): boolean {
-  return false
+  return xs.includes(x)
 }
 
 /* --- BLOQUE B — quitar y añadir sin duplicar --- */
@@ -42,13 +42,13 @@ export function incluye<T>(xs: T[], x: T): boolean {
 // 3) `sinElemento` — la lista sin las apariciones de `x` (inmutable).
 //    sinElemento([1, 2, 1, 3], 1) → [2, 3]
 export function sinElemento<T>(xs: T[], x: T): T[] {
-  return []
+  return xs.filter((elemento) => elemento !== x) // Un nuevo array filtrará todos los elementos que sean diferentes a x
 }
 
 // 4) `agregarUnico` — añade `x` solo si no estaba (inmutable).
 //    agregarUnico([1, 2], 3) → [1, 2, 3] ; agregarUnico([1, 2], 2) → [1, 2]
 export function agregarUnico<T>(xs: T[], x: T): T[] {
-  return xs
+  return xs.includes(x) ? xs : [...xs, x]
 }
 
 /* --- BLOQUE C — CAPSTONE: unir sin duplicar --- */
@@ -56,5 +56,6 @@ export function agregarUnico<T>(xs: T[], x: T): T[] {
 // 5) `combinarUnicos` — junta dos listas quitando duplicados.
 //    combinarUnicos([1, 2], [2, 3]) → [1, 2, 3]
 export function combinarUnicos<T>(a: T[], b: T[]): T[] {
-  return []
+  return [...new Set([...a, ...b])]
 }
+

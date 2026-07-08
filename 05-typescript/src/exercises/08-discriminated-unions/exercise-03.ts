@@ -67,8 +67,7 @@ export type EstadoUsuario =
 //    estaCargando({ estado: "cargando" }) → true
 //    estaCargando({ estado: "error", mensaje: "x" }) → false
 export function estaCargando(e: EstadoUsuario): boolean {
-  // completa aquí (compara e.estado con "cargando")
-  return false
+  return e.estado === "cargando"
 }
 
 // 2) `nombreSiExito` — el nombre del usuario si es "exito"; si no, null.
@@ -76,16 +75,24 @@ export function estaCargando(e: EstadoUsuario): boolean {
 //    nombreSiExito({ estado: "cargando" }) → null
 //    (Estrecha por e.estado ANTES de tocar e.usuario.)
 export function nombreSiExito(e: EstadoUsuario): string | null {
-  // completa aquí
-  return null
+  if (e.estado === "exito") {
+    return e.usuario.nombre
+  }
+  else {
+    return null
+  }
 }
 
 // 3) `edadOcero` — la edad si es "exito"; si no, 0.
 //    edadOcero({ estado: "exito", usuario: { nombre: "Ana", edad: 30 } }) → 30
 //    edadOcero({ estado: "error", mensaje: "x" }) → 0
 export function edadOcero(e: EstadoUsuario): number {
-  // completa aquí
-  return 0
+  if (e.estado === "exito") {
+    return e.usuario.edad
+  }
+  else {
+    return 0
+  }
 }
 
 
@@ -96,8 +103,11 @@ export function edadOcero(e: EstadoUsuario): number {
 //      "exito"    → `Hola, ${nombre}`   (usa e.usuario.nombre)
 //      "error"    → `Error: ${mensaje}` (usa e.mensaje)
 export function mensajeEstado(e: EstadoUsuario): string {
-  // completa aquí (switch con los 3 case)
-  return ""
+  switch (e.estado) {
+    case "cargando": return "Cargando…"
+    case "exito": return `Hola, ${e.usuario.nombre}`
+    case "error": return `Error: ${e.mensaje}`
+  }
 }
 
 // 5) CAPSTONE `resumenEstado` — igual que el 4 pero AÑADE la rama `default` con
@@ -108,6 +118,10 @@ export function mensajeEstado(e: EstadoUsuario): string {
 //      "exito"    → `✅ ${nombre} (${edad})`
 //      "error"    → `❌ ${mensaje}`
 export function resumenEstado(e: EstadoUsuario): string {
-  // completa aquí (switch + default con `const _exhaustivo: never = e`)
-  return ""
+  switch (e.estado) {
+    case "cargando": return "⏳ esperando"
+    case "exito": return `✅ ${e.usuario.nombre} (${e.usuario.edad})`
+    case "error": return `❌ ${e.mensaje}`
+    default: const _exhaustivo: never = e
+  }
 }

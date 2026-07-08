@@ -30,13 +30,14 @@
 // 1) `plegar` — reduce genérico: combina la lista en un `U`.
 //    plegar([1, 2, 3], 0, (acc, n) => acc + n) → 6
 export function plegar<T, U>(xs: T[], inicial: U, combinar: (acc: U, x: T) => U): U {
-  return inicial
+  return xs.reduce(combinar, inicial)
 }
+plegar([1, 2, 3], 0, (acc, n) => acc + n)
 
 // 2) `total` — suma de `valor(x)` de cada elemento.
 //    total([{ p: 10 }, { p: 5 }], (x) => x.p) → 15
 export function total<T>(xs: T[], valor: (x: T) => number): number {
-  return 0
+  return
 }
 
 /* --- BLOQUE B — acumular en objeto, y comprobar --- */

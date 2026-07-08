@@ -65,7 +65,7 @@ export type Peticion =
 //    puedeReintentar({ fase: "fallo", codigo: 500 }) → true
 //    puedeReintentar({ fase: "cargando" }) → false
 export function puedeReintentar(p: Peticion): boolean {
-  // completa aquí
+  if (p.fase === "idle" || p.fase === "fallo") return true
   return false
 }
 
@@ -73,7 +73,7 @@ export function puedeReintentar(p: Peticion): boolean {
 //    cantidadDatos({ fase: "ok", datos: ["a", "b"] }) → 2
 //    cantidadDatos({ fase: "idle" }) → 0
 export function cantidadDatos(p: Peticion): number {
-  // completa aquí (estrecha por p.fase antes de tocar p.datos)
+  if (p.fase === "ok") return p.datos.length
   return 0
 }
 
@@ -84,8 +84,13 @@ export function cantidadDatos(p: Peticion): number {
 //      "ok"       → `${n} datos`        (n = datos.length)
 //      "fallo"    → `Error ${codigo}`
 export function descripcion(p: Peticion): string {
-  // completa aquí (switch con 4 case + default never)
-  return ""
+  switch (p.fase) {
+    case: "idle": return "Sin empezar"
+    case: "cargando": return "Cargando…"
+    case: "ok": return `${p.datos.length} datos`
+    case: "fallo": return `Error ${p.codigo}`
+    default: const _exhaustivo: never = p
+  }
 }
 
 
@@ -98,12 +103,10 @@ export function descripcion(p: Peticion): string {
 //      desdeBanderas(false, ["a"], null) → { fase: "ok", datos: ["a"] }
 //      desdeBanderas(true, null, null)   → { fase: "cargando" }
 //      desdeBanderas(false, null, 404)   → { fase: "fallo", codigo: 404 }
-export function desdeBanderas(
-  cargando: boolean,
-  datos: string[] | null,
-  codigo: number | null,
-): Peticion {
-  // completa aquí (decide la fase con if/else en orden de prioridad)
+export function desdeBanderas(cargando: boolean, datos: string[] | null, codigo: number | null,): Peticion {
+  if (cargando) return { fase: "cargando" }
+  if (codigo) return { fase: "fallo", codigo }
+  if (datos) return { fase: "ok", datos }
   return { fase: "idle" }
 }
 
