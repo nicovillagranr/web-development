@@ -55,24 +55,23 @@ export type Resultado<T> =
 //    respuesta. (No necesitas if/else.)
 //    esExito({ ok: true, valor: 5 }) → true
 export function esExito<T>(r: Resultado<T>): boolean {
-  // completa aquí (una línea)
-  return false
+  return r.ok
 }
 
 // 2) `valorODefecto` — el valor si salió bien; si no, el `porDefecto` que te pasan.
 //    valorODefecto({ ok: true, valor: 5 }, 0) → 5
 //    valorODefecto({ ok: false, error: "x" }, 0) → 0
 export function valorODefecto<T>(r: Resultado<T>, porDefecto: T): T {
-  // completa aquí (estrecha por r.ok)
-  return porDefecto
+  // r.ok es true? en ese caso retorna r.valor, en caso de ser false retorna porDefecto
+  return r.ok ? r.valor : porDefecto
 }
 
 // 3) `mensajeError` — el error si salió mal; si salió bien, null.
 //    mensajeError({ ok: false, error: "boom" }) → "boom"
 //    mensajeError({ ok: true, valor: 5 }) → null
 export function mensajeError<T>(r: Resultado<T>): string | null {
-  // completa aquí
-  return null
+  // r.ok es true? en ese caso retorna null, en caso de ser false retorna r.error
+  return r.ok ? null : r.error
 }
 
 
@@ -83,8 +82,10 @@ export function mensajeError<T>(r: Resultado<T>): string | null {
 //    dividir(6, 2) → { ok: true, valor: 3 }
 //    dividir(1, 0) → { ok: false, error: "división por cero" }
 export function dividir(a: number, b: number): Resultado<number> {
-  // completa aquí
-  return { ok: false, error: "" }
+  if (b != 0) {
+    return { ok: true, valor: a / b }
+  }
+  return { ok: false, error: "división por cero" }
 }
 
 // 5) CAPSTONE `mapResultado` — transforma el valor de éxito con `f`, dejando el
@@ -93,6 +94,8 @@ export function dividir(a: number, b: number): Resultado<number> {
 //    mapResultado({ ok: true, valor: 4 }, (n) => n * 10) → { ok: true, valor: 40 }
 //    mapResultado({ ok: false, error: "x" }, (n) => n * 10) → { ok: false, error: "x" }
 export function mapResultado<T, U>(r: Resultado<T>, f: (valor: T) => U): Resultado<U> {
-  // completa aquí (estrecha por r.ok; aplica f solo en la rama de éxito)
-  return { ok: false, error: "" }
+  if (r.ok) {
+    return { ok: true, valor: f(r.valor) }
+  }
+  return { ok: false, error: r.error }
 }

@@ -1,5 +1,14 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
-import { parseNumero, raiz, andThen, primerError, secuenciar } from './exercise-06'
+import {
+  parseNumero,
+  raiz,
+  andThen,
+  primerError,
+  secuenciar,
+  por10,
+  soloPositivos,
+  valoresSiTodoOk,
+} from './exercise-06'
 import type { Resultado } from './exercise-06'
 
 describe('exercise-06 — errores como datos: encadenar y secuenciar', () => {
@@ -46,5 +55,37 @@ describe('exercise-06 — errores como datos: encadenar y secuenciar', () => {
     ).toEqual({ ok: false, error: 'x' })
     expect(secuenciar<number>([])).toEqual({ ok: true, valor: [] })
     expectTypeOf(secuenciar<number>).returns.toEqualTypeOf<Resultado<number[]>>()
+  })
+
+  // BLOQUE C — escalera de refuerzo del capstone
+  it('C1) por10 acumula en un array nuevo', () => {
+    expect(por10([1, 2, 3])).toEqual([10, 20, 30])
+    expect(por10([])).toEqual([])
+    // no muta el array de entrada
+    const entrada = [1, 2]
+    por10(entrada)
+    expect(entrada).toEqual([1, 2])
+  })
+
+  it('C2) soloPositivos acumula o corta al primer negativo', () => {
+    expect(soloPositivos([1, 2, 3])).toEqual([1, 2, 3])
+    expect(soloPositivos([1, -5, 3])).toBeNull()
+    expect(soloPositivos([])).toEqual([])
+  })
+
+  it('C3) valoresSiTodoOk junta los valores o null al primer fallo', () => {
+    expect(
+      valoresSiTodoOk([
+        { ok: true, valor: 1 },
+        { ok: true, valor: 2 },
+      ]),
+    ).toEqual([1, 2])
+    expect(
+      valoresSiTodoOk([
+        { ok: true, valor: 1 },
+        { ok: false, error: 'x' },
+      ]),
+    ).toBeNull()
+    expect(valoresSiTodoOk([])).toEqual([])
   })
 })

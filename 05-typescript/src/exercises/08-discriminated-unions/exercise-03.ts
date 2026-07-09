@@ -122,6 +122,9 @@ export function resumenEstado(e: EstadoUsuario): string {
     case "cargando": return "⏳ esperando"
     case "exito": return `✅ ${e.usuario.nombre} (${e.usuario.edad})`
     case "error": return `❌ ${e.mensaje}`
-    default: const _exhaustivo: never = e
+    default: {
+      const _exhaustivo: never = e
+      return _exhaustivo
+    }
   }
 }
