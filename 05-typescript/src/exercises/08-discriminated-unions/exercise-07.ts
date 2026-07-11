@@ -158,12 +158,13 @@ aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "sumar", cantidad: 4
  *   leerContador({ contador: 7, historial: ["a"] }) → 7
  *   leerContador({ contador: 0, historial: [] })    → 0
  */
-export function leerContador(estado: EstadoContador): number {
-  // escribe aquí: saca el número de dentro del estado (notación punto)
-  return 0
-}
-// leerContador({ contador: 7, historial: ["a"] }) // → 7
 
+// export type EstadoContador = { contador: number; historial: string[] }
+
+export function leerContador(estado: EstadoContador): number {
+  return estado.contador
+}
+leerContador({ contador: 7, historial: ["a", "b", "c"] }) // → 7
 
 /* ── C2 — AÑADIR a un array SIN romper el viejo ────────────────────────────────
  * La pieza (b), sola. Recibes un historial (lista de textos) y una etiqueta nueva,
@@ -178,10 +179,11 @@ export function leerContador(estado: EstadoContador): number {
  *   agregarEtiqueta([], "reset")  → ["reset"]
  */
 export function agregarEtiqueta(historial: string[], etiqueta: string): string[] {
-  // escribe aquí: lista NUEVA con la etiqueta al final (spread, NO .push)
-  return []
+  return [...historial, etiqueta]
 }
-// agregarEtiqueta(["+1"], "+2") // → ["+1", "+2"]
+agregarEtiqueta(["+1"], "+2") // → ["+1", "+2"]
+agregarEtiqueta([], "reset") // → ["reset"]
+agregarEtiqueta(["+1", "+2"], "+3") // → ["+1", "+2", "+3"]
 
 
 /* ── C3 — CONSTRUIR el objeto de dos campos ────────────────────────────────────
@@ -195,10 +197,10 @@ export function agregarEtiqueta(historial: string[], etiqueta: string): string[]
  *   nuevoEstado(0, [])     → { contador: 0, historial: [] }
  */
 export function nuevoEstado(n: number, lista: string[]): EstadoContador {
-  // escribe aquí: objeto nuevo { contador: ..., historial: ... } (¿qué valor en cada campo?)
-  return { contador: 0, historial: [] }
+  return { contador: n, historial: lista }
 }
-// nuevoEstado(5, ["+5"]) // → { contador: 5, historial: ["+5"] }
+nuevoEstado(5, ["+5"]) // → { contador: 5, historial: ["+5"] }
+nuevoEstado(0, []) // → { contador: 0, historial: [] }
 
 
 /* ── C4 — COMBINAR (b)+(c): estado nuevo con contador dado + etiqueta añadida ───
@@ -213,9 +215,11 @@ export function nuevoEstado(n: number, lista: string[]): EstadoContador {
  *   avanzarManual({ contador: 1, historial: ["+1"] }, 3, "+2")
  *     → { contador: 3, historial: ["+1", "+2"] }
  */
+
+// export type EstadoContador = { contador: number; historial: string[] }
+
 export function avanzarManual(estado: EstadoContador, nuevoContador: number, etiqueta: string): EstadoContador {
-  // escribe aquí: { contador: el que te dan, historial: el viejo + la etiqueta (como C2) }
-  return estado
+  return { contador: nuevoContador, historial: [...estado.historial, etiqueta] }
 }
 // avanzarManual({ contador: 1, historial: ["+1"] }, 3, "+2") // → { contador: 3, historial: ["+1", "+2"] }
 
@@ -232,8 +236,10 @@ export function avanzarManual(estado: EstadoContador, nuevoContador: number, eti
  *   aplicarConHistorialBis({ contador: 4, historial: ["+4"] }, { tipo: "sumar", cantidad: 3 })
  *     → { contador: 7, historial: ["+4", "+3"] }
  */
+
+// export type EstadoContador = { contador: number; historial: string[] }
+
 export function aplicarConHistorialBis(estado: EstadoContador, accion: Accion): EstadoContador {
-  // escribe aquí: como C4, pero calcula el contador con aplicar(...) y la etiqueta con etiquetaAccion(...)
-  return estado
+  return { contador: aplicar(estado.contador, accion), historial: [...estado.historial, etiquetaAccion(accion)] }
 }
 // aplicarConHistorialBis({ contador: 0, historial: [] }, { tipo: "incrementar" }) // → { contador: 1, historial: ["+1"] }

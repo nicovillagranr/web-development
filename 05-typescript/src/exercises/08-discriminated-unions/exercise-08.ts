@@ -51,8 +51,7 @@ export type Empleado =
 //    necesitas estrechar nada.
 //    nombreDe({ nombre: "Ana", salario: 3000 }) → "Ana"
 export function nombreDe(e: Empleado): string {
-  // completa aquí (una línea, sin `in`)
-  return ""
+  return e.nombre
 }
 
 // 2) `esPorHoras` — true si el empleado es del tipo "por horas". Detéctalo con
@@ -60,8 +59,7 @@ export function nombreDe(e: Empleado): string {
 //    esPorHoras({ nombre: "Beto", tarifaHora: 20, horas: 100 }) → true
 //    esPorHoras({ nombre: "Ana", salario: 3000 }) → false
 export function esPorHoras(e: Empleado): boolean {
-  // completa aquí
-  return false
+  return "tarifaHora" in e
 }
 
 
@@ -72,8 +70,10 @@ export function esPorHoras(e: Empleado): boolean {
 //    pagoMensual({ nombre: "Ana", salario: 3000 }) → 3000
 //    pagoMensual({ nombre: "Beto", tarifaHora: 20, horas: 100 }) → 2000
 export function pagoMensual(e: Empleado): number {
-  // completa aquí (if ("salario" in e) ... else ...)
-  return 0
+  if ("salario" in e) {
+    return e.salario
+  }
+  return e.tarifaHora * e.horas
 }
 
 // 4) `describirEmpleado` — un texto que combina nombre + tipo + pago:
@@ -81,14 +81,15 @@ export function pagoMensual(e: Empleado): number {
 //      por horas  → `${nombre}: por horas (${pago})`
 //    (Reusa pagoMensual para el número.)
 export function describirEmpleado(e: Empleado): string {
-  // completa aquí
-  return ""
+  if ("salario" in e) {
+    return `${e.nombre}: asalariado (${pagoMensual(e)})`
+  }
+  return `${e.nombre}: por horas (${pagoMensual(e)})`
 }
 
 // 5) CAPSTONE `nominaTotal` — suma el `pagoMensual` de una lista de empleados
 //    mezclados (asalariados y por horas).
 //    nominaTotal([{ nombre: "Ana", salario: 3000 }, { nombre: "Beto", tarifaHora: 20, horas: 100 }]) → 5000
 export function nominaTotal(empleados: Empleado[]): number {
-  // completa aquí (reduce o for sumando pagoMensual)
-  return 0
+  return empleados.reduce((acumulador, empleado) => acumulador + pagoMensual(empleado), 0)
 }

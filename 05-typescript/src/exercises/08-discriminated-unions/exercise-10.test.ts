@@ -44,7 +44,7 @@ describe('exercise-10 — CAPSTONE máquina de estados de un pedido', () => {
     })
     expect(pagar(pagando, 'tarjeta')).toEqual({
       ok: false,
-      error: 'solo se puede pagar desde el carrito',
+      error: 'Sólo se puede pagar desde el carrito',
     })
     expectTypeOf(pagar).returns.toEqualTypeOf<Resultado<Pedido>>()
   })
@@ -56,7 +56,7 @@ describe('exercise-10 — CAPSTONE máquina de estados de un pedido', () => {
     })
     expect(confirmar(carrito, 1)).toEqual({
       ok: false,
-      error: 'solo se puede confirmar lo que se está pagando',
+      error: 'Sólo se puede confirmar lo que se está pagando',
     })
   })
 })
