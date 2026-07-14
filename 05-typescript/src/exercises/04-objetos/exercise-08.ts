@@ -34,7 +34,9 @@ export type Producto = { nombre: string; categoria: string }
 //    agruparPorCategoria([{nombre:"a",categoria:"x"},{nombre:"b",categoria:"x"}])
 //      → { x: [{a}, {b}] }
 export function agruparPorCategoria(productos: Producto[]): Record<string, Producto[]> {
-  return {}
+  return productos.reduce<Record<string, Producto[]>>(
+    (acc, p) => ({ ...acc, [p.categoria]: [...(acc[p.categoria] ?? []), p] }), {},
+  )
 }
 
 // 2) `agruparPorParidad` — los números, en listas "par" / "impar".

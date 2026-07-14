@@ -26,6 +26,7 @@
  *     pnpm test:run src/exercises/04-objetos/exercise-06.test.ts
  * ===========================================================================*/
 
+
 /* --- BLOQUE A — construir el diccionario contando --- */
 
 // 1) `contar` — cuántas veces aparece cada palabra.
@@ -108,14 +109,15 @@ export function masFrecuente(palabras: string[]): string | undefined {
 // R1) `copiar` — una copia nueva del objeto (no el mismo objeto: una copia).
 //     copiar({ a: 1 }) → { a: 1 }
 export function copiar(obj: Record<string, number>): Record<string, number> {
-  return {}
+  return { ...obj }
 }
+copiar({ a: 10 }) // -> { a: 10 }
 
 // R2) `conTotal` — copia del objeto MÁS una propiedad nueva `total: 10`.
 //     Clave FIJA, escrita a mano. (Aquí todavía no hay llaves calculadas.)
 //     conTotal({ a: 1 }) → { a: 1, total: 10 }
 export function conTotal(obj: Record<string, number>): Record<string, number> {
-  return {}
+  return { ...obj, total: 10 }
 }
 
 // R3) `pisarA` — copia del objeto, pero con `a` valiendo 99 pase lo que pase.
@@ -123,8 +125,10 @@ export function conTotal(obj: Record<string, number>): Record<string, number> {
 //     así que lo que escribas después lo pisa.
 //     pisarA({ a: 1, b: 2 }) → { a: 99, b: 2 } ; pisarA({ b: 2 }) → { b: 2, a: 99 }
 export function pisarA(obj: Record<string, number>): Record<string, number> {
-  return {}
+  return { ...obj, a: 99 }
 }
+pisarA({ a: 1, b: 2 }) // -> { a: 99, b: 2 }
+pisarA({ b: 2 }) // -> { b: 2, a: 99 }
 
 /* ── R-B — LLAVE CALCULADA: `[algo]:` ── */
 
@@ -140,20 +144,21 @@ export function pisarA(obj: Record<string, number>): Record<string, number> {
 //     CALCULA un nombre.
 //     unaClave("hola", 3) → { hola: 3 }   (NO { clave: 3 })
 export function unaClave(clave: string, valor: number): Record<string, number> {
-  return {}
+  return { [clave]: valor }
 }
+unaClave("hola", 3) // -> { hola: 3 }
+unaClave("clave", 3) // -> { clave: 3 }
+unaClave("x", 0) // -> { x: 0 }
 
 // R5) `ponerClave` — copia del objeto + la propiedad `[clave]: valor`.
 //     Ahora sí: spread (R1) + llave calculada (R4), juntos.
 //     ponerClave({ a: 1 }, "b", 2) → { a: 1, b: 2 }
 //     ponerClave({ a: 1 }, "a", 9) → { a: 9 }        ← pisa, como en R3
-export function ponerClave(
-  obj: Record<string, number>,
-  clave: string,
-  valor: number,
-): Record<string, number> {
-  return {}
+export function ponerClave(obj: Record<string, number>, clave: string, valor: number,): Record<string, number> {
+  return { ...obj, [clave]: valor }
 }
+ponerClave({ a: 1 }, "b", 2) // -> { a: 1, b: 2 }
+ponerClave({ a: 1 }, "a", 9) // -> { a: 9 }
 
 /* ── R-C — LEER con respaldo, y UN PASO del reduce a mano ── */
 
@@ -162,7 +167,7 @@ export function ponerClave(
 //     Necesitas respaldar la AUSENCIA (no la falsedad): el operador es `??`, no `||`.
 //     leerOCero({ a: 5 }, "a") → 5 ; leerOCero({}, "x") → 0
 export function leerOCero(obj: Record<string, number>, clave: string): number {
-  return 0
+  return obj[clave] ?? 0
 }
 
 // R7) ⭐ `sumarUno` — copia del objeto con UN palote más en la fila de `clave`.
@@ -172,8 +177,10 @@ export function leerOCero(obj: Record<string, number>, clave: string): number {
 //     sumarUno({ a: 1 }, "a") → { a: 2 }     (la fila existía: 1 + 1)
 //     sumarUno({ a: 1 }, "b") → { a: 1, b: 1 } (la fila NO existía: 0 + 1)
 export function sumarUno(obj: Record<string, number>, clave: string): Record<string, number> {
-  return {}
+  return { ...obj, [clave]: (obj[clave] ?? 0) + 1 }
 }
+sumarUno({ a: 1 }, "a") // -> { a: 2 }
+sumarUno({ a: 1 }, "b") // -> { a: 1, b: 1 }
 
 /* ── R-D — EL PARÉNTESIS de la flecha ── */
 
@@ -185,8 +192,9 @@ export function sumarUno(obj: Record<string, number>, clave: string): Record<str
 //     Luego añade los paréntesis. Quiero que veas el error con tus ojos.
 //     envolverTodos([1, 2]) → [{ valor: 1 }, { valor: 2 }]
 export function envolverTodos(ns: number[]): { valor: number }[] {
-  return []
+  return ns.map((n) => ({ valor: n }))
 }
+envolverTodos([1, 2])
 
 /* ── R-E — YA CON REDUCE ── */
 
@@ -197,16 +205,23 @@ export function envolverTodos(ns: number[]): { valor: number }[] {
 //     El `<Record<string, number>>` le dice a TS de qué tipo es el acumulador.
 //     contarBis(["a", "b", "a"]) → { a: 2, b: 1 } ; contarBis([]) → {}
 export function contarBis(palabras: string[]): Record<string, number> {
-  return {}
+  return { ...palabras.reduce((acumulador, palabra) => sumarUno(acumulador, palabra), {}) }
 }
+contarBis(["a", "b", "a"]) // -> { a: 2, b: 1 }
+contarBis([]) // -> {}
 
 // R10) `sumarPorClave` — mismo patrón, pero en vez de sumar 1 sumas el valor que
 //      viene en cada par. Recorres TUPLAS, así que en el callback desempaquetas
 //      igual que en el ejercicio anterior: `(acumulador, [clave, valor]) => ...`
 //      sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) → { a: 11, b: 2 }
 export function sumarPorClave(pares: [string, number][]): Record<string, number> {
-  return {}
+  let acumulador: Record<string, number> = {}
+  for (const [clave, valor] of pares) {
+    acumulador = sumarUno(acumulador, clave)
+  }
+  return acumulador
 }
+sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) // -> { a: 11, b: 2 }
 
 /* ── R-F — CAPSTONE: el campeón (te prepara el drill 5) ── */
 
