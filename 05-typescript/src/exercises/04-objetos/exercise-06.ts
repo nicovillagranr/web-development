@@ -34,25 +34,26 @@
 export function contar(palabras: string[]): Record<string, number> {
   return palabras.reduce<Record<string, number>>((acumulador, palabra) => ({ ...acumulador, [palabra]: (acumulador[palabra] ?? 0) + 1 }), {})
 }
+contar(["Coca Cola", "Pepsi", "Limon Soda"]) // ->
 
 /* --- BLOQUE B — leer el diccionario (con guard) --- */
 
 // 2) `cuantasVeces` — el valor de una clave, o 0 si no existe (cuida el undefined).
 //    cuantasVeces({ a: 2 }, "a") → 2 ; cuantasVeces({}, "x") → 0
 export function cuantasVeces(obj: Record<string, number>, clave: string): number {
-  return 0
+  return obj[clave] ?? 0
 }
 
 // 3) `tieneClave` — ¿existe esa clave en el diccionario? (usa el operador `in`)
 //    tieneClave({ a: 1 }, "a") → true ; tieneClave({ a: 1 }, "b") → false
 export function tieneClave(obj: Record<string, number>, clave: string): boolean {
-  return false
+  return clave in obj
 }
 
 // 4) `clavesConValorMayorQue` — las claves cuyo valor supera `limite`.
 //    clavesConValorMayorQue({ a: 1, b: 5, c: 3 }, 2) → ["b", "c"]
 export function clavesConValorMayorQue(obj: Record<string, number>, limite: number): string[] {
-  return []
+  return Object.keys(obj).filter(clave => (obj[clave] ?? 0) > limite)
 }
 
 /* --- BLOQUE C — CAPSTONE: contar + encontrar el campeón --- */
@@ -61,7 +62,8 @@ export function clavesConValorMayorQue(obj: Record<string, number>, limite: numb
 //    (reusa `contar` + reduce-campeón sobre los pares)
 //    masFrecuente(["a", "b", "a", "a"]) → "a" ; masFrecuente([]) → undefined
 export function masFrecuente(palabras: string[]): string | undefined {
-  return undefined
+  // const campeon = 0
+  return palabras.reduce<Record<string, number>>((acumulador, palabra) => ({ ...acumulador, [palabra]: (acumulador[palabra] ?? 0) + 1 }), {})
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -109,7 +111,7 @@ export function masFrecuente(palabras: string[]): string | undefined {
 // R1) `copiar` — una copia nueva del objeto (no el mismo objeto: una copia).
 //     copiar({ a: 1 }) → { a: 1 }
 export function copiar(obj: Record<string, number>): Record<string, number> {
-  return { ...obj }
+  return { ...obj } // Recibe: { a: 1 } y devuelve: { a: 1 }, pero sin mutar el original. Es un objeto nuevo
 }
 copiar({ a: 10 }) // -> { a: 10 }
 
@@ -117,7 +119,7 @@ copiar({ a: 10 }) // -> { a: 10 }
 //     Clave FIJA, escrita a mano. (Aquí todavía no hay llaves calculadas.)
 //     conTotal({ a: 1 }) → { a: 1, total: 10 }
 export function conTotal(obj: Record<string, number>): Record<string, number> {
-  return { ...obj, total: 10 }
+  return { ...obj, total: 10 } // Recibe: { a: 1 } y devuelve: { a: 1, total: 10 }, pero sin mutar el original. Es un objeto nuevo y con total: 10 fijo
 }
 
 // R3) `pisarA` — copia del objeto, pero con `a` valiendo 99 pase lo que pase.
@@ -125,7 +127,7 @@ export function conTotal(obj: Record<string, number>): Record<string, number> {
 //     así que lo que escribas después lo pisa.
 //     pisarA({ a: 1, b: 2 }) → { a: 99, b: 2 } ; pisarA({ b: 2 }) → { b: 2, a: 99 }
 export function pisarA(obj: Record<string, number>): Record<string, number> {
-  return { ...obj, a: 99 }
+  return { ...obj, a: 99 } // Recibe: { a: 1, b: 2 } y devuelve: { a: 99, b: 2 }, pero sin mutar el original. Es un objeto nuevo. Da igual lo que hay en a, porque 99 lo pisará. Igualmente no importa lo que valga B, saldrá igual
 }
 pisarA({ a: 1, b: 2 }) // -> { a: 99, b: 2 }
 pisarA({ b: 2 }) // -> { b: 2, a: 99 }
@@ -144,7 +146,7 @@ pisarA({ b: 2 }) // -> { b: 2, a: 99 }
 //     CALCULA un nombre.
 //     unaClave("hola", 3) → { hola: 3 }   (NO { clave: 3 })
 export function unaClave(clave: string, valor: number): Record<string, number> {
-  return { [clave]: valor }
+  return { [clave]: valor } // Recibe: un string y un number y los retorna en un objeto cuyo clave es el string y el valor es el number
 }
 unaClave("hola", 3) // -> { hola: 3 }
 unaClave("clave", 3) // -> { clave: 3 }
@@ -177,7 +179,7 @@ export function leerOCero(obj: Record<string, number>, clave: string): number {
 //     sumarUno({ a: 1 }, "a") → { a: 2 }     (la fila existía: 1 + 1)
 //     sumarUno({ a: 1 }, "b") → { a: 1, b: 1 } (la fila NO existía: 0 + 1)
 export function sumarUno(obj: Record<string, number>, clave: string): Record<string, number> {
-  return { ...obj, [clave]: (obj[clave] ?? 0) + 1 }
+  return { ...obj, [clave]: (obj[clave] ?? 0) + 1 } // Crea un nuevo objeto con el spread. Luego evalúa si la clave existe, y si no, le pone 0
 }
 sumarUno({ a: 1 }, "a") // -> { a: 2 }
 sumarUno({ a: 1 }, "b") // -> { a: 1, b: 1 }
@@ -194,7 +196,7 @@ sumarUno({ a: 1 }, "b") // -> { a: 1, b: 1 }
 export function envolverTodos(ns: number[]): { valor: number }[] {
   return ns.map((n) => ({ valor: n }))
 }
-envolverTodos([1, 2])
+envolverTodos([1, 2]) // -> [{ valor: 1 }, { valor: 2 }]
 
 /* ── R-E — YA CON REDUCE ── */
 
@@ -215,11 +217,7 @@ contarBis([]) // -> {}
 //      igual que en el ejercicio anterior: `(acumulador, [clave, valor]) => ...`
 //      sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) → { a: 11, b: 2 }
 export function sumarPorClave(pares: [string, number][]): Record<string, number> {
-  let acumulador: Record<string, number> = {}
-  for (const [clave, valor] of pares) {
-    acumulador = sumarUno(acumulador, clave)
-  }
-  return acumulador
+  return { ...pares.reduce((acumulador, [clave,]) => sumarUno(acumulador, clave), {}) }
 }
 sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) // -> { a: 11, b: 2 }
 
@@ -233,5 +231,5 @@ sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) // -> { a: 11, b: 2 }
 //      Al final devuelves solo su CLAVE (o undefined si nunca hubo campeón).
 //      campeon({ a: 1, b: 9, c: 5 }) → "b" ; campeon({}) → undefined
 export function campeon(obj: Record<string, number>): string | undefined {
-  return undefined
+  return
 }
