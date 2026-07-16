@@ -1,3 +1,14 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 📌 RECORDATORIO — los tres primos de `Object` (sobre `{ a: 1, b: 5, c: 3 }`):
+ *
+ *   Object.keys(obj)     // → ["a", "b", "c"]              los NOMBRES (siempre strings)
+ *   Object.values(obj)   // → [1, 5, 3]                    los VALORES (aquí, números)
+ *   Object.entries(obj)  // → [["a",1], ["b",5], ["c",3]]  los PARES [nombre, valor]
+ *
+ * 🧠 Un casillero con etiquetas: keys = las etiquetas · values = lo de dentro ·
+ *    entries = etiqueta + contenido, juntos, casillero por casillero.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 /* =============================================================================
  * EJERCICIO 10 — CAPSTONE: mini-analítica de ventas (teje 05–09)
  * =============================================================================
