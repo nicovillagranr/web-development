@@ -26,10 +26,7 @@
  * 🧠 ANALOGÍA: la caja registradora al cierre del día: agrupa por sección, suma,
  *    y saca el ticket-resumen ordenado de mayor a menor.
  *
- * OJO — combina reduce-a-objeto (sumar por clave, del 06), `Set` (categorías
- *    únicas, del 08), el reduce-campeón (la top, del 06) y entries+sort+map+join.
- *
- * ▸ EJERCICIO — drills en escalera, del 1 al 8. ❌ Prohibido `any` y `as`.
+ * ▸ EJERCICIO — drills en escalera, del 1 al 10. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/04-objetos/exercise-10.test.ts
  * ===========================================================================*/
 
@@ -37,7 +34,7 @@ export type Venta = { producto: string; categoria: string; monto: number }
 
 
 /* ════════════════════════════════════════════════════════════════════════════
- * BLOQUE 1 — SUMAR MONTOS (sacar un campo y reducir)
+ * BLOQUE 1 — SUMAR MONTOS (sacar un campo → reducir → sumar por clave)
  * ════════════════════════════════════════════════════════════════════════════
  */
 
@@ -48,23 +45,31 @@ export function montos(ventas: Venta[]): number[] {
 }
 montos([{ producto: "p1", categoria: "A", monto: 10 }]) // ->
 
-// 2) `totalGeneral` — la suma de todos los montos. Reúsa `montos` (drill 1) y
-//    reduce sumando: `.reduce((suma, m) => suma + m, 0)`. El 0 es la suma inicial.
-//    totalGeneral([{..10}, {..5}, {..20}]) → 35
+// 2) `totalGeneral` — la suma de todos los montos. Reúsa `montos` (drill 1) y reduce
+//    sumando: `.reduce((suma, m) => suma + m, 0)`. El 0 es la suma inicial.
+//    totalGeneral([{..10}, {..5}, {..20}]) → 35 ; totalGeneral([]) → 0
 export function totalGeneral(ventas: Venta[]): number {
   return 0
 }
-totalGeneral([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", categoria: "B", monto: 5 }]) // ->
+totalGeneral([{ producto: "p1", categoria: "A", monto: 10 }]) // ->
 
-// 3) ⭐ `totalPorCategoria` — suma de `monto` por categoría. Es el `sumarPorClave`
-//     del 06, pero la clave sale de `v.categoria` y sumas `v.monto` (no 1).
-//     `{ ...acc, [v.categoria]: (acc[v.categoria] ?? 0) + v.monto }`. Anota
-//     `reduce<Record<string, number>>`.
-//     totalPorCategoria([{A,10}, {A,5}, {B,20}]) → { A: 15, B: 20 }
+// 3) `sumarEnCategoria` — UNA vuelta del "sumar por clave": copia el acumulador y en
+//    la etiqueta `categoria` suma `monto` a lo que hubiera (o a 0). Es la pieza que
+//    el reduce del drill 4 repite. `{ ...acc, [categoria]: (acc[categoria] ?? 0) + monto }`.
+//    sumarEnCategoria({}, "A", 10) → { A: 10 } ; sumarEnCategoria({ A: 10 }, "A", 5) → { A: 15 }
+export function sumarEnCategoria(acc: Record<string, number>, categoria: string, monto: number): Record<string, number> {
+  return {}
+}
+sumarEnCategoria({ A: 10 }, "A", 5) // ->
+
+// 4) ⭐ `totalPorCategoria` — suma de `monto` por categoría. Es drill 3 repetido con
+//    `.reduce` sobre las ventas: la clave sale de `v.categoria`, el monto de `v.monto`.
+//    Anota `reduce<Record<string, number>>`.
+//    totalPorCategoria([{A,10}, {A,5}, {B,20}]) → { A: 15, B: 20 }
 export function totalPorCategoria(ventas: Venta[]): Record<string, number> {
   return {}
 }
-totalPorCategoria([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", categoria: "A", monto: 5 }]) // ->
+totalPorCategoria([{ producto: "p1", categoria: "A", monto: 10 }]) // ->
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -72,13 +77,13 @@ totalPorCategoria([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p
  * ════════════════════════════════════════════════════════════════════════════
  */
 
-// 4) `categorias` — las categorías sin repetir, conservando el orden.
-//    Saca las categorías (`.map`) y quítales duplicados (`[...new Set(...)]`).
+// 5) `categorias` — las categorías sin repetir, conservando el orden. Saca las
+//    categorías (`.map`) y quítales duplicados (`[...new Set(...)]`).
 //    categorias([{A}, {A}, {B}]) → ["A", "B"]
 export function categorias(ventas: Venta[]): string[] {
   return []
 }
-categorias([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", categoria: "A", monto: 5 }]) // ->
+categorias([{ producto: "p1", categoria: "A", monto: 10 }]) // ->
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -86,15 +91,23 @@ categorias([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", cat
  * ════════════════════════════════════════════════════════════════════════════
  */
 
-// 5) `categoriaTop` — la categoría que más vendió (por monto total), o undefined si
-//    no hay ventas. Cuenta con `totalPorCategoria` (drill 3) y saca la clave del
-//    valor más alto: el `campeon` del 06 (reduce sobre `Object.entries`, acumulador
-//    `[string, number] | undefined`, y al final `?.[0]`).
+// 6) `campeonDeTotales` — dada `{ A: 15, B: 20 }`, la clave del total más alto (o
+//    undefined si vacío). Reduce sobre `Object.entries`, acumulador
+//    `[string, number] | undefined`, y al final `?.[0]` para quedarte con la clave.
+//    Pista: `(mejor, actual) => (mejor === undefined || actual[1] > mejor[1] ? actual : mejor)`.
+//    campeonDeTotales({ A: 15, B: 20 }) → "B" ; campeonDeTotales({}) → undefined
+export function campeonDeTotales(totales: Record<string, number>): string | undefined {
+  return undefined
+}
+campeonDeTotales({ A: 15, B: 20 }) // ->
+
+// 7) `categoriaTop` — la categoría que más vendió, o undefined si no hay ventas. NO
+//    es pieza nueva: total por categoría (drill 4) + campeón (drill 6).
 //    categoriaTop([{A,10}, {A,5}, {B,20}]) → "B" ; categoriaTop([]) → undefined
 export function categoriaTop(ventas: Venta[]): string | undefined {
   return undefined
 }
-categoriaTop([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", categoria: "B", monto: 20 }]) // ->
+categoriaTop([{ producto: "p1", categoria: "A", monto: 10 }]) // ->
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -102,26 +115,27 @@ categoriaTop([{ producto: "p1", categoria: "A", monto: 10 }, { producto: "p2", c
  * ════════════════════════════════════════════════════════════════════════════
  */
 
-// 6) `ordenarPorTotalDesc` — los pares [categoria, total] ordenados de MAYOR a
-//    menor total. `Object.entries(totales)` da los pares; `.sort((a, b) => b[1] - a[1])`
-//    ordena descendente (b antes que a → de mayor a menor).
+// 8) `ordenarPorTotalDesc` — los pares [categoria, total] ordenados de MAYOR a menor.
+//    `Object.entries(totales)` da los pares; `.sort((a, b) => b[1] - a[1])` ordena
+//    descendente (b antes que a → de mayor a menor por el total, que es el índice [1]).
 //    ordenarPorTotalDesc({ A: 15, B: 20 }) → [["B", 20], ["A", 15]]
 export function ordenarPorTotalDesc(totales: Record<string, number>): [string, number][] {
   return []
 }
 ordenarPorTotalDesc({ A: 15, B: 20 }) // ->
 
-// 7) `lineaDe` — una línea del reporte: "categoria: $total". (Template string.)
+// 9) `lineaDe` — una línea del reporte: "categoria: $total". (Template string con `$`.)
 //    lineaDe("B", 20) → "B: $20"
 export function lineaDe(categoria: string, total: number): string {
   return ""
 }
 lineaDe("B", 20) // ->
 
-// 8) `reporte` — "categoria: $total" por categoría, ordenadas de mayor a menor
-//    total, una por línea. NO es pieza nueva: engancha los pasos.
-//      totalPorCategoria (3) → ordenarPorTotalDesc (6) → .map(lineaDe) (7) → .join("\n")
-//    reporte([{A,10}, {A,5}, {B,20}]) → "B: $20\nA: $15"
+// 10) ⭐ `reporte` — "categoria: $total" por categoría, de mayor a menor total, una por
+//     línea. NO es pieza nueva: engancha los pasos.
+//       totalPorCategoria (4) → ordenarPorTotalDesc (8) → .map(lineaDe) (9) → .join("\n")
+//     El map recibe cada par [categoria, total]; desestructúralo: `([cat, total]) => lineaDe(cat, total)`.
+//     reporte([{A,10}, {A,5}, {B,20}]) → "B: $20\nA: $15"
 export function reporte(ventas: Venta[]): string {
   return ""
 }
