@@ -52,8 +52,10 @@
 //    Usa un `if` normal y dos `return`, como cualquier función de FASE 1.
 //    <Marca visible={true} />   →  <span>NUEVO</span>
 //    <Marca visible={false} />  →  (nada en el DOM)
-export function Marca({}: {}) {
-  return null
+export function Marca({ visible }: { visible: boolean }) {
+  return (
+    visible ? <span>NUEVO</span> : null
+  )
 }
 
 
@@ -69,7 +71,7 @@ export function Marca({}: {}) {
 //    va DENTRO, sobre el texto.
 //    <Estado activo={true} />   →  <span>En línea</span>
 //    <Estado activo={false} />  →  <span>Desconectado</span>
-export function Estado({}: {}) {
+export function Estado({ }: {}) {
   return <span></span>
 }
 
@@ -78,7 +80,7 @@ export function Estado({}: {}) {
 //    no. Aquí el ternario elige el ELEMENTO entero, no solo un texto.
 //    <Acceso logueado={true} />   →  <p>Bienvenido</p>
 //    <Acceso logueado={false} />  →  <a>Entrar</a>
-export function Acceso({}: {}) {
+export function Acceso({ }: {}) {
   return <p></p>
 }
 
@@ -96,7 +98,7 @@ export function Acceso({}: {}) {
 //    Usa `{mensaje && <p>{mensaje}</p>}` dentro del div.
 //    <AvisoError />                      →  <div></div>
 //    <AvisoError mensaje="Falló algo" /> →  <div><p>Falló algo</p></div>
-export function AvisoError({}: {}) {
+export function AvisoError({ }: {}) {
   return <div></div>
 }
 
@@ -106,7 +108,7 @@ export function AvisoError({}: {}) {
 //    verás por qué NO puedes escribir `contador && ...` a secas aquí.
 //    <Insignia contador={0} />  →  <span></span>
 //    <Insignia contador={3} />  →  <span><b>3</b></span>
-export function Insignia({}: {}) {
+export function Insignia({ }: {}) {
   return <span></span>
 }
 
@@ -123,7 +125,7 @@ export function Insignia({}: {}) {
 //    return de un <p>Cargando...</p>. Si lo hay, retorna un <h2> con el nombre.
 //    <Perfil />              →  <p>Cargando...</p>
 //    <Perfil nombre="Ana" /> →  <h2>Ana</h2>
-export function Perfil({}: {}) {
+export function Perfil({ }: {}) {
   return <h2></h2>
 }
 
@@ -133,7 +135,7 @@ export function Perfil({}: {}) {
 //    fondo en el 04).
 //    <Lista items={[]} />              →  <p>Sin resultados</p>
 //    <Lista items={["a", "b"]} />      →  <ul><li>a</li><li>b</li></ul>
-export function Lista({}: {}) {
+export function Lista({ }: {}) {
   return <ul></ul>
 }
 
@@ -159,10 +161,10 @@ export function Lista({}: {}) {
 //    Con `cantidad={0}`:
 //      CarritoRoto → <div>0</div>   ❌ el 0 se coló como texto
 //      CarritoBien → <div></div>    ✅ nada, como debe ser
-export function CarritoRoto({}: {}) {
+export function CarritoRoto({ }: {}) {
   return <div></div>
 }
-export function CarritoBien({}: {}) {
+export function CarritoBien({ }: {}) {
   return <div></div>
 }
 
@@ -192,6 +194,6 @@ export type NotificacionProps = {}
 //       →  <section><span>Sin novedades</span></section>
 //     <Notificacion cargando={false} mensaje="Hola" noLeidas={2} />
 //       →  <section><span>Hola</span><b>2 sin leer</b></section>
-export function Notificacion({}: NotificacionProps) {
+export function Notificacion({ }: NotificacionProps) {
   return <section></section>
 }

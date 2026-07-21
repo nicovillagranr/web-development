@@ -47,12 +47,6 @@
  *    "línea de trazado" es un ejemplo de uso comentado con `//`, no código vivo.
  * ===========================================================================*/
 
-/* eslint-disable @typescript-eslint/no-empty-object-type, no-empty-pattern --
- * ANDAMIAJE DEL STARTER: los huecos `{}` sin rellenar disparan estas dos reglas.
- * Se apagan para que el rojo que veas sea SOLO el tuyo (lógica y tipos).
- * 🧹 Al cerrar los 10 drills, BORRA estas 4 líneas y corre `pnpm lint`. */
-
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: una prop opcional es `T | undefined` por dentro
  * ════════════════════════════════════════════════════════════════════════════
@@ -65,8 +59,13 @@
 //    pones defecto tú, solo pasas lo que haya (aunque sea undefined).
 //    <Etiqueta texto="Hola" />               →  <span>Hola</span>
 //    <Etiqueta texto="Hola" color="red" />   →  <span style="color: red">Hola</span>
-export function Etiqueta({}: {}) {
-  return <span></span>
+export function Etiqueta({ texto, color }: { texto: string, color?: string }) {
+  return (
+    // el color es opcional. Puede decir blue o undefined y no dará error
+    <span style={{ color }}>
+      {texto}
+    </span>
+  )
 }
 
 
@@ -81,8 +80,8 @@ export function Etiqueta({}: {}) {
 //    `Hola, ` + el nombre, y si no vino nombre usa "invitado".
 //    <Saludo />                →  <p>Hola, invitado</p>
 //    <Saludo nombre="Nico" />  →  <p>Hola, Nico</p>
-export function Saludo({}: {}) {
-  return <p></p>
+export function Saludo({ nombre }: { nombre?: string }) {
+  return <p>Hola, {nombre ?? "invitado"}</p>
 }
 
 // 3) `Precio` — recibe `moneda` (string, OPCIONAL, defecto "€") y `cantidad`
@@ -90,10 +89,15 @@ export function Saludo({}: {}) {
 //    detrás con un espacio: `cantidad + " " + moneda`.
 //    <Precio cantidad={10} />               →  <b>10 €</b>
 //    <Precio cantidad={10} moneda="$" />    →  <b>10 $</b>
-export function Precio({}: {}) {
-  return <b></b>
+export function Precio({ moneda = "€", cantidad }: { moneda?: string, cantidad: number }) {
+  return (
+    <b>
+      {cantidad} {moneda}
+    </b>
+  )
 }
-
+//<Precio moneda="$" cantidad={10} />
+//<Precio cantidad={10}></Precio>
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — VALOR POR DEFECTO en la DESESTRUCTURACIÓN (en la firma)
@@ -114,8 +118,12 @@ export function Precio({}: {}) {
 //    el texto dentro y `className` igual a `tamano`.
 //    <Boton texto="Ok" />                  →  <button class="medio">Ok</button>
 //    <Boton texto="Ok" tamano="grande" />  →  <button class="grande">Ok</button>
-export function Boton({}: {}) {
-  return <button></button>
+export function Boton({ texto, tamano = "medio" }: { texto: string, tamano?: string }) {
+  return (
+    <button className={tamano}>
+      {texto}
+    </ button>
+  )
 }
 
 // 5) `Avatar` — recibe `nombre` (string) y `tamanoPx` (number, OPCIONAL,
@@ -123,8 +131,10 @@ export function Boton({}: {}) {
 //    Defecto en la firma otra vez, pero ahora el defecto es un NÚMERO.
 //    <Avatar nombre="Ana" />               →  <img alt="Ana" width="40">
 //    <Avatar nombre="Ana" tamanoPx={80} /> →  <img alt="Ana" width="80">
-export function Avatar({}: {}) {
-  return <img alt="" />
+export function Avatar({ nombre, tamanoPx = 40 }: { nombre: string, tamanoPx?: number }) {
+  return (
+    <img alt={nombre} width={tamanoPx} />
+  )
 }
 
 
@@ -141,8 +151,13 @@ export function Avatar({}: {}) {
 //    <Contador />            →  <span>0</span>
 //    <Contador valor={0} />  →  <span>0</span>   ← el 0 que TÚ pasaste, no el defecto
 //    <Contador valor={5} />  →  <span>5</span>
-export function Contador({}: {}) {
-  return <span></span>
+export function Contador({ valor }: { valor?: number }) {
+  return (
+    // el 0 es el defecto
+    <span>
+      {valor ?? 0}
+    </span>
+  )
 }
 
 // 7) `CampoTexto` — recibe `valor` (string, OPCIONAL). Retorna un <input> con
@@ -153,8 +168,10 @@ export function Contador({}: {}) {
 //    (`readOnly` va puesto para que React no se queje del input controlado.)
 //    <CampoTexto />              →  <input value="">
 //    <CampoTexto valor="hola" /> →  <input value="hola">
-export function CampoTexto({}: {}) {
-  return <input value="" readOnly />
+export function CampoTexto({ valor }: { valor?: string }) {
+  return (
+    <input value={valor ?? ""} readOnly />
+  )
 }
 
 // 8) 🐛 `PrecioRoto` vs 🩹 `PrecioBien` — el bug lado a lado, para VERLO.
@@ -163,11 +180,21 @@ export function CampoTexto({}: {}) {
 //    Con `descuento={0}` (un 0% de descuento es un dato real):
 //      PrecioRoto  → <b>100</b>  ❌ el `||` se comió el 0 y puso el defecto
 //      PrecioBien  → <b>0</b>    ✅ el `??` respetó el 0
-export function PrecioRoto({}: {}) {
-  return <b></b>
+export function PrecioRoto({ descuento }: { descuento?: number }) {
+  return (
+    // BUG: el `||` reemplaza TODO lo que sea "falsy", y el 0 es falsy.
+    // Así que cuando llega descuento={0}, `0 || 100` da 100 — el `||` confunde
+    // "el usuario puso un 0 de verdad" con "no hay valor". Ahí está lo roto.
+    <b>{descuento || 100}</b>
+  )
 }
-export function PrecioBien({}: {}) {
-  return <b></b>
+export function PrecioBien({ descuento }: { descuento?: number }) {
+  return (
+    // BIEN: el `??` solo reemplaza null o undefined, nada más. El 0 no es ni
+    // null ni undefined, así que `0 ?? 100` da 0 — respeta el descuento real.
+    // Solo saltaría al 100 si descuento no viniera (undefined).
+    <b>{descuento ?? 100}</b>
+  )
 }
 
 
@@ -183,7 +210,12 @@ export function PrecioBien({}: {}) {
 //      · `subtitulo`  string, opcional
 //      · `destacada`  boolean, opcional
 //      · `margen`     number, opcional
-export type TarjetaProps = {}
+export type TarjetaProps = {
+  titulo: string,
+  subtitulo?: string,
+  destacada?: boolean,
+  margen?: number
+}
 
 // 10) `Tarjeta` — usa `TarjetaProps` con estos DEFECTOS EN LA FIRMA:
 //       · `subtitulo` → '' (vacío)     · `destacada` → false     · `margen` → 0
@@ -198,6 +230,11 @@ export type TarjetaProps = {}
 //       →  <article class="" style="margin: 0px"><h3>Hola</h3><p></p></article>
 //     <Tarjeta titulo="Hola" subtitulo="Mundo" destacada margen={8} />
 //       →  <article class="destacada" style="margin: 8px"><h3>Hola</h3><p>Mundo</p></article>
-export function Tarjeta({}: TarjetaProps) {
-  return <article></article>
+export function Tarjeta({ titulo, subtitulo = '', destacada = false, margen = 0 }: TarjetaProps) {
+  return (
+    <article className={destacada ? 'destacada' : ''} style={{ margin: margen }}>
+      <h3>{titulo}</h3>
+      <p>{subtitulo}</p>
+    </article>
+  )
 }
