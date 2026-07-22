@@ -37,11 +37,12 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-/* eslint-disable @typescript-eslint/no-empty-object-type, no-empty-pattern --
- * ANDAMIAJE DEL STARTER: los huecos `{}` sin rellenar disparan estas dos reglas.
- * 🧹 Al cerrar los 10 drills, BORRA estas 4 líneas y corre `pnpm lint`. */
-
-export type Producto = { id: number; nombre: string; precio: number; enStock: boolean }
+export type Producto = {
+  id: number,
+  nombre: string,
+  precio: number,
+  enStock: boolean
+}
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -54,8 +55,12 @@ export type Producto = { id: number; nombre: string; precio: number; enStock: bo
 // 1) `ListaSimple` — recibe `nombres` (string[]). Retorna un <ul> con un <li>
 //    por nombre, usando el nombre como texto y como `key`.
 //    <ListaSimple nombres={["a", "b"]} />  →  <ul><li>a</li><li>b</li></ul>
-export function ListaSimple({}: {}) {
-  return <ul></ul>
+export function ListaSimple({ nombres }: { nombres: string[] }) {
+  return (
+    <ul>
+      {nombres.map((nombre) => <li key={nombre}>{nombre}</li>)}
+    </ul>
+  )
 }
 
 
@@ -69,16 +74,24 @@ export function ListaSimple({}: {}) {
 // 2) `ListaProductos` — recibe `productos` (Producto[]). Retorna un <ul> con un
 //    <li> por producto, mostrando su `nombre` y con `key={producto.id}`.
 //    <ListaProductos productos={[{id:1,nombre:"Pan",...}]} />  →  <ul><li>Pan</li></ul>
-export function ListaProductos({}: {}) {
-  return <ul></ul>
+export function ListaProductos({ productos }: { productos: Producto[] }) {
+  return (
+    <ul>
+      {productos.map((producto) => <li key={producto.id}>{producto.nombre}</li>)}
+    </ul>
+  )
 }
 
 // 3) `TablaPrecios` — recibe `productos` (Producto[]). Retorna un <ul> con un
 //    <li> por producto que muestre `nombre` + ": " + `precio` + "€".
 //    <TablaPrecios productos={[{id:1,nombre:"Pan",precio:2,...}]} />
 //      →  <ul><li>Pan: 2€</li></ul>
-export function TablaPrecios({}: {}) {
-  return <ul></ul>
+export function TablaPrecios({ productos }: { productos: Producto[] }) {
+  return (
+    <ul>
+      {productos.map((producto) => <li key={producto.id}>{producto.nombre}: {producto.precio}€</li>)}
+    </ul>
+  )
 }
 
 
@@ -93,8 +106,12 @@ export function TablaPrecios({}: {}) {
 //    Aquí compruebas que `key` NO llega al componente: aunque lo pongas, el
 //    <span> no recibe ninguna prop rara — key se lo queda React.
 //    <Etiquetas tags={["react","ts"]} />  →  <div><span>react</span><span>ts</span></div>
-export function Etiquetas({}: {}) {
-  return <div></div>
+export function Etiquetas({ tags }: { tags: string[] }) {
+  return (
+    <div>
+      {tags.map((tag) => <span key={tag}>{tag}</span>)}
+    </div>
+  )
 }
 
 // 5) `Pasos` — recibe `pasos` (string[]) que PUEDEN REPETIRSE (p.ej. dos "amasar").
@@ -104,8 +121,12 @@ export function Etiquetas({}: {}) {
 //    reordena ni se filtra (si no, React confunde elementos). Aquí es una lista
 //    fija de pasos, así que es aceptable — pero que quede claro el matiz.
 //    <Pasos pasos={["amasar","hornear"]} />  →  <ol><li>amasar</li><li>hornear</li></ol>
-export function Pasos({}: {}) {
-  return <ol></ol>
+export function Pasos({ pasos }: { pasos: string[] }) {
+  return (
+    <ol>
+      {pasos.map((paso, i) => <li key={i}>{paso}</li>)}
+    </ol>
+  )
 }
 
 
@@ -119,16 +140,25 @@ export function Pasos({}: {}) {
 //    por correo (key = el correo).
 //    <Bandeja correos={[]} />               →  <p>Bandeja vacía</p>
 //    <Bandeja correos={["a@b.com"]} />       →  <ul><li>a@b.com</li></ul>
-export function Bandeja({}: {}) {
-  return <ul></ul>
+export function Bandeja({ correos }: { correos: string[] }) {
+  if (correos.length === 0) {
+    return <p>Bandeja vacía</p>
+  }
+  return (
+    <ul>
+      {correos.map((correo) => <li key={correo}>{correo}</li>)}
+    </ul>
+  )
 }
 
 // 7) `Contador` — recibe `items` (string[]). Retorna un <p> con el texto
 //    "Total: " + la cantidad de items. Sin lista, solo el número (usa .length).
 //    <Contador items={["a","b","c"]} />  →  <p>Total: 3</p>
 //    <Contador items={[]} />              →  <p>Total: 0</p>
-export function Contador({}: {}) {
-  return <p></p>
+export function Contador({ items }: { items: string[] }) {
+  // Sin condición: si el array está vacío, `items.length` YA vale 0 y se pinta
+  // "Total: 0". Un ternario cuyas dos ramas dan lo mismo es un ternario de más.
+  return <p>Total: {items.length}</p>
 }
 
 
@@ -150,7 +180,10 @@ export function Contador({}: {}) {
 // 8) Define el tipo `EscaparateProps` y expórtalo (el test lo importa). Debe tener:
 //      · `productos`   Producto[]
 //      · `soloEnStock` boolean
-export type EscaparateProps = {}
+export type EscaparateProps = {
+  productos: Producto[],
+  soloEnStock: boolean
+}
 
 // 9) `Escaparate` — usa `EscaparateProps`. Si `soloEnStock` es true, muestra solo
 //    los productos con `enStock === true`; si es false, muestra todos. Retorna un
@@ -159,8 +192,17 @@ export type EscaparateProps = {}
 //    productos = [{id:1,nombre:"Pan",enStock:true}, {id:2,nombre:"Sal",enStock:false}]
 //    <Escaparate productos={productos} soloEnStock={false} /> →  <ul><li>Pan</li><li>Sal</li></ul>
 //    <Escaparate productos={productos} soloEnStock={true}  /> →  <ul><li>Pan</li></ul>
-export function Escaparate({}: EscaparateProps) {
-  return <ul></ul>
+export function Escaparate({ productos, soloEnStock }: EscaparateProps) {
+  // Primero decido QUÉ lista se pinta (lo único que cambia entre los dos casos),
+  // y después la pinto UNA vez: el <ul>/<li>/key ya no está duplicado.
+  let visibles = productos
+  if (soloEnStock) visibles = productos.filter((p) => p.enStock)
+
+  return (
+    <ul>
+      {visibles.map((p) => <li key={p.id}>{p.nombre}</li>)}
+    </ul>
+  )
 }
 
 // 10) `NombresEnStock` — recibe `productos` (Producto[]) y retorna un <ul> con
@@ -168,9 +210,20 @@ export function Escaparate({}: EscaparateProps) {
 //     campo, todo encadenado. El capstone del capstone: el gesto exacto de tu
 //     slip histórico, ahora devolviendo <li>. Un <li> por producto en stock,
 //     texto = nombre, key = id.
-//     productos = [{id:1,nombre:"Pan",enStock:true},{id:2,nombre:"Sal",enStock:false},
-//                  {id:3,nombre:"Té",enStock:true}]
+//     productos = [{id:1,nombre:"Pan",enStock:true},{id:2,nombre:"Sal",enStock:false}, {id:3,nombre:"Té",enStock:true}]
 //     <NombresEnStock productos={productos} />  →  <ul><li>Pan</li><li>Té</li></ul>
-export function NombresEnStock({}: {}) {
-  return <ul></ul>
+
+// export type Producto = {
+// id: number,
+// nombre: string,
+// precio: number,
+// enStock: boolean
+// }
+
+export function NombresEnStock({ productos }: { productos: Producto[] }) {
+  return (
+    <ul>
+      {productos.filter((producto) => producto.enStock).map((producto) => <li key={producto.id}>{producto.nombre}</li>)}
+    </ul>
+  )
 }

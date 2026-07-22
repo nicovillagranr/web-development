@@ -37,11 +37,6 @@
  *    no ejecuta nada).
  * ===========================================================================*/
 
-/* eslint-disable @typescript-eslint/no-empty-object-type, no-empty-pattern --
- * ANDAMIAJE DEL STARTER: los huecos `{}` sin rellenar disparan estas dos reglas.
- * 🧹 Al cerrar los 10 drills, BORRA estas 4 líneas y corre `pnpm lint`. */
-
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: `return null` = no pintar nada
  * ════════════════════════════════════════════════════════════════════════════
@@ -71,8 +66,10 @@ export function Marca({ visible }: { visible: boolean }) {
 //    va DENTRO, sobre el texto.
 //    <Estado activo={true} />   →  <span>En línea</span>
 //    <Estado activo={false} />  →  <span>Desconectado</span>
-export function Estado({ }: {}) {
-  return <span></span>
+export function Estado({ activo }: { activo: boolean }) {
+  return (
+    <span>{activo ? "En línea" : "Desconectado"}</span>
+  )
 }
 
 // 3) `Acceso` — recibe `logueado` (boolean). Retorna, a nivel del return, uno de
@@ -80,9 +77,13 @@ export function Estado({ }: {}) {
 //    no. Aquí el ternario elige el ELEMENTO entero, no solo un texto.
 //    <Acceso logueado={true} />   →  <p>Bienvenido</p>
 //    <Acceso logueado={false} />  →  <a>Entrar</a>
-export function Acceso({ }: {}) {
-  return <p></p>
+export function Acceso({ logueado }: { logueado: boolean }) {
+  return (
+    // Si logueado viene con true, se renderiza el <p>, si viene con false se renderiza el <a>.
+    logueado ? <p>Bienvenido</p> : <a>Entrar</a>
+  )
 }
+
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -98,8 +99,14 @@ export function Acceso({ }: {}) {
 //    Usa `{mensaje && <p>{mensaje}</p>}` dentro del div.
 //    <AvisoError />                      →  <div></div>
 //    <AvisoError mensaje="Falló algo" /> →  <div><p>Falló algo</p></div>
-export function AvisoError({ }: {}) {
-  return <div></div>
+export function AvisoError({ mensaje }: { mensaje?: string }) {
+  return (
+    // El div se renderizará siempre, pero si hay mensaje se renderizará el <p>.
+    // Si no hay mensaje no se renderizará el <p>.
+    <div>
+      {mensaje && <p>{mensaje}</p>}
+    </div>
+  )
 }
 
 // 5) `Insignia` — recibe `contador` (number). Retorna un <span> que SIEMPRE se
@@ -108,8 +115,13 @@ export function AvisoError({ }: {}) {
 //    verás por qué NO puedes escribir `contador && ...` a secas aquí.
 //    <Insignia contador={0} />  →  <span></span>
 //    <Insignia contador={3} />  →  <span><b>3</b></span>
-export function Insignia({ }: {}) {
-  return <span></span>
+export function Insignia({ contador }: { contador: number }) {
+  return (
+    // El span se renderizará siempre, pero si el contador es mayor a 0 se renderizará el <b>.
+    <span>
+      {contador > 0 && <b>{contador}</b>}
+    </span>
+  )
 }
 
 
@@ -125,8 +137,9 @@ export function Insignia({ }: {}) {
 //    return de un <p>Cargando...</p>. Si lo hay, retorna un <h2> con el nombre.
 //    <Perfil />              →  <p>Cargando...</p>
 //    <Perfil nombre="Ana" /> →  <h2>Ana</h2>
-export function Perfil({ }: {}) {
-  return <h2></h2>
+export function Perfil({ nombre }: { nombre?: string }) {
+  if (nombre === undefined) return <p>Cargando...</p>
+  return <h2>{nombre}</h2>
 }
 
 // 7) `Lista` — recibe `items` (string[]). Si el array está VACÍO, early return
@@ -135,8 +148,13 @@ export function Perfil({ }: {}) {
 //    fondo en el 04).
 //    <Lista items={[]} />              →  <p>Sin resultados</p>
 //    <Lista items={["a", "b"]} />      →  <ul><li>a</li><li>b</li></ul>
-export function Lista({ }: {}) {
-  return <ul></ul>
+export function Lista({ items }: { items: string[] }) {
+  if (items.length === 0) {
+    return <p>Sin resultados</p>
+  }
+  return (
+    <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>
+  )
 }
 
 
@@ -161,11 +179,15 @@ export function Lista({ }: {}) {
 //    Con `cantidad={0}`:
 //      CarritoRoto → <div>0</div>   ❌ el 0 se coló como texto
 //      CarritoBien → <div></div>    ✅ nada, como debe ser
-export function CarritoRoto({ }: {}) {
-  return <div></div>
+export function CarritoRoto({ cantidad }: { cantidad: number }) {
+  return <div>{cantidad && <b>Tienes {cantidad}</b>}</div>
 }
-export function CarritoBien({ }: {}) {
-  return <div></div>
+export function CarritoBien({ cantidad }: { cantidad: number }) {
+  return (
+    <div>
+      {cantidad > 0 && <b>Tienes {cantidad}</b>}
+    </div>
+  )
 }
 
 
@@ -179,7 +201,11 @@ export function CarritoBien({ }: {}) {
 //      · `cargando`  boolean, obligatoria
 //      · `mensaje`   string, opcional
 //      · `noLeidas`  number, obligatoria
-export type NotificacionProps = {}
+export type NotificacionProps = {
+  cargando: boolean
+  mensaje?: string
+  noLeidas: number
+}
 
 // 10) `Notificacion` — usa `NotificacionProps` y, EN ESTE ORDEN de decisiones:
 //       a. si `cargando` es true → early return <p>Cargando...</p>
@@ -194,6 +220,17 @@ export type NotificacionProps = {}
 //       →  <section><span>Sin novedades</span></section>
 //     <Notificacion cargando={false} mensaje="Hola" noLeidas={2} />
 //       →  <section><span>Hola</span><b>2 sin leer</b></section>
-export function Notificacion({ }: NotificacionProps) {
-  return <section></section>
+export function Notificacion({ cargando, mensaje, noLeidas }: NotificacionProps) {
+  return (
+    // Si cargando es true, se renderizará un <p>
+    cargando
+      ? <p>Cargando...</p>
+      // Si no, se renderizará un <section>
+      // Si no hay mensaje, se renderizará "Sin novedades". Si hay mensaje se renderizará el mensaje
+      // Si no hay noLeidas, no se renderizará el <b>. Si hay noLeidas, se renderizará el <b>
+      : <section>
+        <span>{mensaje || "Sin novedades"}</span>
+        {noLeidas > 0 && <b>{noLeidas} sin leer</b>}
+      </section>
+  )
 }
