@@ -44,8 +44,11 @@ describe('03-arrays / exercise-10 — capstone catálogo', () => {
 })
 
 describe('03-arrays / exercise-10 — BLOQUE R (refuerzo reduce-campeón)', () => {
-  const pan = tienda[0] // precio 2
-  const huevos = tienda[2] // precio 4
+  // El `!` va porque con `noUncheckedIndexedAccess` un acceso por índice devuelve
+  // `Producto | undefined`, y `elegirCampeon` pide un `Producto` pelado en su
+  // segundo parámetro. Aquí el índice es fijo sobre un array literal de 3: existen.
+  const pan = tienda[0]! // precio 2
+  const huevos = tienda[2]! // precio 4
 
   it('R1) elMayor', () => {
     expect(elMayor(3, 8)).toBe(8)
