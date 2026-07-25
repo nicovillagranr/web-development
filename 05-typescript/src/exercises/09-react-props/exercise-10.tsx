@@ -1,3 +1,27 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 📌 RECORDATORIO — recortar tipos en vez de copiarlos, sobre este ejemplo:
+ *
+ *     type Usuario = { id: number; nombre: string; email: string; activo: boolean }
+ *
+ *   Pick<Usuario, 'id' | 'nombre'>  // → { id: number; nombre: string }    QUÉDATE con estas
+ *   Omit<Usuario, 'email'>          // → { id, nombre, activo }            QUITA estas
+ *   Partial<Usuario>                // → { id?, nombre?, email?, activo? } todas OPCIONALES
+ *   Usuario['email']                // → string     el TIPO de UNA propiedad, suelto
+ *
+ * Y los dos primos de la casa, que son la MISMA idea aplicada al HTML:
+ *
+ *   ComponentProps<'span'>          // → todas las props nativas de un <span>
+ *   function X({ mia, ...resto })   // `mia` sale suelta; `resto` = lo que va al DOM
+ *
+ * 🧠 Una foto de carnet: `Pick` recorta y te quedas solo con la cara · `Omit` tapa
+ *    lo que no quieres que salga · `Partial` dice "tráeme lo que tengas, no hace
+ *    falta todo" · el acceso indexado saca UNA pieza sin el marco.
+ *
+ * ⚠️ Las claves van entre COMILLAS ('email'); varias se separan con `|`.
+ * ⚠️ `Omit` NO te avisa si escribes mal la clave: `Omit<Usuario, 'emial'>` compila
+ *    tan feliz y no quita nada. `Pick` sí protesta.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 /* =============================================================================
  * EJERCICIO 10 — CAPSTONE: un ÁRBOL de componentes tipado de arriba abajo
  * =============================================================================
@@ -71,7 +95,7 @@ export type Pedido = {
 
 // 1) Define y exporta el tipo `EstadoPedido` como el tipo de la propiedad
 //    `estado` de `Pedido`. Una línea, con acceso indexado. ❌ No lo copies a mano.
-export type EstadoPedido = {}
+export type EstadoPedido = Pedido['estado']
 
 // 2) `EtiquetaEstado` (hoja) — recibe `estado` (EstadoPedido). Retorna un <span>
 //    con `className` = el estado y, dentro, el texto en castellano:
@@ -79,8 +103,16 @@ export type EstadoPedido = {}
 //    Usa `switch` con guardia `never` (exercise-08): si mañana el dominio gana un
 //    cuarto estado, quieres que TE LO DIGA el compilador, no un hueco en blanco.
 //    <EtiquetaEstado estado="enviado" />  →  <span class="enviado">Enviado</span>
-export function EtiquetaEstado({}: {}) {
-  return <span></span>
+export function EtiquetaEstado({ estado }: { estado: EstadoPedido }) {
+  switch (estado) {
+    case 'pendiente': return <span className="pendiente">Pendiente</span>
+    case 'enviado': return <span className="enviado">Enviado</span>
+    case 'entregado': return <span className="entregado">Entregado</span>
+    default: {
+      const _exhaustive: never = estado
+      return _exhaustive
+    }
+  }
 }
 
 
@@ -91,16 +123,23 @@ export function EtiquetaEstado({}: {}) {
 // 3) Define y exporta la `interface DineroProps` que extienda las props nativas
 //    de `<span>` y añada:
 //      · `cantidad` number
-export interface DineroProps {}
+export interface DineroProps extends ComponentProps<'span'> {
+  cantidad: number
+}
 
 //    `Dinero` — usa `DineroProps`. Saca `cantidad`, deja el resto. Retorna un
 //    <span> con el resto derramado y, dentro, la cantidad con dos decimales
 //    seguida de " €"  (`cantidad.toFixed(2)`).
 //    ⚠️ El derrame va de forma que quien llame PUEDA ponerle su className.
 //    <Dinero cantidad={12} className="precio" />  →  <span class="precio">12.00 €</span>
-export function Dinero({}: DineroProps) {
-  return <span></span>
+export function Dinero({ cantidad, ...props }: DineroProps) {
+  return (
+    <span {...props}>
+      {cantidad.toFixed(2)} €
+    </span>
+  )
 }
+
 
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -115,7 +154,17 @@ export function Dinero({}: DineroProps) {
 //    `Pedido` con `id`, `cliente`, `total` y `estado` (usa `Pick` en el
 //    `extends`), y añada:
 //      · `onVer` función que recibe un number (el id) y no devuelve nada
-export interface FilaPedidoProps {}
+
+// export type Pedido = {
+// id: number
+// cliente: string
+// total: number
+// estado: 'pendiente' | 'enviado' | 'entregado'
+// }
+
+export interface FilaPedidoProps extends Pick<Pedido, 'id' | 'cliente' | 'total' | 'estado'> {
+  onVer: (id: number) => void
+}
 
 //    `FilaPedido` — usa `FilaPedidoProps`. Retorna un <tr> con TRES <td>, en
 //    este orden:
@@ -124,8 +173,16 @@ export interface FilaPedidoProps {}
 //      · un `EtiquetaEstado` con el `estado`, y después un <button> con el texto
 //        "Ver" que al clic llame a `onVer` con el `id`
 //    <FilaPedido id={1} cliente="Ana" total={12} estado="enviado" onVer={ver} />
-export function FilaPedido({}: FilaPedidoProps) {
-  return <tr></tr>
+export function FilaPedido(props: FilaPedidoProps) {
+  return (
+    <tr>
+      <td>{props.cliente}</td>
+      <td><Dinero cantidad={props.total} className="total" /></td>
+      <td><EtiquetaEstado estado={props.estado} />
+        <button onClick={() => props.onVer(props.id)}>Ver</button>
+      </td>
+    </tr>
+  )
 }
 
 
@@ -139,8 +196,17 @@ export function FilaPedido({}: FilaPedidoProps) {
 //    contenga un `FilaPedido` por pedido (`key` = el id), pasándole sus campos.
 //    💡 Aquí `onVer` se entrega PELADO: el id lo mete cada fila, no la tabla.
 //    <TablaPedidos pedidos={[]} onVer={ver} />  →  <p>No hay pedidos</p>
-export function TablaPedidos({}: {}) {
-  return <table></table>
+export function TablaPedidos({ pedidos, onVer }: { pedidos: Pedido[], onVer: (id: number) => void }) {
+  if (pedidos.length === 0) {
+    return <p>No hay pedidos</p>
+  }
+  return (
+    <table>
+      <tbody>
+        {pedidos.map(p => <FilaPedido key={p.id} {...p} onVer={onVer} />)}
+      </tbody>
+    </table>
+  )
 }
 
 
@@ -155,7 +221,11 @@ export function TablaPedidos({}: {}) {
 //      · `titulo`   string, obligatoria
 //      · `acciones` ReactNode, OPCIONAL     ← slot con nombre
 //      · `children` ReactNode, obligatoria  ← slot por posición
-export type PanelProps = {}
+export type PanelProps = {
+  titulo: string
+  acciones?: ReactNode
+  children: ReactNode
+}
 
 // 7) `Panel` — usa `PanelProps`. Retorna una <section> que contenga:
 //      · un <header> con un <h2> con el `titulo` dentro y, SOLO si hay
@@ -164,8 +234,16 @@ export type PanelProps = {}
 //    <Panel titulo="Pedidos"><p>Hola</p></Panel>
 //      →  <section><header><h2>Pedidos</h2></header>
 //          <div class="cuerpo"><p>Hola</p></div></section>
-export function Panel({}: PanelProps) {
-  return <section></section>
+export function Panel({ titulo, acciones, children }: PanelProps) {
+  return (
+    <section>
+      <header>
+        <h2>{titulo}</h2>
+        {acciones && <div className="acciones">{acciones}</div>}
+      </header>
+      <div className="cuerpo">{children}</div>
+    </section>
+  )
 }
 
 
@@ -182,7 +260,10 @@ export function Panel({}: PanelProps) {
 //      · { fase: 'cargando' }
 //      · { fase: 'error';  mensaje: string }
 //      · { fase: 'listo';  pedidos: Pedido[] }
-export type EstadoCarga = {}
+export type EstadoCarga =
+  | { fase: 'cargando' }
+  | { fase: 'error'; mensaje: string }
+  | { fase: 'listo'; pedidos: Pedido[] }
 
 //    `Contenido` — recibe `estado` (EstadoCarga) y `onVer` (función que recibe
 //    un number y no devuelve nada). `switch` sobre `estado.fase`, con guardia
@@ -192,8 +273,16 @@ export type EstadoCarga = {}
 //      · 'listo'    → un `TablaPedidos` con los pedidos y el `onVer`
 //    ⚠️ Recibe `estado` como UN objeto para poder interrogarlo: no desestructures
 //       la unión en la firma (la trampa nº1 del exercise-08).
-export function Contenido({}: {}) {
-  return <p></p>
+export function Contenido({ estado, onVer }: { estado: EstadoCarga, onVer: (id: number) => void }) {
+  switch (estado.fase) {
+    case 'cargando': return <p>Cargando…</p>
+    case 'error': return <p className="error">{estado.mensaje}</p>
+    case 'listo': return <TablaPedidos pedidos={estado.pedidos} onVer={onVer} />
+    default: {
+      const _exhaustiveCheck: never = estado
+      return _exhaustiveCheck
+    }
+  }
 }
 
 
@@ -209,14 +298,24 @@ export function Contenido({}: {}) {
 //    resumen([])  →  'Sin pedidos'
 //    resumen([{…total:10}, {…total:5}])  →  '2 pedidos · 15€'
 // eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
-export function resumen(pedidos: Pedido[]) {}
+export function resumen(pedidos: Pedido[]): string {
+  if (pedidos.length === 0) {
+    return 'Sin pedidos'
+  }
+  return `${pedidos.length} pedidos · ${pedidos.reduce((total, pedido) => total + pedido.total, 0)}€`
+}
 
 // 10) Define y exporta el tipo `PaginaPedidosProps` con:
 //       · `titulo`   string
 //       · `estado`   EstadoCarga
 //       · `onVer`    función que recibe un number y no devuelve nada
 //       · `acciones` ReactNode, OPCIONAL
-export type PaginaPedidosProps = {}
+export type PaginaPedidosProps = {
+  titulo: string
+  estado: EstadoCarga
+  onVer: (id: number) => void
+  acciones?: ReactNode
+}
 
 //     `PaginaPedidos` — usa `PaginaPedidosProps`. Retorna un `Panel` con el
 //     `titulo` y las `acciones` que le llegaron y, como children, EN ESTE ORDEN:
@@ -228,6 +327,18 @@ export type PaginaPedidosProps = {}
 //        `exactOptionalPropertyTypes` (tu tsconfig), pasarla de largo tal cual
 //        es lo correcto: `acciones={acciones}`.
 //     <PaginaPedidos titulo="Pedidos" estado={{ fase: 'cargando' }} onVer={ver} />
-export function PaginaPedidos({}: PaginaPedidosProps) {
-  return <section></section>
+export function PaginaPedidos({ titulo, estado, onVer, acciones }: PaginaPedidosProps) {
+  if (estado.fase === 'listo') {
+    return (
+      <Panel titulo={titulo} acciones={acciones}>
+        <Contenido estado={estado} onVer={onVer} />
+        <footer>{resumen(estado.pedidos)}</footer>
+      </Panel>
+    )
+  }
+  return (
+    <Panel titulo={titulo} acciones={acciones}>
+      <Contenido estado={estado} onVer={onVer} />
+    </Panel>
+  )
 }

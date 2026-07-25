@@ -1,3 +1,27 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 📌 RECORDATORIO — recortar tipos en vez de copiarlos, sobre este ejemplo:
+ *
+ *     type Usuario = { id: number; nombre: string; email: string; activo: boolean }
+ *
+ *   Pick<Usuario, 'id' | 'nombre'>  // → { id: number; nombre: string }    QUÉDATE con estas
+ *   Omit<Usuario, 'email'>          // → { id, nombre, activo }            QUITA estas
+ *   Partial<Usuario>                // → { id?, nombre?, email?, activo? } todas OPCIONALES
+ *   Usuario['email']                // → string     el TIPO de UNA propiedad, suelto
+ *
+ * Y los dos primos de la casa, que son la MISMA idea aplicada al HTML:
+ *
+ *   ComponentProps<'span'>          // → todas las props nativas de un <span>
+ *   function X({ mia, ...resto })   // `mia` sale suelta; `resto` = lo que va al DOM
+ *
+ * 🧠 Una foto de carnet: `Pick` recorta y te quedas solo con la cara · `Omit` tapa
+ *    lo que no quieres que salga · `Partial` dice "tráeme lo que tengas, no hace
+ *    falta todo" · el acceso indexado saca UNA pieza sin el marco.
+ *
+ * ⚠️ Las claves van entre COMILLAS ('email'); varias se separan con `|`.
+ * ⚠️ `Omit` NO te avisa si escribes mal la clave: `Omit<Usuario, 'emial'>` compila
+ *    tan feliz y no quita nada. `Pick` sí protesta.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 /* =============================================================================
  * EJERCICIO 01 — React props: un componente es una FUNCIÓN que recibe UN OBJETO
  * =============================================================================
