@@ -9,14 +9,16 @@ Este modulo reune practica de JavaScript desde base hasta integracion en proyect
 - `02-dom/`: seleccion, eventos y manipulacion.
 - `03-poo/`: clases, herencia y metodos.
 - `04-async/`: promesas, async/await y consumo de APIs.
-- `05-libraries/`: practica con librerias (incluye ruta 3D).
+- `05-libraries/`: practica con librerias (`react-three`).
 - `06-projects/`: mini, mid y advanced (estructura base).
 - `proyectos-sueltos/`: ejercicios fuera de flujo principal.
 - `readmes/`: notas tematicas de apoyo.
 
 ## Estado actual
 
-- `05-libraries/3D` concentra la mayor parte de practica aplicada.
+- Las practicas de Three.js Journey (24 lecciones) vivian en `05-libraries/3D` y se
+  movieron a su propio repo el 26 jul 2026: `C:/threejs-journey`. Motivo: `starter/`
+  y `final/` son material de un curso de pago y solo `exercise/` era trabajo propio.
 - Algunas carpetas de `03-poo`, `02-dom` y `06-projects` estan definidas pero incompletas.
 
 ## Objetivo

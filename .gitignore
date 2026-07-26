@@ -43,21 +43,9 @@ Thumbs.db
 # Librería de fuentes local — mismo criterio que los iconos: recurso re-descargable, no se versiona (~464 MB)
 03-css/00-assets/fonts/
 
-# Assets pesados del curso 3D (Three.js Journey) — re-descargables, se quedan en disco pero no se versionan (inflaban el repo ~1 GB)
-04-javascript/05-libraries/3D/**/*.hdr
-04-javascript/05-libraries/3D/**/*.exr
-04-javascript/05-libraries/3D/**/*.glb
-04-javascript/05-libraries/3D/**/*.gltf
-04-javascript/05-libraries/3D/**/*.ktx
-04-javascript/05-libraries/3D/**/*.ktx2
-04-javascript/05-libraries/3D/**/*.basis
-04-javascript/05-libraries/3D/**/*.tga
-04-javascript/05-libraries/3D/**/static/**/*.png
-04-javascript/05-libraries/3D/**/static/**/*.jpg
-04-javascript/05-libraries/3D/**/static/**/*.jpeg
-04-javascript/05-libraries/3D/**/static/**/*.webp
-04-javascript/05-libraries/3D/**/static/**/*.mp4
-04-javascript/05-libraries/3D/**/static/**/*.mp3
+# (Las reglas de los assets del curso Three.js Journey vivían aquí. La carpeta
+#  `04-javascript/05-libraries/3D/` se movió a su propio repo el 26 jul 2026,
+#  así que estas reglas ya no apuntaban a nada y se retiraron.)
 
 # Archivos generados por asistentes de IA — no aportan al código del proyecto
 **/.agent/
