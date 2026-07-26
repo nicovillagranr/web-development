@@ -2,7 +2,7 @@
 
 **Santiago, Chile** · React · TypeScript · Next.js · Abierto a oportunidades
 
-[LinkedIn](https://www.linkedin.com/in/nico-villagran/) · [nicovillagranroses@gmail.com](mailto:nicovillagranroses@gmail.com) · [Mis APIs](https://github.com/nicovillagranr/APIs)
+**[nico-villagran.com](https://nico-villagran.com)** · [LinkedIn](https://www.linkedin.com/in/nico-villagran/) · [nicovillagranroses@gmail.com](mailto:nicovillagranroses@gmail.com) · [Mis APIs](https://github.com/nicovillagranr/APIs)
 
 > Este repositorio es mi **diario de aprendizaje**: once módulos, de HTML semántico a Docker,
 > con la práctica y las decisiones técnicas documentadas por escrito.
@@ -13,7 +13,7 @@
 
 ## El portfolio
 
-**[Portfolio — Proyectos](08-projects/00-hosting)** · React 19 · Tailwind v4 · Vitest
+**[nico-villagran.com](https://nico-villagran.com)** · React 19 · Tailwind v4 · Vitest · [Código](08-projects/00-hosting)
 
 Una SPA que **consume mi propia API REST** ([`/projects`](https://00-portfolio-projects-api.vercel.app/projects) y [`/profile`](https://00-portfolio-projects-api.vercel.app/profile), desplegada en Vercel) y presenta el perfil y un catálogo filtrable, con un Hero interactivo en forma de editor de código.
 

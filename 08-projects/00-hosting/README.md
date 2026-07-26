@@ -4,7 +4,7 @@ Página de proyectos del portfolio de Nicolás Villagrán. Una SPA en React que
 consume una API propia y presenta el perfil y los proyectos en un catálogo
 filtrable, con un Hero interactivo en forma de editor de código.
 
-**Demo:** [nicovillagran.com](https://nicovillagran.com)
+**Demo:** [nico-villagran.com](https://nico-villagran.com)
 
 ---
 
