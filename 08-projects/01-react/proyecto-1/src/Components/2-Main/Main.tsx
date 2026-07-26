@@ -10,6 +10,7 @@ import Card from "../3-Card/Card"
 // Import de datos
 import { cardsData } from "../../data/cardsData"
 
+
 function Main() {
     return (
         <main className="main">

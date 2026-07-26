@@ -5,17 +5,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Comandos
 
 ```bash
-npm run dev       # Inicia el servidor de desarrollo de Vite
-npm run build     # Genera la build de producción
-npm run preview   # Previsualiza la build de producción localmente
-npm run lint      # Ejecuta ESLint, que lo que hace es buscar errores en tu código y mostrarlos en la consola
+pnpm dev         # Inicia el servidor de desarrollo de Vite
+pnpm build       # Comprueba tipos (tsc -b) y genera la build de producción
+pnpm preview     # Previsualiza la build de producción localmente
+pnpm lint        # Ejecuta ESLint, que lo que hace es buscar errores en tu código y mostrarlos en la consola
+pnpm typecheck   # Solo comprueba tipos, sin generar build
 ```
 
 No hay test runner configurado.
 
+**Importante sobre el typecheck:** usa `tsc -b` (modo build, por las referencias de
+proyecto), NO `tsc --noEmit` a secas — este último no comprueba nada aquí y
+devuelve código 0 aunque haya errores.
+
 ## Arquitectura
 
 Landing page de una sola página con React 19 + Vite 7 ("Glossy Touch") — sin librería de routing ni de estado.
+
+**Lenguaje: TypeScript.** Migrado desde JSX en julio de 2026. La configuración
+(`tsconfig.app.json`) es deliberadamente más estricta que la plantilla por
+defecto de Vite: además de `strict`, activa `noUncheckedIndexedAccess`,
+`exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature` y
+`verbatimModuleSyntax` (este último obliga a importar tipos con `import type`).
+Es el mismo `tsconfig` que el proyecto de entrenamiento `05-typescript`.
 
 **Árbol de componentes:**
 

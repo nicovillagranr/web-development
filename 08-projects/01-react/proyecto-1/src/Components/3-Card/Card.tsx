@@ -1,0 +1,27 @@
+import "./Card.css"
+
+// `React.CSSProperties` es un catálogo cerrado: solo conoce las propiedades CSS
+// estándar. `--delay` es una custom property que nos inventamos nosotros, así que
+// hay que añadirla al catálogo extendiéndolo. Va entre comillas porque una clave
+// con guion no es un identificador válido de JS.
+interface CardStyle extends React.CSSProperties {
+    "--delay"?: string
+}
+
+interface CardProps {
+    icon: string
+    title: string
+    text: string
+    style?: CardStyle
+}
+
+function Card({ icon, title, text, style }: CardProps) {
+    return (
+        <div className="box-2__card" style={style}>
+            <span className="card__icon"><img src={icon} alt="" aria-hidden="true" className="card__icon-svg" /></span>
+            <h2 className="card__title">{title}</h2>
+            <p className="card__text">{text}</p>
+        </div>
+    )
+}
+export default Card
