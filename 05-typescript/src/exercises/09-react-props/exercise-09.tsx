@@ -76,10 +76,6 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-/* eslint-disable @typescript-eslint/no-empty-object-type, no-empty-pattern --
- * ANDAMIAJE DEL STARTER: los huecos `{}` sin rellenar disparan estas dos reglas.
- * 🧹 Al cerrar los 10 drills, BORRA estas 4 líneas y corre `pnpm lint`. */
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: la prop-función SIN argumentos

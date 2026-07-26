@@ -39,6 +39,7 @@
  * ===========================================================================*/
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- misma arruga del 08: se consume como tipo con `typeof CATEGORIAS`
 const CATEGORIAS = ["bebida", "snack", "postre"] as const
 type Categoria = (typeof CATEGORIAS)[number]
 

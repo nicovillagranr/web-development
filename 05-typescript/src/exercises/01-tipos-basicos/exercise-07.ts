@@ -71,6 +71,11 @@ export function describirConfig(c: Config): string {
 }
 
 
+// 🧹 LINT: `PERFIL_BASE` es SOLO fuente del tipo (nadie usa su valor, a diferencia
+//    de CONFIG_BASE, que además se esparce en el drill 3). ESLint no cuenta los usos
+//    en posición de TIPO como uso del valor, así que lo marca como "sin usar".
+//    No es un bug: el valor existe a propósito, es la única fuente de la verdad.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- se consume como tipo con `typeof PERFIL_BASE`
 const PERFIL_BASE = { usuario: "ana", nivel: 7 }
 
 // 👉 Mismo hueco para el BLOQUE A (drill 2): deriva en vez de escribir a mano.

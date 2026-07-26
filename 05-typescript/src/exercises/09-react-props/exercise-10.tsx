@@ -70,10 +70,6 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-/* eslint-disable @typescript-eslint/no-empty-object-type, no-empty-pattern --
- * ANDAMIAJE DEL STARTER: los huecos `{}` sin rellenar disparan estas dos reglas.
- * 🧹 Al cerrar los 10 drills, BORRA estas 4 líneas y corre `pnpm lint`. */
-
 import type { ComponentProps, ReactNode } from 'react'
 
 
@@ -154,13 +150,6 @@ export function Dinero({ cantidad, ...props }: DineroProps) {
 //    `Pedido` con `id`, `cliente`, `total` y `estado` (usa `Pick` en el
 //    `extends`), y añada:
 //      · `onVer` función que recibe un number (el id) y no devuelve nada
-
-// export type Pedido = {
-// id: number
-// cliente: string
-// total: number
-// estado: 'pendiente' | 'enviado' | 'entregado'
-// }
 
 export interface FilaPedidoProps extends Pick<Pedido, 'id' | 'cliente' | 'total' | 'estado'> {
   onVer: (id: number) => void

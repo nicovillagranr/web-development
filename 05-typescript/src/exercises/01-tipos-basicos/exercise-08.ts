@@ -45,6 +45,11 @@
  * ===========================================================================*/
 
 
+// 🧹 LINT: la lista es SOLO fuente del tipo — nadie lee su valor, solo se deriva
+//    la unión con `(typeof ROLES)[number]`. ESLint no cuenta los usos en posición
+//    de TIPO como uso del valor, así que la marca como "sin usar". No es un bug:
+//    ese valor es justo lo que hace que lista y unión no puedan desincronizarse.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- se consume como tipo con `typeof ROLES`
 const ROLES = ["admin", "editor", "lector"] as const
 type Rol = (typeof ROLES)[number]
 
@@ -68,6 +73,7 @@ esAdmin("lector") // retorna false
 // esAdmin("Nico") // no compila, porque "Nico" no está en ROLES
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- misma arruga que ROLES: se consume como tipo con `typeof TALLAS`
 const TALLAS = ["S", "M", "L", "XL"] as const
 type Talla = (typeof TALLAS)[number]
 

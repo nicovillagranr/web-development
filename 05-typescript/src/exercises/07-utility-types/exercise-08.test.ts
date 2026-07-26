@@ -7,6 +7,14 @@ import {
   registrarUsuarios,
 } from './exercise-08'
 
+/* eslint-disable @typescript-eslint/no-unused-expressions --
+ * PRUEBAS DE TIPO. Las líneas sueltas tipo `sinPassword(u).password` no calculan
+ * nada en runtime y ESLint las ve como expresiones desperdiciadas; están ahí a
+ * propósito, para darle al `@ts-expect-error` de la línea de encima un error que
+ * cazar. Si se borran, el @ts-expect-error se queda sin trabajo → TS2578.
+ * El disable va a nivel de ARCHIVO porque no cabe entre el @ts-expect-error y su
+ * expresión: TS mira la línea siguiente exacta, y un comentario en medio lo rompe. */
+
 describe('07-utility-types / exercise-08 — Omit<T, K>', () => {
   /* ── BLOQUE A — Omit en el parámetro (datos de alta sin id) ── */
 
