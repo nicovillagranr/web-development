@@ -1,5 +1,7 @@
 import "../PortfolioItem/PortfolioItem.css"
 
+// TODO(tipos): mismo patrón que FeatureCard, ahora con 3 props distintas.
+// Quien las pasa es PortfolioSection.tsx.
 function PortfolioItem({ img, name, text }) {
     return (
         <figure className="portfolio__item">

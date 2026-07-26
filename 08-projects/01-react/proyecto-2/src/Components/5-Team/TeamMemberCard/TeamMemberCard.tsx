@@ -4,6 +4,9 @@ import linkedinIcon from "../../../assets/icons/linkedin.svg"
 
 import "./TeamMemberCard.css"
 
+// TODO(tipos): el mismo patrón por tercera vez, ya con 4 props. Quien las pasa
+// es TeamSection.tsx. Fíjate en que `name` se usa dentro de una plantilla
+// (`Visit ${name} on Facebook`) — eso también te dice algo de su tipo.
 function TeamMemberCard({ photo, name, position, description }) {
     return (
         <li className="member">
