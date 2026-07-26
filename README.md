@@ -1,4 +1,47 @@
-# Frontend Learning Repository / Repositorio de Aprendizaje Frontend
+# Nicolás Villagrán — Frontend Developer
+
+**Santiago, Chile** · React · TypeScript · Next.js · Abierto a oportunidades
+
+[LinkedIn](https://www.linkedin.com/in/nico-villagran/) · [nicovillagranroses@gmail.com](mailto:nicovillagranroses@gmail.com) · [Mis APIs](https://github.com/nicovillagranr/APIs)
+
+> Este repositorio es mi **diario de aprendizaje**: once módulos, de HTML semántico a Docker,
+> con la práctica y las decisiones técnicas documentadas por escrito.
+> **Si vienes a evaluar mi trabajo, empieza por los proyectos de aquí abajo** — el resto del
+> repositorio es el camino, no el destino.
+
+---
+
+## El portfolio
+
+**[Portfolio — Proyectos](08-projects/00-hosting)** · React 19 · Tailwind v4 · Vitest
+
+Una SPA que **consume mi propia API REST** ([`/projects`](https://00-portfolio-projects-api.vercel.app/projects) y [`/profile`](https://00-portfolio-projects-api.vercel.app/profile), desplegada en Vercel) y presenta el perfil y un catálogo filtrable, con un Hero interactivo en forma de editor de código.
+
+La decisión técnica de la que estoy más contento: los datos se piden a la API en runtime, pero en *build time* se genera un **snapshot de respaldo**, así que si la API no responde el sitio se pinta igualmente con el último estado conocido en lugar de quedarse en blanco. Con tests de la capa de datos y de la tarjeta de proyecto (Vitest + Testing Library).
+
+## Proyectos destacados
+
+| | Proyecto | Qué demuestra | Stack | |
+|---|---|---|---|---|
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-6.webp" width="150"> | **Falabella.com** | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](08-projects/02-next/proyecto-2) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. Con tests. | React 19 · Tailwind v4 | [Código](08-projects/01-react/proyecto-8) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-3.webp" width="150"> | **ShopReact** | E-commerce que consume **mi propia Products API**, con catálogo filtrable por categoría. | React 19 · Tailwind v4 · React Router | [Código](08-projects/01-react/proyecto-6) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce sobre **Supabase** con 303 productos reales, no de relleno. *En desarrollo.* | React 19 · Tailwind v4 · Supabase | [Código](08-projects/01-react/proyecto-7) |
+
+Hay más proyectos en [`08-projects/`](08-projects) — landings, práctica de layout y versiones iterativas. Los cuatro de arriba son los que mejor representan lo que sé hacer hoy.
+
+## APIs propias
+
+Las construí para no depender de datos de terceros en mis propios proyectos. Node.js + json-server, desplegadas en Vercel con CORS abierto.
+
+| API | Qué sirve | |
+|---|---|---|
+| **Portfolio Projects API** | Los proyectos y el perfil que consume el portfolio. | [Ver JSON](https://00-portfolio-projects-api.vercel.app/) · [Código](https://github.com/nicovillagranr/APIs/tree/main/00-portfolio-projects) |
+| **Products API** | 50 productos de moda con categoría, tipo, imagen y precio. | [Ver JSON](https://01-products-api.vercel.app/) · [Código](https://github.com/nicovillagranr/APIs/tree/main/01-products-api) |
+
+---
+
+## Sobre este repositorio / About this repository
 
 This repository tracks my frontend learning path with a practical and progressive structure.
 The goal is to build strong fundamentals, document technical decisions, and evolve projects
@@ -7,6 +50,11 @@ into portfolio-ready work for a first frontend developer role.
 Este repositorio documenta mi camino de aprendizaje en frontend con una estructura práctica y progresiva.
 El objetivo es construir fundamentos sólidos, documentar decisiones técnicas y convertir proyectos
 en piezas listas para un portfolio profesional.
+
+Dos ejemplos de lo que hay dentro, por si el recorrido dice más que el resultado:
+
+- [`05-typescript/`](05-typescript) — entrenamiento propio de TypeScript: **90 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
+- [`00-docs/`](00-docs) — convenciones de nombres, política de ubicación de proyectos y decisiones técnicas escritas antes de aplicarlas.
 
 ## Quick Navigation / Navegación rápida
 
