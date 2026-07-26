@@ -13,7 +13,7 @@
 
 ## El portfolio
 
-**[nico-villagran.com](https://nico-villagran.com)** · React 19 · Tailwind v4 · Vitest · [Código](08-projects/00-hosting)
+React 19 · Tailwind v4 · Vitest · **[Ver el sitio](https://nico-villagran.com)** · [Código](08-projects/00-hosting)
 
 Una SPA que **consume mi propia API REST** ([`/projects`](https://00-portfolio-projects-api.vercel.app/projects) y [`/profile`](https://00-portfolio-projects-api.vercel.app/profile), desplegada en Vercel) y presenta el perfil y un catálogo filtrable, con un Hero interactivo en forma de editor de código.
 
@@ -23,9 +23,9 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 
 | | Proyecto | Qué demuestra | Stack | |
 |---|---|---|---|---|
-| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-6.webp" width="150"> | **Falabella.com** | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](08-projects/02-next/proyecto-2) |
-| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. Con tests. | React 19 · Tailwind v4 | [Código](08-projects/01-react/proyecto-8) |
-| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-3.webp" width="150"> | **ShopReact** | E-commerce que consume **mi propia Products API**, con catálogo filtrable por categoría. | React 19 · Tailwind v4 · React Router | [Código](08-projects/01-react/proyecto-6) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-6.webp" width="150"> | **Clon de Falabella.com** *(ejercicio académico)* | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](08-projects/02-next/proyecto-2) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](08-projects/01-react/proyecto-8) |
+| <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-3.webp" width="150"> | **ShopReact** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. | React 19 · Tailwind v4 · React Router | [Código](08-projects/01-react/proyecto-6) |
 | <img src="https://00-portfolio-projects-api.vercel.app/images/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce sobre **Supabase** con 303 productos reales, no de relleno. *En desarrollo.* | React 19 · Tailwind v4 · Supabase | [Código](08-projects/01-react/proyecto-7) |
 
 Hay más proyectos en [`08-projects/`](08-projects) — landings, práctica de layout y versiones iterativas. Los cuatro de arriba son los que mejor representan lo que sé hacer hoy.
