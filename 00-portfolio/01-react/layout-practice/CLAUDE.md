@@ -47,6 +47,6 @@ Los componentes están en `src/Components/` con carpetas numeradas (`1-Header/`,
 
 **Lenguaje visual:** Glassmorphism — fondos semi-transparentes con `rgba` y `backdrop-filter: blur`.
 
-**Base path de Vite:** `/proyecto-1/` — necesario para el despliegue en un subdirectorio.
+**Base path de Vite:** `/layout-practice/` — necesario para el despliegue en un subdirectorio.
 
 **Assets:** SVGs en `src/assets/icons/`, imágenes WebP en `src/assets/images/`.

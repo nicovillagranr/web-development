@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es-CL">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Projex: Digital products built to scale. Design, performance, and accessibility from day one.">
+  <meta property="og:title" content="Projex — Web & Product Studio">
+  <meta property="og:description"
+    content="We help startups turn ideas into fast, accessible, and scalable web products.">
+  <meta property="og:image" content="https://nico-villagran.com/projex/og-image.webp">
+  <meta property="og:url" content="https://nico-villagran.com/projex/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Projex — Web & Product Studio">
+  <meta name="twitter:description" content="We help startups turn ideas into fast, accessible, and scalable web products.">
+  <meta name="twitter:image" content="https://nico-villagran.com/projex/og-image.webp">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>Projex | Web & Product Studio</title>
+
+  <!-- JSON-LD Structured Data para Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Projex",
+    "url": "https://nico-villagran.com/projex/",
+    "logo": "https://nico-villagran.com/projex/og-image.webp",
+    "description": "Digital products built to scale. Design, performance, and accessibility from day one.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "email": "contact@projex.com"
+    }
+  }
+  </script>
+
+  <!--
+    Sin preload/prefetch de imágenes: todas se importan desde los componentes,
+    así que Vite las emite con hash (hero-BtSPU6qn.webp) y aquí no hay forma de
+    escribir esa URL. Los <link> que había apuntaban a rutas de src/ y daban 404.
+  -->
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

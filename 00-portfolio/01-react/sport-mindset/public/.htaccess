@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /proyecto-6/
+    RewriteBase /sport-mindset/
 
     # Si la petición es un archivo o carpeta real, sírvelo tal cual
     RewriteCond %{REQUEST_FILENAME} -f [OR]

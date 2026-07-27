@@ -1,4 +1,4 @@
-# CLAUDE.md — proyecto-7
+# CLAUDE.md — smart-cooler-ui
 
 ## Qué es
 UI simulada de un refrigerador inteligente (Smart Cooler). Pantalla táctil con gestión de inventario de alimentos, hora/clima configurable y panel de sistema. Sin backend — todo el estado vive en localStorage.
@@ -21,7 +21,7 @@ npm run preview   # previsualizar build
 npm run lint      # ESLint
 ```
 
-Base URL de producción: `/proyecto-7/`
+Base URL de producción: `/smart-cooler-ui/`
 
 ## Arquitectura
 
