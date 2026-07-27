@@ -200,7 +200,7 @@ describe('inventoryUtils', () => {
 **Commit:** `ab524` (Refactoriza proyecto 4 y agrega proyecto 3 de Tailwind)
 
 #### ¿Qué cambió?
-- Migración final a `08-projects/`
+- Migración final a `00-portfolio/`
 - CSS Modules en todos los componentes
 - Organización final de la arquitectura
 

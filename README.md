@@ -13,7 +13,7 @@
 
 ## El portfolio
 
-React 19 · Tailwind v4 · Vitest · **[Ver el sitio](https://nico-villagran.com)** · [Código](08-projects/00-hosting)
+React 19 · Tailwind v4 · Vitest · **[Ver el sitio](https://nico-villagran.com)** · [Código](00-portfolio/00-hosting)
 
 Una SPA que **consume mi propia API REST** ([`/projects`](https://00-portfolio-projects-api.vercel.app/projects) y [`/profile`](https://00-portfolio-projects-api.vercel.app/profile), desplegada en Vercel) y presenta el perfil y un catálogo filtrable, con un Hero interactivo en forma de editor de código.
 
@@ -23,12 +23,12 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 
 | | Proyecto | Qué demuestra | Stack | |
 |---|---|---|---|---|
-| <img src="00-docs/01-assets/proyectos/proyecto-6.webp" width="150"> | **Clon de Falabella.com** *(ejercicio académico)* | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](08-projects/02-next/proyecto-2) |
-| <img src="00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](08-projects/01-react/proyecto-8) |
-| <img src="00-docs/01-assets/proyectos/proyecto-3.webp" width="150"> | **ShopReact** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. | React 19 · Tailwind v4 · React Router | [Código](08-projects/01-react/proyecto-6) |
-| <img src="00-docs/01-assets/proyectos/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce sobre **Supabase** con 303 productos reales, no de relleno. *En desarrollo.* | React 19 · Tailwind v4 · Supabase | [Código](08-projects/01-react/proyecto-7) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-6.webp" width="150"> | **Clon de Falabella.com** *(ejercicio académico)* | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](00-portfolio/02-next/proyecto-2) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/proyecto-8) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-3.webp" width="150"> | **ShopReact** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. | React 19 · Tailwind v4 · React Router | [Código](00-portfolio/01-react/proyecto-6) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce sobre **Supabase** con 303 productos reales, no de relleno. *En desarrollo.* | React 19 · Tailwind v4 · Supabase | [Código](00-portfolio/01-react/proyecto-7) |
 
-Hay más proyectos en [`08-projects/`](08-projects) — landings, práctica de layout y versiones iterativas. Los cuatro de arriba son los que mejor representan lo que sé hacer hoy.
+Hay más proyectos en [`00-portfolio/`](00-portfolio) — landings, práctica de layout y versiones iterativas. Los cuatro de arriba son los que mejor representan lo que sé hacer hoy.
 
 ## APIs propias
 
@@ -53,32 +53,46 @@ en piezas listas para un portfolio profesional.
 
 Dos ejemplos de lo que hay dentro, por si el recorrido dice más que el resultado:
 
-- [`05-typescript/`](05-typescript) — entrenamiento propio de TypeScript: **90 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
-- [`00-docs/`](00-docs) — convenciones de nombres, política de ubicación de proyectos y decisiones técnicas escritas antes de aplicarlas.
+- [`01-learning/05-typescript/`](01-learning/05-typescript) — entrenamiento propio de TypeScript: **90 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
+- [`01-learning/00-docs/`](01-learning/00-docs) — convenciones de nombres, política de ubicación de proyectos y decisiones técnicas escritas antes de aplicarlas.
 
 ## Quick Navigation / Navegación rápida
 
-- Main documentation index / Índice principal de documentación: `00-docs/README.md`
-- Repository overview / Vista general del repo: `00-docs/00-overview/readme.md`
-- Quick return guide / Guía de retoma rápida: `00-docs/00-overview/retoma-rapida.md`
-- Naming rules / Convenciones de nombres: `00-docs/00-overview/naming-conventions.md`
-- Projects location policy / Política de ubicación de proyectos: `00-docs/00-overview/projects-location-policy.md`
-- Session memory log / Registro de sesiones: `00-docs/00-overview/session-log.md`
+- Main documentation index / Índice principal de documentación: `01-learning/00-docs/README.md`
+- Repository overview / Vista general del repo: `01-learning/00-docs/00-overview/readme.md`
+- Quick return guide / Guía de retoma rápida: `01-learning/00-docs/00-overview/retoma-rapida.md`
+- Naming rules / Convenciones de nombres: `01-learning/00-docs/00-overview/naming-conventions.md`
+- Projects location policy / Política de ubicación de proyectos: `01-learning/00-docs/00-overview/projects-location-policy.md`
+- Session memory log / Registro de sesiones: `01-learning/00-docs/00-overview/session-log.md`
 
 ## Repository Structure / Estructura del repositorio
 
-- `00-docs/`: Core docs, standards, and decisions / Documentación central, estándares y decisiones.
-- `01-git/`: Git and GitHub / Git y GitHub.
-- `02-html/`: Semantic HTML and accessibility / HTML semántico y accesibilidad.
-- `03-css/`: Architecture, layouts, and frameworks / Arquitectura, layouts y frameworks.
-- `04-javascript/`: Fundamentals, DOM, OOP, async, and libraries / Fundamentos, DOM, POO, async y librerías.
-- `05-typescript/`: TypeScript learning path / Ruta de aprendizaje de TypeScript.
-- `06-react/`: React learning path and projects / Ruta de aprendizaje y proyectos con React.
-- `07-nextjs/`: Next.js learning path and projects / Ruta de aprendizaje y proyectos con Next.js.
-- `08-projects/`: Applied projects / Proyectos aplicados.
-- `09-docker/`: Docker guides and material / Guías y material de Docker.
-- `10-claudeCode/`: Claude Code notes and experiments / Notas y experimentos con Claude Code.
-- `scripts/`: Utility scripts for repo maintenance / Scripts de utilidad para mantenimiento del repo.
+Dos puertas: lo terminado y el camino que llevó hasta ahí.
+Two doors: the finished work, and the path that led to it.
+
+```
+00-portfolio/     Proyectos aplicados — lo que enseño / Applied projects
+   00-hosting/       el sitio del portfolio / the portfolio site
+   01-react/         proyectos React + Vite
+   02-next/          proyectos Next.js
+
+01-learning/      La ruta de aprendizaje / The learning path
+   00-docs/          documentación, estándares y decisiones
+   01-git/           Git y GitHub
+   02-html/          HTML semántico y accesibilidad
+   03-css/           arquitectura, layouts y frameworks
+   04-javascript/    fundamentos, DOM, POO, async y librerías
+   05-typescript/    entrenamiento de TypeScript
+   06-react/         ruta de React
+   07-nextjs/        ruta de Next.js
+   09-docker/        guías y material de Docker
+   10-claudeCode/    notas y experimentos con Claude Code
+
+scripts/          Utilidades de mantenimiento del repo / Repo maintenance
+```
+
+La numeración de cada módulo se conserva: es el orden en que los recorrí.
+Module numbering is preserved: it is the order in which I went through them.
 
 ## Working Rules / Reglas de trabajo
 

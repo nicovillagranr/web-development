@@ -23,10 +23,10 @@ Where a project should live (drill vs portfolio, one-project-one-folder rule, `p
 
 ## Current Normalization Status
 
-- Completed: `01-git/04-cheatsheets` (fixed typo from `04-cheasheets`).
+- Completed: `01-learning/01-git/04-cheatsheets` (fixed typo from `04-cheasheets`).
 - Closed (2026-07-26): legacy path names in the Three.js practice folders — the whole
-  folder left this repo (see `04-javascript/readme.md`), so there is nothing to rename.
+  folder left this repo (see `01-learning/04-javascript/readme.md`), so there is nothing to rename.
 - Pending review in later phases:
-  - duplicated project labels in `06-react/05-projects`
+  - duplicated project labels in `01-learning/06-react/05-projects`
 
 

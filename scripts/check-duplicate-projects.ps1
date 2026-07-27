@@ -80,7 +80,7 @@ try {
 
   if ($exitCode -ne 0 -and -not $Quiet) {
     Write-Output ""
-    Write-Output "Violations found. See 00-docs/00-overview/projects-location-policy.md"
+    Write-Output "Violations found. See 01-learning/00-docs/00-overview/projects-location-policy.md"
   }
 
   exit $exitCode

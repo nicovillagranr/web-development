@@ -38,10 +38,10 @@ Thumbs.db
 .idea/
 
 # Librería de iconos local — se mantiene en disco como recurso, no se versiona (infla el repo)
-03-css/00-assets/icons/
+01-learning/03-css/00-assets/icons/
 
 # Librería de fuentes local — mismo criterio que los iconos: recurso re-descargable, no se versiona (~464 MB)
-03-css/00-assets/fonts/
+01-learning/03-css/00-assets/fonts/
 
 # (Las reglas de los assets del curso Three.js Journey vivían aquí. La carpeta
 #  `04-javascript/05-libraries/3D/` se movió a su propio repo el 26 jul 2026,

@@ -34,7 +34,16 @@ try {
   Write-Output ""
   Write-Output "=== Module Summary ==="
 
-  $modules = Get-ChildItem -Directory | Where-Object { $_.Name -match "^[0-9]{2}-" } | Sort-Object Name
+  # Desde la reestructuracion en dos puertas (26 jul 2026) los modulos numerados
+  # ya no cuelgan de la raiz: 00-portfolio/ es uno, y el resto vive dentro de
+  # 01-learning/. Se escanean los dos niveles para que el resumen siga sirviendo.
+  $moduleRoots = @('.', '01-learning')
+  $modules = foreach ($root in $moduleRoots) {
+    if (Test-Path $root) {
+      Get-ChildItem $root -Directory | Where-Object { $_.Name -match "^[0-9]{2}-" -and $_.Name -ne "01-learning" }
+    }
+  }
+  $modules = $modules | Sort-Object FullName
   $moduleRows = foreach ($module in $modules) {
     $children = Get-ChildItem $module.FullName -Directory -ErrorAction SilentlyContinue
     $childrenWithoutReadme = 0
@@ -46,9 +55,13 @@ try {
       }
     }
 
+    # Ruta relativa a la raiz del repo, con barras al estilo git: los modulos de
+    # 01-learning no se encuentran buscando solo por su nombre.
+    $modulePath = (Resolve-Path -Relative $module.FullName) -replace '^\.\\', '' -replace '\\', '/'
+
     [PSCustomObject]@{
-      Module                    = $module.Name
-      TrackedFiles              = ($tracked | Where-Object { $_ -like "$($module.Name)/*" }).Count
+      Module                    = $modulePath
+      TrackedFiles              = ($tracked | Where-Object { $_ -like "$modulePath/*" }).Count
       ChildDirs                 = $children.Count
       ChildDirsWithoutReadme    = $childrenWithoutReadme
     }

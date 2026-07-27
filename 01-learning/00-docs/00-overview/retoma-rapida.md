@@ -13,13 +13,13 @@ Guia corta para volver al repo despues de semanas o meses sin tocar un tema.
 
 ## Si Olvidaste X, Ve Aqui
 
-- Git base: `01-git/00-fundamentals/fundamentos-git.md`
-- HTML semantico: `02-html/03-guides/README.md`
-- CSS arquitectura: `03-css/01-architecture/README.md`
-- JS DOM: `04-javascript/02-dom/`
-- JS async: `04-javascript/04-async/`
-- React hooks: `06-react/02-hooks/`
-- Docker compose: `09-docker/03-compose/flujo-compose.md`
+- Git base: `01-learning/01-git/00-fundamentals/fundamentos-git.md`
+- HTML semantico: `01-learning/02-html/03-guides/README.md`
+- CSS arquitectura: `01-learning/03-css/01-architecture/README.md`
+- JS DOM: `01-learning/04-javascript/02-dom/`
+- JS async: `01-learning/04-javascript/04-async/`
+- React hooks: `01-learning/06-react/02-hooks/`
+- Docker compose: `01-learning/09-docker/03-compose/flujo-compose.md`
 
 ## Regla de Continuidad
 
