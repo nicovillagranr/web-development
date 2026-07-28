@@ -19,9 +19,18 @@ const mockProfile = {
         tools: ["Git", "Vite", "npm", "ESLint", "Prettier", "Docker"],
         copilots: ["Claude Code", "Claude Design"]
     },
+    // OJO: `intro` tiene que traer los CUATRO campos que exige ProfileSchema.
+    // Si falta alguno, Zod lanza dentro del .then() del hook, la ejecución salta
+    // al .catch() y setProjects() no llega a correr nunca — con lo que el test
+    // que falla es el de `projects`, señalando al sitio equivocado.
     intro: {
         about: "Desarrollador frontend basado en Santiago.",
-        stack: "Cada herramienta de este stack la elegí por una razón."
+        stackHeading: "Cómo trabajo",
+        stack: "Cada herramienta de este stack la elegí por una razón.",
+        stackPillars: [
+            { label: "Pienso", items: ["el problema primero"] },
+            { label: "Pruebo", items: ["los caminos que rompen"] }
+        ]
     },
     philosophy: "Nunca dejar de aprender"
 }
