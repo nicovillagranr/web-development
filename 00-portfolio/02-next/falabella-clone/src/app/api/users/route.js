@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server"
 
-console.log(process.env.TOKEN)
-
 
 export async function GET() {
     const res = await fetch('https://jsonplaceholder.typicode.com/users')
@@ -17,7 +15,7 @@ export async function POST(request) {
     const { nombre, apellido } = await request.json()
     console.log(`El nombre es ${nombre} y el apellido es ${apellido}`)
 
-    return new NextResponse({
+    return NextResponse.json({
         message: "Creando datos..."
     })
 }
@@ -26,7 +24,7 @@ export function PUT() {
     // extract params
     // query database
     // comunicate whith other services
-    return new NextResponse({
+    return NextResponse.json({
         message: "Actualizando datos..."
     })
 }
@@ -35,7 +33,7 @@ export function DELETE() {
     // extract params
     // query database
     // comunicate whith other services
-    return new NextResponse({
+    return NextResponse.json({
         message: "Eliminando datos..."
     })
 }
