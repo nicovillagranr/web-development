@@ -7,15 +7,13 @@ import lockIcon from "../assets/icons/user-lock-solid-full.svg"
 import rocketIcon from "../assets/icons/rocket.svg"
 
 
-interface CardProps {
+export interface CardData {
     id: number;
     icon: string;
     title: string;
     text: string;
 }
-
-
-export const cardsData: CardProps[] = [
+export const cardsData: CardData[] = [
     {
         id: 1,
         icon: wandIcon,
@@ -53,3 +51,5 @@ export const cardsData: CardProps[] = [
         text: "Simple to implement and customize for any project with clean, well-documented code and flexible components."
     }
 ]
+
+
