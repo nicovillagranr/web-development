@@ -1,5 +1,12 @@
 # 📋 Auditoría & Mejoras — 00-hosting
 
+> **Documento con fecha: refleja el estado a 25 de mayo de 2026, no el de hoy.**
+> Lo que ha cambiado desde entonces: la suite está en **19/20** (el mock de
+> `usePortfolioData.test.js` se desincronizó de `ProfileSchema`, que creció con
+> `intro.stackHeading` e `intro.stackPillars`), y las rutas de los proyectos ya no
+> son `/proyecto-N/` sino el nombre de cada uno. El "Sin pendientes" de abajo
+> corresponde a aquella fecha.
+
 **Última auditoría:** 25 de mayo de 2026 (sesión 14: TOOL1 cerrado — auditoría 100% completada)
 **Status general:** Base sólida y desplegada. Auditoría cerrada, portfolio curado (API con 8 entradas) y los 5 proyectos en Hostinger ya apuntan a las carpetas correctas. Suite de 20 tests, lint y build en verde. Package manager migrado a pnpm. **Sin pendientes.**
 

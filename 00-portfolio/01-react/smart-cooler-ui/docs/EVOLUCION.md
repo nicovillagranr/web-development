@@ -406,7 +406,7 @@ ba8c9 - Documentación (profesionalismo)
 
 ---
 
-## Próximas mejoras (ver "Claude Code recomendaciones.md")
+## Próximas mejoras (ver [`recomendaciones-claude-code.md`](./recomendaciones-claude-code.md))
 
 1. Conectar a backend real (MongoDB + APIs)
 2. Agregar manejo de errores robusto

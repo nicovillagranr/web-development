@@ -4,7 +4,7 @@
 
 **[nico-villagran.com](https://nico-villagran.com)** · [LinkedIn](https://www.linkedin.com/in/nico-villagran/) · [nicovillagranroses@gmail.com](mailto:nicovillagranroses@gmail.com) · [Mis APIs](https://github.com/nicovillagranr/APIs)
 
-> Este repositorio es mi **diario de aprendizaje**: once módulos, de HTML semántico a Docker,
+> Este repositorio es mi **diario de aprendizaje**: diez módulos, de HTML semántico a Docker,
 > con la práctica y las decisiones técnicas documentadas por escrito.
 > **Si vienes a evaluar mi trabajo, empieza por los proyectos de aquí abajo** — el resto del
 > repositorio es el camino, no el destino.

@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js — Fundamentos
 
-## Getting Started
+Proyecto mínimo para aprender el App Router de Next.js sin ruido: un listado de
+usuarios traído de una API externa y su página de detalle. Deliberadamente pequeño —
+cinco archivos de ruta y un componente.
 
-First, run the development server:
+## Qué practica
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Server Components con `fetch`** — `page.jsx` es `async` y hace `await` del fetch
+  directamente en el cuerpo del componente. Sin `useEffect`, sin `useState`, sin
+  estado de carga: el HTML llega ya con los datos dentro.
+- **Ruta dinámica** — `/users/[id]`, con el `id` recibido como parámetro de ruta.
+- **`notFound()`** — si la API devuelve un objeto sin `id`, se invoca y Next entrega
+  la página 404 en lugar de reventar.
+- **Estados por convención** — `not-found.jsx` y `error.jsx` en la raíz de `app/`.
+- **Cliente vs servidor** — `Users.jsx` documenta en su primera línea *por qué* no
+  lleva `"use client"`: no tiene eventos, así que no necesita hidratarse.
+
+También queda comentado en `users/[id]/page.jsx` el `generateStaticParams()` que haría
+falta para un build estático con `output: "export"` — apuntado como referencia para
+cuando toque.
+
+## Estructura
+
+```
+src/
+├── app/
+│   ├── page.jsx           listado de usuarios
+│   ├── layout.jsx         layout raíz
+│   ├── error.jsx          error boundary
+│   ├── not-found.jsx      404
+│   └── users/[id]/        detalle de usuario
+├── components/Users.jsx
+└── styles/globals.css
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Datos:** `jsonplaceholder.typicode.com`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Herramienta  | Versión | Uso                 |
+| ------------ | ------- | ------------------- |
+| Next.js      | 16.2    | App Router, SSR     |
+| React        | 19.2    | UI por componentes  |
+| Tailwind CSS | 4       | Estilos utilitarios |
 
-## Learn More
+## Cómo ejecutar
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm install
+pnpm dev        # servidor de desarrollo en localhost:3000
+pnpm build      # build de producción
+pnpm start      # servir el build
+pnpm lint       # linting con ESLint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No está desplegado: es material de estudio, no una pieza de portfolio.

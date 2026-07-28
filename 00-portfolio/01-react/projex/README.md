@@ -11,7 +11,7 @@ consistente y animaciones de entrada con Framer Motion.
 - **Accesibilidad**: focus-trap en el menú/modal y navegación por teclado.
 - **Animaciones** de entrada con Framer Motion sin afectar la legibilidad.
 - **Responsive** en los anchos de uso común (mobile, tablet, desktop).
-- **Routing compatible con hosting estático** (HashRouter, base `/proyecto-3/`).
+- **Routing compatible con hosting estático** (HashRouter, base `/projex/`).
 
 ## Stack
 
@@ -39,4 +39,4 @@ pnpm preview    # previsualizar el build
 pnpm lint       # linting con ESLint
 ```
 
-> Demo: _(pendiente de publicar el enlace de despliegue)_
+> Demo: **[nico-villagran.com/projex](https://nico-villagran.com/projex/)**

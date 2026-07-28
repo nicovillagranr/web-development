@@ -1,4 +1,4 @@
-# Proyecto-4 Smart Cooler: Versiones Históricas
+# Smart Cooler UI: Versiones Históricas
 
 📚 **Archivo histórico con 5 versiones completas** del proyecto Smart Cooler desde diferentes etapas de su desarrollo.
 

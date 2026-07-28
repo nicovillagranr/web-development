@@ -1,4 +1,10 @@
-# Plan: Integración Supabase en proyecto-7
+# Plan: Integración Supabase en Sport Mindset
+
+> **Documento histórico.** Se escribió cuando este proyecto se llamaba `proyecto-7`
+> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/sport-mindset/`.
+> El texto de abajo conserva la nomenclatura original: donde diga *proyecto-7*, lee
+> **sport-mindset**; donde diga *proyecto-6*, lee **shopreact**; donde diga
+> *proyecto-8*, lee **smart-cooler-ui**.
 
 ## Context
 proyecto-7 es un clon de proyecto-6 (e-commerce React 19). La app consume actualmente una API REST propia en Vercel (`VITE_API_URL`). El objetivo es migrar a Supabase con datos reales de wisebikes.cl (303 productos de bicicletas, 1,657 imágenes) para tener un e-commerce real apto para portfolio.
@@ -54,7 +60,7 @@ Hacer directamente en el navegador:
    - `Project URL` → `VITE_SUPABASE_URL`
    - `anon public key` → `VITE_SUPABASE_ANON_KEY`
    - `service_role key` → para el script de importación (nunca al browser)
-4. Crear archivo `.env` en `proyecto-7/`:
+4. Crear archivo `.env` en `sport-mindset/`:
    ```
    VITE_SUPABASE_URL=https://xxxx.supabase.co
    VITE_SUPABASE_ANON_KEY=eyJ...

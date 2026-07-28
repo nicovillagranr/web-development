@@ -1,4 +1,9 @@
-# Plan: Integración Supabase en proyecto-6 (WiseBikes E-Commerce)
+# Plan: Integración Supabase en ShopReact (WiseBikes E-Commerce)
+
+> **Documento histórico.** Se escribió cuando este proyecto se llamaba `proyecto-6`
+> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/shopreact/`.
+> El texto de abajo conserva la nomenclatura original: donde diga *proyecto-6*, lee
+> **shopreact**; donde diga *proyecto-7*, lee **sport-mindset**.
 
 ## Context
 El proyecto-6 es un e-commerce React 19 que actualmente consume una API json-server propia desplegada en Vercel (`https://01-products-api.vercel.app`). Se dispone de datos reales de 303 productos de bicicletas y accesorios (5.2MB JSON) con 1,657 imágenes .webp locales, scrapeados de wisebikes.cl. El objetivo es migrar a Supabase para tener un e-commerce real y funcional apto para portfolio, con catálogo completo + carrito persistente.
@@ -20,7 +25,7 @@ El usuario hace esto directamente en el navegador:
    - `anon public key` → `VITE_SUPABASE_ANON_KEY`
 4. Agregar ambas al archivo `.env` del proyecto
 
-**Archivo afectado:** `C:\web-development\08-projects\01-react\proyecto-6\.env`
+**Archivo afectado:** `C:\web-development\00-portfolio\01-react\shopreact\.env`
 
 ---
 
