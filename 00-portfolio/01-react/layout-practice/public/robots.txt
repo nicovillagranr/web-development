@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nico-villagran.com/proyecto-1/sitemap.xml
+Sitemap: https://nico-villagran.com/layout-practice/sitemap.xml
