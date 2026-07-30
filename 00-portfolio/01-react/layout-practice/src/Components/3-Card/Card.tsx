@@ -1,11 +1,13 @@
+import type { CSSProperties } from "react"
+
 import "./Card.css"
 import type { CardData } from "../../data/cardsData"
 
-// `React.CSSProperties` es un catálogo cerrado: solo conoce las propiedades CSS
+// `CSSProperties` es un catálogo cerrado: solo conoce las propiedades CSS
 // estándar. `--delay` es una custom property que nos inventamos nosotros, así que
 // hay que añadirla al catálogo extendiéndolo. Va entre comillas porque una clave
 // con guion no es un identificador válido de JS.
-interface CardStyle extends React.CSSProperties {
+interface CardStyle extends CSSProperties {
     "--delay"?: string
 }
 

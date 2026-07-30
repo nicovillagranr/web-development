@@ -4,20 +4,17 @@ function TitleWatcher() {
     useEffect(() => {
         const defaultTitle = "Glossy Touch";
         const hiddenTitle = "Te fuiste?";
-        // TODO(tipos): anota explícitamente qué puede guardar esta variable.
+        // El tipo va anotado a mano y no inferido, por dos motivos.
         //
-        // Aquí salen 5 errores de golpe (TS7034 y TS7005) y merece la pena saber
-        // por qué. Normalmente TS te deja escribir `let x = null` sin anotar: usa
-        // el "evolving any", o sea, va deduciendo el tipo de lo que le asignes
-        // después. Pero eso solo funciona si puede seguirle la pista de arriba a
-        // abajo. Aquí `timeoutId` se lee y se escribe dentro de DOS closures
-        // (`handler` y la función de limpieza), que se ejecutarán vete a saber
-        // cuándo, así que TS se rinde y te lo exige explícito.
+        // Normalmente TS acepta `let x = null` sin anotación: usa el "evolving
+        // any" e infiere el tipo de lo que se le asigne después. Pero eso solo
+        // funciona si puede seguir el rastro de arriba abajo. Aquí `timeoutId`
+        // se lee y se escribe dentro de DOS closures (`handler` y la función de
+        // limpieza), que se ejecutan en un momento indeterminado, así que TS
+        // renuncia a inferirlo y lo exige explícito.
         //
-        // Para saber el tipo, mira qué devuelve `window.setTimeout` unas líneas
-        // más abajo (pasa el ratón por encima). Aviso: en el navegador NO es lo
-        // mismo que en Node — te dije que sería `ReturnType<typeof setTimeout>`
-        // y con `lib: ["DOM"]` es bastante más simple que eso.
+        // Y es `number` porque en el navegador `window.setTimeout` devuelve un
+        // número; en Node el tipo sería distinto (`NodeJS.Timeout`).
         let timeoutId: number | null = null;
 
         const handler = () => {
