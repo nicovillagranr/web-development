@@ -309,8 +309,27 @@ export const P3_10_ENTRADA: Producto = { id: 1, nombre: "Té", precio: 100 };
 
 // Debe pintar el <span> SOLO cuando hay pendientes, y nada cuando no los hay.
 export function Aviso({ cantidad }: { cantidad: number }) {
-  return <div>{cantidad && <span>{cantidad} pendientes</span>}</div>;
+  return (
+    <div>
+      {cantidad && <span>{cantidad} pendientes</span>}
+    </div>
+  )
 }
 // Escribe una cantidad que no pinte el <span>... y aun así ensucie la pantalla:
-export const P3_11_ENTRADA: number = 3;
-// Por qué:
+export const P3_11_ENTRADA: number = 0;
+// Por qué: && no devuelve un booleano, devuelve uno de sus dos operandos. Es el
+// mismo mecanismo que el || del ítem 02, con la condición al revés: si el lado
+// izquierdo es falsy, corta ahí y devuelve ESE lado, sin llegar a mirar el
+// derecho. Con cantidad = 0, la expresión entera vale 0 y el <span> ni se evalúa.
+// Hasta ahí el guarda funciona: el <span> efectivamente no se pinta.
+// El problema es lo que React hace con ese 0. React ignora false, null y
+// undefined, no pintan nada, pero los números los pinta como texto. Y 0 es un
+// número. Así que en el <div> queda un 0 suelto en pantalla, sin etiqueta, sin
+// contexto y sin que nadie lo haya pedido. Con false no pasaría: por eso el
+// arreglo es convertir la guarda en un booleano de verdad, cantidad > 0 &&
+// <span>...</span>, y así el lado izquierdo es false y desaparece.
+// TypeScript no lo caza porque la expresión cantidad && <span>... tiene tipo
+// 0 | Element, y las dos posibilidades son cosas que React sabe pintar: un
+// número es un nodo válido igual que un elemento. No hay ningún tipo fuera de
+// sitio del que quejarse. Que uno de los dos resultados sea basura en pantalla
+// es una decisión de diseño, no un error de tipos.
