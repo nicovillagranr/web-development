@@ -5,9 +5,15 @@
  *     onClick={(e) => …}     lo escribes ahí mismo. `e` llega solo.   ✅
  *     onClick={avisar()}     lo llamas TÚ al pintar la página.        ❌
  *
- * De todo lo que trae `e`, este archivo solo usa dos cosas:
- *     e.type          "click", "dblclick", "keydown"… el nombre del suceso
- *     e.nativeEvent   el evento del navegador, envuelto dentro del de React
+ * ⚠️ `e` NO es un texto: es una CAJA. Por dentro (recortada, trae ~25 campos):
+ *
+ *     e = {                    ← la caja entera es `e`
+ *       type: "click",         ← UN campo suyo: `e.type`, y ESE sí es un string
+ *       key: "a",              ← solo lo trae el molde del teclado
+ *       nativeEvent: { … },    ← el evento del navegador, dentro del sobre
+ *     }
+ *
+ * Este archivo usa esos tres. `e` y `e.type` no son la misma cosa.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 /* =============================================================================
@@ -27,11 +33,9 @@
  * 🧠 ANALOGÍA — el molde
  * ----------------------------------------------------------------------------
  * A la masa no le dices qué forma tiene: se la da el molde donde la echas.
- *
- * `onClick=` es un molde. Ya lleva escrito qué recibe la función que metas ahí,
- * así que tu `e` sale con forma sin que tú digas una palabra. Y cada molde da
- * la suya: el del teclado te da la tecla, el del ratón no. Saca la función del
- * molde y la forma se pierde — pero eso es el 03.
+ * `onClick=` es un molde: ya lleva escrito qué recibe la función que metas ahí,
+ * así que tu `e` sale con forma sin que tú digas una palabra. Y cada molde da la
+ * suya — el del teclado te da la tecla, el del ratón no.
  *
  *
  * ▸ UN EJEMPLO
@@ -57,8 +61,14 @@
 //    Devuelve un <button> con el texto "Avisar" que se lo entregue a React.
 //    👉 El starter lo cocina al pintar. Apaga el fuego: quita los ().
 //    <BotonPelado avisar={espia} />  →  espia se llama al hacer clic, no antes
+
+// La prop avisar es una función que no pide nada, y no retorna nada.
 export function BotonPelado({ avisar }: { avisar: () => void }) {
-  return <button onClick={avisar()}>Avisar</button>
+  return (
+    <button onClick={avisar}>
+      Avisar
+    </button>
+  )
 }
 // <BotonPelado avisar={() => console.log('clic')} />
 
@@ -67,8 +77,14 @@ export function BotonPelado({ avisar }: { avisar: () => void }) {
 //    ⚠️ No anotes el parámetro. Es el molde quien le da forma.
 //    👉 El starter le pasa el evento ENTERO. Solo pedían el nombre.
 //    <BotonAvisaTipo avisar={espia} />  →  espia recibe "click"
+
+// La prop avisar es una función que pide un string, y no retorna nada. Ese string es el nombre del suceso, que está dentro del objeto del evento: "click", "dblclick", "keydown"…
 export function BotonAvisaTipo({ avisar }: { avisar: (tipo: string) => void }) {
-  return <button onClick={(e) => avisar(e)}>Avisar</button>
+  return (
+    <button onClick={(e) => avisar(e.type)}>
+      Avisar
+    </button>
+  )
 }
 // <BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
 
@@ -77,8 +93,16 @@ export function BotonAvisaTipo({ avisar }: { avisar: (tipo: string) => void }) {
 //    ⚠️ Ese texto no lo escribes tú en ningún sitio: lo trae el evento.
 //    👉 El starter está en el hueco de al lado, así que no se entera del doble clic.
 //    <BotonAvisaDobleClic avisar={espia} />  →  espia recibe "dblclick"
+
+// La prop avisar es una función que pide un string, y no retorna nada.
+// Para ejecutar la función, el evento tiene que ser del tipo "dblclick".
+// El usuario debe dar click dos veces.
 export function BotonAvisaDobleClic({ avisar }: { avisar: (tipo: string) => void }) {
-  return <button onClick={(e) => avisar(e.type)}>Avisar</button>
+  return (
+    <button onDoubleClick={(e) => avisar(e.type)}>
+      Avisar
+    </button>
+  )
 }
 // <BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
 
@@ -89,8 +113,14 @@ export function BotonAvisaDobleClic({ avisar }: { avisar: (tipo: string) => void
 //       "Property 'key' does not exist on type 'MouseEvent<HTMLInputElement>'".
 //       Traducido: en ese molde no hay teclas. Cámbiate de molde.
 //    <CampoAvisaTecla avisar={espia} />  →  al pulsar la "a", espia recibe "a"
+
+// La prop avisar es una función que pide un string, y no retorna nada.
+// Al pulsar CUALQUIER tecla dentro del input (escriba o no: Shift, Escape, las flechas),
+// el evento trae en e.key la tecla exactamente pulsada.
 export function CampoAvisaTecla({ avisar }: { avisar: (tecla: string) => void }) {
-  return <input onClick={(e) => avisar(e.key)} />
+  return (
+    <input onKeyDown={(e) => avisar(e.key)} />
+  )
 }
 // <CampoAvisaTecla avisar={(k) => console.log(k)} />   // "a"
 
@@ -102,7 +132,11 @@ export function CampoAvisaTecla({ avisar }: { avisar: (tecla: string) => void })
 //    👉 El starter entrega el sobre de React donde pedían el de dentro.
 //    <BotonAvisaNativo avisar={espia} />  →  espia recibe un MouseEvent del DOM
 export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => void }) {
-  return <button onClick={(e) => avisar(e)}>Avisar</button>
+  return (
+    <button onClick={(e) => avisar(e.nativeEvent)}>
+      Avisar
+    </button>
+  )
 }
 // <BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
 
@@ -111,10 +145,12 @@ export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => v
 //    puedes entregarlo pelado, igual que en el drill 5 del 01: envuélvelo.
 //    👉 El starter lo entrega pelado, y no encaja: el molde solo pasa el evento.
 //    <BotonAvisaConId id={7} avisar={espia} />  →  espia recibe (7, "click")
-export function BotonAvisaConId(
-  { id, avisar }: { id: number; avisar: (id: number, tipo: string) => void },
-) {
-  return <button onClick={avisar}>Avisar</button>
+export function BotonAvisaConId({ id, avisar }: { id: number; avisar: (id: number, tipo: string) => void }) {
+  return (
+    <button onClick={(e) => avisar(id, e.type)}>
+      Avisar
+    </button>
+  )
 }
 // <BotonAvisaConId id={7} avisar={(i, t) => console.log(i, t)} />   // 7 "click"
 

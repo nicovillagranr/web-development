@@ -3,7 +3,7 @@ import "./assets/styles/App.css";
 function App() {
   return (
     <>
-      <h1>Aprendiendo Typescript</h1>
+      <h1>Aprendiendo Typescript + React + Arquitectura de Software</h1>
     </>
   );
 }
