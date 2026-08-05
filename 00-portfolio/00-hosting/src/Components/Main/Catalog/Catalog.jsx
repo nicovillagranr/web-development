@@ -30,7 +30,7 @@ export default function Catalog({ projects = [], loading = false, error = null }
     <section className="mt-6" id="proyectos">
       <div className="mb-5 grid gap-1.5">
         <h2 className="font-heading text-2xl font-bold text-text-primary md:text-3xl">Catálogo</h2>
-        <p className="text-text-secondary">Haz clic en cualquier tarjeta para abrir el proyecto.</p>
+        <p className="text-text-secondary">Haz clic en una tarjeta para abrir el proyecto o su código.</p>
         <div className="mt-4 flex gap-2">
           {FILTERS.map((f) => (
             <button

@@ -211,4 +211,36 @@ describe("ProjectCard", () => {
         // El resto del stack sigue pintándose con normalidad
         expect(screen.getByText("$ frontend")).toBeInTheDocument();
     })
+
+    // Test 20: la tarjeta de este propio sitio (path "/") no enlaza a la demo,
+    // porque su demo es la página en la que ya estás: su acción es el código.
+    it("La tarjeta de este sitio enlaza al repo en vez de a la demo", () => {
+        const esteSitio = { ...mockProject, name: "Este sitio", path: "/" };
+        render(<ProjectCard project={esteSitio} />);
+        // No queda ningún enlace "Abrir demo de…"
+        expect(screen.queryAllByRole("link", { name: "Abrir demo de Este sitio" })).toHaveLength(0);
+        // Y los dos que hay (escritorio + móvil) apuntan al repo
+        const links = screen.getAllByRole("link", { name: "Ver el código de Este sitio en GitHub" });
+        expect(links).toHaveLength(2);
+        links.forEach((link) => expect(link).toHaveAttribute("href", mockProject.repo));
+    })
+
+    // Test 21: y no se duplica el enlace al repo. En las demás tarjetas el icono de
+    // GitHub sobre la imagen es la vía al código; aquí la acción ya lo es, así que
+    // ese icono no se pinta y no hay dos enlaces al mismo destino.
+    it("La tarjeta de este sitio no duplica el enlace al repo", () => {
+        const esteSitio = { ...mockProject, name: "Este sitio", path: "/" };
+        render(<ProjectCard project={esteSitio} />);
+        expect(screen.queryAllByRole("link", { name: "Repositorio de Este sitio en GitHub" })).toHaveLength(0);
+    })
+
+    // Test 22: Zod y Vitest tienen que pintarse. Son el stack de la tarjeta de este
+    // sitio, y hasta ahora no estaban en TECH_GROUP: se descartaban en silencio.
+    it("Renderiza los chips de Zod y Vitest", () => {
+        const conZodYVitest = { ...mockProject, stack: ["JavaScript", "React 19", "Zod", "Vitest"] };
+        render(<ProjectCard project={conZodYVitest} />);
+        const stackSection = screen.getByLabelText("Stack tecnológico");
+        expect(within(stackSection).getByText("Zod")).toBeInTheDocument();
+        expect(within(stackSection).getByText("Vitest")).toBeInTheDocument();
+    })
 })

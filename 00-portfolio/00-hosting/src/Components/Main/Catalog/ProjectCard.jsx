@@ -31,6 +31,8 @@ const TECH_CATEGORY = {
   "React Router": "emerald",
   "React Icons": "emerald",
   "CSS modular": "emerald",
+  "Zod": "emerald",
+  "Vitest": "amber",
   "Prisma": "amber",
   "SQLite": "amber",
   "EmailJS": "amber",
@@ -59,6 +61,8 @@ const TECH_GROUP = {
   "React Router": "frontend",
   "React Icons": "frontend",
   "CSS modular": "frontend",
+  "Zod": "frontend",
+  "Vitest": "tools",
   "Prisma": "backend",
   "SQLite": "backend",
   "EmailJS": "backend",
@@ -69,7 +73,15 @@ const TECH_GROUP = {
 export default function ProjectCard({ project, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "En desarrollo";
-  const demoHref = path.endsWith("/") ? path : `${path}/`;
+  // Este propio sitio está publicado en la raíz, así que su "demo" es la página
+  // en la que ya estás: enlazarla sería abrir una copia de lo mismo. Su acción
+  // pasa a ser el código, y la tarjeta deja de ser clicable entera.
+  // El `&& repo` no es decorativo: `repo` es opcional en el schema, y sin él no
+  // habría destino al que mandar la acción. En ese caso se comporta como el resto.
+  const esEsteSitio = path === "/" && Boolean(repo);
+  const accionHref = esEsteSitio ? repo : path.endsWith("/") ? path : `${path}/`;
+  const accionTexto = esEsteSitio ? "Ver el código" : "Abrir";
+  const accionLabel = esEsteSitio ? `Ver el código de ${name} en GitHub` : `Abrir demo de ${name}`;
   const grouped = stack.reduce((acc, t) => {
     const g = TECH_GROUP[t];
     if (g) (acc[g] ??= []).push(t);
@@ -87,7 +99,7 @@ export default function ProjectCard({ project, priority = false }) {
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : undefined}
           />
-          {repo && (
+          {repo && !esEsteSitio && (
             <a
               href={repo}
               target="_blank"
@@ -139,15 +151,18 @@ export default function ProjectCard({ project, priority = false }) {
       </section>
 
       <div className="mt-auto hidden items-center justify-between gap-2 pt-1 md:flex">
+        {/* El `after:inset-0` estira un pseudo-elemento sobre toda la tarjeta para
+            hacerla clicable. En la de este sitio no se pone: solo debe poder
+            pulsarse el enlace, no la tarjeta entera. */}
         <a
-          href={demoHref}
+          href={accionHref}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Abrir demo de ${name}`}
-          className="md:after:absolute md:after:inset-0 md:after:content-['']"
+          aria-label={accionLabel}
+          className={esEsteSitio ? "" : "md:after:absolute md:after:inset-0 md:after:content-['']"}
         >
           <span className="text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100">
-            Abrir &rarr;
+            {accionTexto} &rarr;
           </span>
         </a>
         {repo && !image && (
@@ -164,15 +179,17 @@ export default function ProjectCard({ project, priority = false }) {
 
       <div className="mt-auto flex gap-2 pt-1 md:hidden">
         <a
-          href={demoHref}
+          href={accionHref}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Abrir demo de ${name}`}
+          aria-label={accionLabel}
           className="flex min-h-11 flex-1 items-center justify-center rounded-badge border border-accent-border bg-accent-glow px-3 text-sm font-semibold text-accent"
         >
-          Abrir &rarr;
+          {accionTexto} &rarr;
         </a>
-        {repo && (
+        {/* En la tarjeta de este sitio la acción ya lleva al repo: un segundo
+            icono al lado sería el mismo destino dos veces. */}
+        {repo && !esEsteSitio && (
           <a
             href={repo}
             target="_blank"
