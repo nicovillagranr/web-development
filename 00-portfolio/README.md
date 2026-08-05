@@ -21,8 +21,8 @@ proyecto.
 | [`projex`](01-react/projex) | **Projex** — landing con animaciones y formulario de contacto real. | React 19 · Tailwind v4 · Framer Motion · React Router · EmailJS | ✅ |
 | [`mgd-exports`](01-react/mgd-exports) | **MGD Exports** — landing corporativa con arquitectura *feature-first* y alias de importación. | React 19 · Tailwind v4 · EmailJS | |
 | [`nexusai`](01-react/nexusai) | **NexusAI** — landing de agencia de IA, estética dark. Comparte arquitectura con Projex. | React 19 · Tailwind v4 · Framer Motion | ✅ |
-| [`shopreact`](01-react/shopreact) | **ShopReact** — e-commerce que consume mi [Products API](https://01-products-api.vercel.app/) por variable de entorno. | React 19 · Tailwind v4 · React Router | ✅ |
-| [`sport-mindset`](01-react/sport-mindset) | **Sport Mindset** — e-commerce sobre Supabase con 303 productos reales. En desarrollo. | React 19 · Tailwind v4 · Supabase | ✅ |
+| [`shopreact`](01-react/shopreact) | **ShopReact** — e-commerce que consume mi [Products API](https://01-products-api.vercel.app/) por variable de entorno. Retirado del escaparate: `sport-mindset` parte de este mismo código. | React 19 · Tailwind v4 · React Router | |
+| [`sport-mindset`](01-react/sport-mindset) | **Sport Mindset** — e-commerce que consume mi [Products API](https://01-products-api.vercel.app/) por variable de entorno. En desarrollo: la migración a Supabase con catálogo de ciclismo está planificada, no implementada. | React 19 · Tailwind v4 · React Router | ✅ |
 | [`smart-cooler-ui`](01-react/smart-cooler-ui) | **Smart Cooler UI** — dashboard de producto con clima en tiempo real, inventario y lista de compras. 40 tests. | React 19 · Tailwind v4 · Vitest | ✅ |
 | [`smart-cooler-ui-versions`](01-react/smart-cooler-ui-versions) | Archivo histórico: cinco versiones de Smart Cooler, cada una con su README explicando qué demuestra. | — | |
 
