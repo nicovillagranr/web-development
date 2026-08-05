@@ -57,6 +57,14 @@
   --color-amber: #e8ff00;
   --color-amber-glow: rgba(232, 255, 0, 0.15);
 
+  /* ── Lenguajes — los colores de marca de TS y JS ──
+     El azul canónico de TS (#3178c6) se apaga sobre el base-900 casi negro,
+     así que aquí va aclarado. El amarillo de JS sí funciona tal cual. */
+  --color-lang-ts: #61b3f2;
+  --color-lang-ts-glow: rgba(97, 179, 242, 0.15);
+  --color-lang-js: #f7df1e;
+  --color-lang-js-glow: rgba(247, 223, 30, 0.15);
+
   /* ── Bordes ── */
   --color-line: rgba(255, 0, 119, 0.22);
   --color-line-hover: rgba(255, 0, 119, 0.4);
@@ -99,6 +107,12 @@ html.light {
   --color-emerald-glow: rgba(24, 128, 56, 0.10);
   --color-amber: #e37400;
   --color-amber-glow: rgba(227, 116, 0, 0.10);
+  /* El amarillo de marca de JS es ilegible sobre un fondo claro: aquí baja a
+     oro oscuro. Mismo problema que ya tenía el chip verde en este tema. */
+  --color-lang-ts: #1a5fa0;
+  --color-lang-ts-glow: rgba(26, 95, 160, 0.10);
+  --color-lang-js: #8a6d00;
+  --color-lang-js-glow: rgba(138, 109, 0, 0.10);
   --color-line: rgba(0, 0, 0, 0.10);
   --color-line-hover: rgba(26, 115, 232, 0.40);
   --shadow-card: none;

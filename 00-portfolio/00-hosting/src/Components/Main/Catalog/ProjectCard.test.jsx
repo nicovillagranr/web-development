@@ -13,7 +13,8 @@ import ProjectCard from './ProjectCard';
 //   4. status — badge superior derecho ("Online" / "Mantenimiento")
 //   5. name — <h3>
 //   6. description — <p>
-//   7. tech — stack agrupado en tools/frontend/backend
+//   7. tech — stack agrupado en language/tools/frontend/backend
+//      (el lenguaje viaja dentro del array `stack` y va en su propia fila, arriba)
 //   8. deploy — badge bajo el stack
 //   9. Botón abrir (desktop) — líneas 127-137
 //   10. GitHub icon (desktop, sin imagen) — líneas 138-147, solo si repo && !image
@@ -27,7 +28,7 @@ const mockProject = {
     path: "/proyecto-3",
     image: "https://res.cloudinary.com/dzj8q3l6c/image/upload/v1700000000/portfolio/projex_landing.png",
     description: "Landing page para una agencia de proyectos",
-    stack: ["React 19", "Tailwind v4", "Vite"],
+    stack: ["JavaScript", "React 19", "Tailwind v4", "Vite"],
     type: "landing",
     status: "online",
     deploy: "Vercel",
@@ -179,5 +180,35 @@ describe("ProjectCard", () => {
         const links = screen.queryAllByRole("link", { name: `Repositorio de ${mockProject.name} en GitHub` });
         // Se espera que no se renderice ninguno
         expect(links).toHaveLength(0);
+    })
+
+    // Test 17: la fila del lenguaje se renderiza con su header y su chip
+    it("Renderiza la fila del lenguaje con su header y su chip", () => {
+        render(<ProjectCard project={mockProject} />);
+        // El header lo pinta el propio nombre del grupo, igual que "$ tools"
+        expect(screen.getByText("$ language")).toBeInTheDocument();
+        const stackSection = screen.getByLabelText("Stack tecnológico");
+        expect(within(stackSection).getByText("JavaScript")).toBeInTheDocument();
+    })
+
+    // Test 18: el mismo hueco sirve para TypeScript — es el caso que estrena el chip azul
+    it("Renderiza TypeScript cuando es el lenguaje del proyecto", () => {
+        const projectEnTs = { ...mockProject, stack: ["TypeScript", "React 19"] };
+        render(<ProjectCard project={projectEnTs} />);
+        const stackSection = screen.getByLabelText("Stack tecnológico");
+        expect(within(stackSection).getByText("TypeScript")).toBeInTheDocument();
+        // Y el otro lenguaje NO aparece: son excluyentes
+        expect(within(stackSection).queryByText("JavaScript")).toBeNull();
+    })
+
+    // Test 19: sin lenguaje en el stack no hay fila, y el componente no rompe.
+    // El schema ya exige el lenguaje, pero el componente no debe confiar en eso:
+    // los datos llegan de una API y el fallback del snapshot puede ser viejo.
+    it("No renderiza la fila del lenguaje cuando el stack no declara ninguno", () => {
+        const projectSinLenguaje = { ...mockProject, stack: ["React 19", "Vite"] };
+        render(<ProjectCard project={projectSinLenguaje} />);
+        expect(screen.queryByText("$ language")).toBeNull();
+        // El resto del stack sigue pintándose con normalidad
+        expect(screen.getByText("$ frontend")).toBeInTheDocument();
     })
 })

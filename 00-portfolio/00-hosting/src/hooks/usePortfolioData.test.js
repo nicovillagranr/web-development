@@ -42,7 +42,11 @@ const mockProjects = [
         path: "/proyecto-3",
         image: null,
         description: "Landing page para una agencia de proyectos",
-        stack: ["React", "Tailwind"],
+        // OJO: el primer elemento no es decorativo. ProjectSchema tiene un
+        // .refine() que exige exactamente un lenguaje dentro de `stack`. Si se
+        // quita, el parse() lanza, el hook cae al catch y el test que falla es
+        // el del happy-path — señalando otra vez al sitio equivocado.
+        stack: ["JavaScript", "React", "Tailwind"],
         type: "landing",
         status: "online",
         framework: "React",

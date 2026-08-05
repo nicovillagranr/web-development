@@ -1,4 +1,5 @@
 import githubIcon from "../../../assets/icons/github-light.svg";
+import { LANGUAGES } from "../../../schemas/projectsSchema";
 
 const CHIP_BASE = "rounded-badge border px-2 py-0.5 font-mono text-xs font-medium";
 
@@ -6,6 +7,13 @@ const CHIP_CLASSES = {
   accent: "border-accent-border bg-accent-glow text-accent",
   emerald: "border-emerald/30 bg-emerald-glow text-emerald",
   amber: "border-amber/30 bg-amber-glow text-amber",
+  // Los lenguajes van RELLENOS, no con el borde translúcido de los demás: el
+  // lenguaje es otra clase de dato, no una tech más, y con el mismo tratamiento
+  // que el resto se perdía (el amarillo de JS y el de `pnpm` son casi el mismo).
+  // `text-base-900` es el color de fondo de la página, que se invierte con el
+  // tema — así el texto contrasta contra el relleno en claro y en oscuro.
+  langTs: "border-lang-ts bg-lang-ts text-base-900",
+  langJs: "border-lang-js bg-lang-js text-base-900",
   violet: "border-violet-500/30 bg-violet-500/15 text-violet-400",
   green: "border-green-500/30 bg-green-500/15 text-green-400 [html.light_&]:border-green-700/40 [html.light_&]:bg-green-700/10 [html.light_&]:text-green-700",
   mono: "border-text-primary/40 bg-text-primary/10 text-text-primary",
@@ -13,6 +21,8 @@ const CHIP_CLASSES = {
 };
 
 const TECH_CATEGORY = {
+  "TypeScript": "langTs",
+  "JavaScript": "langJs",
   "React 19": "accent",
   "Next.js 16": "accent",
   "Tailwind v4": "emerald",
@@ -32,7 +42,12 @@ const TECH_CATEGORY = {
   "Hostinger": "violet",
 };
 
+// El lenguaje no es una tech más entre las otras: es lo primero que mira quien
+// evalúa el proyecto. Por eso tiene su propio grupo y se pinta arriba de todos.
+const LANGUAGE_GROUP = Object.fromEntries(LANGUAGES.map((lang) => [lang, "language"]));
+
 const TECH_GROUP = {
+  ...LANGUAGE_GROUP,
   "React 19": "frontend",
   "Next.js 16": "frontend",
   "Tailwind v4": "frontend",
@@ -95,7 +110,7 @@ export default function ProjectCard({ project, priority = false }) {
       <p className="text-sm leading-relaxed text-text-secondary">{description}</p>
 
       <section aria-label="Stack tecnológico" className="font-mono text-xs leading-relaxed">
-        {["tools", "frontend", "backend"].map((group) => {
+        {["language", "tools", "frontend", "backend"].map((group) => {
           const techs = grouped[group] ?? [];
           if (techs.length === 0) return null;
           return (

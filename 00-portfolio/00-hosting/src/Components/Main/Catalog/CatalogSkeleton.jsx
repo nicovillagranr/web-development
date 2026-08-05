@@ -30,6 +30,14 @@ function CardSkeleton() {
                 <Block className="h-3.5 w-5/6" />
             </div>
 
+            {/* Lenguaje — etiqueta "$ language" + su único chip */}
+            <div className="grid gap-2">
+                <Block className="h-3 w-20" />
+                <div className="pl-3">
+                    <Block className="h-5 w-24 rounded-badge" />
+                </div>
+            </div>
+
             {/* Stack — etiqueta "$ grupo" + fila de chips */}
             <div className="grid gap-2">
                 <Block className="h-3 w-16" />
