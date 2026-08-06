@@ -60,7 +60,12 @@ export default function Catalog({ projects = [], loading = false, error = null }
                 <span className="flex-1 border-t border-line" />
               </div>
             )}
-            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {/* El `gap-y` de aquí es también el que separa las zonas DENTRO de
+                cada tarjeta: al ser subgrid heredan las canaletas de este grid.
+                Por eso a partir de `md` vale 4 (16px, el aire interno de la
+                tarjeta) y no 6; la separación entre filas de tarjetas la
+                completa el `mb-2` de la propia tarjeta. */}
+            <div className="grid gap-x-6 gap-y-6 sm:grid-cols-1 md:grid-cols-2 md:gap-y-4">
               {group.map((project, i) => (
                 <ProjectCard key={project.name} project={project} priority={i < 3} />
               ))}

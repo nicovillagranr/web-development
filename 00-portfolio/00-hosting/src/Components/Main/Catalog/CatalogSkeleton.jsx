@@ -3,62 +3,65 @@ function Block({ className = "", style }) {
     return <div className={`animate-pulse rounded bg-line ${className}`} style={style} />;
 }
 
-// Card-placeholder — imita la estructura de <article> en ProjectCard:
-// imagen (aspect-video) + badges + título + descripción + chips de stack + botón.
-// Reusa el mismo marco (borde, radios, padding) para que no haya "salto"
-// cuando llegan las cards reales.
+// Card-placeholder — imita el molde de <article> en ProjectCard: las mismas 5
+// franjas del subgrid (portada, cabecera, descripción, stack, acción), el mismo
+// marco (borde, radios, gradiente) y el mismo `px-5`. Reusa también el
+// `row-span-5` para que el esqueleto cuadre igual que las cards reales y no
+// haya "salto" cuando llegan los datos.
 function CardSkeleton() {
     return (
-        <article className="grid gap-3 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card">
-            {/* Imagen — mismo recorte negativo y aspect-video que la card real */}
-            <div className="-mx-4 -mt-4">
-                <Block className="aspect-video w-full rounded-none" />
+        <article className="grid gap-4 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface shadow-card md:row-span-5 md:mb-2 md:grid-rows-subgrid">
+            {/* 1. Portada — a sangre, mismo aspect-video que la card real */}
+            <Block className="aspect-video w-full rounded-none" />
+
+            {/* 2. Cabecera — kicker (izq) + estado (der) en una línea, y el
+                título justo debajo, sin la canaleta del subgrid en medio */}
+            <div className="grid gap-1 px-5">
+                <div className="flex items-center justify-between gap-2">
+                    <Block className="h-3 w-20" />
+                    <Block className="h-3 w-16" />
+                </div>
+                <Block className="h-7 w-3/4" />
             </div>
 
-            {/* Fila de badges: type (izq) + status (der) */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-                <Block className="h-5 w-24 rounded-badge" />
-                <Block className="h-5 w-20 rounded-badge" />
-            </div>
-
-            {/* Título */}
-            <Block className="h-6 w-3/4" />
-
-            {/* Descripción — dos líneas, la segunda más corta */}
-            <div className="grid gap-2">
+            {/* 3. Descripción — tres líneas, la última más corta */}
+            <div className="grid gap-2 px-5">
                 <Block className="h-3.5 w-full" />
-                <Block className="h-3.5 w-5/6" />
+                <Block className="h-3.5 w-full" />
+                <Block className="h-3.5 w-4/6" />
             </div>
 
-            {/* Lenguaje — etiqueta "$ language" + su único chip */}
-            <div className="grid gap-2">
-                <Block className="h-3 w-20" />
-                <div className="pl-3">
+            {/* 4. Stack — misma rejilla etiqueta | chips que la card real */}
+            <div className="grid grid-cols-[6rem_1fr] items-start gap-x-3 gap-y-2 px-5">
+                <Block className="h-4 w-20" />
+                <div className="flex flex-wrap gap-1.5">
+                    <Block className="h-5 w-24 rounded-badge" />
+                </div>
+                <Block className="h-4 w-16" />
+                <div className="flex flex-wrap gap-1.5">
+                    <Block className="h-5 w-16 rounded-badge" />
+                    <Block className="h-5 w-20 rounded-badge" />
+                </div>
+                <Block className="h-4 w-20" />
+                <div className="flex flex-wrap gap-1.5">
+                    <Block className="h-5 w-20 rounded-badge" />
                     <Block className="h-5 w-24 rounded-badge" />
                 </div>
             </div>
 
-            {/* Stack — etiqueta "$ grupo" + fila de chips */}
-            <div className="grid gap-2">
-                <Block className="h-3 w-16" />
-                <div className="flex flex-wrap gap-1.5 pl-3">
-                    <Block className="h-5 w-16 rounded-badge" />
-                    <Block className="h-5 w-20 rounded-badge" />
-                    <Block className="h-5 w-14 rounded-badge" />
+            {/* 5. Acción — botón "Abrir →", tras la misma línea separadora */}
+            <div className="px-5 pb-5">
+                <div className="border-t border-line pt-4">
+                    <Block className="h-9 w-24" />
                 </div>
-            </div>
-
-            {/* Acción — botón "Abrir →" */}
-            <div className="mt-auto pt-1">
-                <Block className="h-9 w-24" />
             </div>
         </article>
     );
 }
 
 export default function CatalogSkeleton() {
-    // 6 cards = 2 filas completas en lg:grid-cols-3, suficiente para llenar
-    // el alto en pantallas grandes y matar el hueco mientras llega el fetch.
+    // 6 cards = 3 filas completas en md:grid-cols-2, suficiente para llenar el
+    // alto y matar el hueco mientras llega el fetch.
     const CARDS = 6;
 
     return (
@@ -75,8 +78,8 @@ export default function CatalogSkeleton() {
                 </div>
             </div>
 
-            {/* Grid — misma clase exacta que el grid real de Catalog */}
-            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {/* Grid — mismas clases exactas que el grid real de Catalog */}
+            <div className="grid gap-x-6 gap-y-6 sm:grid-cols-1 md:grid-cols-2 md:gap-y-4">
                 {Array.from({ length: CARDS }).map((_, i) => (
                     <CardSkeleton key={i} />
                 ))}

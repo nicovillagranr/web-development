@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import githubIcon from "../../../assets/icons/github-light.svg";
 import { LANGUAGES } from "../../../schemas/projectsSchema";
 
@@ -70,6 +71,8 @@ const TECH_GROUP = {
   "Supabase": "backend",
 };
 
+const GROUP_ORDER = ["language", "tools", "frontend", "backend"];
+
 export default function ProjectCard({ project, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
   const statusLabel = status === "online" ? "Online" : "En desarrollo";
@@ -82,20 +85,45 @@ export default function ProjectCard({ project, priority = false }) {
   const accionHref = esEsteSitio ? repo : path.endsWith("/") ? path : `${path}/`;
   const accionTexto = esEsteSitio ? "Ver el código" : "Abrir";
   const accionLabel = esEsteSitio ? `Ver el código de ${name} en GitHub` : `Abrir demo de ${name}`;
+  // Las APIs no tienen captura que enseñar, y una portada de relleno sería
+  // ruido: sin ella la tarjeta se queda en 5 franjas en vez de 6. No rompe el
+  // molde porque el catálogo agrupa por `framework` y las APIs son un grupo
+  // aparte con su propio grid — dentro de una misma rejilla, o todas las
+  // tarjetas traen imagen o no la trae ninguna.
+  const conPortada = Boolean(image);
   const grouped = stack.reduce((acc, t) => {
     const g = TECH_GROUP[t];
     if (g) (acc[g] ??= []).push(t);
     return acc;
   }, {});
+  // Las filas del stack se calculan antes del JSX porque el bloque es ahora una
+  // rejilla de dos columnas (etiqueta | chips): dentro del map no se puede
+  // devolver `null` para un grupo vacío sin dejar un hueco en la rejilla.
+  const filasStack = GROUP_ORDER.map((group) => [group, grouped[group] ?? []]).filter(
+    ([, techs]) => techs.length > 0
+  );
 
   return (
-    <article aria-label={name} className="animate-card-enter group relative grid gap-3 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface p-4 shadow-card transition-all duration-300 lg:hover:-translate-y-1 lg:hover:border-accent-border lg:hover:bg-none lg:hover:bg-accent-glow lg:hover:shadow-glow">
-      {project.image && (
-        <div className="relative -mx-4 -mt-4">
+    // MOLDE FIJO. La tarjeta no se maqueta a sí misma: `grid-rows-subgrid` la
+    // engancha a las filas del grid del catálogo, y el `row-span` reserva una
+    // franja por zona: 5 con portada (portada, cabecera, descripción, stack,
+    // acción) y 4 sin ella. Como todas las tarjetas de una misma fila
+    // comparten esas franjas, el stack y el botón caen SIEMPRE a la misma
+    // altura aunque la descripción de una sea el doble de larga que la de su
+    // vecina: la corta deja hueco, no empuja lo de abajo. Debajo de `md` hay
+    // una sola columna y no hay nada con lo que alinear, así que ahí vuelve a
+    // ser un grid normal con su `gap-4`.
+    <article
+      aria-label={name}
+      className={`animate-card-enter group relative grid gap-4 overflow-hidden rounded-tl-4xl rounded-tr-sm rounded-bl-sm rounded-br-4xl border border-line bg-linear-to-b from-surface-strong to-surface shadow-card transition-all duration-300 md:mb-2 md:grid-rows-subgrid lg:hover:-translate-y-1 lg:hover:border-accent-border lg:hover:bg-none lg:hover:bg-accent-glow lg:hover:shadow-glow ${conPortada ? "md:row-span-5" : "md:row-span-4"}`}
+    >
+      {/* ── 1. Portada ───────────────────────────────────────────────────── */}
+      {conPortada && (
+        <div className="relative">
           <img
-            src={project.image}
+            src={image}
             alt={`Preview de ${name}`}
-            className="aspect-video w-full object-cover object-top transition-transform duration-500 lg:group-hover:scale-105"
+            className="aspect-video h-full w-full object-cover object-top transition-transform duration-500 lg:group-hover:scale-105"
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : undefined}
           />
@@ -112,94 +140,127 @@ export default function ProjectCard({ project, priority = false }) {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="rounded-badge border border-accent-border bg-accent-glow px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-accent">{type}
-        </span>
-        <span className={`${CHIP_BASE} ${CHIP_CLASSES[status === "online" ? "emerald" : "amber"]}`}>{statusLabel}</span>
+      {/* ── 2. Cabecera ──────────────────────────────────────────────────── */}
+      {/* El tipo y el título comparten franja a propósito: "Web App" es una
+          etiqueta DEL nombre, no un dato aparte, y separarlos en dos zonas del
+          subgrid metía 16px de aire entre dos líneas que se leen seguidas.
+          El tipo va de kicker (mono, sin pastilla) y el estado de punto: dos
+          badges enfrentados pesaban más que el propio nombre del proyecto.
+          Sin portada esta es la primera franja y el borde de arriba le queda
+          pegado: el `pt-5` le devuelve el aire que daba la imagen. */}
+      <div className={`grid gap-1 px-5 ${conPortada ? "" : "pt-5"}`}>
+        <div className="flex items-center justify-between gap-2 font-mono text-xs">
+          <span className="font-medium uppercase tracking-widest text-text-muted">{type}</span>
+          {/* Mismo idioma que los puntos de estado del Hero y del EditorWindow.
+              El latido solo cuando está online: en un proyecto en desarrollo
+              anunciaría una actividad que no hay. */}
+          <span className={`inline-flex items-center gap-1.5 ${status === "online" ? "text-emerald" : "text-amber"}`}>
+            <span
+              aria-hidden="true"
+              className={`inline-block h-1.5 w-1.5 rounded-full bg-current ${status === "online" ? "animate-pulse-dot" : ""}`}
+            />
+            {statusLabel}
+          </span>
+        </div>
+        <h3 className="font-heading text-xl font-bold text-text-primary">{name}</h3>
       </div>
 
-      <h3 className="font-heading text-lg font-bold text-text-primary">{name}</h3>
-      <p className="text-sm leading-relaxed text-text-secondary">{description}</p>
+      {/* ── 3. Descripción ───────────────────────────────────────────────── */}
+      <p className="px-5 text-sm leading-relaxed text-text-secondary">{description}</p>
 
-      <section aria-label="Stack tecnológico" className="font-mono text-xs leading-relaxed">
-        {["language", "tools", "frontend", "backend"].map((group) => {
-          const techs = grouped[group] ?? [];
-          if (techs.length === 0) return null;
-          return (
-            <div key={group}>
-              <div className="text-text-muted">$ {group}</div>
-              <div className="flex flex-wrap gap-1.5 pl-3">
-                {techs.map((tech) => (
-                  <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
-                    {tech}
-                  </span>
-                ))}
-              </div>
+      {/* ── 4. Stack ─────────────────────────────────────────────────────── */}
+      {/* Dos columnas (etiqueta | chips) en vez de la etiqueta encima de sus
+          chips: con la tarjeta al doble de ancho, apilarlas gastaba el alto en
+          líneas de una palabra y dejaba el resto del renglón vacío. */}
+      <section
+        aria-label="Stack tecnológico"
+        className="grid grid-cols-[6rem_1fr] items-start gap-x-3 gap-y-2 px-5 font-mono text-xs leading-relaxed"
+      >
+        {filasStack.map(([group, techs]) => (
+          <Fragment key={group}>
+            <div className="pt-0.5 text-text-muted">$ {group}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {techs.map((tech) => (
+                <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
+                  {tech}
+                </span>
+              ))}
             </div>
-          );
-        })}
+          </Fragment>
+        ))}
         {deploy && (
-          <div>
-            <div className="text-text-muted">$ deploy:</div>
-            <div className="pl-3">
+          <>
+            <div className="pt-0.5 text-text-muted">$ deploy:</div>
+            <div className="flex flex-wrap gap-1.5">
               <span className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[deploy] ?? "neutral"]}`}>
                 {deploy}
               </span>
             </div>
-          </div>
+          </>
         )}
       </section>
 
-      <div className="mt-auto hidden items-center justify-between gap-2 pt-1 md:flex">
-        {/* El `after:inset-0` estira un pseudo-elemento sobre toda la tarjeta para
-            hacerla clicable. En la de este sitio no se pone: solo debe poder
-            pulsarse el enlace, no la tarjeta entera. */}
-        <a
-          href={accionHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={accionLabel}
-          className={esEsteSitio ? "" : "md:after:absolute md:after:inset-0 md:after:content-['']"}
-        >
-          <span className="text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100">
-            {accionTexto} &rarr;
-          </span>
-        </a>
-        {repo && !image && (
-          <a href={repo}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Repositorio de ${name} en GitHub`}
-            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100"
-          >
-            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert" />
-          </a>
-        )}
-      </div>
-
-      <div className="mt-auto flex gap-2 pt-1 md:hidden">
-        <a
-          href={accionHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={accionLabel}
-          className="flex min-h-11 flex-1 items-center justify-center rounded-badge border border-accent-border bg-accent-glow px-3 text-sm font-semibold text-accent"
-        >
-          {accionTexto} &rarr;
-        </a>
-        {/* En la tarjeta de este sitio la acción ya lleva al repo: un segundo
-            icono al lado sería el mismo destino dos veces. */}
-        {repo && !esEsteSitio && (
+      {/* ── 5. Acción ────────────────────────────────────────────────────── */}
+      {/* Escritorio y móvil van envueltos en un mismo contenedor a propósito:
+          son dos hijos del <article>, y sueltos ocuparían dos franjas del
+          subgrid en vez de una, descuadrando la cuenta del `row-span`.
+          La línea separadora va en cada variante y no en este contenedor: así
+          queda metida dentro del `px-5` en vez de cruzar la tarjeta de lado a
+          lado, y solo se pinta la de la variante que se está viendo. */}
+      <div className="px-5 pb-5">
+        <div className="hidden items-center justify-between gap-2 border-t border-line pt-4 md:flex">
+          {/* El `after:inset-0` estira un pseudo-elemento sobre toda la tarjeta para
+              hacerla clicable. En la de este sitio no se pone: solo debe poder
+              pulsarse el enlace, no la tarjeta entera. */}
           <a
-            href={repo}
+            href={accionHref}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Repositorio de ${name} en GitHub`}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3 [html.light_&]:border-2 [html.light_&]:border-text-muted"
+            aria-label={accionLabel}
+            className={esEsteSitio ? "" : "md:after:absolute md:after:inset-0 md:after:content-['']"}
           >
-            <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert [html.light_&]:invert-0" />
+            <span className="text-sm font-bold text-text-primary opacity-60 transition-opacity group-hover:opacity-100">
+              {accionTexto} &rarr;
+            </span>
           </a>
-        )}
+          {/* Sin portada no hay dónde flotar el icono de GitHub, así que baja
+              aquí, al lado de la acción. */}
+          {repo && !conPortada && (
+            <a href={repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Repositorio de ${name} en GitHub`}
+              className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 opacity-70 backdrop-blur transition hover:opacity-100"
+            >
+              <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert" />
+            </a>
+          )}
+        </div>
+
+        <div className="flex gap-2 border-t border-line pt-4 md:hidden">
+          <a
+            href={accionHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={accionLabel}
+            className="flex min-h-11 flex-1 items-center justify-center rounded-badge border border-accent-border bg-accent-glow px-3 text-sm font-semibold text-accent"
+          >
+            {accionTexto} &rarr;
+          </a>
+          {/* En la tarjeta de este sitio la acción ya lleva al repo: un segundo
+              icono al lado sería el mismo destino dos veces. */}
+          {repo && !esEsteSitio && (
+            <a
+              href={repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Repositorio de ${name} en GitHub`}
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-badge border border-line bg-surface px-3 [html.light_&]:border-2 [html.light_&]:border-text-muted"
+            >
+              <img src={githubIcon} alt="GitHub Icon" className="h-5 w-5 invert [html.light_&]:invert-0" />
+            </a>
+          )}
+        </div>
       </div>
     </article>
   );
