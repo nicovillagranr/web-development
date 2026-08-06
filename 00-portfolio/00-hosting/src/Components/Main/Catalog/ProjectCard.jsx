@@ -209,19 +209,25 @@ export default function ProjectCard({ project, priority = false }) {
 
       {/* ── 4. Stack ─────────────────────────────────────────────────────── */}
       {/* Una tabla, no una lista: cada grupo es una COLUMNA con su cabecera
-          arriba y sus techs cayendo debajo. Las columnas se dimensionan al
-          contenido y saltan de línea cuando no caben, en vez de repartirse el
-          ancho a partes iguales: con cuatro columnas rígidas, en el peor caso
-          de `md` (301px de contenido) tocarían a 63px y ahí no entra ni
-          "Framer Motion". Así en pantalla grande salen las cuatro en fila y
-          en `md` bajan a dos y dos.
+          arriba y sus techs cayendo debajo.
           Las techs van sin pastilla pero CON color: apiladas, ocho píldoras
           rellenas eran confeti, mientras que la misma paleta aplicada al texto
           distingue los grupos sin gritar. El lenguaje sí conserva la suya, que
-          es justo lo que lo separa de ser una tech más. */}
+          es justo lo que lo separa de ser una tech más.
+
+          REJILLA DE DOS COLUMNAS HASTA `xl`, y solo a partir de ahí una fila
+          que se dimensiona al contenido. El motivo son los anchos medidos: los
+          cinco grupos de Projex piden 481px y la tarjeta no llega a esa cifra
+          hasta 1280px de viewport (antes ronda los 320-476). Dejarlo en
+          flex-wrap por debajo hacía caer el último grupo SOLO en una segunda
+          línea, sin nada encima con lo que alinearse — el salto feo.
+          Bajar el cuerpo de letra no lo arregla: ni a 9px (ilegible) entra
+          Projex, porque el problema es el número de columnas, no su tamaño.
+          Con dos columnas fijas el corte es siempre el mismo y las cabeceras
+          quedan alineadas, que es lo que lo hace leer como tabla. */}
       <section
         aria-label="Stack tecnológico"
-        className="flex flex-wrap gap-x-6 gap-y-4 px-5 font-mono text-xs"
+        className="grid grid-cols-2 gap-x-6 gap-y-4 px-5 font-mono text-xs xl:flex xl:flex-wrap"
       >
         {columnasStack.map(([group, techs]) => (
           <div key={group} className="grid content-start gap-1.5">

@@ -31,10 +31,14 @@ function CardSkeleton() {
                 <Block className="h-3.5 w-4/6" />
             </div>
 
-            {/* 4. Stack — misma tabla de columnas que la card real: cabecera
-                arriba y techs cayendo debajo. La de lenguaje lleva pastilla, las
-                demás son texto plano, igual que en ProjectCard. */}
-            <div className="flex flex-wrap gap-x-6 gap-y-4 px-5">
+            {/* 4. Stack — misma tabla de columnas que la card real, y con su
+                mismo molde: dos columnas hasta `xl` y una sola fila a partir de
+                ahí. Van cuatro grupos porque es lo que trae la mayoría de las
+                tarjetas (lenguaje, frontend, herramientas y deploy), así que al
+                cargar los datos el bloque no cambia de alto. La de lenguaje
+                lleva pastilla y las demás son texto plano, igual que en
+                ProjectCard. */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4 px-5 xl:flex xl:flex-wrap">
                 <div className="grid content-start gap-1.5">
                     <Block className="h-3 w-16" />
                     <Block className="h-5 w-24 rounded-badge" />
@@ -49,6 +53,10 @@ function CardSkeleton() {
                     <Block className="h-3 w-24" />
                     <Block className="h-3 w-14" />
                     <Block className="h-3 w-16" />
+                </div>
+                <div className="grid content-start gap-1.5">
+                    <Block className="h-3 w-14" />
+                    <Block className="h-3 w-20" />
                 </div>
             </div>
 
