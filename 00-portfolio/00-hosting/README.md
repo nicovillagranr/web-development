@@ -63,19 +63,23 @@ El `.env` no se commitea (está en `.gitignore`); usa `.env.example` como planti
 
 ### Scripts
 
-| Script           | Descripción                              |
-| ---------------- | ---------------------------------------- |
-| `pnpm dev`       | Servidor de desarrollo con HMR           |
-| `pnpm build`     | Build de producción en `dist/`           |
-| `pnpm preview`   | Sirve el build de producción localmente  |
-| `pnpm lint`      | Linter sobre todo el proyecto            |
-| `pnpm test`      | Tests con Vitest                         |
+| Script           | Descripción                                        |
+| ---------------- | -------------------------------------------------- |
+| `pnpm dev`       | Servidor de desarrollo con HMR                     |
+| `pnpm build`     | Genera el snapshot y compila a `dist/`             |
+| `pnpm snapshot`  | Solo regenera `public/data-snapshot.json`          |
+| `pnpm preview`   | Sirve el build de producción localmente            |
+| `pnpm lint`      | Linter sobre todo el proyecto                      |
+| `pnpm test`      | Tests con Vitest (en watch; `--run` para una pasada) |
 
 ---
 
 ## Estructura
 
 ```
+scripts/
+└── generate-snapshot.js     Congela la API en public/data-snapshot.json (build)
+
 src/
 ├── App.jsx                  Composición raíz: tema + datos + layout
 ├── main.jsx                 Punto de entrada
@@ -88,10 +92,14 @@ src/
 │   ├── Footer/              Pie de página
 │   └── ErrorBoundary/       Captura de errores de render
 ├── hooks/
-│   └── usePortfolioData.js  Carga de projects + profile (+ tests)
+│   ├── usePortfolioDataWithFallback.js  El que usa la app: API + snapshot
+│   └── usePortfolioData.js  Versión original sin fallback (+ tests)
 ├── schemas/                 Schemas Zod de la API
 └── data/                    Claves de localStorage centralizadas
 ```
+
+Los dos hooks conviven a propósito: el original se conserva como término de
+comparación para ver qué añade exactamente la red de seguridad.
 
 ---
 
@@ -105,23 +113,40 @@ https://00-portfolio-projects-api.vercel.app
   GET /profile    — perfil (rol, ubicación, stack, intro)
 ```
 
-El hook `usePortfolioData` pide ambos endpoints en paralelo con `Promise.all`,
-valida cada respuesta con Zod, cancela las peticiones al desmontar mediante
-`AbortController` y reporta en el error qué endpoint falló y con qué status.
+El hook `usePortfolioDataWithFallback` pide ambos endpoints en paralelo con
+`Promise.all`, valida cada respuesta con Zod, cancela las peticiones al desmontar
+mediante `AbortController` y reporta en el error qué endpoint falló y con qué
+status.
+
+### Red de seguridad
+
+Si la API no responde en 4s, devuelve un error HTTP, se cae la red o el JSON no
+pasa el schema, el hook recurre a `data-snapshot.json`: una copia de la respuesta
+de la API congelada durante el build por `scripts/generate-snapshot.js` y servida
+desde el mismo host que la app, así que si la página cargó el snapshot está.
+
+El snapshot también se valida con Zod — un snapshot corrupto da error en vez de
+pintar basura — y el hook devuelve `stale: true` cuando los datos vienen de ahí.
+Si la API está caída en el momento del build, el script avisa pero **no rompe el
+build**: conserva el snapshot anterior.
+
+> Como el snapshot se hornea contra la API **en vivo**, hay que desplegar
+> cualquier cambio de la API *antes* de correr `pnpm build`. Al revés, el
+> snapshot se queda con los datos viejos.
 
 ---
 
 ## Testing
 
-20 tests con Vitest + Testing Library:
+26 tests con Vitest + Testing Library:
 
-- `usePortfolioData.test.js` — estados loading / success / error HTTP y
+- `usePortfolioData.test.js` (4) — estados loading / success / error HTTP y
   cancelación al desmontar.
-- `ProjectCard.test.jsx` — renderizado de imagen, badges, stack, enlaces y
-  casos negativos.
+- `ProjectCard.test.jsx` (22) — renderizado de imagen, badges, stack agrupado,
+  enlaces y casos negativos.
 
 ```bash
-pnpm test
+pnpm test -- --run   # una pasada; `pnpm test` a secas se queda en watch
 ```
 
 ---
@@ -129,8 +154,11 @@ pnpm test
 ## Deploy
 
 El build (`pnpm build`) genera `dist/`, pensado para hosting estático Apache.
-El `.htaccess` en `public/` incluye el `ErrorDocument` de la página 404 custom y
-se copia al build automáticamente.
+Todo lo de `public/` se copia al build automáticamente: el `.htaccess` (con el
+`ErrorDocument` de la 404 custom y las cabeceras de caché), el `sitemap.xml`, el
+`robots.txt` y el `data-snapshot.json` recién horneado.
+
+Subir el contenido de `dist/` a la raíz del hosting.
 
 ---
 
