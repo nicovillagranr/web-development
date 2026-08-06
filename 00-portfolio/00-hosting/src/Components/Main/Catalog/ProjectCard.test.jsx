@@ -132,7 +132,7 @@ describe("ProjectCard", () => {
     // Test 12: el badge de deploy se renderiza con su header y valor
     it("Renderiza el badge de deploy con su header y valor", () => {
         render(<ProjectCard project={mockProject} />);
-        const deployBadge = screen.getByText("$ deploy:");
+        const deployBadge = screen.getByText("deploy");
         expect(deployBadge).toBeInTheDocument();
         expect(screen.getByText(mockProject.deploy)).toBeInTheDocument();
     })
@@ -141,7 +141,7 @@ describe("ProjectCard", () => {
     it("No renderiza el badge de deploy cuando no existe", () => {
         const projectSinDeploy = { ...mockProject, deploy: undefined };
         render(<ProjectCard project={projectSinDeploy} />);
-        expect(screen.queryByText("$ deploy:")).toBeNull();
+        expect(screen.queryByText("deploy")).toBeNull();
     })
 
     // Test 14: los enlaces para abrir la demo (desktop + mobile) tienen href y atributos correctos
@@ -185,8 +185,9 @@ describe("ProjectCard", () => {
     // Test 17: la fila del lenguaje se renderiza con su header y su chip
     it("Renderiza la fila del lenguaje con su header y su chip", () => {
         render(<ProjectCard project={mockProject} />);
-        // El header lo pinta el propio nombre del grupo, igual que "$ tools"
-        expect(screen.getByText("$ language")).toBeInTheDocument();
+        // La cabecera de la columna la pinta GROUP_LABEL, que traduce la clave
+        // inglesa del grupo ("language") a la etiqueta que se lee ("lenguaje")
+        expect(screen.getByText("lenguaje")).toBeInTheDocument();
         const stackSection = screen.getByLabelText("Stack tecnológico");
         expect(within(stackSection).getByText("JavaScript")).toBeInTheDocument();
     })
@@ -207,9 +208,9 @@ describe("ProjectCard", () => {
     it("No renderiza la fila del lenguaje cuando el stack no declara ninguno", () => {
         const projectSinLenguaje = { ...mockProject, stack: ["React 19", "Vite"] };
         render(<ProjectCard project={projectSinLenguaje} />);
-        expect(screen.queryByText("$ language")).toBeNull();
+        expect(screen.queryByText("lenguaje")).toBeNull();
         // El resto del stack sigue pintándose con normalidad
-        expect(screen.getByText("$ frontend")).toBeInTheDocument();
+        expect(screen.getByText("frontend")).toBeInTheDocument();
     })
 
     // Test 20: la tarjeta de este propio sitio (path "/") no enlaza a la demo,

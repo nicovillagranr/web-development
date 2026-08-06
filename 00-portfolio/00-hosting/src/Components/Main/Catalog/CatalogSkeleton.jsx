@@ -31,21 +31,24 @@ function CardSkeleton() {
                 <Block className="h-3.5 w-4/6" />
             </div>
 
-            {/* 4. Stack — misma rejilla etiqueta | chips que la card real */}
-            <div className="grid grid-cols-[6rem_1fr] items-start gap-x-3 gap-y-2 px-5">
-                <Block className="h-4 w-20" />
-                <div className="flex flex-wrap gap-1.5">
+            {/* 4. Stack — misma tabla de columnas que la card real: cabecera
+                arriba y techs cayendo debajo. La de lenguaje lleva pastilla, las
+                demás son texto plano, igual que en ProjectCard. */}
+            <div className="flex flex-wrap gap-x-6 gap-y-4 px-5">
+                <div className="grid content-start gap-1.5">
+                    <Block className="h-3 w-16" />
                     <Block className="h-5 w-24 rounded-badge" />
                 </div>
-                <Block className="h-4 w-16" />
-                <div className="flex flex-wrap gap-1.5">
-                    <Block className="h-5 w-16 rounded-badge" />
-                    <Block className="h-5 w-20 rounded-badge" />
+                <div className="grid content-start gap-1.5">
+                    <Block className="h-3 w-16" />
+                    <Block className="h-3 w-20" />
+                    <Block className="h-3 w-24" />
+                    <Block className="h-3 w-16" />
                 </div>
-                <Block className="h-4 w-20" />
-                <div className="flex flex-wrap gap-1.5">
-                    <Block className="h-5 w-20 rounded-badge" />
-                    <Block className="h-5 w-24 rounded-badge" />
+                <div className="grid content-start gap-1.5">
+                    <Block className="h-3 w-24" />
+                    <Block className="h-3 w-14" />
+                    <Block className="h-3 w-16" />
                 </div>
             </div>
 

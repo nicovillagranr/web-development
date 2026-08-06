@@ -1,24 +1,43 @@
-import { Fragment } from "react";
 import githubIcon from "../../../assets/icons/github-light.svg";
 import { LANGUAGES } from "../../../schemas/projectsSchema";
 
 const CHIP_BASE = "rounded-badge border px-2 py-0.5 font-mono text-xs font-medium";
 
+// Desde que el stack se pinta como tabla, la pastilla es EXCLUSIVA de la columna
+// `lenguaje`: todo lo demás va como texto de color (ver TECH_TEXT). Por eso aquí
+// solo quedan los dos lenguajes — las categorías que había para el resto
+// (accent, emerald, amber, violet, green, mono) ya no las alcanzaba nadie.
+//
+// Los lenguajes van RELLENOS, no con el borde translúcido que tenían los demás:
+// el lenguaje es otra clase de dato, no una tech más, y con el mismo tratamiento
+// que el resto se perdía (el amarillo de JS y el de `pnpm` son casi el mismo).
+// `text-base-900` es el color de fondo de la página, que se invierte con el
+// tema — así el texto contrasta contra el relleno en claro y en oscuro.
 const CHIP_CLASSES = {
-  accent: "border-accent-border bg-accent-glow text-accent",
-  emerald: "border-emerald/30 bg-emerald-glow text-emerald",
-  amber: "border-amber/30 bg-amber-glow text-amber",
-  // Los lenguajes van RELLENOS, no con el borde translúcido de los demás: el
-  // lenguaje es otra clase de dato, no una tech más, y con el mismo tratamiento
-  // que el resto se perdía (el amarillo de JS y el de `pnpm` son casi el mismo).
-  // `text-base-900` es el color de fondo de la página, que se invierte con el
-  // tema — así el texto contrasta contra el relleno en claro y en oscuro.
   langTs: "border-lang-ts bg-lang-ts text-base-900",
   langJs: "border-lang-js bg-lang-js text-base-900",
-  violet: "border-violet-500/30 bg-violet-500/15 text-violet-400",
-  green: "border-green-500/30 bg-green-500/15 text-green-400 [html.light_&]:border-green-700/40 [html.light_&]:bg-green-700/10 [html.light_&]:text-green-700",
-  mono: "border-text-primary/40 bg-text-primary/10 text-text-primary",
+  // Red de seguridad, hoy inalcanzable: el schema obliga a que el lenguaje sea
+  // uno de LANGUAGES y los dos están mapeados abajo. Existe para el día que
+  // añadas un tercer lenguaje y se te olvide darle categoría — mejor una
+  // pastilla sosa que una sin estilo ninguno.
   neutral: "border-line bg-surface text-text-muted",
+};
+
+// Las mismas categorías, pero solo el color del texto: en las columnas del stack
+// las techs van sin pastilla, así que el color es lo único que queda para
+// distinguir un grupo de otro.
+// Ojo con `violet` y `green`: son los dos únicos que no salen de un token del
+// @theme, así que no se invierten solos con el tema y necesitan su override a
+// mano. Como pastilla se sostenían con fondo y borde; como texto pelado sobre
+// fondo claro, sin el override se lavan.
+const TECH_TEXT = {
+  accent: "text-accent",
+  emerald: "text-emerald",
+  amber: "text-amber",
+  violet: "text-violet-400 [html.light_&]:text-violet-700",
+  green: "text-green-400 [html.light_&]:text-green-700",
+  mono: "text-text-primary",
+  neutral: "text-text-muted",
 };
 
 const TECH_CATEGORY = {
@@ -39,6 +58,11 @@ const TECH_CATEGORY = {
   "EmailJS": "amber",
   "Node.js": "green",
   "Supabase": "green",
+  // Mismo verde que Node.js a propósito: json-server ES un servidor Node, y en
+  // la columna `backend` de las cards de API van uno debajo del otro. Sin
+  // categoría caía en `neutral` y salía gris apagado al lado del verde, como si
+  // fuera de otra clase de cosa.
+  "json-server": "green",
   "npm": "amber",
   "pnpm": "amber",
   "Vercel": "mono",
@@ -71,7 +95,19 @@ const TECH_GROUP = {
   "Supabase": "backend",
 };
 
-const GROUP_ORDER = ["language", "tools", "frontend", "backend"];
+// El framework va justo detrás del lenguaje, antes que las herramientas: quien
+// evalúa el proyecto mira primero con qué está construido, no con qué se empaqueta.
+const GROUP_ORDER = ["language", "frontend", "backend", "tools"];
+
+// Las claves de grupo son inglesas porque vienen de TECH_GROUP, pero la tarjeta
+// está escrita en español y las cabeceras se leen.
+const GROUP_LABEL = {
+  language: "lenguaje",
+  frontend: "frontend",
+  backend: "backend",
+  tools: "herramientas",
+  deploy: "deploy",
+};
 
 export default function ProjectCard({ project, priority = false }) {
   const { name, path, description, stack, type, status, image, deploy, repo } = project;
@@ -96,12 +132,15 @@ export default function ProjectCard({ project, priority = false }) {
     if (g) (acc[g] ??= []).push(t);
     return acc;
   }, {});
-  // Las filas del stack se calculan antes del JSX porque el bloque es ahora una
-  // rejilla de dos columnas (etiqueta | chips): dentro del map no se puede
-  // devolver `null` para un grupo vacío sin dejar un hueco en la rejilla.
-  const filasStack = GROUP_ORDER.map((group) => [group, grouped[group] ?? []]).filter(
-    ([, techs]) => techs.length > 0
-  );
+  // Las columnas del stack se calculan antes del JSX por dos motivos: hay que
+  // descartar los grupos vacíos (una cabecera sin nada debajo sería una columna
+  // fantasma), y `deploy` es un campo suelto del proyecto, no una tech del
+  // array, pero en la tabla es una columna más como las otras. Normalizarlo
+  // aquí evita repetir el mismo marcado dos veces en el JSX.
+  const columnasStack = [
+    ...GROUP_ORDER.map((group) => [group, grouped[group] ?? []]),
+    ...(deploy ? [["deploy", [deploy]]] : []),
+  ].filter(([, techs]) => techs.length > 0);
 
   return (
     // MOLDE FIJO. La tarjeta no se maqueta a sí misma: `grid-rows-subgrid` la
@@ -169,35 +208,43 @@ export default function ProjectCard({ project, priority = false }) {
       <p className="px-5 text-sm leading-relaxed text-text-secondary">{description}</p>
 
       {/* ── 4. Stack ─────────────────────────────────────────────────────── */}
-      {/* Dos columnas (etiqueta | chips) en vez de la etiqueta encima de sus
-          chips: con la tarjeta al doble de ancho, apilarlas gastaba el alto en
-          líneas de una palabra y dejaba el resto del renglón vacío. */}
+      {/* Una tabla, no una lista: cada grupo es una COLUMNA con su cabecera
+          arriba y sus techs cayendo debajo. Las columnas se dimensionan al
+          contenido y saltan de línea cuando no caben, en vez de repartirse el
+          ancho a partes iguales: con cuatro columnas rígidas, en el peor caso
+          de `md` (301px de contenido) tocarían a 63px y ahí no entra ni
+          "Framer Motion". Así en pantalla grande salen las cuatro en fila y
+          en `md` bajan a dos y dos.
+          Las techs van sin pastilla pero CON color: apiladas, ocho píldoras
+          rellenas eran confeti, mientras que la misma paleta aplicada al texto
+          distingue los grupos sin gritar. El lenguaje sí conserva la suya, que
+          es justo lo que lo separa de ser una tech más. */}
       <section
         aria-label="Stack tecnológico"
-        className="grid grid-cols-[6rem_1fr] items-start gap-x-3 gap-y-2 px-5 font-mono text-xs leading-relaxed"
+        className="flex flex-wrap gap-x-6 gap-y-4 px-5 font-mono text-xs"
       >
-        {filasStack.map(([group, techs]) => (
-          <Fragment key={group}>
-            <div className="pt-0.5 text-text-muted">$ {group}</div>
-            <div className="flex flex-wrap gap-1.5">
-              {techs.map((tech) => (
-                <span key={tech} className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]}`}>
+        {columnasStack.map(([group, techs]) => (
+          <div key={group} className="grid content-start gap-1.5">
+            <div className="border-b border-line pb-1 text-text-muted">{GROUP_LABEL[group]}</div>
+            {techs.map((tech) =>
+              group === "language" ? (
+                // `justify-self-start` para que la pastilla no se estire hasta
+                // el ancho de la columna: en un grid los hijos crecen por
+                // defecto, y una píldora estirada deja de parecer una píldora.
+                <span
+                  key={tech}
+                  className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[tech] ?? "neutral"]} justify-self-start`}
+                >
                   {tech}
                 </span>
-              ))}
-            </div>
-          </Fragment>
+              ) : (
+                <span key={tech} className={TECH_TEXT[TECH_CATEGORY[tech] ?? "neutral"]}>
+                  {tech}
+                </span>
+              )
+            )}
+          </div>
         ))}
-        {deploy && (
-          <>
-            <div className="pt-0.5 text-text-muted">$ deploy:</div>
-            <div className="flex flex-wrap gap-1.5">
-              <span className={`${CHIP_BASE} ${CHIP_CLASSES[TECH_CATEGORY[deploy] ?? "neutral"]}`}>
-                {deploy}
-              </span>
-            </div>
-          </>
-        )}
       </section>
 
       {/* ── 5. Acción ────────────────────────────────────────────────────── */}
