@@ -59,8 +59,17 @@
   <link rel="preconnect" href="https://00-portfolio-projects-api.vercel.app" crossorigin>
   <link rel="dns-prefetch" href="https://00-portfolio-projects-api.vercel.app">
 
-  <!-- Favicon (generado con realfavicongenerator) -->
-  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+  <!-- Favicon (isotipo "N", ver public/favicon/icon.svg)
+       Ojo con las rutas: en Vite, public/ NO es un segmento de URL. Es una bandeja cuyo
+       contenido se copia tal cual al raíz de dist/, así que la ruta pública es /favicon/...
+       Si escribes /public/favicon/... funciona en el dev server (ahí el archivo existe
+       físicamente en esa ruta) pero en el build Vite lo trata como un import y lo duplica
+       en /assets/ con hash: acabas con el icono dos veces y una URL nueva en cada build.
+
+       Y el atributo sizes NO escala nada: solo DESCRIBE cuánto mide el archivo para que el
+       navegador elija cuál bajar. Poner un número mayor no agranda el dibujo. Para que el
+       logo se lea a 16px lo que importa es que la forma sea sólida y llene el lienzo. -->
+  <link rel="icon" type="image/svg+xml" href="/favicon/icon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
   <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
