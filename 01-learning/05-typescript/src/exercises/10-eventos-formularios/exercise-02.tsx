@@ -70,7 +70,8 @@ export function BotonPelado({ avisar }: { avisar: () => void }) {
     </button>
   )
 }
-// <BotonPelado avisar={() => console.log('clic')} />
+// Cuando el usuario de click al botón, en consola aparece "clic".
+<BotonPelado avisar={() => console.log('clic')} />
 
 // 2) `BotonAvisaTipo` — ahora `avisar` sí pide algo: el nombre del suceso.
 //    Escribe el manejador DENTRO del hueco, recibe el evento y sácale el `type`.
@@ -86,7 +87,8 @@ export function BotonAvisaTipo({ avisar }: { avisar: (tipo: string) => void }) {
     </button>
   )
 }
-// <BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
+// Cuando el usuario dé click la función entrará al objeto del evento, y sacará el valor del `type`. En este caso el valor es "click".
+<BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
 
 // 3) `BotonAvisaDobleClic` — el mismo botón y el mismo `avisar`, pero el aviso
 //    tiene que salir al DOBLE clic, no al clic.
@@ -104,7 +106,8 @@ export function BotonAvisaDobleClic({ avisar }: { avisar: (tipo: string) => void
     </button>
   )
 }
-// <BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
+// Lo mismo que el drill anterior, pero la lógica se ejecuta al DOBLE clic.
+<BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
 
 // 4) `CampoAvisaTecla` — cambia el elemento: un <input>. `avisar` pide la TECLA
 //    que se pulsó, y el evento del teclado la trae en `e.key`.
@@ -122,7 +125,8 @@ export function CampoAvisaTecla({ avisar }: { avisar: (tecla: string) => void })
     <input onKeyDown={(e) => avisar(e.key)} />
   )
 }
-// <CampoAvisaTecla avisar={(k) => console.log(k)} />   // "a"
+// En este caso, accedemos al objeto del evento teclado KeyboardEvent, y sacamos la tecla pulsada con e.key.
+<CampoAvisaTecla avisar={(k) => console.log(k)} />   // "a"
 
 // 5) `BotonAvisaNativo` — el `e` de React es un ENVOLTORIO. Dentro trae el
 //    evento de verdad, el del navegador, en `e.nativeEvent`. Aquí `avisar` pide
@@ -138,7 +142,8 @@ export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => v
     </button>
   )
 }
-// <BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
+// En este caso la función accede al evento del navegador MouseEvent, y saca lo que necesita.
+<BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
 
 // 6) `BotonAvisaConId` — el cierre: `avisar` pide DOS cosas, el `id` y el tipo.
 //    El `id` ya lo tienes (te llega por props); el tipo lo trae el evento. No
@@ -152,7 +157,7 @@ export function BotonAvisaConId({ id, avisar }: { id: number; avisar: (id: numbe
     </button>
   )
 }
-// <BotonAvisaConId id={7} avisar={(i, t) => console.log(i, t)} />   // 7 "click"
+<BotonAvisaConId id={7} avisar={(i, t) => console.log(i, t)} />   // 7 "click"
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde: aquí el molde te ha regalado el tipo porque

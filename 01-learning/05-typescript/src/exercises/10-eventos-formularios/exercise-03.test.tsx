@@ -7,6 +7,11 @@ import {
   CampoFuera,
   BotonFueraConId,
   EnlaceCompleto,
+  ejecutar,
+  medirDoble,
+  registro,
+  apuntar,
+  BotonTimbre,
 } from './exercise-03'
 
 describe('10-eventos-formularios / exercise-03 — el manejador fuera del hueco', () => {
@@ -57,5 +62,32 @@ describe('10-eventos-formularios / exercise-03 — el manejador fuera del hueco'
     fireEvent(enlace, clic)
     expect(avisar).toHaveBeenCalledWith('/perfil', 'click')
     expect(clic.defaultPrevented).toBe(true)
+  })
+})
+
+describe('10-eventos-formularios / exercise-03 — BLOQUE V: qué significa `void`', () => {
+  it('V1) ejecutar — llama a la función una vez y tira lo que salga', () => {
+    const espia = vi.fn<() => void>()
+    ejecutar(espia)
+    expect(espia).toHaveBeenCalledTimes(1)
+  })
+
+  it('V2) medirDoble — el espejo: aquí SÍ se usa lo que sale', () => {
+    expect(medirDoble(() => 21)).toBe(42)
+    expect(medirDoble(() => 0)).toBe(0)
+  })
+
+  it('V3) apuntar — devolver algo desde un `=> void` es legal', () => {
+    registro.length = 0 // el registro es compartido: se limpia antes de mirar
+    apuntar()
+    expect(registro).toEqual(['visita'])
+  })
+
+  it('V4) BotonTimbre — el mismo `=> void`, ahora con el evento delante', () => {
+    const avisar = vi.fn<(tipo: string) => void>()
+    render(<BotonTimbre avisar={avisar} />)
+    expect(avisar).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button'))
+    expect(avisar).toHaveBeenCalledWith('click')
   })
 })

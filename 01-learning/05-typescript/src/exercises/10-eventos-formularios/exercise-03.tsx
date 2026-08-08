@@ -75,7 +75,7 @@ export function BotonFuera({ avisar }: { avisar: (tipo: string) => void }) {
     </button>
   )
 }
-// <BotonFuera avisar={(t) => console.log(t)} />   // "click"
+<BotonFuera avisar={(t) => console.log(t)} />   // "click"
 
 // 2) `EnlaceFuera` — la misma operación sobre un `<a href="/inicio">Ir</a>`.
 //    Cambia la etiqueta, así que cambia el cartel.
@@ -164,4 +164,111 @@ export function EnlaceCompleto({ destino, avisar }: { destino: string; avisar: (
  * Cuando los 6 estén en verde: has escrito `MouseEvent<HTMLButtonElement>` cinco
  * veces. En el 04 le pones NOMBRE a eso una sola vez y dejas de repetirlo — y de
  * paso el manejador deja de nacer en el componente y empieza a llegar por props.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* =============================================================================
+ * 🔁 BLOQUE V — REFUERZO: qué significa `void`
+ * =============================================================================
+ *
+ * Montado sobre tu pregunta: «no entiendo el uso del `void` si perfectamente el
+ * retorno podría ser un string». La intuición es CORRECTA — el retorno puede ser
+ * un string. Lo que falla es lo que crees que promete la palabra:
+ *
+ *     ❌ "no devuelvas nada"
+ *     ✅ "devuelvas lo que devuelvas, nadie va a mirarlo"
+ *
+ *
+ * 🧠 ANALOGÍA — el timbre y la calculadora
+ * ----------------------------------------------------------------------------
+ * El timbre lo pulsas por lo que HACE: suena. Nadie pregunta "¿qué me ha devuelto
+ * el timbre?". La calculadora la usas por lo que TE DA: si no te da un número, no
+ * sirve para nada. Un manejador es un timbre, no una calculadora.
+ *
+ *
+ * ▸ 4 drills + 1 experimento, en orden. ❌ Prohibido `any` y `as`.
+ *     pnpm test:run src/exercises/10-eventos-formularios/exercise-03.test.tsx
+ * ===========================================================================*/
+
+// V1) `Aviso` + `ejecutar` — el tipo de una función que se llama por lo que HACE.
+//     `Aviso` no recibe nada y no devuelve nada. `ejecutar` recibe una función
+//     así y la llama UNA vez; lo que salga de ella, se tira.
+//     👉 El starter nombró la SALIDA en vez de la función entera (lo mismo que te
+//        pasó en el drill 1 del 04), y `ejecutar` no llama a nadie.
+//     ejecutar(espia)  →  espia se llama 1 vez
+export type Aviso = () => void
+
+// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
+export function ejecutar(accion: Aviso): void {
+  return accion()
+}
+ejecutar(() => console.log('sonó'))   // imprime "sonó"
+
+// V2) `Medida` + `medirDoble` — el espejo, para que se vea el contraste.
+//     `Medida` no recibe nada y devuelve un `number`. `medirDoble` la llama y
+//     devuelve el DOBLE de lo que salga.
+//     ⚠️ Aquí sí se mira lo que sale, y por eso no puede ser `void`: si nadie
+//        pudiera mirarlo, no habría nada que duplicar.
+//     👉 El starter devuelve un 0 fijo sin llamar a nadie.
+//     medirDoble(() => 21)  →  42
+export type Medida = () => number
+
+// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
+export function medirDoble(m: Medida): number {
+  return m() * 2
+}
+medirDoble(() => 21)   // 42
+
+// V3) `apuntar` — TU PREGUNTA, en código. `apuntar` es de tipo `Aviso`, o sea
+//     `=> void`. Su cuerpo tiene que ser `registro.push('visita')`, y resulta que
+//     `.push` DEVUELVE UN NÚMERO (la nueva longitud de la lista).
+//     ⚠️ Antes de escribirlo, predice: ¿cuántos errores da `pnpm typecheck`?
+//        Apunta tu respuesta, escríbelo, y compruébalo. Ahí está la lección.
+//     👉 El starter tiene el cuerpo vacío: no apunta nada.
+//     apuntar()  →  registro pasa a contener 'visita'
+// 📌 type Aviso = () => void          ← el de V1, para no subir a buscarlo
+// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
+export const registro: string[] = []
+
+// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
+export const apuntar: Aviso = () => {
+  return registro.push('visita')
+}
+apuntar()   // 1
+
+// V4) `BotonTimbre` — de vuelta a lo tuyo. Talla `ManejadorSimple`: recibe el
+//     evento de clic de un `<button>` y no devuelve nada. Anota el `const` con él
+//     y entrégaselo al hueco, como en el drill 1 de este archivo.
+//     ⚠️ Es el mismo `=> void` de V1, con un parámetro delante. Nada más.
+//     👉 El starter promete un `string` a la salida, y de ahí no sale ninguno.
+//        Ojo: este drill sale VERDE en el test aunque esté mal. Lo caza typecheck.
+//     <BotonTimbre avisar={espia} />  →  espia recibe "click"
+export type ManejadorSimple = (e: MouseEvent<HTMLButtonElement>) => void
+
+export function BotonTimbre({ avisar }: { avisar: (tipo: string) => void }) {
+  const manejar: ManejadorSimple = (e) => avisar(e.type)
+  return (
+    <button onClick={manejar}>
+      Timbre
+    </button>
+  )
+}
+<BotonTimbre avisar={(t) => console.log(t)} />   // "click"
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 🔬 EXPERIMENTO — no lo entregas, lo corres y lo deshaces.
+ *
+ * Ya has visto que DEVOLVER algo a un `=> void` está permitido. Ahora mira lo
+ * único que `void` sí te prohíbe. Pega esto al final del archivo y corre
+ * `pnpm typecheck`:
+ *
+ *     const cuantos: number = ejecutar(apuntar)
+ *
+ * `apuntar` devuelve un número de verdad (lo viste en V3) y `ejecutar` lo llama.
+ * Aun así no puedes recogerlo. Lee el error y quédate con la frase:
+ *
+ *     `void` no prohíbe DEVOLVER. Prohíbe USAR lo devuelto.
+ *
+ * Por eso un manejador se tipa `=> void` y no `=> string`: no es que no pueda
+ * salir un string — es que React no lo va a recoger, y el tipo lo dice en alto.
+ * Borra la línea cuando acabes.
  * ───────────────────────────────────────────────────────────────────────────── */

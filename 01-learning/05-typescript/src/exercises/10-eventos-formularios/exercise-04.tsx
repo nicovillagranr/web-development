@@ -68,11 +68,15 @@ import type { MouseEvent, KeyboardEvent, MouseEventHandler } from 'react'
 //       TEST también. No lo toques: es este mismo fallo visto desde el otro lado
 //       — un sello mal tallado rompe a todo el que lo estampe. Se cura aquí.
 //    <BotonConSello avisar={espia} />  →  espia recibe "click"
-export type ManejadorDeClic = MouseEvent<HTMLButtonElement>
+export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
 
 export function BotonConSello({ avisar }: { avisar: (tipo: string) => void }) {
   const manejar: ManejadorDeClic = (e) => avisar(e.type)
-  return <button onClick={manejar}>Avisar</button>
+  return (
+    <button onClick={manejar}>
+      Avisar
+    </button>
+  )
 }
 // <BotonConSello avisar={(t) => console.log(t)} />   // "click"
 
@@ -82,8 +86,12 @@ export function BotonConSello({ avisar }: { avisar: (tipo: string) => void }) {
 //    👉 El starter hace DOS cosas mal, una de cada archivo: escribe el tipo largo
 //       a mano teniendo el sello (lo de aquí), y cocina al pintar (lo del 01).
 //    <BotonRecibeManejador alPulsar={espia} />  →  espia recibe el evento entero
-export function BotonRecibeManejador({ alPulsar }: { alPulsar: (e: MouseEvent<HTMLButtonElement>) => void }) {
-  return <button onClick={alPulsar()}>Avisar</button>
+export function BotonRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }) {
+  return (
+    <button onClick={alPulsar}>
+      Avisar
+    </button>
+  )
 }
 // <BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />   // "click"
 
@@ -93,10 +101,14 @@ export function BotonRecibeManejador({ alPulsar }: { alPulsar: (e: MouseEvent<HT
 //       dentro de `<…>` y ya no entra en la misma etiqueta.
 //    👉 El starter talló el sello nuevo copiando el de los botones. TS2322.
 //    <EnlaceRecibeManejador alPulsar={espia} />  →  espia recibe el evento
-export type ManejadorDeEnlace = (e: MouseEvent<HTMLButtonElement>) => void
+export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
 
 export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlace }) {
-  return <a href="/inicio" onClick={alPulsar}>Ir</a>
+  return (
+    <a href="/inicio" onClick={alPulsar}>
+      Ir
+    </a>
+  )
 }
 // <EnlaceRecibeManejador alPulsar={(e) => console.log(e.type)} />   // "click"
 
@@ -110,9 +122,11 @@ export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlac
 export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>, tecla: string) => void
 
 export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecla }) {
-  return <input onKeyDown={alTeclear} />
+  return (
+    <input onKeyDown={(e) => alTeclear(e, e.key)} />
+  )
 }
-// <CampoRecibeManejador alTeclear={(e) => console.log(e.key)} />   // "a"
+<CampoRecibeManejador alTeclear={(e) => console.log(e.key)} />   // "a"
 
 // 5) `BotonConSelloDeReact` — el sello del drill 1 ya venía tallado de fábrica:
 //    React lo llama `MouseEventHandler<HTMLButtonElement>` y está en el import.
@@ -122,8 +136,12 @@ export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecl
 //       marcado como "declared but never used": ese aviso ES el enunciado.
 //    <BotonConSelloDeReact avisar={espia} />  →  espia recibe "click"
 export function BotonConSelloDeReact({ avisar }: { avisar: (tipo: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.type)
-  return <button onClick={manejar}>Avisar</button>
+  const manejar = (e: MouseEventHandler<HTMLButtonElement>) => avisar(e.type)
+  return (
+    <button onClick={manejar}>
+      Avisar
+    </button>
+  )
 }
 // <BotonConSelloDeReact avisar={(t) => console.log(t)} />   // "click"
 
@@ -134,10 +152,10 @@ export function BotonConSelloDeReact({ avisar }: { avisar: (tipo: string) => voi
 //    <BarraDeAcciones alGuardar={espiaA} alSalir={espiaB} />
 export function BarraDeAcciones({ alGuardar, alSalir }: { alGuardar: ManejadorDeClic; alSalir: ManejadorDeEnlace }) {
   return (
-    <div>
+    <>
       <button onClick={alGuardar}>Guardar</button>
-      <a href="/salir">Salir</a>
-    </div>
+      <a href="/salir" onClick={alSalir}>Salir</a>
+    </>
   )
 }
 // <BarraDeAcciones alGuardar={(e) => console.log(e.type)} alSalir={(e) => console.log(e.type)} />
