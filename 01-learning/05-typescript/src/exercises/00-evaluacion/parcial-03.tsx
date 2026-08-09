@@ -1,7 +1,3 @@
-/* eslint-disable react-refresh/only-export-components --
- * Este archivo exporta tipos y funciones normales además del componente del
- * ítem 11. La regla existe por el hot-reload de Vite y aquí no aplica. */
-
 /* =============================================================================
  * PARCIAL 03 — CAZADOR DE BUGS   ·   11 ítems
  * =============================================================================

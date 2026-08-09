@@ -23,4 +23,14 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
+  {
+    // Los ejercicios no se montan nunca en la app: solo los importa vitest, así que
+    // no hay hot reload que proteger. La regla pide que un .tsx exporte SOLO
+    // componentes, y aquí conviven a propósito componentes con funciones sueltas
+    // (los drills sin React). Se apaga donde su premisa no se cumple, no donde molesta.
+    files: ['src/exercises/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

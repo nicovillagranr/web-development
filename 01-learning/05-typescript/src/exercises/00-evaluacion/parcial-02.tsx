@@ -1,11 +1,3 @@
-/* eslint-disable react-refresh/only-export-components --
- * Este archivo exporta tipos y funciones normales además del componente de la
- * PARTE F. La regla existe por el hot-reload de Vite y aquí no aplica.
- *
- * (El `@typescript-eslint/no-unused-vars` que acompañaba a esta línea era
- *  andamiaje del examen —los cuerpos sin responder no usaban sus parámetros— y
- *  se retiró al corregirlo: ya no hace falta.) */
-
 /* =============================================================================
  * PARCIAL 02 — Consolidación FASE 1 + props   ·   12 ítems
  * =============================================================================

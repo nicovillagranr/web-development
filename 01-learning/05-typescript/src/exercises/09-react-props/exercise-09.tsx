@@ -113,7 +113,6 @@ export function BotonSimple({ texto, onAccion }: { texto: string, onAccion: () =
 //    ⚠️ Llamar a `hacerManejador` NO debe ejecutar nada todavía. Solo fabrica.
 //    const manejar = hacerManejador(7, elegir)   ← aquí no se llamó a `elegir`
 //    manejar()                                   ← aquí sí: elegir(7)
-// eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
 export function hacerManejador(id: number, onSeleccionar: (id: number) => void) {
   return () => onSeleccionar(id)
 }

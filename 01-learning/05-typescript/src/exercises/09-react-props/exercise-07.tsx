@@ -99,7 +99,6 @@ import type { ComponentProps, ReactNode } from 'react'
 //       componente: partir las props en "lo mío" y "lo que reenvío".
 //    partirUsuario({ id: 1, nombre: 'Ana', activo: true })
 //      →  { id: 1, resto: { nombre: 'Ana', activo: true } }
-// eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
 export function partirUsuario(obj: { id: number, nombre: string, activo: boolean }): { id: number; resto: { nombre: string; activo: boolean } } {
   const { id, ...resto } = obj
   return { id, resto }

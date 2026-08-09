@@ -286,7 +286,6 @@ export function Contenido({ estado, onVer }: { estado: EstadoCarga, onVer: (id: 
 //    ⚠️ Anota el tipo de retorno.
 //    resumen([])  →  'Sin pedidos'
 //    resumen([{…total:10}, {…total:5}])  →  '2 pedidos · 15€'
-// eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
 export function resumen(pedidos: Pedido[]): string {
   if (pedidos.length === 0) {
     return 'Sin pedidos'

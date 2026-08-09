@@ -306,7 +306,6 @@ export function Aviso(props: AvisoProps) {
 //      · 'enlace' → "Enlace a " + el href
 //      · 'accion' → "Acción: " + el texto
 //    describirBoton({ como: 'enlace', texto: 'Ir', href: '/a' })  →  'Enlace a /a'
-// eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
 export function describirBoton(props: BotonProps) {
   switch (props.como) {
     case 'enlace':
@@ -325,7 +324,6 @@ export function describirBoton(props: BotonProps) {
 //      · 'exito' → "Todo bien"   · 'error' → "Falló"   · 'cargando' → "Esperando"
 //    …y un `default` con la GUARDIA `never` explicada arriba.
 //    etiquetaDe({ tipo: 'cargando' })  →  'Esperando'
-// eslint-disable-next-line react-refresh/only-export-components -- no es un componente; la regla vigila el hot-reload de Vite y aquí no aplica
 export function etiquetaDe(props: MensajeProps) {
   switch (props.tipo) {
     case 'exito':
