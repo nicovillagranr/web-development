@@ -45,7 +45,7 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import type { MouseEvent, KeyboardEvent, MouseEventHandler } from 'react'
+import type { MouseEvent, KeyboardEvent, MouseEventHandler, KeyboardEventHandler } from 'react'
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -128,13 +128,17 @@ export function BotonConSello({ avisar }: { avisar: (t: string) => void }) {
 //    📎 <button> → MouseEvent<HTMLButtonElement>
 //       <a>      → MouseEvent<HTMLAnchorElement>
 //    → click   →   avisar recibe "click"
-export type ManejadorDeEnlace = (e: MouseEvent<HTMLButtonElement>) => void
+export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
 
 export function EnlaceConSello({ avisar }: { avisar: (t: string) => void }) {
   const manejar: ManejadorDeEnlace = (e) => avisar(e.type)
-  return <a href="/inicio" onClick={manejar}>Ir</a>
+  return (
+    <a href="/inicio" onClick={manejar}>
+      Ir
+    </a>
+  )
 }
-// <EnlaceConSello avisar={(t) => console.log(t)} />   // "click"
+<EnlaceConSello avisar={(t) => console.log(t)} />   // "click"
 
 // 3) `ManejadorDeTecla` + `CampoConSello` — QUÉ CONSTRUIR: el tercer alias, el del
 //    teclado sobre un `<input>` con `onKeyDown`, montado igual que los dos
@@ -149,13 +153,15 @@ export function EnlaceConSello({ avisar }: { avisar: (t: string) => void }) {
 //    📎 onKeyDown pasa 1 argumento:  (e)
 //       el alias del starter pide 2: (e, tecla)
 //    → tecleas "a"   →   avisar recibe "a"
-export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>, tecla: string) => void
+export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 
 export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: ManejadorDeTecla = (e, tecla) => avisar(`${e.key}-${tecla}`)
-  return <input onKeyDown={manejar} />
+  const manejar: ManejadorDeTecla = (e) => avisar(e.key)
+  return (
+    <input onKeyDown={manejar} />
+  )
 }
-// <CampoConSello avisar={(t) => console.log(t)} />   // "a"
+<CampoConSello avisar={(t) => console.log(t)} />   // "a"
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -205,10 +211,14 @@ export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
 //       ✅ const manejar: MouseEventHandler<HTMLButtonElement> = (e) => …
 //    → click   →   avisar recibe "click"
 export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: MouseEventHandler<HTMLButtonElement>) => avisar(e.type)
-  return <button onClick={manejar}>Avisar</button>
+  const manejar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type)
+  return (
+    <button onClick={manejar}>
+      Avisar
+    </button>
+  )
 }
-// <BotonConSelloDeReact avisar={(t) => console.log(t)} />   // "click"
+<BotonConSelloDeReact avisar={(t) => console.log(t)} />   // "click"
 
 // 5) `CampoConSelloDeReact` — QUÉ CONSTRUIR: lo mismo sobre el `<input>` con
 //    `onKeyDown`, con el alias de fábrica del teclado. Aplica la regla del nombre:
@@ -225,10 +235,13 @@ export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 //       KeyboardEventHandler<HTMLInputElement>   ← la función que lo recibe
 //    → tecleas "a"   →   avisar recibe "a"
 export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: KeyboardEvent<HTMLInputElement> = (e) => avisar(e.key)
-  return <input onKeyDown={manejar} />
+  // Importé el manejador de React: `KeyboardEventHandler<HTMLInputElement>` y lo apliqué al drill
+  const manejar: KeyboardEventHandler<HTMLInputElement> = (e) => avisar(e.key)
+  return (
+    <input onKeyDown={manejar} />
+  )
 }
-// <CampoConSelloDeReact avisar={(t) => console.log(t)} />   // "a"
+<CampoConSelloDeReact avisar={(t) => console.log(t)} />   // "a"
 
 // 6) `BarraConSellos` — QUÉ CONSTRUIR: el cierre. Un `<button>` "Guardar" que
 //    avisa "boton:click" y un `<a href="/salir">Salir</a>` que avisa
@@ -241,16 +254,142 @@ export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 //    📎 botón:  MouseEventHandler<HTMLButtonElement>   ← el de React
 //       enlace: ManejadorDeEnlace                      ← el tuyo, del drill 2
 //    → click en Guardar → "boton:click"   ·   click en Salir → "enlace:click"
+
+// Combiné ambos handlers en un solo que proporciona React y los apliqué a ambas etiquetas HTML
 export function BarraConSellos({ avisar }: { avisar: (t: string) => void }) {
   const alBoton: MouseEventHandler<HTMLButtonElement> = (e) => avisar(`boton:${e.type}`)
+  const alEnlace: MouseEventHandler<HTMLAnchorElement> = (e) => avisar(`enlace:${e.type}`)
   return (
     <>
       <button onClick={alBoton}>Guardar</button>
-      <a href="/salir" onClick={alBoton}>Salir</a>
+      <a href="/salir" onClick={alEnlace}>Salir</a>
     </>
   )
 }
 // <BarraConSellos avisar={(t) => console.log(t)} />
+
+/* =============================================================================
+ * 🪜 ESCALERA T — quién le pone el tipo a la `e`
+ * =============================================================================
+ *
+ * Una sola idea, en seis peldaños:
+ *
+ *     LA ETIQUETA DEL `const` ES LA QUE LE DICE AL PARÁMETRO QUÉ ES.
+ *
+ * T1–T4 no tienen React, ni eventos, ni JSX: números y textos, para ver la
+ * maquinaria desnuda. En T5 y T6 vuelve el evento, y comprobarás que por el
+ * camino no había cambiado nada.
+ *
+ * En todos, el cuerpo viene MAL a propósito. Lo escribes tú.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// T1) `doblar` — QUÉ CONSTRUIR: recibe un número y devuelve el doble.
+//    La etiqueta ya está puesta; tú solo escribes el cuerpo.
+//    👀 FÍJATE EN LA `n`: en la línea de abajo no pone `n: number` por ningún
+//       lado. Y aun así puedes multiplicarla como número. Pregúntate de dónde
+//       salió su tipo — la respuesta es el título de la escalera.
+//    🔧 El cuerpo devuelve la entrada tal cual, sin doblarla.
+//    → doblar(4)   →   8
+type Duplicador = (n: number) => number
+
+export const doblar: Duplicador = (n) => n * 2
+// console.log(doblar(4))   // 8
+
+
+// T2) `triplicar` — QUÉ CONSTRUIR: lo mismo, por tres. Pero aquí NO HAY ETIQUETA:
+//    el `const` va desnudo y el tipo se escribe en el parámetro.
+//    👀 EL CONTRASTE ES EL EJERCICIO: T1 y T2 hacen el mismo trabajo y los dos
+//       están bien tipados. Lo único que cambia es DÓNDE pusiste la información:
+//       en la etiqueta del `const` (T1) o en el parámetro (T2). Una de las dos.
+//    🔧 El cuerpo devuelve la entrada tal cual.
+//    → triplicar(4)   →   12
+export const triplicar = (n: number) => n * 3
+// console.log(triplicar(4))   // 12
+
+
+// T3) `gritar` — QUÉ CONSTRUIR: recibe un texto y lo devuelve en MAYÚSCULAS.
+//    Etiqueta puesta, como en T1.
+//    📌 type Transformador = (t: string) => string
+//    👀 La `t` va desnuda otra vez, y aun así `.toUpperCase()` te autocompleta al
+//       escribir el punto. Eso solo ocurre si TypeScript ya sabe que es un
+//       string. ¿Quién se lo dijo, si tú no lo escribiste?
+//    🔧 El cuerpo devuelve el texto sin tocar.
+//    → gritar("hola")   →   "HOLA"
+type Transformador = (t: string) => string
+
+export const gritar: Transformador = (t) => t.toUpperCase()
+// console.log(gritar("hola"))   // "HOLA"
+
+
+// T4) `repetir` — QUÉ CONSTRUIR: repite un texto tantas veces como diga el número.
+//    Dos parámetros, los dos desnudos.
+//    📌 type Repetidor = (t: string, veces: number) => string
+//    👀 La etiqueta no tipa solo el primero: tipa TODOS, y por POSICIÓN. El primer
+//       hueco del alias cae en `t`, el segundo en `veces`. Los nombres que les
+//       pongas abajo dan igual — podrías llamarlos `a` y `b` y funcionaría igual.
+//       Lo que manda es el orden.
+//    🔧 El cuerpo los pega en vez de repetir: sale "ab3".
+//    → repetir("ab", 3)   →   "ababab"
+
+// El type Repetidor es una función. Esta recibe un string y un número y retorna un string
+type Repetidor = (t: string, veces: number) => string
+
+// Repetir es una variable que llama a la Función Repetidor
+export const repetir: Repetidor = (t, veces) => t.repeat(veces)
+// console.log(repetir("ab", 3))   // "ababab"
+
+
+// T5) `BotonEscalera` — QUÉ CONSTRUIR: vuelve el evento. Un `<button>` "Pulsa"
+//    cuyo manejador avisa con el TIPO del suceso.
+//    📌 type AlPulsar = (e: MouseEvent<HTMLButtonElement>) => void
+//    👀 La `e` va desnuda, exactamente igual que la `n` de T1. Mismo mecanismo,
+//       solo que lo que llega ahora es un objeto evento en vez de un número.
+//       Si entendiste T1, esto ya lo sabes.
+//    🔧 El cuerpo entrega la CAJA entera en vez de sacarle el campo: avisa
+//       "[object Object]". Es tu trampa vieja de `e` contra `e.type`.
+//    → click   →   avisar recibe "click"
+
+// AlPulsar es un alias de tipo
+type AlPulsar = (e: MouseEvent<HTMLButtonElement>) => void
+
+export function BotonEscalera({ avisar }: { avisar: (t: string) => void }) {
+  const alPulsar: AlPulsar = (e) => avisar(`${e.type}`)
+  return (
+    <button onClick={alPulsar}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonEscalera avisar={(t) => console.log(t)} />   // "click"
+
+
+// T6) `BotonEscaleraDeReact` — QUÉ CONSTRUIR: el mismo botón, pero sin alias
+//    tuyo: con el que trae React, que ya está en el import de arriba.
+//    👀 AQUÍ FALTA LA ETIQUETA. Es el único peldaño donde TypeScript se queja, y
+//       la queja es justo la prueba de la escalera: sin etiqueta en el `const` y
+//       sin anotación en el parámetro, no tiene de dónde deducir la `e`.
+//    🔧 El `const` va desnudo:
+//       `TS7006: Parameter 'e' implicitly has an 'any' type.`
+//       El cuerpo YA ESTÁ BIEN — no lo toques. Se cura poniendo la etiqueta.
+//       ⚠️ Y el test sale VERDE: en ejecución la `e` es el evento de verdad.
+//          Este peldaño solo lo caza `pnpm typecheck`.
+//    → click   →   avisar recibe "click"
+
+export function BotonEscaleraDeReact({ avisar }: { avisar: (t: string) => void }) {
+  const alPulsar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type)
+  return (
+    <button onClick={alPulsar}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonEscaleraDeReact avisar={(t) => console.log(t)} />   // "click"
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 🗣️ DILO EN VOZ ALTA antes de pasar al 05 — sin mirar arriba:
+ *   · En `const f: Alias = (x) => …`, ¿qué describe `Alias`?
+ *   · En `const f = (x: Tipo) => …`, ¿qué describe `Tipo`?
+ *   · ¿Por qué no hace falta escribir los dos?
+ * ───────────────────────────────────────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde: hasta aquí el manejador siempre nacía DENTRO del

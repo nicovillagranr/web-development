@@ -109,7 +109,7 @@ export function BotonFuera({ avisar }: { avisar: (t: string) => void }) {
     </button>
   )
 }
-<BotonFuera avisar={(t) => console.log(t)} />   // "click"
+// <BotonFuera avisar={(t) => console.log(t)} />   // "click"
 
 // 2) `EnlaceFuera` — QUÉ CONSTRUIR: lo mismo sobre un `<a href="/inicio">Ir</a>`.
 //    El manejador va fuera y anotado, pero el argumento de tipo YA NO es el del
@@ -130,7 +130,7 @@ export function EnlaceFuera({ avisar }: { avisar: (t: string) => void }) {
     </a>
   )
 }
-<EnlaceFuera avisar={(t) => console.log(t)} />   // "click"
+// <EnlaceFuera avisar={(t) => console.log(t)} />   // "click"
 
 // 3) `CampoFuera` — QUÉ CONSTRUIR: un `<input>` con `onKeyDown`, y el manejador
 //    fuera. Le pasa `e.key` a `avisar`.
@@ -154,7 +154,7 @@ export function CampoFuera({ avisar }: { avisar: (t: string) => void }) {
     <input onKeyDown={manejar} />
   )
 }
-<CampoFuera avisar={(t) => console.log(t)} />   // "a"
+// <CampoFuera avisar={(t) => console.log(t)} />   // "a"
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -207,7 +207,7 @@ export function BotonFueraConId({ id, avisar }: { id: string; avisar: (t: string
     </button>
   )
 }
-<BotonFueraConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
+// <BotonFueraConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
 
 // 5) `CampoLeeValor` — QUÉ CONSTRUIR: un `<input>` cuyo manejador, fuera y
 //    anotado, le pase a `avisar` lo que hay ESCRITO en el campo:
@@ -229,7 +229,7 @@ export function CampoLeeValor({ avisar }: { avisar: (t: string) => void }) {
     <input onKeyUp={manejar} />
   )
 }
-<CampoLeeValor avisar={(t) => console.log(t)} />   // "hola"
+// <CampoLeeValor avisar={(t) => console.log(t)} />   // "hola"
 
 // 6) `BarraFuera` — QUÉ CONSTRUIR: el cierre. Dos elementos en el mismo
 //    componente, cada uno con SU manejador fuera y SU cartel: un `<button>` con
@@ -242,8 +242,8 @@ export function CampoLeeValor({ avisar }: { avisar: (t: string) => void }) {
 //       <a>      → MouseEvent<HTMLAnchorElement>
 //    → click en Guardar → "boton:click"   ·   click en Salir → "enlace:click"
 export function BarraFuera({ avisar }: { avisar: (t: string) => void }) {
-  const alBoton = (e: MouseEvent<HTMLButtonElement>) => avisar(`Boton:${e.type}`)
-  const alEnlace = (e: MouseEvent<HTMLAnchorElement>) => avisar(`Enlace:${e.type}`)
+  const alBoton = (e: MouseEvent<HTMLButtonElement>) => avisar(`boton:${e.type}`)
+  const alEnlace = (e: MouseEvent<HTMLAnchorElement>) => avisar(`enlace:${e.type}`)
   return (
     <>
       <button onClick={alBoton}>Guardar</button>
@@ -251,7 +251,7 @@ export function BarraFuera({ avisar }: { avisar: (t: string) => void }) {
     </>
   )
 }
-<BarraFuera avisar={(t) => console.log(t)} />
+// <BarraFuera avisar={(t) => console.log(t)} />   // ← te falta la traza: ¿qué dos strings salen?
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde —los dos comandos, no solo el test— llevarás
