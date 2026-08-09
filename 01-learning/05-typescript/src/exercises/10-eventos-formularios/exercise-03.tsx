@@ -1,73 +1,107 @@
 /* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — de dónde salía el tipo de `e` en el 02:
+ * 📌 RECORDATORIO — el mismo manejador, en los dos sitios:
  *
- *     <button onClick={(e) => …}>    el HUECO decide Mouse/Keyboard
- *      ▲                             la ETIQUETA decide el Element
+ *   DENTRO del hueco          <button onClick={(e) => …}>
+ *     el tipo lo pone React. No anotas nada.          ← esto era el 02
  *
- *     e = {                     ← la caja entera es `e`
- *       type: "click",          ← un campo suyo: `e.type`, y ESE sí es un string
- *       preventDefault(),       ← una FUNCIÓN suya: corta lo que iba a hacer el
- *     }                            navegador por su cuenta (navegar, enviar…)
+ *   FUERA del hueco           const manejar = (e: MouseEvent<HTMLButtonElement>) => …
+ *     no hay contexto. El tipo lo escribes TÚ.        ← esto es este archivo
  *
- * ⚠️ Hay DOS `MouseEvent`: el global (el del navegador) y el de React. Aquí
- *    quieres el de React, y ese se importa. El global no lleva `<…>`.
+ * ⚠️ Y para escribirlo hay que traerlo:
+ *       import type { MouseEvent, KeyboardEvent } from 'react'
+ *    Sin ese import, `MouseEvent` es OTRO tipo distinto — el del navegador.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 /* =============================================================================
- * EJERCICIO 03 — el manejador fuera del hueco
+ * EJERCICIO 03 — el manejador fuera del hueco                ·  3/10 del bloque
  * =============================================================================
+ *
+ * 🎯 AL TERMINAR SABRÁS
+ * ----------------------------------------------------------------------------
+ *   · anotar el parámetro de un manejador que vive fuera del JSX
+ *   · elegir el argumento de tipo según la etiqueta donde lo vas a colgar
+ *   · saber que ese tipo se IMPORTA de react, y por qué existen dos con el mismo
+ *     nombre
  *
  * 🟢 ¿POR QUÉ ESTE ARCHIVO?
  * ----------------------------------------------------------------------------
- * En el 02 el molde te regalaba el tipo de `e` porque escribías la función DENTRO
- * del hueco. Aquí la sacas: la guardas en un `const` y luego se la entregas. Fuera
- * del hueco no hay molde, así que se acabó el regalo y el tipo lo escribes tú.
+ * En el 02 todo cabía dentro del hueco. En cuanto un manejador crece, o lo usan
+ * dos elementos, o quieres testearlo aparte, lo sacas a un `const` — y ahí se
+ * acaba el regalo: fuera del hueco nadie sabe qué recibe tu función, así que se
+ * lo tienes que decir tú. Este archivo es aprender a escribir ese cartel.
  *
- *
- * 🧠 ANALOGÍA — la ventanilla
+ * 🗺️ MAPA DEL ARCHIVO
  * ----------------------------------------------------------------------------
- * Rellenas el impreso EN la ventanilla: el mostrador ya tiene el cartel puesto,
- * así que nadie te pregunta de qué trámite va. Se sabe por dónde estás.
- * Rellénalo EN CASA y nadie lo sabe: ahí sí tienes que escribir arriba a qué
- * ventanilla va — y tiene que coincidir, o te lo devuelven.
- *
- *
- * ▸ UN EJEMPLO
- * ----------------------------------------------------------------------------
- *     const manejar = (e: MouseEvent<HTMLButtonElement>) => console.log(e.type)
- *     <button onClick={manejar}>Hola</button>
- *
- *     Ese `<HTMLButtonElement>` es el cartel. Lo escribes porque lo rellenaste
- *     en casa; en el 02 no hacía falta porque lo rellenabas en la ventanilla.
- *
- *
- * 🗣️ CÓMO SE LLAMA ESTO
- * ----------------------------------------------------------------------------
- *   · ANOTAR EL PARÁMETRO → escribir tú el tipo que antes ponía el contexto
- *
+ *   TEORÍA 1 · fuera no hay contexto: anotas e importas   →  drills 1, 2, 3
+ *   TEORÍA 2 · el argumento de tipo dice sobre QUÉ        →  drills 4, 5, 6
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-03.test.tsx
+ *     pnpm typecheck
  *
- * ⚠️ AQUÍ LOS TESTS NO BASTAN, y es la primera vez que te pasa en esta carpeta.
- *    Un cartel mal puesto no rompe nada al ejecutar: los drills 1, 2 y 4 salen
- *    VERDES con el starter tal cual. La otra mitad de la nota la da
- *    `pnpm typecheck`, que arranca con 6 errores. Corre los dos comandos.
+ * ⚠️ AQUÍ EL TEST DEJA DE BASTAR, Y ES EL TEMA DEL ARCHIVO. Un cartel mal puesto
+ *    no rompe nada al ejecutar: los starters de los drills 1, 2, 3 y 5 salen
+ *    VERDES en el test y solo los caza `pnpm typecheck`. Corre LOS DOS comandos.
  *
- * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
+ * 📝 LAS TRACES DE ESTE ARCHIVO VAN COMENTADAS, Y NO ES UNA MANÍA. En el 01, que
+ *    era `.ts`, descomentar una trace la ejecutaba. Aquí no: escribir
+ *    `<BotonFuera avisar={…} />` solo fabrica un objeto que DESCRIBE el elemento —
+ *    el componente no se llama, así que no imprime nada. Y ni `lint` ni `typecheck`
+ *    protestan, porque no está mal escrito: simplemente no hace nada.
+ *    Es `avisar` vs `avisar()` un piso más arriba:
+ *        <Boton />  es la receta   ·   renderizar es cocinar
+ *    Lo único que ejecuta de verdad estos componentes es el test.
  * ===========================================================================*/
 
-import type { MouseEvent } from 'react'
-import type { KeyboardEvent } from 'react'
-
-// 1) `BotonFuera` — saca el manejador del hueco: guárdalo en un `const` dentro
-//    del componente y entrégaselo al `onClick`. Al salir, `e` se queda sin cartel.
-//    👉 El starter lo rellenó en casa y lo mandó sin poner el trámite arriba:
-//       TS7006 "Parameter 'e' implicitly has an 'any' type".
-//    <BotonFuera avisar={espia} />  →  espia recibe "click"
+import type { MouseEvent, KeyboardEvent } from 'react'
 
 
-export function BotonFuera({ avisar }: { avisar: (tipo: string) => void }) {
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 1 — fuera del hueco no hay contexto
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   El tipado contextual del 02 solo funciona DENTRO del hueco. Un `const` en el
+ *   cuerpo del componente no está en ningún hueco: nadie le dice a TS qué recibe,
+ *   así que el parámetro se queda sin tipo y salta `TS7006: Parameter 'e'
+ *   implicitly has an 'any' type`. La solución es la ANOTACIÓN DE TIPO: escribir
+ *   tú lo que el hueco decía por ti.
+ *
+ * SINTAXIS — y el import es parte de la sintaxis, no un detalle
+ *     import type { MouseEvent } from 'react'
+ *
+ *     const manejar = (e: MouseEvent<HTMLButtonElement>) => console.log(e.type)
+ *                         └──────── la anotación ────────┘
+ *     <button onClick={manejar}>Avisar</button>
+ *
+ * 🧠 ANALOGÍA (de apoyo) — la ventanilla. Rellenas el impreso EN la ventanilla y
+ *    nadie te pregunta de qué trámite va: el mostrador ya tiene el cartel puesto.
+ *    Rellénalo EN CASA y tienes que escribir arriba a qué ventanilla va — y tiene
+ *    que coincidir, o te lo devuelven.
+ *
+ * 🗣️ LAS PIEZAS
+ *     import type   → trae un TIPO, no un valor. Desaparece al compilar
+ *     MouseEvent<…> → el tipo del evento de ratón de React
+ *     e: MouseEvent<…>  → la anotación de tipo del parámetro
+ *
+ * ⚠️ TRAMPA — los DOS HOMÓNIMOS. `MouseEvent` y `KeyboardEvent` existen dos veces:
+ *    el del navegador (global, siempre disponible, NO admite `<…>`) y el de React
+ *    (hay que importarlo). Si te olvidas del import, TS coge el global y te dice
+ *    `TS2315: Type 'KeyboardEvent' is not generic`. Ese mensaje admite dos
+ *    lecturas —"quita los `<…>`" y "coge el otro tipo"— y **solo una arregla**.
+ *    Regla de la casa: si no entiendes por qué se fue un error, no se fue.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 1) `BotonFuera` — QUÉ CONSTRUIR: saca el manejador a un `const` dentro del
+//    componente, anótalo, y entrégalo al hueco `onClick` de un `<button>`
+//    "Avisar". El manejador le pasa `e.type` a `avisar`.
+//    🔧 STARTER ROTO A PROPÓSITO: el manejador ya está fuera, pero sin anotar.
+//       `TS7006: Parameter 'e' implicitly has an 'any' type.`
+//       ⚠️ El test de este drill sale VERDE con el starter tal cual: sin tipo
+//       funciona igual al ejecutar. Este fallo solo lo caza `pnpm typecheck`.
+//    📎 import type { MouseEvent } from 'react'   ← ya está arriba
+//       e: MouseEvent<HTMLButtonElement>          ← lo que hay que escribir
+//    → click   →   avisar recibe "click"
+export function BotonFuera({ avisar }: { avisar: (t: string) => void }) {
   const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.type)
   return (
     <button onClick={manejar}>
@@ -77,12 +111,18 @@ export function BotonFuera({ avisar }: { avisar: (tipo: string) => void }) {
 }
 <BotonFuera avisar={(t) => console.log(t)} />   // "click"
 
-// 2) `EnlaceFuera` — la misma operación sobre un `<a href="/inicio">Ir</a>`.
-//    Cambia la etiqueta, así que cambia el cartel.
-//    👉 El starter lleva el cartel de la ventanilla de al lado y se lo devuelven:
-//       TS2322, un manejador de `HTMLButtonElement` no entra en un `<a>`.
-//    <EnlaceFuera avisar={espia} />  →  espia recibe "click"
-export function EnlaceFuera({ avisar }: { avisar: (tipo: string) => void }) {
+// 2) `EnlaceFuera` — QUÉ CONSTRUIR: lo mismo sobre un `<a href="/inicio">Ir</a>`.
+//    El manejador va fuera y anotado, pero el argumento de tipo YA NO es el del
+//    botón: un `<a>` es otro elemento del DOM y tiene su propio nombre.
+//    🔧 STARTER ROTO A PROPÓSITO: copió el cartel del botón. `TS2322: Type
+//       '(e: MouseEvent<HTMLButtonElement>) => void' is not assignable to type
+//       'MouseEventHandler<HTMLAnchorElement>'`. Lee el final de la línea: te
+//       está diciendo qué esperaba esa etiqueta.
+//       ⚠️ Otro que sale VERDE en el test. Solo lo caza `typecheck`.
+//    📎 <button> → HTMLButtonElement
+//       <a>      → HTMLAnchorElement
+//    → click   →   avisar recibe "click"
+export function EnlaceFuera({ avisar }: { avisar: (t: string) => void }) {
   const manejar = (e: MouseEvent<HTMLAnchorElement>) => avisar(e.type)
   return (
     <a href="/inicio" onClick={manejar}>
@@ -90,185 +130,131 @@ export function EnlaceFuera({ avisar }: { avisar: (tipo: string) => void }) {
     </a>
   )
 }
-// <EnlaceFuera avisar={(t) => console.log(t)} />   // "click"
+<EnlaceFuera avisar={(t) => console.log(t)} />   // "click"
 
-// 3) `EnlaceSinNavegar` — el mismo enlace, pero al hacer clic NO debe navegar.
-//    Ese "no hagas lo tuyo" se lo dices al navegador con una función que viene
-//    dentro del propio evento. Está en la chuleta de arriba.
-//    👉 El starter avisa, pero deja que el navegador se vaya a "/inicio".
-//    <EnlaceSinNavegar avisar={espia} />  →  avisa Y se queda en la página
-export function EnlaceSinNavegar({ avisar }: { avisar: (tipo: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    avisar(e.type)
-  }
-  return (
-    <a href="/inicio" onClick={manejar}>
-      Ir
-    </a>
-  )
-}
-// <EnlaceSinNavegar avisar={(t) => console.log(t)} />   // "click", sin navegar
-
-// 4) `CampoFuera` — otro molde y otra ventanilla: un `<input>` que avisa de la
-//    tecla. El cartel que escribas tiene que decir las dos cosas correctas.
-//    ⚠️ Si te equivocas en la primera mitad no habrá `.key`; si te equivocas en
-//       la segunda, el `<input>` te lo rechaza. Son dos huecos, no uno.
-//    ⚠️ Este se toca en DOS sitios: aquí y en el import de la línea 60. El tipo
-//       que necesitas no está traído, y hay otro homónimo listo para colarse.
-//    👉 El starter deja el cartel del ratón donde se piden teclas.
-//    <CampoFuera avisar={espia} />  →  al pulsar la "a", espia recibe "a"
-export function CampoFuera({ avisar }: { avisar: (tecla: string) => void }) {
+// 3) `CampoFuera` — QUÉ CONSTRUIR: un `<input>` con `onKeyDown`, y el manejador
+//    fuera. Le pasa `e.key` a `avisar`.
+//    ⚠️ ESTE DRILL EXIGE TOCAR EL IMPORT: el evento de teclado no es `MouseEvent`,
+//       se llama `KeyboardEvent`, y también hay que traerlo de `'react'`. Está ya
+//       en la línea de import de arriba — pero si no estuviera, ese sería el
+//       primer paso, no el último.
+//    🔧 STARTER ROTO A PROPÓSITO: trae el cartel del ratón a un evento de teclado,
+//       y por eso da DOS errores que dicen lo mismo desde los dos lados:
+//       `TS2339: Property 'key' does not exist on type 'MouseEvent<…>'` (dentro:
+//       en ese molde no hay teclas) y `TS2322 … '(e: MouseEvent<HTMLInputElement>)
+//       => void' is not assignable to type 'KeyboardEventHandler<HTMLInputElement>'`
+//       (fuera: el hueco esperaba otra cosa). Se curan los dos con un solo cambio.
+//       ⚠️ Y otra vez VERDE en el test.
+//    📎 onClick   → MouseEvent<HTMLInputElement>      → sin `key`
+//       onKeyDown → KeyboardEvent<HTMLInputElement>   → con `key`
+//    → tecleas "a"   →   avisar recibe "a"
+export function CampoFuera({ avisar }: { avisar: (t: string) => void }) {
   const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.key)
   return (
     <input onKeyDown={manejar} />
   )
 }
-// <CampoFuera avisar={(k) => console.log(k)} />   // "a"
+<CampoFuera avisar={(t) => console.log(t)} />   // "a"
 
-// 5) `BotonFueraConId` — el manejador de fuera pide DOS cosas: el `id` y el tipo.
-//    El hueco solo pasa el evento, así que ya no encaja pelado: envuélvelo.
-//    ⚠️ Lo de FUERA se anota; lo que escribas DENTRO del hueco, no — ahí vuelve
-//       a haber molde. En una misma línea puedes tener las dos cosas.
-//    👉 El starter entrega el de fuera pelado, y por ahí no pasa el `id`.
-//    <BotonFueraConId id={7} avisar={espia} />  →  espia recibe (7, "click")
-export function BotonFueraConId({ id, avisar }: { id: number; avisar: (id: number, tipo: string) => void }) {
-  const manejar = (id: number, evento: MouseEvent<HTMLButtonElement>) => avisar(id, evento.type)
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 2 — el argumento de tipo dice sobre QUÉ elemento
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   `MouseEvent<T>` es genérico, y esa `T` no es decoración: es el elemento donde
+ *   cuelga el manejador. De ella sale el tipo de `e.currentTarget`, o sea lo que
+ *   el editor te deja pedirle al elemento que disparó el evento. Rellenarla no es
+ *   burocracia: es lo que hace que `.value` exista o no.
+ *
+ * SINTAXIS
+ *     KeyboardEvent<HTMLInputElement>   →  e.currentTarget es un <input> …
+ *     e.currentTarget.value             →  …y por eso `.value` existe
+ *
+ * 🗣️ LAS PIEZAS
+ *     T (el argumento de tipo) → el elemento donde cuelga el manejador
+ *     e.currentTarget          → el elemento que tiene puesto el manejador
+ *
+ * ⚠️ TRAMPA — LA PEOR DEL ARCHIVO, porque no la caza NINGÚN comando. La firma
+ *    real es `interface KeyboardEvent<T = Element>`: ese `= Element` es un valor
+ *    POR DEFECTO. Si escribes `KeyboardEvent` a secas, el hueco no se queda vacío
+ *    —se rellena solo con `Element`— y el manejador sigue encajando en el `<input>`
+ *    (quien acepta cualquier elemento cabe donde piden uno concreto). Resultado:
+ *    typecheck en 0, test en verde, y el cartel a medias.
+ *    Cómo destaparla, y esto lo puedes hacer TÚ ahora mismo: pídele
+ *    `e.currentTarget.value`. Sobre `Element` no existe. Eso es lo que compras
+ *    rellenando el hueco: que el editor sepa qué hay al otro lado.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 4) `BotonFueraConId` — QUÉ CONSTRUIR: el manejador de fuera necesita DOS cosas,
+//    el evento y el `id` que llega por props, así que declara los dos parámetros.
+//    Como el hueco solo pasa el evento, no puedes entregarlo pelado: envuélvelo
+//    EN el hueco. Avisa con "guardar:click".
+//    ⚠️ Dentro del hueco sigue habiendo tipado contextual; fuera no. Por eso el
+//       `const` va anotado y el envoltorio del hueco no.
+//    🔧 STARTER ROTO A PROPÓSITO: lo entrega pelado. `TS2322 … Target signature
+//       provides too few arguments. Expected 2 or more, but got 1`. Y el test lo
+//       caza además en rojo, porque el `id` nunca llega.
+//    📎 onClick pasa 1 argumento:  (e)
+//       manejar pide 2:            (e, id)
+//    (el `id={id}` del `<button>` ya está puesto y no es parte del ejercicio:
+//     está para que el elemento lleve su propio id, como en cualquier página)
+//    → click con id="guardar"   →   avisar recibe "guardar:click"
+export function BotonFueraConId({ id, avisar }: { id: string; avisar: (t: string) => void }) {
+  const manejar = (e: MouseEvent<HTMLButtonElement>, idBoton: string) => avisar(`${idBoton}:${e.type}`)
   return (
-    <button onClick={(e) => manejar(id, e)}>
+    <button id={id} onClick={(e) => manejar(e, id)}>
       Avisar
     </button>
   )
 }
-// <BotonFueraConId id={7} avisar={(i, t) => console.log(i, t)} />   // 7 "click"
+<BotonFueraConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
 
-// 6) `EnlaceCompleto` — el cierre, y van juntas las tres cosas del archivo: el
-//    destino llega por props y se pinta en el `href`; al clic corta la navegación
-//    y avisa con el destino y el tipo del suceso.
-//    👉 El starter tiene el cartel puesto y nada más: ni corta ni pasa el destino.
-//    <EnlaceCompleto destino="/perfil" avisar={espia} />  →  ("/perfil", "click")
-export function EnlaceCompleto({ destino, avisar }: { destino: string; avisar: (destino: string, tipo: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    avisar(destino, e.type)
-  }
+// 5) `CampoLeeValor` — QUÉ CONSTRUIR: un `<input>` cuyo manejador, fuera y
+//    anotado, le pase a `avisar` lo que hay ESCRITO en el campo:
+//    `e.currentTarget.value`.
+//    ⚠️ El hueco aquí es `onKeyUp`, no `onKeyDown`, y no es capricho: en el
+//       `keyDown` la tecla todavía NO ha entrado en el campo, así que el valor
+//       iría siempre una letra por detrás. Al soltar ya está dentro.
+//    🔧 STARTER ROTO A PROPÓSITO: escribe `KeyboardEvent` sin el argumento de
+//       tipo, y ahí se rellena solo con `Element`. `TS2339: Property 'value' does
+//       not exist on type 'EventTarget & Element'`. Es la trampa de arriba, en
+//       vivo: sin ese hueco relleno, el editor no sabe que al otro lado hay un
+//       `<input>`. ⚠️ El test sale VERDE — al ejecutar el `.value` está ahí.
+//    📎 KeyboardEvent                        → currentTarget: Element   (sin .value)
+//       KeyboardEvent<HTMLInputElement>      → currentTarget: <input>   (con .value)
+//    → escribes "hola" y pulsas una tecla   →   avisar recibe "hola"
+export function CampoLeeValor({ avisar }: { avisar: (t: string) => void }) {
+  const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.currentTarget.value)
   return (
-    <a href={destino} onClick={manejar}>
-      Ir
-    </a>
+    <input onKeyUp={manejar} />
   )
 }
-// <EnlaceCompleto destino="/perfil" avisar={(d, t) => console.log(d, t)} />
+<CampoLeeValor avisar={(t) => console.log(t)} />   // "hola"
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * Cuando los 6 estén en verde: has escrito `MouseEvent<HTMLButtonElement>` cinco
- * veces. En el 04 le pones NOMBRE a eso una sola vez y dejas de repetirlo — y de
- * paso el manejador deja de nacer en el componente y empieza a llegar por props.
- * ───────────────────────────────────────────────────────────────────────────── */
-
-/* =============================================================================
- * 🔁 BLOQUE V — REFUERZO: qué significa `void`
- * =============================================================================
- *
- * Montado sobre tu pregunta: «no entiendo el uso del `void` si perfectamente el
- * retorno podría ser un string». La intuición es CORRECTA — el retorno puede ser
- * un string. Lo que falla es lo que crees que promete la palabra:
- *
- *     ❌ "no devuelvas nada"
- *     ✅ "devuelvas lo que devuelvas, nadie va a mirarlo"
- *
- *
- * 🧠 ANALOGÍA — el timbre y la calculadora
- * ----------------------------------------------------------------------------
- * El timbre lo pulsas por lo que HACE: suena. Nadie pregunta "¿qué me ha devuelto
- * el timbre?". La calculadora la usas por lo que TE DA: si no te da un número, no
- * sirve para nada. Un manejador es un timbre, no una calculadora.
- *
- *
- * ▸ 4 drills + 1 experimento, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/10-eventos-formularios/exercise-03.test.tsx
- * ===========================================================================*/
-
-// V1) `Aviso` + `ejecutar` — el tipo de una función que se llama por lo que HACE.
-//     `Aviso` no recibe nada y no devuelve nada. `ejecutar` recibe una función
-//     así y la llama UNA vez; lo que salga de ella, se tira.
-//     👉 El starter nombró la SALIDA en vez de la función entera (lo mismo que te
-//        pasó en el drill 1 del 04), y `ejecutar` no llama a nadie.
-//     ejecutar(espia)  →  espia se llama 1 vez
-export type Aviso = () => void
-
-// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
-export function ejecutar(accion: Aviso): void {
-  return accion()
-}
-ejecutar(() => console.log('sonó'))   // imprime "sonó"
-
-// V2) `Medida` + `medirDoble` — el espejo, para que se vea el contraste.
-//     `Medida` no recibe nada y devuelve un `number`. `medirDoble` la llama y
-//     devuelve el DOBLE de lo que salga.
-//     ⚠️ Aquí sí se mira lo que sale, y por eso no puede ser `void`: si nadie
-//        pudiera mirarlo, no habría nada que duplicar.
-//     👉 El starter devuelve un 0 fijo sin llamar a nadie.
-//     medirDoble(() => 21)  →  42
-export type Medida = () => number
-
-// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
-export function medirDoble(m: Medida): number {
-  return m() * 2
-}
-medirDoble(() => 21)   // 42
-
-// V3) `apuntar` — TU PREGUNTA, en código. `apuntar` es de tipo `Aviso`, o sea
-//     `=> void`. Su cuerpo tiene que ser `registro.push('visita')`, y resulta que
-//     `.push` DEVUELVE UN NÚMERO (la nueva longitud de la lista).
-//     ⚠️ Antes de escribirlo, predice: ¿cuántos errores da `pnpm typecheck`?
-//        Apunta tu respuesta, escríbelo, y compruébalo. Ahí está la lección.
-//     👉 El starter tiene el cuerpo vacío: no apunta nada.
-//     apuntar()  →  registro pasa a contener 'visita'
-// 📌 type Aviso = () => void          ← el de V1, para no subir a buscarlo
-// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
-export const registro: string[] = []
-
-// eslint-disable-next-line react-refresh/only-export-components -- archivo de ejercicios: aquí conviven funciones sueltas con componentes
-export const apuntar: Aviso = () => {
-  return registro.push('visita')
-}
-apuntar()   // 1
-
-// V4) `BotonTimbre` — de vuelta a lo tuyo. Talla `ManejadorSimple`: recibe el
-//     evento de clic de un `<button>` y no devuelve nada. Anota el `const` con él
-//     y entrégaselo al hueco, como en el drill 1 de este archivo.
-//     ⚠️ Es el mismo `=> void` de V1, con un parámetro delante. Nada más.
-//     👉 El starter promete un `string` a la salida, y de ahí no sale ninguno.
-//        Ojo: este drill sale VERDE en el test aunque esté mal. Lo caza typecheck.
-//     <BotonTimbre avisar={espia} />  →  espia recibe "click"
-export type ManejadorSimple = (e: MouseEvent<HTMLButtonElement>) => void
-
-export function BotonTimbre({ avisar }: { avisar: (tipo: string) => void }) {
-  const manejar: ManejadorSimple = (e) => avisar(e.type)
+// 6) `BarraFuera` — QUÉ CONSTRUIR: el cierre. Dos elementos en el mismo
+//    componente, cada uno con SU manejador fuera y SU cartel: un `<button>` con
+//    texto "Guardar" que avisa "boton:click", y un `<a href="/salir">Salir</a>`
+//    que avisa "enlace:click".
+//    🔧 STARTER ROTO A PROPÓSITO: escribe un solo manejador y lo cuelga de los
+//       dos. `TS2322` en el `<a>`, porque el cartel dice `HTMLButtonElement`; y el
+//       test en rojo, porque al pulsar "Salir" avisa "boton:click".
+//    📎 <button> → MouseEvent<HTMLButtonElement>
+//       <a>      → MouseEvent<HTMLAnchorElement>
+//    → click en Guardar → "boton:click"   ·   click en Salir → "enlace:click"
+export function BarraFuera({ avisar }: { avisar: (t: string) => void }) {
+  const alBoton = (e: MouseEvent<HTMLButtonElement>) => avisar(`Boton:${e.type}`)
+  const alEnlace = (e: MouseEvent<HTMLAnchorElement>) => avisar(`Enlace:${e.type}`)
   return (
-    <button onClick={manejar}>
-      Timbre
-    </button>
+    <>
+      <button onClick={alBoton}>Guardar</button>
+      <a href="/salir" onClick={alEnlace}>Salir</a>
+    </>
   )
 }
-<BotonTimbre avisar={(t) => console.log(t)} />   // "click"
+<BarraFuera avisar={(t) => console.log(t)} />
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * 🔬 EXPERIMENTO — no lo entregas, lo corres y lo deshaces.
- *
- * Ya has visto que DEVOLVER algo a un `=> void` está permitido. Ahora mira lo
- * único que `void` sí te prohíbe. Pega esto al final del archivo y corre
- * `pnpm typecheck`:
- *
- *     const cuantos: number = ejecutar(apuntar)
- *
- * `apuntar` devuelve un número de verdad (lo viste en V3) y `ejecutar` lo llama.
- * Aun así no puedes recogerlo. Lee el error y quédate con la frase:
- *
- *     `void` no prohíbe DEVOLVER. Prohíbe USAR lo devuelto.
- *
- * Por eso un manejador se tipa `=> void` y no `=> string`: no es que no pueda
- * salir un string — es que React no lo va a recoger, y el tipo lo dice en alto.
- * Borra la línea cuando acabes.
+ * Cuando los 6 estén en verde —los dos comandos, no solo el test— llevarás
+ * escrito `MouseEvent<HTMLButtonElement>` media docena de veces. En el 04 lo
+ * escribes UNA y le pones nombre.
  * ───────────────────────────────────────────────────────────────────────────── */

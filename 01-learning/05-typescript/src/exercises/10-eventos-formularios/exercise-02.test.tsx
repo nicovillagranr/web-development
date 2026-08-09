@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {
   BotonPelado,
   BotonAvisaTipo,
@@ -10,49 +11,49 @@ import {
 } from './exercise-02'
 
 describe('10-eventos-formularios / exercise-02 — el evento llega solo', () => {
-  it('1) BotonPelado — se entrega, no se ejecuta al pintar', () => {
-    const avisar = vi.fn<() => void>()
-    render(<BotonPelado avisar={avisar} />)
-    expect(avisar).not.toHaveBeenCalled() // pintar no es cocinar
-    fireEvent.click(screen.getByRole('button'))
-    expect(avisar).toHaveBeenCalledTimes(1)
+  it('1) BotonPelado — se entrega, no se llama al pintar', async () => {
+    const espia = vi.fn()
+    render(<BotonPelado alPulsar={espia} />)
+    expect(espia).not.toHaveBeenCalled() // pintar no es pulsar
+    await userEvent.click(screen.getByRole('button', { name: 'Avisar' }))
+    expect(espia).toHaveBeenCalledTimes(1)
   })
 
-  it('2) BotonAvisaTipo — el nombre del suceso sale del evento', () => {
-    const avisar = vi.fn<(tipo: string) => void>()
-    render(<BotonAvisaTipo avisar={avisar} />)
-    fireEvent.click(screen.getByRole('button'))
-    expect(avisar).toHaveBeenCalledWith('click')
+  it('2) BotonAvisaTipo — pasa el CAMPO type, no la caja entera', async () => {
+    const espia = vi.fn()
+    render(<BotonAvisaTipo avisar={espia} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Avisar' }))
+    expect(espia).toHaveBeenCalledWith('click')
   })
 
-  it('3) BotonAvisaDobleClic — el hueco que eliges decide el suceso', () => {
-    const avisar = vi.fn<(tipo: string) => void>()
-    render(<BotonAvisaDobleClic avisar={avisar} />)
-    fireEvent.click(screen.getByRole('button'))
-    expect(avisar).not.toHaveBeenCalled() // un clic suelto no es un doble clic
-    fireEvent.doubleClick(screen.getByRole('button'))
-    expect(avisar).toHaveBeenCalledWith('dblclick')
+  it('3) BotonAvisaDobleClic — el hueco que eliges decide el suceso', async () => {
+    const espia = vi.fn()
+    render(<BotonAvisaDobleClic avisar={espia} />)
+    await userEvent.dblClick(screen.getByRole('button', { name: 'Avisar' }))
+    expect(espia).toHaveBeenCalledTimes(1)
+    expect(espia).toHaveBeenCalledWith('dblclick') // lo trae el evento, no lo escribes tú
   })
 
-  it('4) CampoAvisaTecla — cada molde da lo suyo: el del teclado, la tecla', () => {
-    const avisar = vi.fn<(tecla: string) => void>()
-    render(<CampoAvisaTecla avisar={avisar} />)
-    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'a' })
-    expect(avisar).toHaveBeenCalledWith('a') // la tecla, no "keydown"
+  it('4) CampoAvisaTecla — otro elemento, otro hueco, otro evento', async () => {
+    const espia = vi.fn()
+    render(<CampoAvisaTecla avisar={espia} />)
+    await userEvent.type(screen.getByRole('textbox'), 'a')
+    expect(espia).toHaveBeenCalledWith('a')
   })
 
-  it('5) BotonAvisaNativo — dentro del sobre de React viene el del navegador', () => {
-    const avisar = vi.fn<(nativo: MouseEvent) => void>()
-    render(<BotonAvisaNativo avisar={avisar} />)
-    fireEvent.click(screen.getByRole('button'))
-    expect(avisar).toHaveBeenCalledTimes(1)
-    expect(avisar.mock.calls[0]?.[0]).toBeInstanceOf(MouseEvent) // el de verdad
+  it('5) BotonAvisaNativo — entrega la carta de dentro, no el envoltorio', async () => {
+    const espia = vi.fn()
+    render(<BotonAvisaNativo avisar={espia} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Avisar' }))
+    expect(espia).toHaveBeenCalledTimes(1)
+    const recibido = espia.mock.calls[0]?.[0]
+    expect(recibido).toBeInstanceOf(MouseEvent) // el del navegador, de verdad
   })
 
-  it('6) BotonAvisaConId — dentro del molde tienes las dos cosas', () => {
-    const avisar = vi.fn<(id: number, tipo: string) => void>()
-    render(<BotonAvisaConId id={7} avisar={avisar} />)
-    fireEvent.click(screen.getByRole('button'))
-    expect(avisar).toHaveBeenCalledWith(7, 'click') // el id era tuyo, el tipo del evento
+  it('6) BotonAvisaConId — dentro del hueco tienes las props Y el evento', async () => {
+    const espia = vi.fn()
+    render(<BotonAvisaConId id="guardar" avisar={espia} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Avisar' }))
+    expect(espia).toHaveBeenCalledWith('guardar:click')
   })
 })
