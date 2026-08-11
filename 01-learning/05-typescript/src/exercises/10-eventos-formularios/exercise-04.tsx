@@ -38,8 +38,12 @@
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-04.test.tsx
  *     pnpm typecheck
  *
+ *   Todos los starters de este archivo están rotos a propósito.
+ *   ¿Atascado? Las pistas están en `exercise-04.pistas.md`, de una en una.
+ *
  * ⚠️ COMO EN EL 03, EL TEST NO BASTA: un alias mal tallado no rompe la ejecución.
- *    Los starters de los drills 1, 2, 4 y 5 salen VERDES. Corre LOS DOS comandos.
+ *    **4 de los 6 starters pasan el test con el fallo dentro**, y no te digo
+ *    cuáles. Corre LOS DOS comandos.
  *
  * 📝 Las traces van comentadas: en `.tsx` escribir `<Componente />` solo fabrica
  *    un objeto que lo describe, no lo ejecuta.
@@ -86,23 +90,15 @@ import type { MouseEvent, KeyboardEvent, MouseEventHandler, KeyboardEventHandler
  *    Los dos compilan como declaración; el error salta después, al usarlos.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `ManejadorDeClic` + `BotonConSello` — QUÉ CONSTRUIR: declara el alias del
-//    manejador de clic de un `<button>`, y úsalo poniéndoselo al `const` de
-//    `BotonConSello`. Con el alias puesto NO anotes la `e`: llega tipada sola.
-//    🔧 STARTER ROTO A PROPÓSITO: el alias nombra el EVENTO en vez del MANEJADOR,
-//       y eso desencadena TRES errores en cascada — léelos en orden, cuentan una
-//       historia: `TS2322: Type '(e: any) => void' is not assignable to type
-//       'ManejadorDeClic'` (le das una función donde el alias dice que va un
-//       objeto) → `TS7006: Parameter 'e' implicitly has an 'any' type` (como el
-//       alias no es una función, no hay contexto y la `e` se queda sin tipo) →
-//       `TS2322: Type 'ManejadorDeClic' is not assignable to type
-//       'MouseEventHandler<HTMLButtonElement>'` (y por eso el `onClick` lo rechaza).
-//       Los tres se curan con un solo cambio. ⚠️ Test VERDE: solo lo caza typecheck.
-//    💡 Fíjate en que el error dice `ManejadorDeClic`, con tu nombre. Ponerle
-//       nombre a un tipo también se lo pone a los mensajes de error.
-//    📎 el EVENTO:    MouseEvent<HTMLButtonElement>
-//       el MANEJADOR: (e: MouseEvent<HTMLButtonElement>) => void
-//    → click   →   avisar recibe "click"
+// 1) `ManejadorDeClic` + `BotonConSello` — el botón "Avisar" de siempre, que avisa
+//    con el tipo del evento. Lo nuevo es que el tipo del manejador ya no se escribe
+//    en el parámetro: se declara UNA vez ahí arriba como alias, y se le estampa al
+//    `const`. Con el alias puesto no anotes la `e` y mira qué pasa.
+//    El alias del starter no está tallado sobre lo que hay que nombrar, y por eso
+//    todo lo que viene después se cae en cascada. Lee los errores EN ORDEN: cuentan
+//    una historia, y los cura un solo cambio.
+//    💡 De propina, fíjate en que los mensajes de error ahora dicen
+//       `ManejadorDeClic`. Ponerle nombre a un tipo también se lo pone a sus fallos.
 export type ManejadorDeClic = (evento: MouseEvent<HTMLButtonElement>) => void
 
 export function BotonConSello({ avisar }: { avisar: (t: string) => void }) {
@@ -115,19 +111,11 @@ export function BotonConSello({ avisar }: { avisar: (t: string) => void }) {
 }
 <BotonConSello avisar={(t) => console.log(t)} />   // "click"
 
-// 2) `ManejadorDeEnlace` + `EnlaceConSello` — QUÉ CONSTRUIR: el segundo alias, el
-//    de los `<a>`, y móntalo igual sobre `<a href="/inicio">Ir</a>`.
-//    ⚠️ Aquí se ve por qué un alias no vale para todo: cambia una sola palabra
-//       dentro de `<…>` y ya no entra en la misma etiqueta.
-//    🔧 STARTER ROTO A PROPÓSITO: talló el alias nuevo copiando el de los botones.
-//       `TS2322: Type 'ManejadorDeEnlace' is not assignable to type
-//       'MouseEventHandler<HTMLAnchorElement>'`. Ojo a la ironía del mensaje: el
-//       alias se LLAMA "DeEnlace" y por dentro dice botón. El nombre no comprueba
-//       nada; lo que cuenta es lo que hay a la derecha del `=`.
-//       ⚠️ Test VERDE otra vez.
-//    📎 <button> → MouseEvent<HTMLButtonElement>
-//       <a>      → MouseEvent<HTMLAnchorElement>
-//    → click   →   avisar recibe "click"
+// 2) `ManejadorDeEnlace` + `EnlaceConSello` — el segundo alias, ahora para un
+//    `<a href="/inicio">Ir</a>`, montado igual que el anterior y avisando igual.
+//    Alguien talló este sello copiando el de los botones y cambiándole el nombre.
+//    Se llama "DeEnlace" y compila tan feliz — el nombre de un alias no comprueba
+//    nada, lo que cuenta es lo que hay a la derecha del `=`.
 export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
 
 export function EnlaceConSello({ avisar }: { avisar: (t: string) => void }) {
@@ -140,19 +128,11 @@ export function EnlaceConSello({ avisar }: { avisar: (t: string) => void }) {
 }
 <EnlaceConSello avisar={(t) => console.log(t)} />   // "click"
 
-// 3) `ManejadorDeTecla` + `CampoConSello` — QUÉ CONSTRUIR: el tercer alias, el del
-//    teclado sobre un `<input>` con `onKeyDown`, montado igual que los dos
-//    anteriores. Avisa con `e.key`.
-//    ⚠️ El alias tiene que tener los MISMOS huecos que el sitio donde lo estampas.
-//    🔧 STARTER ROTO A PROPÓSITO: el alias pide DOS parámetros —el evento y la
-//       tecla suelta— y el hueco solo pasa uno. `TS2322: Type 'ManejadorDeTecla'
-//       is not assignable to type 'KeyboardEventHandler<HTMLInputElement>'`, y
-//       debajo la línea que lo explica: `Target signature provides too few
-//       arguments. Expected 2 or more, but got 1`. Y el test sale ROJO además,
-//       porque ese segundo parámetro nunca llega: avisa "a-undefined".
-//    📎 onKeyDown pasa 1 argumento:  (e)
-//       el alias del starter pide 2: (e, tecla)
-//    → tecleas "a"   →   avisar recibe "a"
+// 3) `ManejadorDeTecla` + `CampoConSello` — el tercer alias, el del teclado sobre
+//    un `<input>`, montado igual que los dos anteriores: al teclear, `avisar`
+//    recibe la tecla pulsada.
+//    Este alias está tallado con una pieza de más, así que ya no encaja donde lo
+//    vas a estampar. Cuenta lo que pide el alias y lo que da el sitio.
 export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 
 export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
@@ -197,19 +177,11 @@ export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
  *    Es la trampa de la TEORÍA 1 otra vez, ahora con el nombre de React.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `BotonConSelloDeReact` — QUÉ CONSTRUIR: el mismo botón del drill 1, pero
-//    usando el alias que trae React en vez de declarar uno tuyo. Está en el
-//    import de arriba.
-//    🔧 STARTER ROTO A PROPÓSITO: pone el alias del manejador en el sitio del
-//       evento, o sea anotando la `e`. Eso dice que `e` es una función, y por eso
-//       `TS2339: Property 'type' does not exist on type
-//       'MouseEventHandler<HTMLButtonElement>'` — claro que no: las funciones no
-//       tienen `.type`. Y detrás, el segundo: `TS2322: Type '(e:
-//       MouseEventHandler<…>) => void' is not assignable to type
-//       'MouseEventHandler<…>'`. ⚠️ Test VERDE.
-//    📎 ❌ (e: MouseEventHandler<HTMLButtonElement>) => …
-//       ✅ const manejar: MouseEventHandler<HTMLButtonElement> = (e) => …
-//    → click   →   avisar recibe "click"
+// 4) `BotonConSelloDeReact` — el mismo botón del drill 1, pero deja de tallar
+//    sellos: React ya trae los suyos y este está en el import de arriba.
+//    El starter lo tiene puesto en el sitio equivocado. Lee bien el primero de los
+//    dos errores: te está diciendo qué cree TypeScript que es `e`, y con eso solo
+//    ya sabes dónde está la etiqueta mal colocada.
 export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
   const manejar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type)
   return (
@@ -220,20 +192,14 @@ export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 }
 <BotonConSelloDeReact avisar={(t) => console.log(t)} />   // "click"
 
-// 5) `CampoConSelloDeReact` — QUÉ CONSTRUIR: lo mismo sobre el `<input>` con
-//    `onKeyDown`, con el alias de fábrica del teclado. Aplica la regla del nombre:
-//    si el evento es `KeyboardEvent<T>`, el manejador es…
-//    ⚠️ ESTE DRILL EXIGE TOCAR EL IMPORT: el alias que necesitas NO está en la
-//       línea de import de arriba. Añádelo tú — es la primera vez en el bloque que
-//       te toca a ti, y saber qué traer es parte del ejercicio.
-//    🔧 STARTER ROTO A PROPÓSITO: se dejó la terminación `Handler`, así que le
-//       está diciendo al `const` que es un EVENTO. Mismo trío en cascada que el
-//       drill 1: `TS2322: Type '(e: any) => void' is not assignable to type
-//       'KeyboardEvent<HTMLInputElement>'` → `TS7006` en la `e` → y el rechazo del
-//       hueco. ⚠️ Test VERDE.
-//    📎 KeyboardEvent<HTMLInputElement>          ← el objeto que llega
-//       KeyboardEventHandler<HTMLInputElement>   ← la función que lo recibe
-//    → tecleas "a"   →   avisar recibe "a"
+// 5) `CampoConSelloDeReact` — lo mismo sobre el `<input>` que avisa con la tecla,
+//    también con el sello de fábrica. Aquí es donde la regla del nombre que acabas
+//    de leer se gana el sueldo: dedúcelo tú, no lo busques.
+//    Restricción: el alias que necesitas NO está en el import de arriba. Añádelo.
+//    Es la primera vez en el bloque que te toca a ti, y saber qué traer es parte
+//    del ejercicio.
+//    (El `const` del starter ya lleva etiqueta y aun así se cae en la misma
+//     cascada que el drill 1: tener etiqueta no basta si no es la que toca.)
 export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
   // Importé el manejador de React: `KeyboardEventHandler<HTMLInputElement>` y lo apliqué al drill
   const manejar: KeyboardEventHandler<HTMLInputElement> = (e) => avisar(e.key)
@@ -243,17 +209,12 @@ export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 }
 <CampoConSelloDeReact avisar={(t) => console.log(t)} />   // "a"
 
-// 6) `BarraConSellos` — QUÉ CONSTRUIR: el cierre. Un `<button>` "Guardar" que
-//    avisa "boton:click" y un `<a href="/salir">Salir</a>` que avisa
-//    "enlace:click", cada uno con su manejador. Usa el alias de React para el
-//    botón y TU `ManejadorDeEnlace` del drill 2 para el enlace — mézclalos a
-//    propósito, para ver que son intercambiables: los dos son solo nombres.
-//    🔧 STARTER ROTO A PROPÓSITO: escribe un solo manejador y lo cuelga de los
-//       dos elementos. `TS2322` en el `<a>`, y el test en ROJO porque al pulsar
-//       "Salir" avisa "boton:click".
-//    📎 botón:  MouseEventHandler<HTMLButtonElement>   ← el de React
-//       enlace: ManejadorDeEnlace                      ← el tuyo, del drill 2
-//    → click en Guardar → "boton:click"   ·   click en Salir → "enlace:click"
+// 6) `BarraConSellos` — el cierre. Un `<button>` "Guardar" que avisa "boton:click"
+//    y un `<a href="/salir">Salir</a>` que avisa "enlace:click", cada uno con su
+//    manejador. El starter intenta apañarse con uno solo para los dos.
+//    Restricción, y es lo que se demuestra aquí: usa el sello de React en el botón
+//    y TU `ManejadorDeEnlace` del drill 2 en el enlace. Mézclalos a propósito, para
+//    comprobar que son intercambiables — los dos son solo nombres de lo mismo.
 
 // Combiné ambos handlers en un solo que proporciona React y los apliqué a ambas etiquetas HTML
 export function BarraConSellos({ avisar }: { avisar: (t: string) => void }) {
@@ -283,7 +244,7 @@ export function BarraConSellos({ avisar }: { avisar: (t: string) => void }) {
  * En todos, el cuerpo viene MAL a propósito. Lo escribes tú.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// T1) `doblar` — QUÉ CONSTRUIR: recibe un número y devuelve el doble.
+// T1) `doblar` — recibe un número y devuelve el doble.
 //    La etiqueta ya está puesta; tú solo escribes el cuerpo.
 //    👀 FÍJATE EN LA `n`: en la línea de abajo no pone `n: number` por ningún
 //       lado. Y aun así puedes multiplicarla como número. Pregúntate de dónde
@@ -296,7 +257,7 @@ export const doblar: Duplicador = (n) => n * 2
 // console.log(doblar(4))   // 8
 
 
-// T2) `triplicar` — QUÉ CONSTRUIR: lo mismo, por tres. Pero aquí NO HAY ETIQUETA:
+// T2) `triplicar` — lo mismo, por tres. Pero aquí NO HAY ETIQUETA:
 //    el `const` va desnudo y el tipo se escribe en el parámetro.
 //    👀 EL CONTRASTE ES EL EJERCICIO: T1 y T2 hacen el mismo trabajo y los dos
 //       están bien tipados. Lo único que cambia es DÓNDE pusiste la información:
@@ -307,7 +268,7 @@ export const triplicar = (n: number) => n * 3
 // console.log(triplicar(4))   // 12
 
 
-// T3) `gritar` — QUÉ CONSTRUIR: recibe un texto y lo devuelve en MAYÚSCULAS.
+// T3) `gritar` — recibe un texto y lo devuelve en MAYÚSCULAS.
 //    Etiqueta puesta, como en T1.
 //    📌 type Transformador = (t: string) => string
 //    👀 La `t` va desnuda otra vez, y aun así `.toUpperCase()` te autocompleta al
@@ -321,7 +282,7 @@ export const gritar: Transformador = (t) => t.toUpperCase()
 // console.log(gritar("hola"))   // "HOLA"
 
 
-// T4) `repetir` — QUÉ CONSTRUIR: repite un texto tantas veces como diga el número.
+// T4) `repetir` — repite un texto tantas veces como diga el número.
 //    Dos parámetros, los dos desnudos.
 //    📌 type Repetidor = (t: string, veces: number) => string
 //    👀 La etiqueta no tipa solo el primero: tipa TODOS, y por POSICIÓN. El primer
@@ -339,7 +300,7 @@ export const repetir: Repetidor = (t, veces) => t.repeat(veces)
 // console.log(repetir("ab", 3))   // "ababab"
 
 
-// T5) `BotonEscalera` — QUÉ CONSTRUIR: vuelve el evento. Un `<button>` "Pulsa"
+// T5) `BotonEscalera` — vuelve el evento. Un `<button>` "Pulsa"
 //    cuyo manejador avisa con el TIPO del suceso.
 //    📌 type AlPulsar = (e: MouseEvent<HTMLButtonElement>) => void
 //    👀 La `e` va desnuda, exactamente igual que la `n` de T1. Mismo mecanismo,
@@ -363,14 +324,12 @@ export function BotonEscalera({ avisar }: { avisar: (t: string) => void }) {
 // <BotonEscalera avisar={(t) => console.log(t)} />   // "click"
 
 
-// T6) `BotonEscaleraDeReact` — QUÉ CONSTRUIR: el mismo botón, pero sin alias
+// T6) `BotonEscaleraDeReact` — el mismo botón, pero sin alias
 //    tuyo: con el que trae React, que ya está en el import de arriba.
 //    👀 AQUÍ FALTA LA ETIQUETA. Es el único peldaño donde TypeScript se queja, y
 //       la queja es justo la prueba de la escalera: sin etiqueta en el `const` y
 //       sin anotación en el parámetro, no tiene de dónde deducir la `e`.
-//    🔧 El `const` va desnudo:
-//       `TS7006: Parameter 'e' implicitly has an 'any' type.`
-//       El cuerpo YA ESTÁ BIEN — no lo toques. Se cura poniendo la etiqueta.
+//    🔧 El `const` va desnudo. El cuerpo YA ESTÁ BIEN — no lo toques.
 //       ⚠️ Y el test sale VERDE: en ejecución la `e` es el evento de verdad.
 //          Este peldaño solo lo caza `pnpm typecheck`.
 //    → click   →   avisar recibe "click"
@@ -383,7 +342,7 @@ export function BotonEscaleraDeReact({ avisar }: { avisar: (t: string) => void }
     </button>
   )
 }
-// <BotonEscaleraDeReact avisar={(t) => console.log(t)} />   // "click"
+<BotonEscaleraDeReact avisar={(t) => console.log(t)} />   // "click"
 /* ─────────────────────────────────────────────────────────────────────────────
  * 🗣️ DILO EN VOZ ALTA antes de pasar al 05 — sin mirar arriba:
  *   · En `const f: Alias = (x) => …`, ¿qué describe `Alias`?

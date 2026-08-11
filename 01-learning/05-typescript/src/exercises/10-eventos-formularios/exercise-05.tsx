@@ -35,7 +35,13 @@
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-05.test.tsx
- *     pnpm typecheck     ← el starter del 2 sale VERDE en el test. Corre los dos.
+ *     pnpm typecheck
+ *
+ *   Todos los starters de este archivo están rotos a propósito.
+ *   ¿Atascado? Las pistas están en `exercise-05.pistas.md`, de una en una.
+ *
+ * ⚠️ Corre LOS DOS comandos. 1 de los 6 starters pasa el test con el fallo dentro,
+ *    y no te digo cuál.
  *
  * 📝 Las traces van comentadas: en `.tsx` escribir `<Componente />` solo fabrica
  *    un objeto que lo describe, no lo ejecuta.
@@ -83,46 +89,39 @@ export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
  *                                      evento: `alPulsar` se queda sin argumento
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `BotonRecibeManejador` — QUÉ CONSTRUIR: un `<button>` "Avisar" cuyo manejador
-//    NO nace aquí: llega por la prop `alPulsar`, ya tipada con el alias. Entrégala
-//    al hueco tal cual.
-//    🔧 STARTER ROTO A PROPÓSITO: la envuelve sin necesidad y la llama sin
-//       argumentos. `TS2554: Expected 1 arguments, but got 0`, y el test en ROJO
-//       porque `alPulsar` recibe `undefined` en vez del evento.
-//    📎 onClick espera: (e: MouseEvent<HTMLButtonElement>) => void
-//       alPulsar:       ManejadorDeClic, que ES exactamente eso  → encajan
-//    → click   →   alPulsar recibe el evento, y su `type` es "click"
+// 1) `BotonRecibeManejador` — un `<button>` "Avisar" cuyo manejador ya no nace
+//    aquí dentro: llega por la prop `alPulsar`, ya tipada con el alias. El
+//    componente no decide qué pasa al pulsar, solo dónde se cuelga.
+//    Al hacer clic, `alPulsar` tiene que ejecutarse y recibir el evento entero.
+//    El starter se lo pasa por el camino: llega, pero llega vacío.
 export function BotonRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }) {
-  return <button onClick={() => alPulsar()}>Avisar</button>
+  return (
+    <button onClick={alPulsar}>
+      Avisar
+    </button>
+  )
 }
-// <BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />
+<BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />
 
-// 2) `EnlaceRecibeManejador` — QUÉ CONSTRUIR: lo mismo sobre
-//    `<a href="/inicio">Ir</a>`. Cambia el elemento, así que cambia el alias de
-//    la prop.
-//    🔧 STARTER ROTO A PROPÓSITO: tipa la prop con el alias del botón.
-//       `TS2322: Type 'ManejadorDeClic' is not assignable to type
-//       'MouseEventHandler<HTMLAnchorElement>'`.
-//       ⚠️ ES EL ÚNICO DRILL DEL ARCHIVO QUE SALE VERDE EN EL TEST: al ejecutar
-//       funciona igual de bien con el alias equivocado. Solo lo caza typecheck.
-//    📎 <button> → ManejadorDeClic
-//       <a>      → ManejadorDeEnlace
-//    → click   →   alPulsar recibe el evento
-export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }) {
-  return <a href="/inicio" onClick={alPulsar}>Ir</a>
+// 2) `EnlaceRecibeManejador` — lo mismo sobre `<a href="/inicio">Ir</a>`. Cambia
+//    el elemento, y por tanto cambia lo que se puede prometer sobre la prop.
+//    Al hacer clic, `alPulsar` recibe el evento.
+export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlace }) {
+  return (
+    <a href="/inicio" onClick={alPulsar}>
+      Ir
+    </a>
+  )
 }
 // <EnlaceRecibeManejador alPulsar={(e) => console.log(e.type)} />
 
-// 3) `CampoRecibeManejador` — QUÉ CONSTRUIR: un `<input>` que recibe por props un
-//    manejador de teclado y lo cuelga del hueco `onKeyDown`.
-//    🔧 STARTER ROTO A PROPÓSITO: la prop está bien tipada, pero la cuelga del
-//       hueco equivocado — `onClick`. `TS2322 … 'ManejadorDeTecla' is not
-//       assignable to type 'MouseEventHandler<HTMLInputElement>'`, y el test en
-//       ROJO porque al teclear no salta nada.
-//    📎 ManejadorDeTecla recibe KeyboardEvent  →  su hueco es onKeyDown
-//    → tecleas "a"   →   alTeclear recibe el evento, y su `key` es "a"
+// 3) `CampoRecibeManejador` — un `<input>` que recibe por props un manejador de
+//    TECLADO. La prop ya viene bien tipada; el problema es dónde la han colgado,
+//    porque ahora mismo al teclear no salta nada.
 export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecla }) {
-  return <input onClick={alTeclear} />
+  return (
+    <input onKeyDown={alTeclear} />
+  )
 }
 // <CampoRecibeManejador alTeclear={(e) => console.log(e.key)} />
 
@@ -155,46 +154,37 @@ export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecl
  *    no lo estudies — es de la carpeta 11. Aquí solo se ve pasar.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `BotonConIdRecibeManejador` — QUÉ CONSTRUIR: el hijo recibe un `id` por props
-//    y un manejador que pide DOS cosas, el evento y ese `id`. Como el hueco solo
-//    pasa el evento, envuelve y añade tú el `id`.
-//    🔧 STARTER ROTO A PROPÓSITO: entrega el manejador pelado, como si encajara.
-//       `TS2322: Type 'ManejadorConId' is not assignable to type
-//       'MouseEventHandler<HTMLButtonElement>'`, y debajo la línea que lo explica:
-//       `Target signature provides too few arguments. Expected 2 or more, but got
-//       1`. El test también en ROJO, porque el `id` llega `undefined`.
-//    📎 onClick pasa 1 argumento:   (e)
-//       ManejadorConId pide 2:      (e, id)
-//    → click con id="guardar"   →   alPulsar recibe el evento Y "guardar"
+// 4) `BotonConIdRecibeManejador` — un manejador reutilizable no puede saber sobre
+//    CUÁL de los botones se pulsó: ese dato solo lo tiene el hijo. Por eso el que
+//    llega por props aquí pide dos cosas —el evento y un id—, y el hijo tiene que
+//    apañárselas para darle las dos.
+//    Monta un <button> "Avisar" que lleve ese id como atributo y que al pulsarlo
+//    ejecute el manejador con la información completa.
 export type ManejadorConId = (e: MouseEvent<HTMLButtonElement>, id: string) => void
 
 export function BotonConIdRecibeManejador({ id, alPulsar }: { id: string; alPulsar: ManejadorConId }) {
-  return <button id={id} onClick={alPulsar}>Avisar</button>
+  return (
+    <button id={id} onClick={(e) => alPulsar(e, id)}>
+      Avisar
+    </button>
+  )
 }
-// <BotonConIdRecibeManejador id="guardar" alPulsar={(e, id) => console.log(id)} />
+<BotonConIdRecibeManejador id="guardar" alPulsar={(e, id) => console.log(e.type, id)} />
 
-// 5) `BarraRecibeDos` — QUÉ CONSTRUIR: un componente que recibe DOS manejadores
-//    por props, cada uno con su alias, y los cuelga en su elemento: `alGuardar`
-//    en un `<button>` "Guardar", y `alSalir` en un `<a href="/salir">Salir</a>`.
-//    🔧 STARTER ROTO A PROPÓSITO: los tiene CRUZADOS —`alSalir` en el botón y
-//       `alGuardar` en el enlace—, así que da DOS `TS2322`, uno por elemento:
-//       `Type 'ManejadorDeEnlace' is not assignable to type
-//       'MouseEventHandler<HTMLButtonElement>'` y su espejo en el `<a>`. Y el test
-//       en ROJO: al pulsar "Guardar" se dispara el manejador de salir.
-//    📎 alGuardar: ManejadorDeClic     → va en el <button>
-//       alSalir:   ManejadorDeEnlace   → va en el <a>
-//    → click en Guardar → salta alGuardar   ·   click en Salir → salta alSalir
-export function BarraRecibeDos({
-  alGuardar,
-  alSalir,
-}: {
-  alGuardar: ManejadorDeClic
-  alSalir: ManejadorDeEnlace
-}) {
+// 5) `BarraRecibeDos` — un componente que recibe DOS manejadores por props, cada
+//    uno con su alias, y los reparte entre sus dos elementos: `alGuardar` en un
+//    `<button>` "Guardar" y `alSalir` en un `<a href="/salir">Salir</a>`.
+//    Al pulsar cada uno tiene que saltar el suyo, y solo el suyo.
+
+// export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
+// export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
+// export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
+
+export function BarraRecibeDos({ alGuardar, alSalir, }: { alGuardar: ManejadorDeClic, alSalir: ManejadorDeEnlace }) {
   return (
     <>
-      <button onClick={alSalir}>Guardar</button>
-      <a href="/salir" onClick={alGuardar}>Salir</a>
+      <button onClick={alGuardar}>Guardar</button>
+      <a href="/salir" onClick={alSalir}>Salir</a>
     </>
   )
 }
@@ -214,20 +204,21 @@ export function PanelDeConteo() {
   )
 }
 
-// 6) `BotonDeAccion` — QUÉ CONSTRUIR: el cierre, y el hijo que usa `PanelDeConteo`
-//    justo aquí arriba. Recibe dos props —`texto`, que es lo que se lee en el
-//    botón, y `alPulsar`— y monta un `<button>` con ese texto y ese manejador.
-//    🔧 STARTER ROTO A PROPÓSITO: envuelve y dentro del envoltorio ENTREGA la
-//       función en vez de llamarla, así que al pulsar no pasa nada y el contador
-//       se queda en 0. ⚠️ Y aquí typecheck NO te va a ayudar: se queda callado,
-//       porque el hueco es `=> void` y en un `void` cualquier retorno vale,
-//       incluido devolver una función. Es el drill 14 del `exercise-01` otra vez:
-//       la permisividad de `void` es la que te deja sin red. Solo el test lo caza.
-//    📎 alPulsar   → la función que hay que ENTREGAR al hueco
-//       alPulsar() → su llamada. Ninguna de las dos es lo que quieres aquí dentro
-//    → tres clics en "Sumar"   →   el panel muestra "Total: 3"
-export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: ManejadorDeClic }) {
-  return <button onClick={() => alPulsar}>{texto}</button>
+// 6) `BotonDeAccion` — el cierre, y el hijo que monta `PanelDeConteo` aquí arriba.
+//    Recibe dos props, el `texto` que se lee en el botón y el `alPulsar` que
+//    ejecuta, y con eso pinta su `<button>`. Tres clics en "Sumar" y el panel de
+//    arriba tiene que marcar "Total: 3".
+//    Ahora mismo se queda en 0. Y typecheck no te va a ayudar a saber por qué:
+//    va a callar aunque esté mal, así que este lo tienes que razonar tú mirando
+//    qué le llega de verdad al hueco.
+//    Restricción: la firma de `BotonDeAccion` es la que `PanelDeConteo` espera.
+//    Si la cambias, arreglarás el botón y romperás el padre.
+export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: () => void }) {
+  return (
+    <button type="button" onClick={alPulsar}>
+      {texto}
+    </button>
+  )
 }
 // <BotonDeAccion texto="Sumar" alPulsar={(e) => console.log(e.type)} />
 

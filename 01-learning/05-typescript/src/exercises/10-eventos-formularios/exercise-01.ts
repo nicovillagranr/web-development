@@ -44,11 +44,14 @@
  *
  * ▸ EJERCICIO — 14 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-01.test.ts
- *     pnpm typecheck     ← córrelo también
+ *     pnpm typecheck
  *
- * ⚠️ EN EL BLOQUE R EL TYPECHECK DEJA DE BASTAR. De los 8 starters nuevos, solo
- *    3 dan error de tipos (8, 9, 10); los otros 5 fallan por LÓGICA y los caza
- *    únicamente el test. Es el primer sitio del archivo donde el compilador no
+ *   Todos los starters de este archivo están rotos a propósito.
+ *   ¿Atascado? Las pistas están en `exercise-01.pistas.md`, de una en una.
+ *
+ * ⚠️ EN EL BLOQUE R EL TYPECHECK DEJA DE BASTAR. De los 8 starters nuevos, **solo
+ *    3 dan error de tipos; los otros 5 fallan por LÓGICA** y los caza únicamente el
+ *    test. No te digo cuáles. Es el primer sitio del archivo donde el compilador no
  *    te cubre — y es a propósito, porque ese es el tema del drill 14.
  *
  * 📝 Trazado comentado bajo cada función. Descoméntalo para ver el valor.
@@ -85,50 +88,33 @@
  *     string         → el tipo de retorno, lo que sale al llamarla
  *
  * ⚠️ TRAMPA — `() => string` no se lee "un string": se lee "una función que
- *    retorna un string". Confundir los dos es el error que TS canta como
- *    `TS2322: Type '() => string' is not assignable to type 'string'`. Y con los
- *    dos lados cambiados significa justo lo contrario. Léelos siempre enteros.
+ *    retorna un string". Confundir los dos es el error más repetido del archivo, y
+ *    TS lo canta poniendo esos dos tipos uno a cada lado de "is not assignable to".
+ *    Cuál está en cada lado cambia por completo lo que significa, así que léelos
+ *    siempre enteros en vez de reconocerlos de un vistazo.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `guardarEnLista` — QUÉ CONSTRUIR: mete la función `receta` dentro de un
-//    array y devuelve ese array, sin llamarla. El tipo de retorno ya está escrito
-//    y dice qué va dentro: `Array<() => string>` son funciones, no textos.
-//    🔧 STARTER ROTO A PROPÓSITO: guarda `receta()`, o sea el retorno.
-//       Verás `TS2322: Type 'string' is not assignable to type '() => string'` y
-//       el test en rojo por haber cocinado. El fallo es la lección: los `()` no
-//       son decoración, son la operación que cambia el valor por otro.
-//    📎 La firma, leída de arriba a abajo:
-//       receta: () => string           ← lo que TIENES: una función
-//       retorno: Array<() => string>   ← lo que se PIDE: un array DE funciones
+// 1) `guardarEnLista` — mete la función `receta` en un array y devuelve el array,
+//    sin llamarla por el camino. Lee el tipo de retorno que ya está escrito: dice
+//    qué va dentro de ese array, y no son textos.
 //    → guardarEnLista(() => "café")   →   [ () => "café" ]
 export function guardarEnLista(receta: () => string): Array<() => string> {
   return [receta]
 }
 guardarEnLista(() => "café") // → [ () => "café" ]
 
-// 2) `ejecutar` — QUÉ CONSTRUIR: te dan una receta y tú quieres el plato. Llámala
-//    y devuelve lo que salga. Fíjate en el tipo de retorno: es `string`.
-//    🔧 STARTER ROTO A PROPÓSITO: devuelve la función sin llamarla.
-//       `TS2322: Type '() => string' is not assignable to type 'string'`.
-//       Traducido: le has dado el papel donde pedían comida. Enciende el fuego.
-//    📎 receta: () => string   ← lo que TIENES: una función
-//       retorno: string        ← lo que se PIDE: el texto. Hay que llamarla.
+// 2) `ejecutar` — te dan una receta y tú quieres el plato. El tipo de retorno es
+//    `string`, así que lo que devuelvas tiene que ser el texto, no la receta.
 //    → ejecutar(() => "café")   →   "café"
 export function ejecutar(receta: () => string): string {
   return receta()
 }
 ejecutar(() => "café") // → "café"
 
-// 3) `entregar` — QUÉ CONSTRUIR: la misma receta, al revés. NO la llames:
-//    devuélvela tal cual, para que la llame otro más tarde. El tipo de retorno ya
-//    no es `string`, es `() => string`.
-//    🔧 STARTER ROTO A PROPÓSITO: hace justo lo contrario que el drill 2.
-//       `TS2322: Type 'string' is not assignable to type '() => string'`.
-//       Traducido: pedían papel y has dado comida. Apaga el fuego. Los errores
-//       del 2 y del 3 son el MISMO par de tipos con los lados cambiados — y esa
-//       diferencia de lados es exactamente lo que separa ejecutar de entregar.
-//    📎 receta: () => string    ← lo que TIENES
-//       retorno: () => string   ← lo que se PIDE: lo MISMO. No hay que tocarla.
+// 3) `entregar` — la misma receta, al revés: que la llame otro más tarde. Fíjate
+//    en que el tipo de retorno ya no es el mismo que el del drill 2, y que los
+//    errores de los dos son el mismo par de tipos con los lados cambiados — esa
+//    diferencia de lados es justo lo que separa ejecutar de entregar.
 //    → entregar(() => "café")     →   la función, sin llamar
 //    → entregar(() => "café")()   →   "café"   ← estos `()` de fuera sí cocinan
 export function entregar(receta: () => string): () => string {
@@ -206,20 +192,12 @@ llamaConObjeto((suceso) => console.log(suceso)) // → { type: 'click' }
  *    entrega pelada, porque ahí hacía falta un envoltorio.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `entregarPelado` — QUÉ CONSTRUIR: aquí aparece el otro. `llamaConTexto`
-//    (arriba) recibe una función y la llama él pasándole un texto; tu `avisar`
-//    pide un texto. Las dos firmas encajan, así que entrégala pelada y quítate de
-//    en medio: no la llames tú.
-//    🔧 STARTER ROTO A PROPÓSITO: le pone los `()` a `avisar` en el sitio mismo de
-//       la entrega. Es el único drill que da DOS errores en la misma línea, y hay
-//       que leerlos juntos: `TS2554: Expected 1 arguments, but got 0` (la llamaste
-//       sin darle el texto) y `TS2345: Argument of type 'void' is not assignable
-//       to parameter of type '(t: string) => void'` (lo que llegó fue el retorno,
-//       que es nada, donde se pedía la función). El fallo es la lección: esto es
-//       literalmente el `onClick={avisar()}` que en el 02 escribirías sin verlo.
-//    📎 Las dos firmas que tienes que comparar, sin subir a buscarlas:
-//       llamaConTexto(fn: (t: string) => void)   ← lo que se PIDE
-//                          avisar: (t: string) => void   ← lo que TIENES
+// 4) `entregarPelado` — aquí aparece el OTRO que llama. `llamaConTexto` recibe una
+//    función y la llama él, pasándole un texto; tu `avisar` pide un texto. Tu
+//    trabajo es ponerlos en contacto y quitarte de en medio.
+//    Ojo con el starter, porque este error es literalmente el `onClick={avisar()}`
+//    que dentro de dos archivos vas a escribir sin verlo.
+//    📌 llamaConTexto(fn: (t: string) => void)
 //    → entregarPelado(espia)   →   espia recibe "click"
 
 // export function llamaConTexto(fn: (t: string) => void): void {
@@ -231,17 +209,11 @@ export function entregarPelado(avisar: (t: string) => void): void {
 }
 entregarPelado((t) => console.log(t)) // → "click"
 
-// 5) `entregarEnvuelto` — QUÉ CONSTRUIR: el mismo `llamaConTexto`, que pasa un
-//    TEXTO. Pero `avisarLargo` pide un NÚMERO: las firmas NO encajan. Envuélvela —
-//    una función de una línea que reciba el texto y llame a `avisarLargo` con su
-//    longitud (`.length`).
-//    🔧 STARTER ROTO A PROPÓSITO: la entrega pelada, como si encajara. `TS2345`,
-//       y debajo la línea que de verdad importa: `Types of parameters 'n' and 't'
-//       are incompatible. Type 'string' is not assignable to type 'number'`. El
-//       fallo es la lección: TS te está nombrando los dos parámetros que no casan.
-//    📎 Las dos firmas, y aquí ya NO coinciden:
-//       llamaConTexto(fn: (t: string) => void)   ← lo que se PIDE
-//                     avisarLargo: (n: number) => void   ← lo que TIENES
+// 5) `entregarEnvuelto` — el mismo `llamaConTexto`, que sigue pasando un texto.
+//    Pero `avisarLargo` no quiere el texto: quiere cuántas letras tiene. Móntalo
+//    para que le llegue el número, no la palabra.
+//    El starter lo entrega pelado como en el drill 4, y aquí eso ya no cuela.
+//    📌 llamaConTexto(fn: (t: string) => void)
 //    → entregarEnvuelto(espia)   →   espia recibe 5   ("click" tiene 5 letras)
 export function entregarEnvuelto(avisarLargo: (n: number) => void): void {
   llamaConTexto((dato) => avisarLargo(dato.length))
@@ -277,17 +249,11 @@ entregarEnvuelto((n) => console.log(n)) // → 5
  *    llama EVENTO. El drill de abajo es ese, sin React todavía encima.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 6) `entregarSacandoDelObjeto` — QUÉ CONSTRUIR: ahora el que llama es
-//    `llamaConObjeto`, y no pasa un texto sino un OBJETO, `{ type: "click" }`. Tu
-//    `avisar` sigue pidiendo un texto, y ese texto está DENTRO del objeto.
-//    Envuelve otra vez, y dentro del envoltorio saca el campo que hace falta.
-//    🔧 STARTER ROTO A PROPÓSITO: envuelve bien, pero pasa la caja entera en vez
-//       del campo. `TS2345: Argument of type '{ type: string; }' is not assignable
-//       to parameter of type 'string'`. El fallo es la lección: es la confusión
-//       objeto-vs-propiedad, la que más cara te ha salido en este bloque.
-//    📎 Las dos firmas. Ojo a lo que hay a la izquierda de cada flecha:
-//       llamaConObjeto(fn: (suceso: { type: string }) => void)   ← lo que se PIDE
-//                          avisar: (t: string) => void   ← lo que TIENES
+// 6) `entregarSacandoDelObjeto` — ahora el que llama es `llamaConObjeto`, y lo que
+//    reparte no es un texto sino un OBJETO. Tu `avisar` sigue pidiendo un texto, y
+//    ese texto viaja dentro del objeto.
+//    El starter envuelve bien; lo que falla es lo que mete en el sobre.
+//    📌 llamaConObjeto(fn: (suceso: { type: string }) => void)
 //    → entregarSacandoDelObjeto(espia)   →   espia recibe "click"
 export function entregarSacandoDelObjeto(avisar: (t: string) => void): void {
   llamaConObjeto((suceso) => avisar(suceso.type))
@@ -354,13 +320,11 @@ llamaConUsuario((u) => console.log(u.edad)) // → 30
  * O sea, `.forEach` llama a tu función con TRES argumentos, quieras o no. */
 export const COLORES = ["rojo", "verde", "azul"]
 
-// 7) `avisarEnMayusculas` — QUÉ CONSTRUIR: llega un texto por `llamaConTexto` y
-//    `avisar` pide un texto. Encajan, pero no quieres el mismo: quieres el texto
-//    en mayúsculas. Envuelve y transfórmalo con `.toUpperCase()`.
-//    🔧 STARTER ROTO A PROPÓSITO: envuelve pero no transforma — reenvía tal cual.
-//       Typecheck NO protesta (los tipos casan); solo el test lo caza.
-//    📎 llamaConTexto(fn: (t: string) => void)   ← lo que se PIDE
-//       avisar: (t: string) => void              ← lo que TIENES
+// 7) `avisarEnMayusculas` — llega un texto y `avisar` pide un texto, así que los
+//    tipos ya encajan. Pero no quieres el mismo texto: lo quieres en mayúsculas.
+//    Aviso: typecheck va a callar en este, porque un string es un string lo pongas
+//    como lo pongas. Solo el test lo caza.
+//    📌 llamaConTexto(fn: (t: string) => void)
 //    → avisarEnMayusculas(espia)   →   espia recibe "CLICK"
 
 // export function llamaConTexto(fn: (t: string) => void): void {
@@ -376,115 +340,93 @@ export function avisarEnMayusculas(avisar: (t: string) => void): void {
 }
 // avisarEnMayusculas((t) => console.log(t))
 
-// 8) `avisarNombre` — QUÉ CONSTRUIR: ahora llama `llamaConUsuario`, que pasa un
-//    `Usuario` entero. `avisar` pide un `string`. Saca el campo que encaja.
-//    🔧 STARTER ROTO A PROPÓSITO: saca un campo del tipo equivocado.
-//       `TS2345: Argument of type 'number' is not assignable to parameter of
-//       type 'string'`. Lee el error al revés: te dice qué campo cogiste.
-//    📎 llamaConUsuario(fn: (u: Usuario) => void)   ← lo que se PIDE
+// 8) `avisarNombre` — ahora llama `llamaConUsuario`, que reparte un `Usuario`
+//    entero. De todo lo que trae dentro, `avisar` solo quiere una pieza, y su
+//    firma te dice cuál puede aceptar.
+//    📌 llamaConUsuario(fn: (u: Usuario) => void)
 //       Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
-//       avisar: (n: string) => void                 ← lo que TIENES
 //    → avisarNombre(espia)   →   espia recibe "Nico"
 export function avisarNombre(avisar: (n: string) => void): void {
   llamaConUsuario((u) => avisar(u.nombre))
 }
 // avisarNombre((n) => console.log(n))
 
-// 9) `avisarEdad` — QUÉ CONSTRUIR: el mismo `Usuario`, pero ahora `avisar` pide
-//    un `number`. Mismo enrutado, otra pieza.
-//    🔧 STARTER ROTO A PROPÓSITO: el espejo del 8, `TS2345` con `string` y
-//       `number` en los lados cambiados. El objeto que llega es el MISMO en los
-//       dos drills: lo único que decide qué campo sacar es la firma de destino.
-//    📎 llamaConUsuario(fn: (u: Usuario) => void)   ← lo que se PIDE
+// 9) `avisarEdad` — el mismo `Usuario` y el mismo enrutado, otra pieza. El objeto
+//    que llega es idéntico al del drill 8: lo único que ha cambiado es la firma
+//    del destino, y eso solo ya decide qué campo hay que sacar.
+//    📌 llamaConUsuario(fn: (u: Usuario) => void)
 //       Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
-//       avisar: (n: number) => void                 ← lo que TIENES (¡number!)
 //    → avisarEdad(espia)   →   espia recibe 30
 export function avisarEdad(avisar: (n: number) => void): void {
   llamaConUsuario((u) => avisar(u.edad))
 }
 // avisarEdad((n) => console.log(n))
 
-// 10) `avisarAlias` — QUÉ CONSTRUIR: el alias no está suelto en el `Usuario`,
-//     está DENTRO de `cuenta`. Dos puntos, no uno.
-//     🔧 STARTER ROTO A PROPÓSITO: se queda en la caja intermedia y entrega
-//        `u.cuenta`. `TS2345: Argument of type '{ alias: string; }' is not
-//        assignable to parameter of type 'string'`. Es el drill 6 un nivel más
-//        abajo: `cuenta` también es una caja, aunque esté dentro de otra.
-//     📎 llamaConUsuario(fn: (u: Usuario) => void)   ← lo que se PIDE
+// 10) `avisarAlias` — la pieza que quieres esta vez no está suelta en el `Usuario`:
+//     está guardada dentro de otra caja. El starter se queda a medio camino y
+//     entrega la caja intermedia, que es el drill 6 otra vez un piso más abajo.
+//     📌 llamaConUsuario(fn: (u: Usuario) => void)
 //        Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
-//                                                     └─ caja dentro de la caja
-//        avisar: (a: string) => void                 ← lo que TIENES
 //     → avisarAlias(espia)   →   espia recibe "@nico"
 export function avisarAlias(avisar: (a: string) => void): void {
   llamaConUsuario((u) => avisar(u.cuenta.alias))
 }
 // avisarAlias((a) => console.log(a))
 
-// 11) `avisarResumen` — QUÉ CONSTRUIR: el envoltorio no está limitado a UNA
-//     pieza. Arma un texto con dos campos, con esta forma exacta: "Nico (30)".
-//     🔧 STARTER ROTO A PROPÓSITO: solo mete el nombre y se deja la edad.
-//        Typecheck calla —es un `string` válido— y solo el test lo caza.
-//     📎 llamaConUsuario(fn: (u: Usuario) => void)   ← lo que se PIDE
+// 11) `avisarResumen` — hasta aquí el envoltorio sacaba UNA pieza. No tiene por qué:
+//     puede armar algo con varias. Monta un texto con esta forma exacta, paréntesis
+//     incluidos: "Nico (30)".
+//     Aviso: typecheck calla otra vez. Medio texto sigue siendo un texto válido.
+//     📌 llamaConUsuario(fn: (u: Usuario) => void)
 //        Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
-//        avisar: (t: string) => void                 ← lo que TIENES
 //     → avisarResumen(espia)   →   espia recibe "Nico (30)"
 export function avisarResumen(avisar: (t: string) => void): void {
-  llamaConUsuario((u) => avisar(`${u.nombre}`))
+  llamaConUsuario((u) => avisar(`${u.nombre} (${u.edad})`))
 }
 // avisarResumen((t) => console.log(t))
 
-// 12) `listarConPosicion` — QUÉ CONSTRUIR: recorre `COLORES` con `.forEach` y por
-//     cada uno llama a `avisar` con su posición delante: "1. rojo". Necesitas dos
-//     de los tres argumentos que te pasa `.forEach`: el valor y el índice.
-//     🔧 STARTER ROTO A PROPÓSITO: usa el índice tal cual y te sale "0. rojo".
-//        `.forEach` cuenta desde 0; la posición que lee una persona empieza en 1.
-//        Typecheck calla —`${i}` es un string perfectamente válido—, así que este
-//        fallo no es de tipos sino de lógica, y solo lo caza el test.
-//     📎 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
+// 12) `listarConPosicion` — recorre `COLORES` y por cada uno llama a `avisar` con
+//     su posición delante, tal y como la leería una persona: "1. rojo".
+//     Aviso: typecheck no te va a ayudar. Cualquier número que pongas ahí produce
+//     un texto válido, así que el único que sabe contar es el test.
+//     📌 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
 //     → listarConPosicion(espia)   →   "1. rojo", "2. verde", "3. azul"
 export function listarConPosicion(avisar: (t: string) => void): void {
-  COLORES.forEach((color, i) => avisar(`${i}. ${color}`))
+  COLORES.forEach((color, i) => avisar(`${i + 1}. ${color}`))
 }
-listarConPosicion((t) => console.log(t)) // → 0. rojo, 1. verde, 2. azul
+listarConPosicion((t) => console.log(t)) // → 1. rojo, 2. verde, 3. azul
 
-// 13) `avisarCadaColor` — QUÉ CONSTRUIR: el mismo `.forEach`, que sigue pasando
-//     tres argumentos. Pero ahora solo quieres el color, sin número ni nada.
-//     Aquí está la regla que no conocías: **tu función puede declarar MENOS
-//     parámetros de los que le pasan**, y los que no declares se descartan solos.
-//     Declara solo el primero y entrégalo tal cual.
-//     🔧 STARTER ROTO A PROPÓSITO: declara los TRES y los usa los tres, como si
-//        hubiera que recogerlo todo. No hay que. Typecheck vuelve a callar: no
-//        sobra un tipo, sobra trabajo.
+// 13) `avisarCadaColor` — el mismo recorrido, que sigue pasando tres argumentos.
+//     Pero ahora solo quieres el color, sin número ni nada más.
+//     Aquí está la regla que no conocías, y es el ejercicio entero: **tu función
+//     puede declarar MENOS parámetros de los que le pasan**, y los que no declares
+//     se descartan solos. El starter los recoge los tres, como si hubiera que
+//     quedárselo todo. Typecheck calla: no sobra un tipo, sobra trabajo.
 //     💡 ESTO ES LO QUE ARREGLA TU BUG DE JULIO. `["10","10","10"].map(parseInt)`
 //        da `[10, NaN, 2]` porque `.map` también pasa tres argumentos y `parseInt`
 //        acepta dos, así que el índice se le cuela como base numérica. La cura es
 //        este drill: `.map((s) => parseInt(s, 10))` declara UNA mano y los otros
 //        dos argumentos pasan de largo.
-//     📎 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
+//     📌 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
 //     → avisarCadaColor(espia)   →   "rojo", "verde", "azul"
 export function avisarCadaColor(avisar: (t: string) => void): void {
-  COLORES.forEach((color, i, todos) => avisar(`${color} ${i} de ${todos.length}`))
+  COLORES.forEach((color) => avisar(color))
 }
-avisarCadaColor((t) => console.log(t)) // → rojo 0 de 3, verde 1 de 3, azul 2 de 3
+avisarCadaColor((t) => console.log(t)) // → rojo, verde, azul
 
-// 14) `entregarQueRetorna` — QUÉ CONSTRUIR: `medir` devuelve un `number`, y el
-//     hueco de `llamaConTexto` pide `(t: string) => void`. Parece que no encaja,
-//     pero encaja: `void` significa "no miro tu retorno". Entrégala PELADA.
-//     🔧 STARTER ROTO A PROPÓSITO: envuelve sin necesidad y de paso recorta el
-//        texto a su primera letra, así que `medir` recibe "c". Pero mira al lado
-//        del fallo: **el envoltorio devuelve un `number` y TS no ha dicho nada**,
-//        porque en un hueco `=> void` cualquier retorno vale. Ese silencio es el
-//        drill: `void` te deja escribir dentro lo que quieras, y el compilador no
-//        te va a cubrir ahí. Entrégala pelada y no hay dentro donde equivocarse.
-//     📎 llamaConTexto(fn: (t: string) => void)   ← lo que se PIDE: retorno `void`
-//        medir: (t: string) => number             ← lo que TIENES: retorna `number`
-//        El parámetro casa. El retorno NO casa — y da igual, porque `void` no mira.
+// 14) `entregarQueRetorna` — el cierre, y una firma que parece no encajar: `medir`
+//     devuelve un `number` donde el hueco pide algo que no devuelve nada. Míralo
+//     otra vez antes de dar por hecho que hay que envolver.
+//     Y mira también lo que hace el starter: envuelve, y dentro del envoltorio
+//     devuelve un `number` **sin que TypeScript diga una palabra**. Ese silencio es
+//     el drill: en un hueco `=> void` cualquier retorno vale, así que ahí dentro el
+//     compilador no te cubre. Pregúntate qué pasa si no hay dentro.
+//     📌 llamaConTexto(fn: (t: string) => void)
 //     → entregarQueRetorna(espia)   →   espia recibe "click" y devuelve 5
 export function entregarQueRetorna(medir: (t: string) => number): void {
-  llamaConTexto((t) => medir(t.charAt(0)))
+  llamaConTexto(medir)
 }
-entregarQueRetorna((t) => t.length) // -> 5
-
+entregarQueRetorna((t) => t.length) // → 5
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 14 estén en verde, el 02 hace esto mismo con un botón de verdad: el
  * que llama es React y lo que te pasa es un objeto — el EVENTO. O sea, el drill 6
