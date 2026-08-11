@@ -38,9 +38,14 @@
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-02.test.tsx
- *     pnpm typecheck     ← córrelo también: 4 de los 6 starters dan error de
- *                          tipos; el 3 y el 6 fallan por LÓGICA y solo los caza
- *                          el test. Que typecheck calle no significa que esté bien.
+ *     pnpm typecheck
+ *
+ *   Todos los starters de este archivo están rotos a propósito.
+ *   ¿Atascado? Las pistas están en `exercise-02.pistas.md`, de una en una.
+ *
+ * ⚠️ Corre LOS DOS comandos. 4 de los 6 starters dan error de tipos, pero **2
+ *    fallan solo por lógica y typecheck se los traga enteros**. No te digo cuáles.
+ *    Que typecheck calle no significa que esté bien.
  *
  * 📝 LAS TRACES DE ESTE ARCHIVO VAN COMENTADAS, Y NO ES UNA MANÍA. En el 01, que
  *    era `.ts`, descomentar una trace la ejecutaba. Aquí no: escribir
@@ -84,20 +89,9 @@
  *    sin tipo. Eso es exactamente el archivo 03, y ahí lo escribirás tú.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `BotonPelado` — QUÉ CONSTRUIR: un `<button>` con el texto "Avisar" que
-//    entregue `alPulsar` al hueco `onClick`, tal cual. Las firmas encajan, así
-//    que va pelada: es el drill 4 del 01 con React de por medio.
-//    🔧 STARTER ROTO A PROPÓSITO: le pone los `()` y la llama al PINTAR, no al
-//       pulsar. `TS2322: Type 'void' is not assignable to type
-//       'MouseEventHandler<HTMLButtonElement> | undefined'` — le diste el retorno
-//       (que es nada) donde se pedía la función. El `| undefined` está porque
-//       `onClick` es opcional: puedes no ponerlo, pero si lo pones va función.
-//       Y el test lo caza por el otro lado: comprueba que `alPulsar` NO se ha
-//       llamado todavía al renderizar.
-//    📎 onClick espera: (e: MouseEvent<HTMLButtonElement>) => void   ← se PIDE
-//       alPulsar: () => void                                        ← TIENES
-//       (una función que acepta MENOS parámetros encaja: los sobrantes se tiran)
-//    → click en el botón   →   alPulsar se llama una vez
+// 1) `BotonPelado` — un `<button>` "Avisar" que ejecute `alPulsar` cuando alguien
+//    lo pulse. Una vez por clic, y ni una sola vez antes: al pintarse el
+//    componente no tiene que pasar nada todavía.
 export function BotonPelado({ alPulsar }: { alPulsar: () => void }) {
   return (
     <button onClick={alPulsar}>
@@ -105,18 +99,13 @@ export function BotonPelado({ alPulsar }: { alPulsar: () => void }) {
     </button>
   )
 }
-<BotonPelado alPulsar={() => console.log("pulsado")} />
+// <BotonPelado alPulsar={() => console.log("pulsado")} />
 
-// 2) `BotonAvisaTipo` — QUÉ CONSTRUIR: un `<button>` "Avisar" que escriba el
-//    manejador DENTRO del hueco y le pase a `avisar` el campo `type` del evento.
-//    No anotes `e`: el hueco ya lo hace. Aquí es donde ves el tipado contextual.
-//    🔧 STARTER ROTO A PROPÓSITO: entrega la caja entera en vez del campo.
-//       `TS2345: Argument of type 'MouseEvent<HTMLButtonElement, MouseEvent>' is
-//       not assignable to parameter of type 'string'`. No te falta un tipo: te
-//       falta un punto.
-//    📎 e: MouseEvent<HTMLButtonElement>   ← lo que te DA el hueco (la caja)
-//       avisar: (t: string) => void       ← lo que PIDE tu destino (un campo)
-//    → click   →   avisar recibe "click"
+// 2) `BotonAvisaTipo` — el mismo botón "Avisar", pero ahora el manejador se
+//    escribe DENTRO del hueco y tiene que pasarle a `avisar` el tipo del evento.
+//    Lo que sale es un texto: "click".
+//    No anotes `e`. Aquí es exactamente donde se ve el tipado contextual, y
+//    escribir el tipo a mano te lo taparía.
 export function BotonAvisaTipo({ avisar }: { avisar: (t: string) => void }) {
   return (
     <button onClick={(e) => avisar(e.type)}>
@@ -124,19 +113,14 @@ export function BotonAvisaTipo({ avisar }: { avisar: (t: string) => void }) {
     </button>
   )
 }
-<BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
+// <BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
 
-// 3) `BotonAvisaDobleClic` — QUÉ CONSTRUIR: el mismo botón "Avisar", pero que
-//    reaccione al DOBLE clic. El hueco se llama `onDoubleClick`. Pásale otra vez
-//    `e.type` — y fíjate en que el texto que sale lo trae el evento, no lo
+// 3) `BotonAvisaDobleClic` — el mismo botón, pero que reaccione al DOBLE clic y
+//    no a uno suelto. Avisa igual que el anterior, con el tipo del evento; fíjate
+//    en que el texto que sale cambia solo, porque lo trae el evento y no lo
 //    escribes tú.
-//    🔧 STARTER ROTO A PROPÓSITO: usa el hueco `onClick`, así que salta con
-//       cualquier clic suelto y avisa "click". Typecheck calla —los dos huecos
-//       aceptan la misma función—, o sea que este fallo es de elección, no de
-//       tipos, y solo lo caza el test.
-//    📎 onClick       → salta con un clic       → e.type vale "click"
-//       onDoubleClick → salta con doble clic    → e.type vale "dblclick"
-//    → doble clic   →   avisar recibe "dblclick"
+//    Aviso: typecheck no te va a ayudar en este. Los dos huecos aceptan la misma
+//    función, así que el fallo no es de tipos y solo lo caza el test.
 export function BotonAvisaDobleClic({ avisar }: { avisar: (t: string) => void }) {
   return (
     <button onDoubleClick={(e) => avisar(e.type)}>
@@ -144,7 +128,7 @@ export function BotonAvisaDobleClic({ avisar }: { avisar: (t: string) => void })
     </button>
   )
 }
-<BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
+// <BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -174,38 +158,21 @@ export function BotonAvisaDobleClic({ avisar }: { avisar: (t: string) => void })
  *    veas un error con `MouseEvent` a los dos lados, es esto.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `CampoAvisaTecla` — QUÉ CONSTRUIR: un `<input>` que, al pulsar una tecla,
-//    le pase a `avisar` la tecla pulsada. El hueco es `onKeyDown` y el campo,
-//    `e.key`. Otro elemento, otro hueco, otro evento.
-//    🔧 STARTER ROTO A PROPÓSITO: pide `e.key` desde el hueco `onClick`, y ahí
-//       no hay teclas. `TS2339: Property 'key' does not exist on type
-//       'MouseEvent<HTMLInputElement, MouseEvent>'`. Léelo entero: te está
-//       diciendo qué molde has elegido.
-//    📎 onClick   → e: MouseEvent<…>      → type, nativeEvent…  sin `key`
-//       onKeyDown → e: KeyboardEvent<…>   → …y ADEMÁS `key`
-//    → tecleas "a"   →   avisar recibe "a"
+// 4) `CampoAvisaTecla` — cambiamos de elemento y de gesto: un `<input>` que, al
+//    teclear, le pase a `avisar` la tecla que se ha pulsado. Otro elemento y otro
+//    hueco significan otro evento, con otros campos dentro.
 export function CampoAvisaTecla({ avisar }: { avisar: (t: string) => void }) {
   return (
     <input onKeyDown={(e) => avisar(e.key)} />
   )
 }
-<CampoAvisaTecla avisar={(t) => console.log(t)} />   // "a"
+// <CampoAvisaTecla avisar={(t) => console.log(t)} />   // "a"
 
-// 5) `BotonAvisaNativo` — QUÉ CONSTRUIR: un `<button>` "Avisar" que le pase a
-//    `avisar` el evento DEL NAVEGADOR, no el de React. Está guardado dentro, en
-//    `e.nativeEvent`.
-//    ⚠️ Mira la firma de la prop: pide un `MouseEvent`, pero ese `MouseEvent` es
-//       el GLOBAL del navegador — este archivo no importa nada de React, así que
-//       el nombre se refiere al del DOM.
-//    🔧 STARTER ROTO A PROPÓSITO: entrega el envoltorio en vez de la carta.
-//       `TS2345: Argument of type 'MouseEvent<HTMLButtonElement, MouseEvent>' is
-//       not assignable to parameter of type 'MouseEvent'`. Los DOS homónimos cara
-//       a cara, y debajo TS te dice en qué se diferencian: `is missing the
-//       following properties … layerX, layerY, offsetX, offsetY, and 16 more`.
-//    📎 e: MouseEvent<HTMLButtonElement>   ← el de React (envoltorio)
-//       e.nativeEvent: MouseEvent          ← el del DOM   (la carta de dentro)
-//       avisar: (nativo: MouseEvent) => void   ← pide la carta
-//    → click   →   avisar recibe un MouseEvent de verdad del navegador
+// 5) `BotonAvisaNativo` — un `<button>` "Avisar", y esta vez mira bien la firma
+//    de `avisar`: no pide un texto, pide un `MouseEvent` entero. Y no el que te
+//    da el hueco, sino el DEL NAVEGADOR — este archivo no importa nada de React,
+//    así que ese nombre se refiere al global del DOM. El que React te pasa lo
+//    lleva guardado dentro: sácalo de ahí y entrégaselo.
 export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => void }) {
   return (
     <button onClick={(e) => avisar(e.nativeEvent)}>
@@ -213,21 +180,14 @@ export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => v
     </button>
   )
 }
-<BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
+// <BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
 
-// 6) `BotonAvisaConId` — QUÉ CONSTRUIR: un `<button>` "Avisar" que avise con el
-//    `id` que le llega por props Y el tipo del evento, pegados con dos puntos:
-//    "guardar:click". Dentro del hueco tienes las dos cosas a mano.
-//    🔧 STARTER ROTO A PROPÓSITO: envuelve bien —eso está correcto— pero dentro
-//       solo usa el `id` y se olvida del evento, así que avisa "guardar" a secas.
-//       Typecheck calla, porque `id` ya es un `string` perfectamente válido: este
-//       fallo no es de tipos, es de haberte dejado media pieza. Solo el test lo
-//       caza. Dentro del envoltorio sigue habiendo tipado contextual, así que la
-//       `e` que declares llegará tipada sola.
-//    📎 dentro del hueco tienes las DOS fuentes a mano:
-//       id: string                          ← viene de las props
-//       e.type: string                      ← viene del evento
-//    → click con id="guardar"   →   avisar recibe "guardar:click"
+// 6) `BotonAvisaConId` — el cierre. Un `<button>` "Avisar" que avise con las dos
+//    cosas que tiene a mano ahí dentro, el `id` que llega por props y el tipo del
+//    evento, pegadas con dos puntos: con `id="guardar"`, un clic manda
+//    "guardar:click".
+//    Aviso: typecheck va a callar aunque te quede a medias, porque medio texto
+//    sigue siendo un texto perfectamente válido. Solo el test lo caza.
 export function BotonAvisaConId({ id, avisar }: { id: string; avisar: (texto: string) => void }) {
   return (
     <button id={id} onClick={(evento) => avisar(`${id}:${evento.type}`)}>
@@ -235,7 +195,7 @@ export function BotonAvisaConId({ id, avisar }: { id: string; avisar: (texto: st
     </button>
   )
 }
-<BotonAvisaConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
+// <BotonAvisaConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde: en todos ellos el manejador vivía DENTRO del
