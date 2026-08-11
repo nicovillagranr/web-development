@@ -50,6 +50,15 @@ Thumbs.db
 # Archivos generados por asistentes de IA — no aportan al código del proyecto
 **/.agent/
 **/.agents/
-**/.claude/
 **/.windsurf/
 **/skills-lock.json
+
+# De `.claude/` se ignora el CONTENIDO (settings.local.json es config de esta máquina)…
+**/.claude/*
+# …salvo las skills PROPIAS de 05-typescript, que son material del proyecto: van
+# versionadas y viajan con el repo, igual que su CLAUDE.md.
+# La excepción es deliberadamente estrecha: las skills de OTROS proyectos son de
+# terceros (frontend-design, responsive-design), o sea dependencias instaladas, y
+# ésas siguen fuera de git.
+!01-learning/05-typescript/.claude/
+!01-learning/05-typescript/.claude/skills/
