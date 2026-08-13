@@ -96,7 +96,7 @@ import type { ChangeEvent } from 'react'
 //    El starter se queda a un piso de distancia de lo que hay que entregar.
 export function CampoAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
   return (
-    <input onChange={(e) => avisar(e.target)} />
+    <input onChange={(e) => avisar(e.target.value)} />
   )
 }
 // <CampoAvisaTexto avisar={(t) => console.log(t)} />   // "h", "ho", "hol", "hola"
@@ -108,7 +108,8 @@ export function CampoAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
 //    vez la trampa de aquí arriba antes de dar nada por hecho.
 export function CampoNumeroAvisaDoble({ avisar }: { avisar: (n: number) => void }) {
   return (
-    <input type="number" onChange={(e) => avisar(e.target.value * 2)} />
+    // <input type="number" onChange={(e) => avisar(e.target.value * 2)} /> // Solución intuitiva -> No sirve porque e.target.value siempre es string
+    <input type="number" onChange={(e) => avisar(Number(e.target.value) * 2)} />
   )
 }
 // <CampoNumeroAvisaDoble avisar={(n) => console.log(n)} />   // 42
@@ -120,12 +121,12 @@ export function CampoNumeroAvisaDoble({ avisar }: { avisar: (n: number) => void 
 //    Restricción: el tipo del evento se importa de 'react' y ya está arriba; el
 //    nombre del elemento tendrás que buscarlo tú.
 export function AreaAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: ChangeEvent<HTMLInputElement>) => avisar(e.target.value)
+  const manejar = (e: ChangeEvent<HTMLTextAreaElement>) => avisar(e.target.value)
   return (
     <textarea onChange={manejar} />
   )
 }
-// <AreaAvisaTexto avisar={(t) => console.log(t)} />   // "hey"
+//<AreaAvisaTexto avisar={(t) => console.log(t)} />   // "hey"
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -174,7 +175,8 @@ export function CampoGuardaTexto() {
   const [texto, setTexto] = useState("")
   return (
     <div>
-      <input onChange={(e) => setTexto(e.target)} />
+      {/* Cuando el usuario escribe algo dentro del input, el texto dentro del párrafo cambiará */}
+      <input onChange={(e) => setTexto(e.target.value)} />
       <p>{texto}</p>
     </div>
   )
@@ -188,13 +190,27 @@ export function CampoGuardaTexto() {
 //    por un lado y lo que ves por otro. Falta que mande el estado.
 export function CampoEnMayusculas() {
   const [texto, setTexto] = useState("")
+
   return (
     <div>
-      <input onChange={(e) => setTexto(e.target.value.toUpperCase())} />
+      <input
+        // 1. EL "VALUE" ES LA CLAVE: Convierte el input en un campo controlado.
+        // Sin esta propiedad, el navegador pinta el texto de forma nativa e independiente.
+        // Al añadirla, obligas al input a mostrar EXACTAMENTE lo que guardas en el estado.
+        value={texto}
+
+        // 2. EL FLUJO: Cuando el usuario escribe:
+        //    a) Se dispara el onChange.
+        //    b) Capturamos el texto, lo pasamos a mayúsculas y actualizamos el estado (setTexto).
+        //    c) React vuelve a renderizar el componente.
+        //    d) La propiedad 'value' recibe el nuevo estado en mayúsculas y lo dibuja en la pantalla.
+        onChange={(e) => setTexto(e.target.value.toUpperCase())}
+      />
       <p>{texto}</p>
     </div>
   )
 }
+
 // <CampoEnMayusculas />
 
 // 6) `FormularioNombre` — el cierre, y el circuito entero funcionando. Un campo
@@ -206,7 +222,8 @@ export function FormularioNombre() {
   const [nombre, setNombre] = useState("")
   return (
     <div>
-      <input value={nombre} onChange={() => setNombre(nombre)} />
+      <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+      {/* Si no hay nombre, renderizamos "Escribe tu nombre". Si hay nombre renderizamos "Hola, ${nombre}" */}
       <p>{nombre ? `Hola, ${nombre}` : "Escribe tu nombre"}</p>
     </div>
   )
