@@ -217,3 +217,272 @@ export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: Ma
 
 Encaja pelada, como en el drill 1. El envoltorio sobraba desde el principio.
 </details>
+
+---
+
+# 🪜 Escalera P — el nombre de la prop
+
+> Los seis peldaños atacan la misma idea desde seis sitios, así que las pistas se
+> parecen mucho entre sí. Eso es a propósito.
+>
+> En cuatro de los seis, el mensaje del compilador contiene `IntrinsicAttributes`.
+> Es solo el saco donde React mete `key` y compañía: ignóralo y lee lo que va detrás
+> del `&`, que es el paquete de props de tu componente.
+
+---
+
+## P1 — `TarjetaDeUsuario`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El nombre de esta prop está escrito en dos sitios: donde el padre la manda y donde el
+hijo la pide. Ponlos uno al lado del otro y léelos.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+No dicen lo mismo, y aquí el que manda es el padre: es él quien bautiza la prop. Ojo,
+que el hijo la escribe **dos veces** —al destriparla y en el tipo—, y las dos tienen
+que decir lo que dice el padre.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2322: Type '{ nombre: string; }' is not assignable to type 'IntrinsicAttributes & { usuario: string; }'.
+  Property 'nombre' does not exist on type 'IntrinsicAttributes & { usuario: string; }'.
+```
+
+Sale en `exercise-05.test.tsx`, no en tu archivo, porque el que se queja es el padre:
+está intentando entregar algo que el hijo no pide. **El que protesta no es siempre el
+que hay que arreglar.**
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function TarjetaDeUsuario({ nombre }: { nombre: string }) {
+  return <p>{nombre}</p>
+}
+```
+
+El padre manda `nombre`, así que el hijo pide `nombre`. Nada más. Podrían llamarse los
+dos `pepe` y funcionaría igual de bien.
+</details>
+
+---
+
+## P2 — `Insignia`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Deja de leer el nombre de la prop y lee su **tipo**. ¿Eso que llega se puede ejecutar?
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Es un texto, y un texto no se ejecuta: no pinta nada colgado de un hueco de evento. Su
+sitio es el contenido del `<span>`, como cualquier otro string.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2322: Type 'string' is not assignable to type 'MouseEventHandler<HTMLSpanElement>'.
+```
+
+Aquí sí protesta dentro de tu archivo, y por un motivo que importa: `onClick` escrito
+sobre un `<span>` **sí** es un hueco de React de verdad. Sobre un componente tuyo no lo
+sería.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function Insignia({ onClick }: { onClick: string }) {
+  return <span>{onClick}</span>
+}
+```
+
+La prop podía llamarse `onClick`, `texto` o `pepe`. Lo que decide qué puedes hacer con
+ella es su tipo, no su nombre.
+</details>
+
+---
+
+## P3 — `BotonCastellano`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El hijo escribe el nombre de la prop dos veces: una al destriparla y otra en el tipo.
+Compáralas antes de mirar nada más.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+No coinciden, y la buena es la del tipo, porque es la que el padre escribe en el JSX.
+Saca esa del paquete y cuélgala del hueco del `<button>`.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2339: Property 'onClick' does not exist on type '{ alPulsar: () => void; }'.
+```
+
+Traducido: estás sacando del paquete de props algo que el paquete no lleva. Lo que
+lleva lo describe el tipo —`{ alPulsar: () => void }`— y ahí dentro no hay ningún
+`onClick`.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function BotonCastellano({ alPulsar }: { alPulsar: () => void }) {
+  return (
+    <button type="button" onClick={alPulsar}>
+      Pulsa
+    </button>
+  )
+}
+```
+
+`alPulsar` es el nombre de la prop y `onClick` es el hueco. Son dos cosas distintas, y
+por eso pueden llamarse distinto sin que pase nada.
+</details>
+
+---
+
+## P4 — `BotonIngles`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Es el fallo de P3 con los dos nombres cambiados de sitio. Que la prop se llame
+`onClick` no cambia ni una coma del arreglo.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+En la línea del `<button>` van a acabar conviviendo dos `onClick`: el hueco a la
+izquierda del `=` y tu prop dentro de las llaves. Se ve raro y es lo correcto.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2339: Property 'alPulsar' does not exist on type '{ onClick: () => void; }'.
+```
+
+Espejo exacto del de P3: mismo error, mismos dos nombres, intercambiados.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function BotonIngles({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick}>
+      Pulsa
+    </button>
+  )
+}
+```
+
+`onClick={onClick}`: el de la izquierda es el hueco de React, el de la derecha es tu
+prop. Comparten nombre por casualidad —el padre la bautizó así— y no por parentesco.
+Compara este cuerpo con el de P3: es el mismo botón dos veces.
+</details>
+
+---
+
+## P5 — `BotonMini`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El padre está escrito justo encima y no se toca. Léelo: el nombre bueno está ahí.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El hijo pide un nombre que el padre no manda, así que esa prop llega `undefined` y el
+botón se queda sin nada que ejecutar. Se cambian los dos sitios del hijo, como en P1.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2322: Type '{ alSubir: () => void; }' is not assignable to type 'IntrinsicAttributes & { onClick: () => void; }'.
+  Property 'alSubir' does not exist on type 'IntrinsicAttributes & { onClick: () => void; }'.
+```
+
+Mira la línea a la que apunta: no es `BotonMini`, es `PanelMini`. Otra vez el padre
+protestando por el hijo — y aquí el que no se puede tocar es el que protesta.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function BotonMini({ alSubir }: { alSubir: () => void }) {
+  return (
+    <button type="button" onClick={alSubir}>
+      Subir
+    </button>
+  )
+}
+```
+
+El padre manda `alSubir`, el hijo pide `alSubir` y lo cuelga del hueco. Fíjate en que
+el hueco sigue llamándose `onClick` aunque la prop no: el hueco no se elige.
+</details>
+
+---
+
+## P6 — `PanelBilingue`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Aquí fallan **dos** cosas y el compilador solo caza una. La otra la tienes en el test:
+lee qué texto espera y compáralo con el que pintas.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+En el `<p>` falta el valor que guarda el estado. Y de los dos hijos, uno está montado
+con el nombre de prop que pide el otro, y encima con un valor que no es una función:
+los dos botones tienen que recibir lo mismo, cada uno por el nombre que él pide.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2322: Type '{ alPulsar: number; }' is not assignable to type 'IntrinsicAttributes & { onClick: () => void; }'.
+  Property 'alPulsar' does not exist on type 'IntrinsicAttributes & { onClick: () => void; }'.
+```
+
+`alPulsar: number` te da las dos mitades del fallo de golpe: el nombre que no toca, y
+un número donde iba una función.
+
+**Del `<p>` no vas a ver nada aquí, ni ahora ni después:** pintar de menos no es un
+error de tipos. Ese solo lo caza el test.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function PanelBilingue() {
+  const [total, setTotal] = useState(0)
+  const sumar = () => setTotal(total + 1)
+  return (
+    <div>
+      <p>Bilingüe: {total}</p>
+      <BotonCastellano alPulsar={sumar} />
+      <BotonIngles onClick={sumar} />
+    </div>
+  )
+}
+```
+
+La misma función entra por dos props que se llaman distinto y las dos suben el mismo
+total. Esa es la frase de la escalera, ya en verde: **el nombre de una prop no hace
+nada, solo tiene que coincidir arriba y abajo.**
+</details>

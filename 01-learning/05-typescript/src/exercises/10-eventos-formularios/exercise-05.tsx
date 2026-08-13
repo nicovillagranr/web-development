@@ -32,8 +32,9 @@
  * ----------------------------------------------------------------------------
  *   TEORÍA 1 · una prop que es una función   →  drills 1, 2, 3
  *   TEORÍA 2 · cuando el hijo pone algo suyo →  drills 4, 5, 6
+ *   🪜 ESCALERA P · el nombre de la prop     →  peldaños P1 a P6, al final
  *
- * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
+ * ▸ EJERCICIO — 6 drills + 6 peldaños, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-05.test.tsx
  *     pnpm typecheck
  *
@@ -94,6 +95,8 @@ export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 //    componente no decide qué pasa al pulsar, solo dónde se cuelga.
 //    Al hacer clic, `alPulsar` tiene que ejecutarse y recibir el evento entero.
 //    El starter se lo pasa por el camino: llega, pero llega vacío.
+
+// export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
 export function BotonRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }) {
   return (
     <button onClick={alPulsar}>
@@ -101,11 +104,13 @@ export function BotonRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }
     </button>
   )
 }
-<BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />
+// <BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />
 
 // 2) `EnlaceRecibeManejador` — lo mismo sobre `<a href="/inicio">Ir</a>`. Cambia
 //    el elemento, y por tanto cambia lo que se puede prometer sobre la prop.
 //    Al hacer clic, `alPulsar` recibe el evento.
+
+// export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
 export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlace }) {
   return (
     <a href="/inicio" onClick={alPulsar}>
@@ -118,6 +123,8 @@ export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlac
 // 3) `CampoRecibeManejador` — un `<input>` que recibe por props un manejador de
 //    TECLADO. La prop ya viene bien tipada; el problema es dónde la han colgado,
 //    porque ahora mismo al teclear no salta nada.
+
+// export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecla }) {
   return (
     <input onKeyDown={alTeclear} />
@@ -169,7 +176,7 @@ export function BotonConIdRecibeManejador({ id, alPulsar }: { id: string; alPuls
     </button>
   )
 }
-<BotonConIdRecibeManejador id="guardar" alPulsar={(e, id) => console.log(e.type, id)} />
+// <BotonConIdRecibeManejador id="guardar" alPulsar={(e, id) => console.log(e.type, id)} /> // "click", "guardar"
 
 // 5) `BarraRecibeDos` — un componente que recibe DOS manejadores por props, cada
 //    uno con su alias, y los reparte entre sus dos elementos: `alGuardar` en un
@@ -205,15 +212,15 @@ export function PanelDeConteo() {
 }
 
 // 6) `BotonDeAccion` — el cierre, y el hijo que monta `PanelDeConteo` aquí arriba.
-//    Recibe dos props, el `texto` que se lee en el botón y el `alPulsar` que
-//    ejecuta, y con eso pinta su `<button>`. Tres clics en "Sumar" y el panel de
-//    arriba tiene que marcar "Total: 3".
-//    Ahora mismo se queda en 0. Y typecheck no te va a ayudar a saber por qué:
-//    va a callar aunque esté mal, así que este lo tienes que razonar tú mirando
-//    qué le llega de verdad al hueco.
-//    Restricción: la firma de `BotonDeAccion` es la que `PanelDeConteo` espera.
-//    Si la cambias, arreglarás el botón y romperás el padre.
-export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: () => void }) {
+//    Recibe el `texto` que se lee en el botón y el `alPulsar` que ejecuta, y con eso
+//    pinta su `<button>`. Tres clics en "Sumar" y el panel de arriba marca "Total: 3".
+//    Ahora mismo se queda en 0 y typecheck no te va a decir por qué: este lo razonas
+//    tú, mirando qué le llega de verdad al hueco.
+//    Restricción: la firma es la que `PanelDeConteo` espera. Si la cambias, arreglas
+//    el botón y rompes el padre.
+
+// export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
+export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: ManejadorDeClic }) {
   return (
     <button type="button" onClick={alPulsar}>
       {texto}
@@ -222,8 +229,135 @@ export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: ()
 }
 // <BotonDeAccion texto="Sumar" alPulsar={(e) => console.log(e.type)} />
 
+/* =============================================================================
+ * 🪜 ESCALERA P — el nombre de la prop
+ * =============================================================================
+ *
+ * Una sola idea, en seis peldaños:
+ *
+ *     EL NOMBRE DE UNA PROP NO HACE NADA. SOLO TIENE QUE COINCIDIR ARRIBA Y ABAJO.
+ *
+ * `onClick` escrito sobre un `<button>` es un hueco de React: engancha el clic.
+ * `onClick` escrito sobre un componente tuyo es un nombre y nada más — no engancha
+ * nada, no dispara nada, y podrías haberlo llamado `pepe`.
+ *
+ * P1 y P2 no tienen eventos: props de texto, para ver el contrato desnudo. En P3 y
+ * P4 entra la función, la misma dos veces con la prop llamada de dos maneras. P5 y
+ * P6 la montan en un padre de verdad.
+ *
+ * En todos hay algo roto a propósito, y no siempre está en el cuerpo: unas veces la
+ * que viene mal es la firma.
+ *
+ * Aquí ninguno pasa el test con el fallo dentro: los seis se quejan por los dos
+ * lados. Si un peldaño te sale verde, es que está bien.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// P1) `TarjetaDeUsuario` — pinta dentro de un <p> el nombre que le pasen. El padre
+//     que la monta está en la trace de aquí abajo: míralo, porque es él quien decide
+//     cómo se llama la prop. El <p> debe mostrar "Nico".
+//     Restricción: el padre no se toca. Y como aquí ese padre es el test, el error de
+//     tipos de este peldaño sale en el `.test.tsx`, no en este archivo.
+export function TarjetaDeUsuario({ nombre }: { nombre: string }) {
+  return (
+    <p>{nombre}</p>
+  )
+}
+// <TarjetaDeUsuario nombre="Nico" />   // <p>Nico</p>
+
+
+// P2) `Insignia` — recibe una prop llamada `onClick` cuyo valor es un TEXTO, y lo
+//     pinta dentro de un <span>. No hay ningún clic aquí: es una etiqueta de texto
+//     y ya está.
+//     Sí, se llama `onClick` a propósito. Sobre un componente tuyo ese nombre no
+//     tiene ningún poder — cabe un string igual que cabría un número.
+export function Insignia({ onClick }: { onClick: string }) {
+  return (
+    <span>
+      {onClick}
+    </span>
+  )
+}
+// <Insignia onClick="nuevo" />   // <span>nuevo</span>
+
+
+// P3) `BotonCastellano` — el primero de un par: dos botones idénticos, cada uno con
+//     la prop llamada de una manera. Este recibe la suya en castellano, `alPulsar`,
+//     y monta un <button> "Pulsa".
+//     Al hacer clic tiene que ejecutarse lo que el padre le haya pasado en esa prop.
+export function BotonCastellano({ alPulsar }: { alPulsar: () => void }) {
+  return (
+    <button type="button" onClick={alPulsar}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonCastellano alPulsar={() => console.log('clic')} />
+
+
+// P4) `BotonIngles` — el mismo botón exacto que P3, con la prop llamada `onClick` en
+//     vez de `alPulsar`. Ojo, que aquí `onClick` va a aparecer dos veces y no son la
+//     misma cosa: una es el nombre que el padre eligió para la prop y la otra es el
+//     hueco del <button>. Que coincidan no las conecta.
+//     Al hacer clic tiene que ejecutarse lo que el padre le haya pasado en la prop.
+export function BotonIngles({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonIngles onClick={() => console.log('clic')} />
+
+
+/* ⬇️ ESTE PADRE YA ESTÁ ESCRITO. No lo toques: es el peldaño P5 visto desde arriba. */
+export function PanelMini() {
+  const [total, setTotal] = useState(0)
+  const subir = () => setTotal(total + 1)
+  return (
+    <div>
+      <p>Mini: {total}</p>
+      <BotonMini alSubir={subir} />
+    </div>
+  )
+}
+
+// P5) `BotonMini` — el hijo que `PanelMini` monta aquí arriba. Pinta un <button>
+//     "Subir" que ejecute lo que le llega. El padre ya está escrito ahí arriba, y
+//     ahí está escrito también el nombre de la prop.
+//     Restricción: el padre no se toca. El que se adapta es el hijo.
+export function BotonMini({ alSubir }: { alSubir: () => void }) {
+  return (
+    <button type="button" onClick={alSubir}>
+      Subir
+    </button>
+  )
+}
+// (se ve montado dentro de <PanelMini />)
+
+
+// P6) `PanelBilingue` — el cierre. Guarda un total con `useState` y monta DOS
+//     botones que suben ese mismo total: el `BotonCastellano` de P3 y el
+//     `BotonIngles` de P4, cada uno con el nombre de prop que pide el suyo.
+//     Pinta el total en un <p> con el texto "Bilingüe: 0".
+//     Los dos hijos son el mismo botón escrito dos veces con la prop llamada
+//     distinto, y los dos suman. Esa es la frase de la escalera, ya en verde.
+export function PanelBilingue() {
+  const [total, setTotal] = useState(0)
+  const sumar = () => setTotal(total + 1)
+  return (
+    <div>
+      <p>Bilingüe: {total}</p>
+      <BotonCastellano alPulsar={sumar} />
+      <BotonIngles onClick={sumar} />
+    </div>
+  )
+}
+// <PanelBilingue />
+
+
 /* ─────────────────────────────────────────────────────────────────────────────
- * Cuando los 6 estén en verde: llevas cinco archivos mirando `e.type` y `e.key`,
- * que casi no se usan en el trabajo real. En el 06 entra el que sí — el que te
- * dice qué hay ESCRITO en un campo — y con él un `e` con otro apellido.
+ * Cuando los 6 drills y los 6 peldaños estén en verde: llevas cinco archivos
+ * mirando `e.type` y `e.key`, que casi no se usan en el trabajo real. En el 06
+ * entra el que sí — el que te dice qué hay ESCRITO en un campo — y con él un `e`
+ * con otro apellido.
  * ───────────────────────────────────────────────────────────────────────────── */
