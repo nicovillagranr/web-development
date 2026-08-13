@@ -196,6 +196,9 @@ export function CampoAvisaLoEscrito({ avisar }: { avisar: (t: string) => void })
 export function TarjetaQueIgnoraElBoton({ avisar }: { avisar: (t: string) => void }) {
   return (
     <article onClick={(e) => {
+      // Este if evalúa si el click le pasa por encima de la tarjeta
+      // Si lo hace, avisa con "tarjeta"
+      // Si no lo hace, no hace nada
       if (e.target === e.currentTarget) {
         avisar('tarjeta')
       }
@@ -211,6 +214,6 @@ export function TarjetaQueIgnoraElBoton({ avisar }: { avisar: (t: string) => voi
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde: los seis manejadores de este archivo viven en el
  * elemento del que leen. No es casualidad — es la forma de que los tipos te sirvan
- * de algo. En el 08 el manejador pasa a vivir en el <form>, y ahí `target` y
- * `currentTarget` vuelven a separarse con una diferencia que sí importa.
+ * de algo. En el 08 el manejador se muda al <form>, que es el caso donde eso deja
+ * de ser una elección: el envío solo ocurre ahí.
  * ───────────────────────────────────────────────────────────────────────────── */
