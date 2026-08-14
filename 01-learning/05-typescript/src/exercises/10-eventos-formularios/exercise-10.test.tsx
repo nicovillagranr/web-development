@@ -8,6 +8,12 @@ import {
   FilaTarea,
   ListaTareas,
   GestorDeTareas,
+  EtiquetaTexto,
+  BotonQueAvisa,
+  PadreQueGuarda,
+  PadreQueLimpia,
+  PadreConDosCajas,
+  PadreQueEntregaLosDos,
 } from './exercise-10'
 
 const tareaDe = (id: string, texto: string, hecha = false) =>
@@ -95,5 +101,58 @@ describe('10-eventos-formularios / exercise-10 — CAPSTONE: el formulario enter
     await userEvent.click(screen.getByRole('button', { name: 'Borrar Regar' }))
     expect(screen.queryByText('Regar')).not.toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(1)
+  })
+})
+
+describe('10-eventos-formularios / exercise-10 — escalera E', () => {
+  it('E1) EtiquetaTexto — pinta la prop, y la sigue si cambia', () => {
+    const { rerender } = render(<EtiquetaTexto texto="hola" />)
+    expect(screen.getByText('hola')).toBeInTheDocument()
+    rerender(<EtiquetaTexto texto="adios" />)
+    expect(screen.getByText('adios')).toBeInTheDocument()
+  })
+
+  it('E2) BotonQueAvisa — avisa al pulsar, y no antes', async () => {
+    const espia = vi.fn()
+    render(<BotonQueAvisa alPulsar={espia} />)
+    expect(espia).not.toHaveBeenCalled()
+    await userEvent.click(screen.getByRole('button'))
+    expect(espia).toHaveBeenCalledTimes(1)
+  })
+
+  it('E3) PadreQueGuarda — lo tecleado en el hijo sube y se pinta arriba', async () => {
+    render(<PadreQueGuarda />)
+    await userEvent.type(screen.getByRole('textbox'), 'hola')
+    expect(screen.getByText('hola')).toBeInTheDocument()
+  })
+
+  it('E4) PadreQueLimpia — el botón del padre vacía el campo del hijo', async () => {
+    render(<PadreQueLimpia />)
+    const campo = screen.getByRole('textbox')
+    await userEvent.type(campo, 'hola')
+    expect(campo).toHaveValue('hola')
+    await userEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
+    expect(campo).toHaveValue('')
+  })
+
+  it('E5) PadreConDosCajas — los dos estados son independientes', async () => {
+    render(<PadreConDosCajas />)
+    const [caja1, caja2] = screen.getAllByRole('textbox')
+    if (!caja1 || !caja2) throw new Error('faltan cajas')
+    await userEvent.type(caja1, 'Nico')
+    await userEvent.type(caja2, 'n@a.com')
+    expect(screen.getByText('nombre: Nico')).toBeInTheDocument()
+    expect(screen.getByText('email: n@a.com')).toBeInTheDocument()
+  })
+
+  it('E6) PadreQueEntregaLosDos — entrega los dos juntos, en un objeto', async () => {
+    const espia = vi.fn()
+    render(<PadreQueEntregaLosDos alEnviar={espia} />)
+    const [caja1, caja2] = screen.getAllByRole('textbox')
+    if (!caja1 || !caja2) throw new Error('faltan cajas')
+    await userEvent.type(caja1, 'Nico')
+    await userEvent.type(caja2, 'n@a.com')
+    await userEvent.click(screen.getByRole('button', { name: 'Enviar' }))
+    expect(espia).toHaveBeenLastCalledWith({ nombre: 'Nico', email: 'n@a.com' })
   })
 })

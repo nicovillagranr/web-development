@@ -207,3 +207,201 @@ setTareas([...tareas, nueva])
 `[...tareas, nueva]` es un array nuevo con los de antes más uno. React compara el
 que le das con el que tenía, ve que no es el mismo, y repinta.
 </details>
+
+---
+
+# Escalera E — el estado vive arriba
+
+> Cuatro de los seis peldaños no dan error de tipos: son de comportamiento y solo
+> los caza el test. Los otros dos (E2 y E6) sí, y su Pista 3 cita el mensaje.
+
+## E1 — `EtiquetaTexto`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El componente pinta bien la primera vez y se queda congelado cuando la prop cambia.
+O sea que lo que está pintando no es la prop: es algo que se guardó al nacer.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`useState(texto)` usa el valor de la prop **solo la primera vez**, para inicializar.
+A partir de ahí la caja va por su cuenta y la prop puede cambiar cien veces sin
+enterarse. Copiar una prop al estado es un error clásico, y aquí no hace falta
+estado ninguno.
+</details>
+
+<details><summary>Pista 3 — por qué typecheck no dice nada</summary>
+
+**No hay mensaje.** `useState(texto)` es válido y a veces es lo que quieres (un
+valor inicial editable). Que aquí no lo sea es una decisión de diseño, no un tipo.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function EtiquetaTexto({ texto }: { texto: string }) {
+  return <p>{texto}</p>
+}
+```
+
+Un hijo que solo pinta no necesita estado. **Lo que le llega es la verdad.**
+</details>
+
+## E2 — `BotonQueAvisa`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El test comprueba dos cosas: que avise al pulsar **y que no avise antes**. Falla la
+segunda, así que la función se está ejecutando en el momento de pintar.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Los paréntesis ejecutan. Al hueco hay que entregarle la función, no el resultado de
+llamarla — es el primer concepto de esta carpeta, el `exercise-01`.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2322: Type 'void' is not assignable to type
+'MouseEventHandler<HTMLButtonElement> | undefined'.
+```
+
+`void` es lo que devuelve `alPulsar()`: nada. Le estás dando al `onClick` el
+resultado de la llamada, y ese resultado no existe.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+<button onClick={alPulsar}>Pulsa</button>
+```
+</details>
+
+## E3 — `PadreQueGuarda`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El hijo avisa bien: recibe cada tecla y llama a `alEscribir` con lo tecleado. Mira
+qué hace el padre con ese aviso.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El padre le pasa una función que **ignora el argumento** y guarda cadena vacía
+pase lo que pase. Lo que necesita entregarle al hijo es su propia función de
+cambiar el estado — la segunda cosa que devuelve `useState`, tal cual, sin
+envolverla en nada.
+</details>
+
+<details><summary>Pista 3 — por qué typecheck no dice nada</summary>
+
+**No hay mensaje.** `() => setTexto('')` encaja perfectamente en
+`(valor: string) => void`: la regla de aridad permite declarar menos parámetros de
+los que te van a pasar. Que ignorar el valor sea un error es cosa tuya, no del tipo.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+<CajaQueAvisa alEscribir={setTexto} />
+```
+
+`setTexto` **es** una función `(valor: string) => void`. Encaja en la prop sin
+envolverla, y entregarla es literalmente darle al hijo la llave del estado del padre.
+</details>
+
+## E4 — `PadreQueLimpia`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El padre guarda bien —el `<p>` de abajo lo demuestra— y al pulsar "Limpiar" el
+estado se vacía. Pero el campo sigue enseñando lo de antes: el campo no está
+mirando el estado.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`CajaQueAvisa` solo sabe avisar; no recibe nada que pintar, así que su `<input>`
+se pinta solo con lo que el usuario tecleó. En este archivo hay otra caja que sí
+acepta lo que debe mostrar.
+</details>
+
+<details><summary>Pista 3 — por qué typecheck no dice nada</summary>
+
+**No hay mensaje.** Un `<input>` sin `value` es válido y muy común. Que tú
+quisieras el campo controlado no está escrito en ningún tipo — es la misma lección
+del drill 5 del 06, ahora con el estado un piso más arriba.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+<CajaControlada texto={texto} alEscribir={setTexto} />
+```
+
+**Un hijo controlado necesita las DOS props.** Con una sola funciona a medias.
+</details>
+
+## E5 — `PadreConDosCajas`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Escribes en una caja y el que cambia es el `<p>` de la otra. Sigue el recorrido de
+un solo carácter: sale de la caja de arriba, y ¿en qué estado aterriza?
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Cada caja pinta un estado y avisa a **otro**. Están cruzadas: lo que hay que
+emparejar es `texto=` y `alEscribir=` de cada una.
+</details>
+
+<details><summary>Pista 3 — por qué typecheck no dice nada</summary>
+
+**No hay mensaje**, y es el caso del drill 3 del 09 otra vez: los dos estados son
+`string`, así que los dos setters tienen exactamente el mismo tipo
+—`(valor: string) => void`— y son intercambiables para el compilador. **Cuando dos
+cosas tienen el mismo tipo, cruzarlas no es un error de tipos.**
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+<CajaControlada texto={nombre} alEscribir={setNombre} />
+<CajaControlada texto={email} alEscribir={setEmail} />
+```
+</details>
+
+## E6 — `PadreQueEntregaLosDos`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Lee la firma de `alEnviar`: pide **un** argumento, y ese argumento es un objeto con
+dos claves.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Tienes los dos datos en dos variables sueltas. Hay que juntarlos en un objeto antes
+de entregarlos, y las claves se llaman igual que las variables.
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+TS2554: Expected 1 arguments, but got 2.
+```
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+onClick={() => alEnviar({ nombre, email })}
+```
+
+`{ nombre, email }` es la forma corta de `{ nombre: nombre, email: email }`. Y esta
+es exactamente la línea que necesita el drill 3, con otros nombres.
+</details>

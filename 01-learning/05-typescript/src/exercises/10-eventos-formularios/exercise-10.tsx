@@ -30,6 +30,8 @@
  * ----------------------------------------------------------------------------
  *   TEORÍA 1 · el reparto de responsabilidades  →  drills 1, 2, 3
  *   TEORÍA 2 · el estado que es una lista       →  drills 4, 5, 6
+ *   ESCALERA E · el estado vive arriba  →  E1-E6, al final del archivo
+ *                (si el drill 3 se te atraganta, baja ahí y vuelve)
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-10.test.tsx
@@ -46,6 +48,7 @@
  * ===========================================================================*/
 
 import { useState } from 'react'
+
 
 type Prioridad = 'baja' | 'media' | 'alta'
 type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
@@ -85,26 +88,26 @@ type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
 // 1) `CampoTexto` — un <input> controlado DESDE FUERA: pinta el `texto` que le
 //    llega y avisa por `alEscribir` de lo que se teclea. No tiene estado propio.
 //    El starter entrega el manejador sin traducir.
-export function CampoTexto(
-  { texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void },
-) {
+export function CampoTexto({ texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void }) {
   return (
-    <input value={texto} onChange={alEscribir} />
+    <input value={texto} onChange={(e) => alEscribir(e.target.value)} />
   )
 }
-// <CampoTexto texto="hola" alEscribir={(v) => console.log(v)} />
+// <CampoTexto texto="hola" alEscribir={(v) => console.log(v)} />   // "hola"
 
 // 2) `SelectorPrioridad` — un <select> con las tres prioridades, controlado igual
 //    que el campo: pinta la que le llega y avisa de la elegida.
 //    `alElegir` pide una `Prioridad`, y el DOM no sabe nada de ese tipo.
 //    Restricción: sin `as`.
-export function SelectorPrioridad(
-  { prioridad, alElegir }: { prioridad: Prioridad; alElegir: (p: Prioridad) => void },
-) {
+export function SelectorPrioridad({ prioridad, alElegir }: { prioridad: Prioridad; alElegir: (p: Prioridad) => void }) {
   return (
-    <select
-      value={prioridad}
-      onChange={(e) => alElegir(e.target.value)}
+    <select value={prioridad} onChange={(e) => {
+      switch (e.target.value) {
+        case 'baja': alElegir('baja'); break
+        case 'media': alElegir('media'); break
+        case 'alta': alElegir('alta'); break
+      }
+    }}
     >
       <option value="baja">Baja</option>
       <option value="media">Media</option>
@@ -119,20 +122,21 @@ export function SelectorPrioridad(
 //    queda limpio: campo vacío y prioridad de vuelta en "media".
 //    Con el campo vacío no entrega nada. Y no recarga la página, claro.
 //    Fíjate en lo que `alAñadir` pide: ni `id` ni `hecha`. Eso no es cosa suya.
-export function FormularioTarea(
-  { alAñadir }: { alAñadir: (datos: { texto: string; prioridad: Prioridad }) => void },
-) {
+export function FormularioTarea({ alAñadir }: { alAñadir: (datos: { texto: string; prioridad: Prioridad }) => void }) {
   const [texto, setTexto] = useState('')
   const [prioridad, setPrioridad] = useState<Prioridad>('media')
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      if (texto === '') return
-      alAñadir({ texto, prioridad })
+      if (texto) {
+        alAñadir({ texto, prioridad })
+        setTexto('')
+        setPrioridad('media')
+      }
     }}>
       <CampoTexto texto={texto} alEscribir={setTexto} />
       <SelectorPrioridad prioridad={prioridad} alElegir={setPrioridad} />
-      <button>Añadir</button>
+      <button type="submit">Añadir</button>
     </form>
   )
 }
@@ -174,13 +178,9 @@ export function FormularioTarea(
 //    texto y un botón "Borrar". La casilla avisa por `alMarcar` con el id y el
 //    nuevo estado; el botón avisa por `alBorrar` con el id.
 //    Los dos datos que hay que entregar ya los tienes en las props.
-export function FilaTarea(
-  { tarea, alMarcar, alBorrar }: {
-    tarea: Tarea
-    alMarcar: (id: string, hecha: boolean) => void
-    alBorrar: (id: string) => void
-  },
-) {
+export function FilaTarea({ tarea, alMarcar, alBorrar }: {
+  tarea: TareaalMarcar: (id: string, hecha: boolean) => voidalBorrar: (id: string) => void
+}) {
   return (
     <li>
       <input
@@ -254,4 +254,136 @@ export function GestorDeTareas() {
  * Cuando los 6 estén en verde has terminado el bloque, y lo que tienes delante no
  * es un ejercicio: es una feature con la misma forma que las de un proyecto de
  * verdad. Repásala y búscale los nueve archivos dentro — están todos.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA E — el estado vive arriba
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Seis peldaños para desmontar el drill 3 en sus tres piezas. La frase entera es
+ * esta, y cada peldaño añade una palabra:
+ *
+ *   **El estado vive en el padre. El hijo lo PINTA y AVISA, y no guarda nada.**
+ *
+ *   E1-E2 · qué hace un hijo tonto: pintar lo que le dan, avisar de lo que pasa
+ *   E3-E4 · el circuito: el padre le entrega su propia función de cambiar
+ *   E5-E6 · dos estados a la vez, y cómo se juntan al enviar
+ *
+ * 👀 En estos peldaños los padres pintan un `<p>` con lo que llevan guardado. No
+ *    es decoración: es la única forma de VER desde fuera si el dato subió o no.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// E1) `EtiquetaTexto` — un hijo que solo pinta: recibe `texto` y lo muestra en un
+//     <p>. Si el padre le cambia el texto, tiene que cambiar lo que se ve.
+//     El starter se hace una copia del texto al nacer y se queda con ella.
+export function EtiquetaTexto({ texto }: { texto: string }) {
+  const copia = texto
+  return (
+    <p>
+      {copia}
+    </p>
+  )
+}
+//<EtiquetaTexto texto="hola" />
+
+// E2) `BotonQueAvisa` — un hijo que solo avisa: al pulsarlo llama a `alPulsar`.
+//     Ojo con lo que le entregas al hueco: entregar una función y llamarla no es
+//     lo mismo, y es el primer concepto de esta carpeta.
+export function BotonQueAvisa({ alPulsar }: { alPulsar: () => void }) {
+  return (
+    <button onClick={alPulsar}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonQueAvisa alPulsar={() => {}} />
+
+// E3) `PadreQueGuarda` — el padre tiene el estado y el `<p>` que lo pinta; el hijo
+//     `CajaQueAvisa` ya está escrito y avisa bien de cada tecla. Tecleas "hola" y
+//     el <p> del padre tiene que decir "hola".
+//     El padre está ignorando lo que el hijo le cuenta.
+function CajaQueAvisa({ alEscribir }: { alEscribir: (valor: string) => void }) {
+  return <input onChange={(e) => alEscribir(e.target.value)} />
+}
+
+export function PadreQueGuarda() {
+  const [texto, setTexto] = useState('')
+  return (
+    <div>
+      <CajaQueAvisa alEscribir={setTexto} />
+      <p>{texto}</p>
+    </div>
+  )
+}
+// <PadreQueGuarda />
+
+// E4) `PadreQueLimpia` — el mismo circuito, y ahora el padre tiene un botón que
+//     vacía el estado. Al pulsarlo, el campo tiene que quedarse vacío también.
+//     Ahora el campo se queda con lo escrito, porque va por libre.
+//     El starter monta la caja del peldaño anterior, que solo sabe avisar.
+function CajaControlada({ texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void },) {
+  return <input value={texto} onChange={(e) => alEscribir(e.target.value)} />
+}
+
+export function PadreQueLimpia() {
+  const [texto, setTexto] = useState('')
+  return (
+    <div>
+      <CajaQueAvisa alEscribir={setTexto} />
+      <button type="button" onClick={() => setTexto('')}>Limpiar</button>
+      <p>guardado: {texto}</p>
+    </div>
+  )
+}
+// <PadreQueLimpia />
+
+// E5) `PadreConDosCajas` — dos estados independientes en el mismo padre, cada uno
+//     con su caja. Escribes en la primera y el <p> de arriba lo dice; escribes en
+//     la segunda y el de abajo, sin que se pisen.
+//     El starter tiene los cables cruzados: cada caja avisa al estado del otro.
+export function PadreConDosCajas() {
+  const [nombre, setNombre] = useState('')
+  const [email, setEmail] = useState('')
+  return (
+    <div>
+      <CajaControlada texto={nombre} alEscribir={setEmail} />
+      <CajaControlada texto={email} alEscribir={setNombre} />
+      <p>nombre: {nombre}</p>
+      <p>email: {email}</p>
+    </div>
+  )
+}
+// <PadreConDosCajas />
+
+// E6) `PadreQueEntregaLosDos` — el cierre, y es la línea del drill 3. Al pulsar
+//     "Enviar", `alEnviar` recibe los dos datos JUNTOS, en un objeto con las
+//     claves `nombre` y `email`.
+//     Lee la firma de `alEnviar`: pide una cosa, no dos.
+export function PadreQueEntregaLosDos(
+  { alEnviar }: { alEnviar: (datos: { nombre: string; email: string }) => void },
+) {
+  const [nombre, setNombre] = useState('')
+  const [email, setEmail] = useState('')
+  return (
+    <div>
+      <CajaControlada texto={nombre} alEscribir={setNombre} />
+      <CajaControlada texto={email} alEscribir={setEmail} />
+      <button type="button" onClick={() => alEnviar(nombre, email)}>Enviar</button>
+    </div>
+  )
+}
+// <PadreQueEntregaLosDos alEnviar={(d) => console.log(d)} />
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Con los seis en verde, el drill 3 se lee entero:
+ *
+ *   texto y prioridad viven en FormularioTarea          ← E3
+ *   los hijos los pintan (`texto=`, `prioridad=`)        ← E4
+ *   y avisan con el setter que el padre les entregó      ← E3
+ *   son dos estados independientes                       ← E5
+ *   y al enviar se juntan en un objeto                   ← E6
+ *
+ * Y la pieza que no está en ningún peldaño —`{ texto, prioridad }` sin `id` ni
+ * `hecha`— es la del 09: la frontera entrega datos del dominio, no lo que le
+ * sobra a quien los tiene.
  * ───────────────────────────────────────────────────────────────────────────── */
