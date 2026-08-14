@@ -33,6 +33,8 @@
  * ----------------------------------------------------------------------------
  *   TEORÍA 1 · el envío y el freno       →  drills 1, 2, 3
  *   TEORÍA 2 · de dónde salen los datos  →  drills 4, 5, 6
+ *   ESCALERA S · el click y el envío son dos cosas  →  S1-S6, al final del archivo
+ *                (si el drill 2 no se te cae solo, baja ahí antes de seguir)
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-08.test.tsx
@@ -50,7 +52,8 @@
  * ===========================================================================*/
 
 import { useState } from 'react'
-import type { ChangeEvent } from 'react'
+// import type { ChangeEvent } from 'react'
+import type { SubmitEvent } from 'react';
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -97,20 +100,21 @@ export function FormularioAvisa({ alEnviar }: { alEnviar: () => void }) {
     </form>
   )
 }
-<FormularioAvisa alEnviar={() => console.log('enviado')} />
+{/* <FormularioAvisa alEnviar={() => console.log('enviado')} /> */ }
 
 // 2) `FormularioConDosBotones` — el mismo formulario con dos botones: "Enviar", que
 //    envía, y "Limpiar", que llama a `alLimpiar` y **no debe enviar nada**.
 //    Ahora mismo "Limpiar" hace las dos cosas.
 //    Restricción: el `onSubmit` del <form> no se toca; el arreglo es cosa del botón.
-export function FormularioConDosBotones(
-  { alEnviar, alLimpiar }: { alEnviar: () => void; alLimpiar: () => void },
-) {
+export function FormularioConDosBotones({ alEnviar, alLimpiar }: { alEnviar: () => void; alLimpiar: () => void }) {
   return (
     <form onSubmit={(e) => { e.preventDefault(); alEnviar() }}>
       <input name="nombre" />
-      <button onClick={alLimpiar}>Limpiar</button>
-      <button>Enviar</button>
+      {/* SOLUCIÓN: type="button" evita que este botón envíe el formulario */}
+      <button type="button" onClick={alLimpiar}>Limpiar</button>
+
+      {/* SOLUCIÓN: type="submit" (o dejarlo por defecto) para que se encargue de enviar */}
+      <button type="submit">Enviar</button>
     </form>
   )
 }
@@ -122,7 +126,7 @@ export function FormularioConDosBotones(
 //    se va a quejar.
 //    Este drill exige un import nuevo, y sale de 'react'.
 export function FormularioManejadorFuera({ alEnviar }: { alEnviar: () => void }) {
-  const manejar = (e: ChangeEvent<HTMLButtonElement>) => {
+  const manejar = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     alEnviar()
   }
@@ -174,9 +178,9 @@ export function FormularioManejadorFuera({ alEnviar }: { alEnviar: () => void })
 export function FormularioLeeElNombre({ alEnviar }: { alEnviar: (n: string) => void }) {
   const [nombre, setNombre] = useState('')
   return (
-    <form onSubmit={(e) => { e.preventDefault(); alEnviar(e.currentTarget.elements.nombre.value) }}>
+    <form onSubmit={(e) => { e.preventDefault(); alEnviar(nombre) }}>
       <input name="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <button>Enviar</button>
+      <button type="submit">Enviar</button>
     </form>
   )
 }
@@ -188,9 +192,13 @@ export function FormularioLeeElNombre({ alEnviar }: { alEnviar: (n: string) => v
 export function FormularioLimpiaAlEnviar({ alEnviar }: { alEnviar: (n: string) => void }) {
   const [nombre, setNombre] = useState('')
   return (
-    <form onSubmit={(e) => { e.preventDefault(); alEnviar(nombre) }}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      alEnviar(nombre);
+      setNombre('')
+    }}>
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <button>Enviar</button>
+      <button type="submit">Enviar</button>
     </form>
   )
 }
@@ -204,9 +212,11 @@ export function FormularioNoEnviaVacio({ alEnviar }: { alEnviar: (n: string) => 
   const [nombre, setNombre] = useState('')
   return (
     <form onSubmit={(e) => {
-      e.preventDefault()
-      alEnviar(nombre)
-      setNombre('')
+      e.preventDefault();
+      if (nombre) {
+        alEnviar(nombre);
+        setNombre('')
+      }
     }}>
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
       <button>Enviar</button>
@@ -219,4 +229,127 @@ export function FormularioNoEnviaVacio({ alEnviar }: { alEnviar: (n: string) => 
  * Cuando los 6 estén en verde: tienes un formulario que se envía, se frena, se
  * valida y se limpia. Lo que le falta para ser el de un proyecto real es que la
  * función de arriba reciba DATOS y no piezas del DOM — y de eso va el 09.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA S — el click y el envío son DOS cosas
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Seis peldaños cortos para una sola frase: **son dos eventos distintos, en dos
+ * elementos distintos, y uno provoca al otro.**
+ *
+ *   1. pulsas el botón      → evento `click`, y ocurre EN EL BOTÓN
+ *   2. el botón, por ser de envío, provoca el envío del formulario
+ *   3. eso dispara el evento `submit`, y ocurre EN EL <form>
+ *   4. el navegador navega  ← salvo que alguien lo frene
+ *
+ * `onClick` escucha el paso 1. `onSubmit` escucha el paso 3. Por eso `onSubmit`
+ * va en el `<form>`: es el `<form>` quien se envía, no el botón. Y por eso hay
+ * dos maneras de que no se envíe nada — cortar en el paso 2 o cortar en el 4.
+ *
+ * 👀 Los peldaños usan una prop `registrar` que apunta lo que va pasando, para
+ *    que puedas ver el orden. En un componente de verdad no existiría.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// S1) `BotonSuelto` — un <button> que no está dentro de ningún <form>: aquí no hay
+//     envío posible. Al pulsarlo registra "click".
+//     El starter escucha un evento que en este botón no va a ocurrir jamás.
+export function BotonSuelto({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <button onClick={() => registrar('click')}>
+      Pulsa
+    </button>
+  )
+}
+// <BotonSuelto registrar={(q) => console.log(q)} />   // "click"
+
+// S2) `EnvioSinManejadorEnElBoton` — ahora sí hay <form>, y el botón no lleva
+//     ningún manejador. Aun así, al pulsarlo se registra "submit".
+//     Restricción: el <button> tiene que acabar sin un solo manejador encima.
+export function EnvioSinManejadorEnElBoton({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
+      <button>
+        Enviar
+      </button>
+    </form>
+  )
+}
+// <EnvioSinManejadorEnElBoton registrar={(q) => console.log(q)} />   // "submit"
+
+// S3) `RegistraLosDos` — el botón lleva su manejador y el formulario el suyo. Al
+//     pulsar una sola vez se registran las DOS cosas, en el orden en que ocurren.
+//     El starter solo tiene una de las dos.
+export function RegistraLosDos({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
+      <button onClick={() => registrar('click')}>
+        Enviar
+      </button>
+    </form>
+  )
+}
+// <RegistraLosDos registrar={(q) => console.log(q)} />   // "click", luego "submit"
+
+// S4) `BotonQueNoProvoca` — el mismo de S3, pero este botón no debe provocar el
+//     envío: al pulsarlo se registra "click" y nada más.
+//     Restricción: el manejador del botón no se toca; el arreglo es lo que el
+//     botón ES, no lo que hace.
+export function BotonQueNoProvoca({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
+      <button type="button" onClick={() => registrar('click')}>
+        Pulsa
+      </button>
+    </form>
+  )
+}
+// <BotonQueNoProvoca registrar={(q) => console.log(q)} />   // "click"
+
+// S5) `EnterEnvia` — un formulario con dos campos y un botón. Sin tocar el botón:
+//     escribir en un campo y pulsar Enter tiene que registrar "submit".
+//     El starter dejó el formulario sin ningún botón capaz de enviarlo.
+export function EnterEnvia({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
+      <input name="nombre" />
+      <input name="email" />
+      {/* Cambiado a type="submit" para activar el comportamiento nativo del Enter */}
+      <button type="submit">Enviar</button>
+    </form>
+  )
+}
+// <EnterEnvia registrar={(q) => console.log(q)} />   // "submit" al pulsar Enter
+
+// S6) `CortarAntesDeNacer` — el último, y el que explica los otros cinco. Al pulsar
+//     se registra "click" y el envío NO llega a ocurrir: "submit" no se registra.
+//     Restricción: sin tocar el `type` del botón. El corte va en el manejador del
+//     click, y es el mismo freno del drill 1 puesto un paso antes.
+export function CortarAntesDeNacer({ registrar }: { registrar: (que: string) => void }) {
+  return (
+    <form onSubmit={() => registrar('submit')}>
+      {/* Recibimos el evento 'e' y llamamos a preventDefault para cortar el submit */}
+      <button onClick={(e) => { e.preventDefault(); registrar('click') }}>
+        Pulsa
+      </button>
+    </form>
+  )
+}
+// <CortarAntesDeNacer registrar={(q) => console.log(q)} />   // "click"
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Con los seis en verde, la respuesta a "¿en el form o en el botón?" es una tabla:
+ *
+ *   quiero enterarme del envío         → onSubmit, y va en el <form>   (S2)
+ *   quiero enterarme del click         → onClick, y va en el botón     (S3)
+ *   quiero que ese botón no envíe      → type="button"                 (S4)
+ *   quiero enviar sin ratón            → que haya un botón de envío    (S5)
+ *   quiero cancelar el envío al vuelo  → preventDefault en el click    (S6)
+ *   quiero enviar pero sin navegar     → preventDefault en el submit   (drill 1)
+ *
+ * Las dos últimas se parecen y no son lo mismo: S6 impide que el envío NAZCA —el
+ * `onSubmit` no llega a saltar—, mientras que el drill 1 deja que nazca y solo le
+ * quita al navegador la parte de irse de la página. Por eso el drill 2 se arregla
+ * con `type` y no con S6: un botón que sigue siendo de envío es el que responde al
+ * Enter, aunque le hayas cancelado el click.
  * ───────────────────────────────────────────────────────────────────────────── */

@@ -8,7 +8,17 @@ import {
   FormularioLeeElNombre,
   FormularioLimpiaAlEnviar,
   FormularioNoEnviaVacio,
+  BotonSuelto,
+  EnvioSinManejadorEnElBoton,
+  RegistraLosDos,
+  BotonQueNoProvoca,
+  EnterEnvia,
+  CortarAntesDeNacer,
 } from './exercise-08'
+
+/** Aplana las llamadas del espía: [['click'], ['submit']] → ['click', 'submit'] */
+const loRegistrado = (espia: ReturnType<typeof vi.fn>) =>
+  espia.mock.calls.map((llamada) => llamada[0])
 
 /** Envía el <form> y devuelve el evento, para poder mirar si se frenó. */
 function enviar(contenedor: HTMLElement) {
@@ -75,5 +85,51 @@ describe('10-eventos-formularios / exercise-08 — onSubmit y preventDefault', (
     enviar(container)
     expect(espia).toHaveBeenLastCalledWith('Nico')
     expect(campo).toHaveValue('')
+  })
+})
+
+describe('10-eventos-formularios / exercise-08 — escalera S', () => {
+  it('S1) BotonSuelto — registra el click', async () => {
+    const espia = vi.fn()
+    render(<BotonSuelto registrar={espia} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(loRegistrado(espia)).toEqual(['click'])
+  })
+
+  it('S2) EnvioSinManejadorEnElBoton — el botón no lleva nada y aun así se envía', async () => {
+    const espia = vi.fn()
+    render(<EnvioSinManejadorEnElBoton registrar={espia} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(loRegistrado(espia)).toEqual(['submit'])
+  })
+
+  it('S3) RegistraLosDos — un click provoca las dos cosas, y en este orden', async () => {
+    const espia = vi.fn()
+    render(<RegistraLosDos registrar={espia} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(loRegistrado(espia)).toEqual(['click', 'submit'])
+  })
+
+  it('S4) BotonQueNoProvoca — click sí, envío no', async () => {
+    const espia = vi.fn()
+    render(<BotonQueNoProvoca registrar={espia} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(loRegistrado(espia)).toEqual(['click'])
+  })
+
+  it('S5) EnterEnvia — Enter en el campo envía, sin tocar el botón', async () => {
+    const espia = vi.fn()
+    render(<EnterEnvia registrar={espia} />)
+    const [campo] = screen.getAllByRole('textbox')
+    if (!campo) throw new Error('no hay campos en el formulario')
+    await userEvent.type(campo, 'Nico{Enter}')
+    expect(loRegistrado(espia)).toEqual(['submit'])
+  })
+
+  it('S6) CortarAntesDeNacer — el envío no llega a ocurrir', async () => {
+    const espia = vi.fn()
+    render(<CortarAntesDeNacer registrar={espia} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(loRegistrado(espia)).toEqual(['click'])
   })
 })
