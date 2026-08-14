@@ -85,7 +85,7 @@
 //    El starter entrega el manejador sin traducir.
 export function CampoTexto({ alEscribir }: { alEscribir: (valor: string) => void }) {
   return (
-    <input onChange={alEscribir} />
+    <input onChange={(e) => alEscribir(e.target.value)} />
   )
 }
 // <CampoTexto alEscribir={(v) => console.log(v)} />   // "hola"
@@ -95,7 +95,7 @@ export function CampoTexto({ alEscribir }: { alEscribir: (valor: string) => void
 //    Una casilla también tiene `value`, pero eso no es lo que te están pidiendo.
 export function Interruptor({ alCambiar }: { alCambiar: (activo: boolean) => void }) {
   return (
-    <input type="checkbox" onChange={(e) => alCambiar(e.target.value)} />
+    <input type="checkbox" onChange={(e) => alCambiar(e.target.checked)} />
   )
 }
 // <Interruptor alCambiar={(a) => console.log(a)} />   // true
@@ -104,11 +104,10 @@ export function Interruptor({ alCambiar }: { alCambiar: (activo: boolean) => voi
 //    cosas: primero de qué campo se trata y después lo que hay escrito. Tecleas
 //    "a" y recibe ("email", "a").
 //    Los dos datos salen del mismo sitio, y el starter los tiene.
-export function CampoConNombre(
-  { alCambiar }: { alCambiar: (campo: string, valor: string) => void },
-) {
+export function CampoConNombre({ alCambiar }: { alCambiar: (campo: string, valor: string) => void }) {
   return (
-    <input name="email" onChange={(e) => alCambiar(e.target.value, e.target.name)} />
+    // e.target.name recoge "email", e.target.value recoge lo que el usuario ha escrito
+    <input name="email" onChange={(e) => alCambiar(e.target.name, e.target.value)} />
   )
 }
 // <CampoConNombre alCambiar={(c, v) => console.log(c, v)} />   // "email" "a"
@@ -150,11 +149,11 @@ export function CampoConNombre(
 // 4) `BotonBorrar` — un botón que, al pulsarlo, llama a `alBorrar` con el id del
 //    elemento que hay que borrar. El id llega por props, ya escrito arriba.
 //    El starter lo va a buscar a otro sitio.
-export function BotonBorrar(
-  { id, alBorrar }: { id: string; alBorrar: (id: string) => void },
-) {
+export function BotonBorrar({ id, alBorrar }: { id: string; alBorrar: (id: string) => void }) {
   return (
-    <button aria-label={`Borrar ${id}`} onClick={(e) => alBorrar(e.currentTarget.id)}>Borrar</button>
+    <button aria-label={`Borrar ${id}`} onClick={() => alBorrar(id)}>
+      Borrar
+    </button>
   )
 }
 // <BotonBorrar id="t-7" alBorrar={(id) => console.log(id)} />   // "t-7"
@@ -165,7 +164,7 @@ export function BotonBorrar(
 //    numérico.
 export function CampoCantidad({ alCambiar }: { alCambiar: (cantidad: number) => void }) {
   return (
-    <input type="number" onChange={(e) => alCambiar(e.target.value)} />
+    <input type="number" onChange={(e) => alCambiar(Number(e.target.value))} />
   )
 }
 // <CampoCantidad alCambiar={(n) => console.log(n)} />   // 21
@@ -182,7 +181,13 @@ type Color = 'rojo' | 'verde' | 'azul'
 //    Restricción: sin `as`, como en todo el archivo.
 export function SelectorDeColor({ alElegir }: { alElegir: (color: Color) => void }) {
   return (
-    <select onChange={(e) => alElegir(e.target.value)}>
+    <select onChange={(e) => {
+      switch (e.target.value) {
+        case 'rojo': alElegir('rojo'); break
+        case 'verde': alElegir('verde'); break
+        case 'azul': alElegir('azul'); break
+      }
+    }}>
       <option value="rojo">Rojo</option>
       <option value="verde">Verde</option>
       <option value="azul">Azul</option>
