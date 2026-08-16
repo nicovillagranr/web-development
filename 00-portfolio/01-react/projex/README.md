@@ -7,7 +7,7 @@ consistente y animaciones de entrada con Framer Motion.
 ## Características
 
 - **Secciones funcionales**: Hero, servicios, proyectos y contacto.
-- **Formulario de contacto funcional** con EmailJS (envío real de correos).
+- **Formulario de contacto** con validación accesible (errores anunciados con `role="alert"`) y estados de envío. Es una demo: no hay backend, el envío se simula.
 - **Accesibilidad**: focus-trap en el menú/modal y navegación por teclado.
 - **Animaciones** de entrada con Framer Motion sin afectar la legibilidad.
 - **Responsive** en los anchos de uso común (mobile, tablet, desktop).
@@ -22,7 +22,6 @@ consistente y animaciones de entrada con Framer Motion.
 | Framer Motion    | 12      | Animaciones                          |
 | React Router DOM | 7       | Navegación (HashRouter)              |
 | Vite             | 7       | Build y dev server                   |
-| EmailJS          | 4       | Formulario de contacto               |
 
 ## Sistema visual
 

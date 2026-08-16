@@ -21,8 +21,8 @@ Aplicar arquitectura de componentes, estado local y estilos utilitarios en una U
 - clima actual y pronostico diario/horario
 - metricas de clima (UV, humedad, sensacion termica, presion, AQI)
 - inventario de alimentos
-- lista de compras inteligente
-- reordenamiento de tarjetas persistido en localStorage
+- recetas sugeridas segun el inventario guardado
+- persistencia local del inventario y los ajustes (localStorage)
 - pantalla secundaria (`screen_2`) como prototipo visual
 
 ## Arquitectura resumida
