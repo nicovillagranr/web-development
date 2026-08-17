@@ -62,3 +62,12 @@ Thumbs.db
 # ésas siguen fuera de git.
 !01-learning/05-typescript/.claude/
 !01-learning/05-typescript/.claude/skills/
+
+# Memoria de Claude Code — NO es una carpeta, es un junction de Windows que apunta a
+# `C:\Users\norge\.claude\projects\C--web-development\memory\`, donde viven de verdad
+# los archivos. Está aquí para poder consultarlos sin salir del proyecto.
+# Se ignora porque este repo es PÚBLICO y esos .md contienen notas personales
+# (búsqueda de empleo, auditorías internas del portfolio). Nunca quitar esta regla.
+# Al cambiar de máquina hay que copiar la carpeta real a mano y rehacer el junction:
+#   mklink /J C:\web-development\.claude-memory "%USERPROFILE%\.claude\projects\C--web-development\memory"
+.claude-memory/
