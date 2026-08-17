@@ -48,11 +48,8 @@
  * ===========================================================================*/
 
 import { useState } from 'react'
-
-
 type Prioridad = 'baja' | 'media' | 'alta'
 type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el reparto de responsabilidades
@@ -90,6 +87,8 @@ type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
 //    El starter entrega el manejador sin traducir.
 export function CampoTexto({ texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void }) {
   return (
+    // Con value guardamos el texto escrito
+    // Con onChange nos avisamos de lo tecleado
     <input value={texto} onChange={(e) => alEscribir(e.target.value)} />
   )
 }
@@ -178,18 +177,23 @@ export function FormularioTarea({ alAñadir }: { alAñadir: (datos: { texto: str
 //    texto y un botón "Borrar". La casilla avisa por `alMarcar` con el id y el
 //    nuevo estado; el botón avisa por `alBorrar` con el id.
 //    Los dos datos que hay que entregar ya los tienes en las props.
+
+// type Prioridad = 'baja' | 'media' | 'alta'
+// type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
+
 export function FilaTarea({ tarea, alMarcar, alBorrar }: {
-  tarea: TareaalMarcar: (id: string, hecha: boolean) => voidalBorrar: (id: string) => void
+  tarea: Tarea; alMarcar: (id: string, hecha: boolean) => void; alBorrar: (id: string) => void
 }) {
   return (
     <li>
       <input
         type="checkbox"
         checked={tarea.hecha}
-        onChange={(e) => alMarcar(tarea.id, e.target.value)}
-      />
+        onChange={(e) => alMarcar(tarea.id, e.target.checked)} />
       {tarea.texto}
-      <button aria-label={`Borrar ${tarea.texto}`} onClick={() => alBorrar(tarea.id)}>
+      <button
+        aria-label={`Borrar ${tarea.texto}`}
+        onClick={() => alBorrar(tarea.id)}>
         Borrar
       </button>
     </li>
@@ -201,17 +205,15 @@ export function FilaTarea({ tarea, alMarcar, alBorrar }: {
 //    a cada una lo que necesita para avisar hacia arriba.
 //    Este componente no decide nada: solo reparte.
 //    Restricción: `key` va en el elemento que devuelve el map, y sale de la tarea.
-export function ListaTareas(
-  { tareas, alMarcar, alBorrar }: {
-    tareas: Tarea[]
-    alMarcar: (id: string, hecha: boolean) => void
-    alBorrar: (id: string) => void
-  },
-) {
+export function ListaTareas({ tareas, alMarcar, alBorrar }: {
+  tareas: Tarea[]
+  alMarcar: (id: string, hecha: boolean) => void
+  alBorrar: (id: string) => void
+}) {
   return (
     <ul>
       {tareas.map((tarea) => (
-        <FilaTarea key={tarea.id} tarea={tarea.texto} alMarcar={alMarcar} alBorrar={alBorrar} />
+        <FilaTarea key={tarea.id} tarea={tarea} alMarcar={alMarcar} alBorrar={alBorrar} />
       ))}
     </ul>
   )
@@ -277,6 +279,8 @@ export function GestorDeTareas() {
 //     <p>. Si el padre le cambia el texto, tiene que cambiar lo que se ve.
 //     El starter se hace una copia del texto al nacer y se queda con ella.
 export function EtiquetaTexto({ texto }: { texto: string }) {
+  // Creamos una variable que guarde una copia del texto
+  // En el primer render se crea con el texto que le llega
   const copia = texto
   return (
     <p>
@@ -284,7 +288,7 @@ export function EtiquetaTexto({ texto }: { texto: string }) {
     </p>
   )
 }
-//<EtiquetaTexto texto="hola" />
+// <EtiquetaTexto texto="hola" />
 
 // E2) `BotonQueAvisa` — un hijo que solo avisa: al pulsarlo llama a `alPulsar`.
 //     Ojo con lo que le entregas al hueco: entregar una función y llamarla no es
@@ -307,7 +311,7 @@ function CajaQueAvisa({ alEscribir }: { alEscribir: (valor: string) => void }) {
 }
 
 export function PadreQueGuarda() {
-  const [texto, setTexto] = useState('')
+  const [texto, setTexto] = useState('') // texto parte con "", cuando se usa setTexto este string cambia
   return (
     <div>
       <CajaQueAvisa alEscribir={setTexto} />
@@ -329,9 +333,9 @@ export function PadreQueLimpia() {
   const [texto, setTexto] = useState('')
   return (
     <div>
-      <CajaQueAvisa alEscribir={setTexto} />
+      <CajaControlada texto={texto} alEscribir={setTexto} />
       <button type="button" onClick={() => setTexto('')}>Limpiar</button>
-      <p>guardado: {texto}</p>
+      <p>Guardado: {texto}</p>
     </div>
   )
 }
@@ -346,8 +350,8 @@ export function PadreConDosCajas() {
   const [email, setEmail] = useState('')
   return (
     <div>
-      <CajaControlada texto={nombre} alEscribir={setEmail} />
-      <CajaControlada texto={email} alEscribir={setNombre} />
+      <CajaControlada texto={nombre} alEscribir={setNombre} />
+      <CajaControlada texto={email} alEscribir={setEmail} />
       <p>nombre: {nombre}</p>
       <p>email: {email}</p>
     </div>
@@ -359,16 +363,14 @@ export function PadreConDosCajas() {
 //     "Enviar", `alEnviar` recibe los dos datos JUNTOS, en un objeto con las
 //     claves `nombre` y `email`.
 //     Lee la firma de `alEnviar`: pide una cosa, no dos.
-export function PadreQueEntregaLosDos(
-  { alEnviar }: { alEnviar: (datos: { nombre: string; email: string }) => void },
-) {
+export function PadreQueEntregaLosDos({ alEnviar }: { alEnviar: (datos: { nombre: string; email: string }) => void }) {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   return (
     <div>
       <CajaControlada texto={nombre} alEscribir={setNombre} />
       <CajaControlada texto={email} alEscribir={setEmail} />
-      <button type="button" onClick={() => alEnviar(nombre, email)}>Enviar</button>
+      <button type="button" onClick={() => alEnviar({ nombre, email })}>Enviar</button>
     </div>
   )
 }
