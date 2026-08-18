@@ -24,8 +24,8 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 | | Proyecto | Qué demuestra | Stack | |
 |---|---|---|---|---|
 | <img src="01-learning/00-docs/01-assets/proyectos/proyecto-6.webp" width="150"> | **Clon de Falabella.com** *(ejercicio académico)* | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](00-portfolio/02-next/falabella-clone) |
-| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/smart-cooler-ui) |
-| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. *En desarrollo.* | React 19 · Tailwind v4 · React Router | [Código](00-portfolio/01-react/sport-mindset) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/portfolio/smart-cooler-ui) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. *En desarrollo.* | React 19 · Tailwind v4 · React Router | [Código](00-portfolio/01-react/portfolio/sport-mindset) |
 
 Hay más proyectos en [`00-portfolio/`](00-portfolio) — landings, práctica de layout y versiones iterativas. Los tres de arriba son los que mejor representan lo que sé hacer hoy.
 
@@ -73,6 +73,8 @@ Two doors: the finished work, and the path that led to it.
 00-portfolio/     Proyectos aplicados — lo que enseño / Applied projects
    00-hosting/       el sitio del portfolio / the portfolio site
    01-react/         proyectos React + Vite
+      portfolio/     el escaparate / the showcase
+      privados/      practica, sin terminar y archivo / practice, WIP and archive
    02-next/          proyectos Next.js
 
 01-learning/      La ruta de aprendizaje / The learning path

@@ -11,7 +11,9 @@ Regla de oro: **un proyecto, un solo sitio**. Si un ejercicio crece hasta volver
 
 ## Carpetas canónicas para proyectos aplicados
 
-- `00-portfolio/01-react/` — proyectos React + Vite.
+- `00-portfolio/01-react/` — proyectos React + Vite, divididos en dos:
+  - `portfolio/` — **el escaparate**: lo que enseño cuando alguien viene a evaluar mi trabajo.
+  - `privados/` — el resto: práctica que ya cumplió, proyectos sin terminar y archivo histórico.
 - `00-portfolio/02-next/` — proyectos Next.js.
 - `00-portfolio/03-bootstrap/` — proyectos Bootstrap (crear cuando haga falta).
 - `00-portfolio/04-tailwind/` — proyectos puramente Tailwind/CSS (crear cuando haga falta).
@@ -30,14 +32,29 @@ Regla de oro: **un proyecto, un solo sitio**. Si un ejercicio crece hasta volver
 2. **Cuando un drill crece a portfolio**, se *mueve* a `00-portfolio/`. No queda copia detrás.
 3. **`package.json.name`** debe coincidir con el nombre de la carpeta padre (o el slug del proyecto si es un nombre real tipo `nexusai-landing`) y debe ser único en todo el repo.
 4. **En `00-portfolio/` no hay numeración**: cada carpeta se llama como el proyecto
-   (`projex`, `shopreact`, `sport-mindset`…). Para los publicados, el nombre de la
-   carpeta coincide además con su ruta en el hosting y con el `path` de la API.
+   (`projex`, `shopreact`, `sport-mindset`…). Para los publicados, el **slug** —no la
+   ruta completa— coincide con su ruta en el hosting y con el `path` de la API:
+   `00-portfolio/01-react/portfolio/projex/` se publica en `/projex/`.
    La numeración `proyecto-N` sobrevive solo en `01-learning/`, donde es local a la
    carpeta padre y el orden sí significa algo (cronología del temario).
 
    *Por qué:* mientras `00-portfolio/` estuvo numerado, el número de la carpeta, el
    slot publicado y las rutas de los `og:url`/`RewriteBase` se desincronizaron tres
    veces. Un nombre no se desincroniza.
+
+5. **`portfolio/` vs `privados/` es una decisión de escaparate, no de calidad.** Un
+   proyecto entra en `portfolio/` cuando quiero que alguien lo mire; si además está
+   desplegado, lleva ✅ en `00-portfolio/README.md`. Son dos cosas distintas y la
+   segunda se comprueba con un `curl`, no de memoria.
+
+   *Por qué:* la columna ✅ llegó a marcar como publicados dos proyectos que
+   devolvían 404. Un criterio verificable no se puede creer por error.
+
+6. **Mover un proyecto entre `portfolio/` y `privados/` no cambia su URL.** El `base`
+   está escrito literal en cada `vite.config` (`base: '/projex/'`), así que la carpeta
+   y la ruta publicada solo están unidas por esta convención, no por código. Al mover
+   algo, revisa a mano que `base`, el `path` de la API y el enlace del README sigan
+   diciendo lo mismo.
 5. **Antes de crear un proyecto nuevo**, correr `scripts/check-duplicate-projects.ps1` para confirmar que el nombre elegido está libre.
 
 ## Detección de violaciones

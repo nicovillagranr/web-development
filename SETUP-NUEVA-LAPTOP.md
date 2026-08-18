@@ -70,7 +70,7 @@ Para settings **específicos del proyecto** que quieras versionar y compartir: f
    - Si ya está abierto: `Ctrl+Shift+P` → `Cursor Settings: Import VS Code Settings`.
 
 4. **Verificar que `.vscode/settings.json` se aplica**
-   Abrir cualquier `.jsx` (p. ej. `00-portfolio/01-react/projex/src/App.jsx`), romper el formato a propósito y guardar → Prettier debe reformatear y ESLint debe auto-fix.
+   Abrir cualquier `.jsx` (p. ej. `00-portfolio/01-react/portfolio/projex/src/App.jsx`), romper el formato a propósito y guardar → Prettier debe reformatear y ESLint debe auto-fix.
 
 ## Settings versionados en el repo
 

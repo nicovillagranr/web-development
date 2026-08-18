@@ -13,7 +13,7 @@ Desde el 26 jul 2026 el repositorio tiene **dos puertas** en la raiz: lo termina
 y el camino que llevo hasta ahi.
 
 - `00-portfolio/`: proyectos aplicados. Es lo que se ensena.
-  - `00-hosting/` el sitio del portfolio · `01-react/` proyectos React + Vite · `02-next/` proyectos Next.js.
+  - `00-hosting/` el sitio del portfolio · `01-react/` proyectos React + Vite (`portfolio/` el escaparate, `privados/` el resto) · `02-next/` proyectos Next.js.
 - `01-learning/`: la ruta de aprendizaje, con la numeracion original de cada modulo.
   - `00-docs/`: vision general, assets de referencia y documentos de soporte.
   - `01-git/`: fundamentos de Git, commits, branching, GitHub y cheatsheets.
