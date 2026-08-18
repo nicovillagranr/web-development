@@ -1,0 +1,67 @@
+import type { Comparison } from "../metrics/index.ts";
+import { formatPercentChange } from "../metrics/index.ts";
+
+/**
+ * La variación respecto al período anterior.
+ *
+ * Aquí se ve, en diez líneas, la decisión que sostiene toda la app: **la flecha sale
+ * de `movement` y el color sale de `improved`.** Son dos preguntas distintas.
+ *
+ *   Prep Time bajó   → flecha ▼ , color verde  (bajar es mejorar)
+ *   Pedidos bajaron  → flecha ▼ , color rojo   (bajar es empeorar)
+ *
+ * Si el color se dedujera de la flecha, la mitad de las métricas se pintaría al
+ * revés. Es el fallo más común de estos paneles y el más difícil de detectar,
+ * porque la pantalla sigue pareciendo correcta.
+ */
+const ARROWS = { up: "▲", down: "▼", flat: "→" } as const;
+
+export function DeltaIndicator({
+  comparison,
+  referenceLabel,
+}: {
+  comparison: Comparison | null;
+  /**
+   * "vs S32". Se omite en listas donde ya está dicho una vez arriba.
+   *
+   * Se declara `?: string | undefined` y no solo `?: string` por
+   * `exactOptionalPropertyTypes`: en un modelo de datos distinguir "no está la
+   * clave" de "está y vale undefined" es útil, pero en props de React las dos cosas
+   * son literalmente lo mismo, y exigir la distinción solo obliga a quien llama a
+   * hacer malabares para no pasar `undefined`.
+   */
+  referenceLabel?: string | undefined;
+}) {
+  // Sin período anterior no hay nada que comparar: la primera semana del histórico,
+  // o alguien que acaba de entrar. Decirlo es más honesto que pintar un 0%.
+  if (!comparison) {
+    return <span className="text-ink-faint text-xs">Sin histórico</span>;
+  }
+
+  const tone =
+    comparison.improved === true
+      ? "text-good"
+      : comparison.improved === false
+        ? "text-bad"
+        : "text-ink-soft";
+
+  const meaning =
+    comparison.improved === true
+      ? "mejora"
+      : comparison.improved === false
+        ? "empeora"
+        : "sin cambio";
+
+  return (
+    <span className={`inline-flex items-center gap-1 text-xs font-medium ${tone}`}>
+      <span aria-hidden="true">{ARROWS[comparison.movement]}</span>
+      <span className="tabular">
+        {comparison.pct === null ? "nuevo" : formatPercentChange(comparison.pct)}
+      </span>
+      {/* El lector de pantalla recibe el significado, no el símbolo: "▲ 4,2%" leído
+          en voz alta no dice si eso es bueno. */}
+      <span className="sr-only">({meaning})</span>
+      {referenceLabel ? <span className="text-ink-faint font-normal">{referenceLabel}</span> : null}
+    </span>
+  );
+}
