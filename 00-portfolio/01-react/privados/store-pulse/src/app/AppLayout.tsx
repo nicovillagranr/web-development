@@ -35,7 +35,7 @@ export function AppLayout() {
                 to={tab.to}
                 end={tab.end}
                 className={({ isActive }) =>
-                  `flex min-h-[3.25rem] items-center justify-center text-sm font-medium transition-colors ${
+                  `flex min-h-13 items-center justify-center text-sm font-medium transition-colors ${
                     isActive ? "text-brand" : "text-ink-soft"
                   }`
                 }

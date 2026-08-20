@@ -91,7 +91,7 @@ export function WorkerPage() {
 
       <section aria-labelledby="otras">
         <h2 id="otras" className="text-ink-soft mb-2 text-sm font-semibold">
-          Productividad y calidad
+          Resto de indicadores
         </h2>
         <div className="grid grid-cols-2 gap-3">
           {cards.map((metric) => (
