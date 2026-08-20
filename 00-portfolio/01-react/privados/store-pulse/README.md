@@ -1,4 +1,6 @@
-# Store Pulse
+| | Movimiento | ¿Es bueno? |
+| --------- | ---------- | ---------- || Prep ▼ | baja | 🟢 mejora |
+| Pedidos ▼ | baja | 🔴 empeora |# Store Pulse
 
 PWA mobile-first para consultar las métricas operativas de un local de reparto desde el teléfono:
 rendimiento individual, del equipo y del local, con objetivos, cumplimiento y evolución semanal.
@@ -38,7 +40,7 @@ total_orders: {
 }
 ```
 
-De ahí sale todo lo demás. La UI no sabe qué es "Picking Time": sabe leer una definición y pintarla.
+De ahí sale todo lo demás. La UI no sabe qué es el tiempo de picking: sabe leer una definición y pintarla.
 **Añadir una métrica nueva es añadir una entrada al registro** — aparece sola en las tarjetas, en el
 selector de orden del ranking, en los gráficos y en los mocks, sin tocar un solo componente.
 
@@ -49,10 +51,10 @@ local. En vez de esperar a tenerla, la arquitectura está hecha para que llegar 
 
 `direction` resuelve el error que se cuela en todos los paneles de este tipo:
 
-|             | Movimiento | ¿Es bueno? |
-| ----------- | ---------- | ---------- |
-| Prep Time ▼ | baja       | 🟢 mejora  |
-| Pedidos ▼   | baja       | 🔴 empeora |
+|           | Movimiento | ¿Es bueno? |
+| --------- | ---------- | ---------- |
+| Prep ▼    | baja       | 🟢 mejora  |
+| Pedidos ▼ | baja       | 🔴 empeora |
 
 La flecha sale de hacia dónde se movió el número; el color, de si eso es una mejora. Son dos
 preguntas distintas, y en `src/metrics/compare.ts` son dos campos distintos. Deducir el color de la
@@ -60,15 +62,26 @@ flecha pinta la mitad de las métricas al revés, y la pantalla sigue pareciendo
 
 ## Estado
 
-**Fase 0 (descubrimiento) abierta.** Las 11 métricas del registro están marcadas `status: "assumed"`:
-sus nombres y significados están leídos de capturas, no de una definición oficial. La propia app lo
-dice al final del panel, y ese aviso se calcula desde el registro — encoge solo según se vayan
-confirmando y desaparece cuando no quede ninguna.
+**Fase 0 (descubrimiento) abierta.** El 18 de agosto de 2026 apareció el listado de indicadores que
+usa el local, y cambió el registro sin cerrar la fase:
 
-Los umbrales de cumplimiento (`DEFAULT_TIERS`) son la hipótesis más floja que no contradice los dos
-únicos ejemplos reales conocidos. Están documentados como provisionales.
+- **Confirma los nombres.** Los doce indicadores reales están ahora en el registro con su nombre en
+  español y, aparte, con la cadena literal de la fuente (`sourceLabel`) que el importador de la Fase
+  6 buscará como cabecera de columna en el Excel.
+- **Trajo tres métricas que faltaban**: tamaño de cesta, tiempo de picking por artículo y retrasos
+  Dmart.
+- **No confirma ningún significado.** Las 14 métricas siguen en `status: "assumed"`, y quedan diez
+  preguntas abiertas para el local.
 
-Construido: los tres niveles de la app, el registro, los objetivos, los gráficos y la PWA.
+El aviso del final del panel cuenta las dos dudas por separado —las que no sabemos qué miden y la
+que ni siquiera aparece en el listado— y se calcula desde el registro, así que encoge solo y
+desaparece cuando no quede ninguna.
+
+Los umbrales de cumplimiento (`DEFAULT_TIERS`) siguen siendo la hipótesis más floja que no
+contradice los dos únicos ejemplos reales conocidos. Están documentados como provisionales, y el
+listado no trajo objetivos nuevos: siguen siendo dos.
+
+Construido: los tres niveles de la app, el registro, los objetivos, los gráficos, los dos temas y la PWA.
 Pendiente: backend, base de datos, importador del Excel y autenticación (ver _Lo que falta_).
 
 ## Correrlo
@@ -127,15 +140,29 @@ Dos límites que el proyecto respeta a propósito:
   observación tomada de una captura, no una ley: son promedios y solo cuadran si todos los pedidos
   pasan por las tres etapas. Si dejan de sumar, la app avisa en vez de taparlo.
 - **Los colores de los gráficos están validados, no elegidos a ojo** — banda de luminosidad, croma,
-  separación para daltonismo y contraste. Ver la nota en `src/index.css`.
+  separación para daltonismo y contraste, en los dos temas. El resultado tiene una curiosidad: en
+  oscuro los tres pasan el mínimo de 3:1, y en claro la aqua se queda en 2,82:1. Ver la nota en
+  `src/App.css`.
+- **El modo oscuro no es el claro invertido.** Cada valor está medido contra la superficie oscura,
+  porque un verde que contrasta 5,5:1 sobre blanco contrasta 1,9:1 sobre un fondo oscuro. Y el acento
+  sigue siendo índigo y no un rojo de marca: aquí el rojo ya significa "esta métrica empeoró", y un
+  botón primario del mismo rojo haría ambiguo justo lo que la app existe para desambiguar.
+- **El nombre visible y el nombre de la fuente son dos campos.** La app se lee en español; el
+  importador del Excel busca columnas por su cadena literal, con la ortografía que tenga —en las
+  notas del local se leen "Inacuracy" y "Assigment", con una letra menos. Si fueran el mismo campo,
+  traducir la app rompería la ingesta.
+- **El tamaño de cesta no tiene dirección buena ni mala.** `neutral` no es un hueco por rellenar: que
+  la cesta suba depende de lo que compre la gente, no de cómo trabaje nadie. Al no tener "mejor", no
+  se evalúa ni se colorea, y puede aparecer en la ficha de una persona como contexto sin convertirse
+  en una nota. Es el denominador que explica por qué un pedido tardó más.
 - **Recharts va en su propio chunk.** Pesa más que todo lo demás junto y los gráficos están bajo el
-  pliegue: cargarlo aparte deja el bundle inicial en ~99 kB comprimidos en vez de ~207 kB.
+  pliegue: cargarlo aparte deja el bundle inicial en ~100 kB comprimidos en vez de ~199 kB.
 
 ## Lo que falta
 
 | Fase | Qué                                                                  |
 | ---- | -------------------------------------------------------------------- |
-| 0    | Confirmar las métricas con el local _(en curso, fuera del código)_   |
+| 0    | Confirmar qué mide cada métrica con el local — 10 preguntas abiertas |
 | 5    | Modelo de datos y API — Vercel Functions + Postgres + Prisma         |
 | 6    | Importador del Excel: allowlist, validación, upsert idempotente      |
 | 7    | Conectar la PWA a la API (cambiar la implementación de `DataSource`) |
