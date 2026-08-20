@@ -17,6 +17,11 @@ export default function Hero({ projects = [], profile, loading = false }) {
     name: profile?.name || "—",
     role: profile?.role || "—",
     based: profile?.based || "—",
+    // Aquí no se usa el fallback "—" sino null: el campo es opcional en la API,
+    // así que su ausencia no es un fallo que haya que delatar. Quien lo consume
+    // simplemente omite la línea.
+    degree: profile?.education?.degree || null,
+    institution: profile?.education?.institution || null,
     years: profile?.years ?? "—",
     projects: totalProjects,
     online: onlineCount,
@@ -46,6 +51,9 @@ export default function Hero({ projects = [], profile, loading = false }) {
         { k: "name", v: data.name, type: "str" },
         { k: "role", v: data.role, type: "str" },
         { k: "based", v: data.based, type: "str" },
+        // Solo aparece si la API lo trae, para no dejar una línea vacía en el
+        // editor mientras el campo no exista.
+        ...(data.degree ? [{ k: "education", v: data.degree, type: "str" }] : []),
         { k: "years_react", v: data.years, type: "num" },
         { k: "projects", v: data.projects, type: "num" },
         { k: "online", v: data.online, type: "num" },

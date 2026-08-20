@@ -28,11 +28,13 @@ function PreviewAbout({ data }) {
         <h2 className="font-heading text-3xl sm:text-5xl font-bold leading-tight tracking-tight text-text-primary">
           {data.name}
         </h2>
-        {/* "X años de experiencia" junto al rol se lee como antigüedad laboral.
-            El ancla de formación es concreta y comprobable, y no promete un
-            historial de empleo que todavía no existe. */}
+        {/* "X años de experiencia" junto al rol se lee como antigüedad laboral,
+            y una fecha de inicio obliga a defender un arco que el repositorio
+            público no acompaña. El título es una credencial concreta, con fecha
+            comprobable en el CV y en LinkedIn, y no promete un historial de
+            empleo que todavía no existe. */}
         <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-text-secondary">
-          {data.based} · Programando desde 2021
+          {data.based}{data.institution ? ` · Titulado en ${data.institution}` : ""}
         </div>
       </div>
 

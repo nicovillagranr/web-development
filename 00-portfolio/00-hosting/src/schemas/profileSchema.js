@@ -11,6 +11,13 @@ export const ProfileSchema = z.object({
     linkedin: z.string(),
     role: z.string(),
     based: z.string(),
+    // Opcional a propósito: la API todavía puede no traerlo. Si fuese
+    // obligatorio, ProfileSchema.parse() reventaría antes de que despliegues
+    // la versión nueva de la API y el sitio caería al fallback sin motivo.
+    education: z.object({
+        degree: z.string(),
+        institution: z.string()
+    }).optional(),
     years: z.number(),
     availability: z.string(),
     stack: z.object({
