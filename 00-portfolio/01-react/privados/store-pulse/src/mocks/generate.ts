@@ -20,16 +20,33 @@ import { between, createRandom, seedFrom } from "./random.ts";
  * este archivo.
  */
 
-/** Nombres de relleno. Cualquier parecido con la realidad es casualidad. */
+/**
+ * Nombres de relleno. Cualquier parecido con la realidad es casualidad.
+ *
+ * Van con apellido a propósito, y con las longitudes repartidas de 10 a 20
+ * caracteres. Con solo el nombre de pila, todos median lo mismo y la lista de
+ * equipo se veía cómoda en cualquier ancho — una comodidad falsa, porque los
+ * nombres reales del local vendrán completos. Así el caso incómodo aparece en
+ * la demo, que es donde se puede arreglar.
+ *
+ * "Sofía Vera" y "Constanza Etchegaray" son los dos extremos y están puestos a
+ * conciencia: entre esos dos se ve si la tarjeta aguanta.
+ */
 const WORKER_NAMES = [
-  "Camila",
-  "Nicolás",
-  "María",
-  "Ignacio",
-  "Valentina",
-  "Diego",
-  "Josefa",
-  "Matías",
+  "Camila Rojas",
+  "Nicolás Muñoz",
+  "María Soto",
+  "Ignacio Fuentes",
+  "Valentina Sepúlveda",
+  "Diego Araya",
+  "Josefa Contreras",
+  "Matías Pérez",
+  "Sofía Vera",
+  "Natalia Espinoza",
+  "Agustín Tapia",
+  "Florencia Vergara",
+  "Santiago Díaz",
+  "Constanza Etchegaray",
 ] as const;
 
 /**
@@ -48,6 +65,11 @@ const UPDATED_AT = "2026-08-17T12:32:00.000Z";
 /**
  * Valores de partida por métrica, tomados de las capturas del documento.
  *
+ * Los tres indicadores que trajo el listado del 18 ago 2026 (cesta, picking por
+ * artículo y retrasos Dmart) no tienen captura detrás: sus valores de partida son
+ * plausibles y nada más. Da igual para lo que sirve esto —que la demo se vea viva—
+ * pero conviene no confundirlos con los que sí salieron de una pantalla real.
+ *
  * Las métricas derivadas (`prep_time`, `quality_total`) NO están aquí a propósito:
  * se calculan sumando sus partes, para que el invariante `assignment + picking +
  * packaging = prep_time` se cumpla también en la demo y el aviso de descuadre pueda
@@ -56,13 +78,21 @@ const UPDATED_AT = "2026-08-17T12:32:00.000Z";
 const BASELINE: Partial<Record<MetricId, number>> = {
   total_orders: 190,
   partial_orders: 1.2,
+  basket_size: 12,
   assignment_time: 1.55,
   picking_time: 3.9,
+  // 3,9 ÷ 12 = 0,325. Cuadrado a mano con los otros dos para que la demo no
+  // contradiga la relación que se sospecha, pero SIN calcularlo: los tres se
+  // generan por separado y el ruido los separa un poco, que es lo honesto
+  // mientras la fórmula siga sin verificarse contra una captura.
+  item_picking_time: 0.33,
   packaging_time: 1.6,
   inaccuracy_total: 1.7,
-  wrong_missing_item: 0.8,
+  inaccuracy_wm_item: 0.8,
   wrong_order_never_arrived: 0.5,
-  product_quality: 0.35,
+  inaccuracy_pq: 0.35,
+  // Inventado del todo: no hay ni una captura con este número.
+  dmart_late: 2.4,
 };
 
 /**
@@ -84,6 +114,10 @@ function baselineFor(metric: MetricDefinition): number {
       return 2;
     case "minutes":
       return 3;
+    case "items-per-order":
+      return 12;
+    case "minutes-per-item":
+      return 0.3;
   }
 }
 

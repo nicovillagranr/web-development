@@ -69,15 +69,15 @@ la métrica tiene objetivo— su estado.
 
 ```
 ┌──────────────────┬──────────────────┐
-│ Pedidos          │ Prep Time        │
+│ Pedidos          │ Prep             │
 │ 1.243            │ 6,91 min         │
 │ ▲ 4,2% vs W32    │ ▼ 3,1% vs W32 🟢 │
 └──────────────────┴──────────────────┘
 ```
 
 **La flecha y el color son cosas distintas y no hay que confundirlas.** La flecha dice hacia dónde se
-movió el número; el color dice si eso es bueno. En Prep Time el número baja (▼) y eso es una mejora
-(verde). Es exactamente el §6 del documento y el motivo de que `direction` exista.
+movió el número; el color dice si eso es bueno. En el tiempo de preparación el número baja (▼) y eso
+es una mejora (verde). Es exactamente el §6 del documento y el motivo de que `direction` exista.
 
 ### Cumplimiento de objetivos
 
@@ -92,8 +92,9 @@ cinco series son ruido.
 
 ### Composición de calidad
 
-Barras apiladas: Wrong & Missing / Wrong order & never arrived / Product Quality. Responde de qué se
-compone el total de incidencias, que es lo accionable — el total a secas no dice qué arreglar.
+Barras apiladas: producto mal o faltante / pedido mal o no entregado / calidad de producto. Responde
+de qué se compone el total de incidencias, que es lo accionable — el total a secas no dice qué
+arreglar.
 
 ---
 
@@ -111,7 +112,7 @@ compone el total de incidencias, que es lo accionable — el total a secas no di
 ### Selector de métrica de orden
 
 ```
-Ordenado por:  [ Picking Time ▾ ]
+Ordenado por:  [ Tiempo de picking ▾ ]
 ```
 
 Visible y siempre presente, no escondido en un menú. El §17 avisa de que no existe un ranking
@@ -153,10 +154,10 @@ como para mover la referencia de todos.)_
 El bloque más útil de toda la app, y el que justifica `derivedFrom`:
 
 ```
-Prep Time                            6,91 min
-├─ Assignment    1,56  ████
+Tiempo de preparación                6,91 min
+├─ Asignación    1,56  ████
 ├─ Picking       3,77  ██████████
-└─ Packaging     1,58  ████
+└─ Empaque       1,58  ████
 ```
 
 Un total de 6,91 no dice qué hacer. El desglose sí: señala **dónde** está el tiempo. Y si las tres

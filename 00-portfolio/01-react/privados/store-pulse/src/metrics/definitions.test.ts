@@ -72,6 +72,16 @@ describe("registro de métricas", () => {
     }
   });
 
+  it("ninguna métrica repite el nombre de la fuente", () => {
+    // El importador de la Fase 6 buscará las columnas del Excel por `sourceLabel`.
+    // Dos métricas con la misma cadena significarían dos destinos para una columna,
+    // y la ingesta escribiría una encima de la otra sin quejarse.
+    const nombres = METRIC_LIST.map((metric) => metric.sourceLabel).filter(
+      (nombre) => nombre !== undefined,
+    );
+    expect(new Set(nombres).size, "hay un sourceLabel duplicado").toBe(nombres.length);
+  });
+
   it("el escalafón por defecto tiene suelo, para que ningún valor quede sin escalón", () => {
     // Sin un escalón que acepte cualquier ratio, evaluate() devolvería null para los
     // valores muy malos — y la UI los pintaría igual que "sin objetivo". Justo al revés.

@@ -37,6 +37,12 @@ function unitSuffix(unit: Unit): string {
       return "%";
     case "count":
       return "";
+    // Los dos cocientes llevan el "por" escrito. Sin él, "12,4" y "0,32" se leen
+    // como un conteo y un tiempo cualquiera, que es justo lo que no son.
+    case "items-per-order":
+      return " art./pedido";
+    case "minutes-per-item":
+      return " min/art.";
   }
 }
 

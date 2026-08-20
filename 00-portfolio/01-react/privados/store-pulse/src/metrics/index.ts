@@ -39,6 +39,7 @@ export {
   METRICS,
   metricsForScope,
   TARGETS,
+  unlistedMetrics,
 } from "./definitions.ts";
 
 export { evaluate, performanceRatio } from "./evaluate.ts";
