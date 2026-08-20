@@ -6,6 +6,21 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
+  /**
+   * El subdirectorio desde el que se sirve la app en el hosting.
+   *
+   * Sin esto, Vite escribe rutas absolutas desde la raíz del dominio
+   * (`/assets/index-abc.js`). Publicado en un subdirectorio, el navegador pide ese
+   * archivo a la raíz, no lo encuentra, y el módulo nunca llega a ejecutarse: el
+   * HTML carga, `#root` se queda vacío y sale una **pantalla en blanco sin error
+   * visible**. Es el fallo más silencioso del despliegue estático, porque en `pnpm
+   * dev` y en `pnpm preview` todo funciona — ahí la app sí vive en la raíz.
+   *
+   * Tiene que coincidir exactamente con la carpeta publicada, con las dos barras.
+   * `App.tsx` lo reutiliza como `basename` del router vía `import.meta.env.BASE_URL`,
+   * así que cambiando esta línea se enteran los dos.
+   */
+  base: "/store-pulse/",
   plugins: [
     react(),
     tailwindcss(),

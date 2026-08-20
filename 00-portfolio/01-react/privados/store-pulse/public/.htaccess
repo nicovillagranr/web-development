@@ -1,0 +1,30 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Rutas de la SPA en hosting estático.
+#
+# EL PROBLEMA. Las pantallas de esta app (`/equipo`, `/equipo/w-01`) existen solo
+# dentro del JavaScript: en el disco del servidor no hay ninguna carpeta con esos
+# nombres, solo `index.html` y los assets. Navegando por dentro no se nota, porque
+# React cambia la URL sin preguntarle nada a Apache. Pero quien pegue ese enlace o
+# pulse F5 sí hace la pregunta — y Apache busca una carpeta que no existe y sirve
+# el 404 del sitio.
+#
+# LA REGLA. Si lo que piden no es un archivo real (!-f) ni una carpeta real (!-d),
+# se entrega `index.html` y que el router decida qué pintar. Las dos condiciones
+# son lo que evita romper todo lo demás: los assets, el manifest y el service
+# worker sí existen en disco, así que se sirven ellos y no pasan por aquí.
+#
+# OJO AL DESPLEGAR. `RewriteBase` tiene que coincidir con la carpeta publicada y
+# con el `base` de `vite.config.ts`. Si un día cambia el nombre, se cambian los dos.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# El IfModule no es adorno: sin mod_rewrite, un `RewriteEngine` suelto no se ignora
+# —tumba el directorio entero con un error 500—. Así, en el peor caso, se degrada a
+# lo de hoy (la portada funciona, las rutas profundas dan 404) en vez de caerse todo.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /store-pulse/
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.html [L]
+</IfModule>
