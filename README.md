@@ -27,7 +27,7 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 | <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario persistido en localStorage y recetas sugeridas según lo guardado. **40 tests en verde** (Vitest). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/portfolio/02-smart-cooler-ui) |
 | <img src="01-learning/00-docs/01-assets/proyectos/projex.webp" width="150"> | **Projex** | Landing por secciones con animaciones de entrada y **formulario de contacto con validación accesible**: los errores se anuncian con `role="alert"` y el foco queda atrapado en el menú y el modal. El envío es una demo, sin backend. | React 19 · Tailwind v4 · Framer Motion · React Router | **[Demo](https://nico-villagran.com/projex/)** · [Código](00-portfolio/01-react/portfolio/03-projex) |
 
-Van **ordenados por dificultad técnica**, igual que las carpetas del repo, y son **los que están publicados**: es el mismo criterio que decide qué vive en [`00-portfolio/01-react/portfolio/`](00-portfolio/01-react/portfolio) — estar en la API y responder en el dominio. En [`00-portfolio/`](00-portfolio) hay más: un clon de Falabella con App Router desplegado en Vercel, landings, práctica de layout y versiones iterativas.
+Van **ordenados por dificultad técnica**, igual que las carpetas del repo, y son **los que están publicados**: es el mismo criterio que decide qué vive en [`00-portfolio/01-react/portfolio/`](00-portfolio/01-react/portfolio) — estar en la API y responder en el dominio. En [`00-portfolio/`](00-portfolio) hay más: un clon de Falabella con App Router desplegado en Vercel, dos e-commerce que consumen mi Products API y un par de landings.
 
 ## APIs propias
 
@@ -75,8 +75,8 @@ Two doors: the finished work, and the path that led to it.
    01-react/         proyectos React + Vite
       portfolio/     el escaparate: lo publicado / the showcase: what is live
          01-store-pulse/  02-smart-cooler-ui/  03-projex/
-      privados/      en curso, practica y archivo / WIP, practice and archive
-         01-sport-mindset/ ... 07-smart-cooler-ui-versions/
+      privados/      en curso y practica / WIP and practice
+         01-sport-mindset/ ... 04-landing-layout-system/
    02-next/          proyectos Next.js
       privados/      ninguno publicado todavia / none published yet
 

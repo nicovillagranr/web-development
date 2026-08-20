@@ -37,7 +37,11 @@ publicados tiene solo `privados/`; la carpeta vacía no se deja puesta esperando
 
 1. **Un proyecto vive en una sola carpeta.** Si necesitas referirte a él desde otro módulo, enlaza con un README de stub, no copies código.
 2. **Cuando un drill crece a portfolio**, se *mueve* a `00-portfolio/`. No queda copia detrás.
-3. **`package.json.name`** debe coincidir con el nombre de la carpeta padre (o el slug del proyecto si es un nombre real tipo `nexusai-landing`) y debe ser único en todo el repo.
+3. **`package.json.name`** debe coincidir con el **slug** de la carpeta —el nombre sin el
+   `NN-` que lo ordena— y ser único en todo el repo. Se admite el nombre real del producto
+   cuando la marca no es el slug: `02-shopreact` declara `nova-fashion`, que es lo que se
+   ve en la interfaz. Lo que no vale es un nombre heredado de una numeración muerta;
+   `react-portfolio-3` en `03-projex` es deuda pendiente, no el patrón a seguir.
 4. **En `00-portfolio/` las carpetas van numeradas por dificultad técnica**, dentro de
    cada `portfolio/` y cada `privados/`: `NN-slug`, del más difícil al más simple
    (`01-store-pulse`, `02-smart-cooler-ui`, `03-projex`…). El número ordena; **el slug

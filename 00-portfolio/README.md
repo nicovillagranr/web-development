@@ -43,9 +43,6 @@ El slug es lo que identifica: `03-projex` se publica en `/projex/`, no en `/03-p
 | [`02-shopreact`](01-react/privados/02-shopreact) | **ShopReact** — el mismo e-commerce, punto de partida de `sport-mindset`: hoy los 35 archivos de `src/` son idénticos entre los dos. | Lo mismo: es el origen del que salió el anterior | React 19 · Tailwind v4 · React Router |
 | [`03-mgd-exports`](01-react/privados/03-mgd-exports) | **MGD Exports** — landing corporativa con arquitectura *feature-first* y alias de importación. | Única integración de terceros que envía de verdad (EmailJS con credenciales por entorno) | React 19 · Tailwind v4 · EmailJS |
 | [`04-landing-layout-system`](01-react/privados/04-landing-layout-system) | **Landing Layout System** — secciones reutilizables y arquitectura CSS mantenible. Migrado a TypeScript. | Sistema de secciones tipado, pensado para reutilizar en vez de copiar | React 19 · TypeScript · Vite |
-| [`05-nexusai`](01-react/privados/05-nexusai) | **NexusAI** — landing de agencia de IA, estética dark. Comparte arquitectura con Projex. | Composición por secciones y animaciones, sin datos remotos | React 19 · Tailwind v4 · Framer Motion |
-| [`06-layout-practice`](01-react/privados/06-layout-practice) | **Layout Practice** — layout CSS aplicado con componentes. Migrado a TypeScript. | Ejercicio de layout: la pieza más simple del conjunto | React 19 · TypeScript · Vite |
-| [`07-smart-cooler-ui-versions`](01-react/privados/07-smart-cooler-ui-versions) | Archivo histórico: cinco versiones de Smart Cooler, cada una con su README explicando qué demuestra. | — (no es un proyecto: va al final por eso) | — |
 
 ## `02-next/`
 
