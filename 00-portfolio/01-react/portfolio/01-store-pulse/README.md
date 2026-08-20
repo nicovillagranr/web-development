@@ -1,6 +1,4 @@
-| | Movimiento | ¿Es bueno? |
-| --------- | ---------- | ---------- || Prep ▼ | baja | 🟢 mejora |
-| Pedidos ▼ | baja | 🔴 empeora |# Store Pulse
+# Store Pulse
 
 PWA mobile-first para consultar las métricas operativas de un local de reparto desde el teléfono:
 rendimiento individual, del equipo y del local, con objetivos, cumplimiento y evolución semanal.
