@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/**
+ * Tokens de color con nombre semántico, no de pintura.
+ *
+ * En los componentes se escribe `bg-surface` o `text-ink-soft`, no `bg-white` ni
+ * `text-slate-500`. Cuesta lo mismo de escribir y es lo que ha permitido añadir el
+ * modo oscuro redefiniendo estas variables, sin tocar ni un componente: la única
+ * excepción está anotada en `--color-on-good`.
+ *
+ * Los cuatro colores de estado (good/warn/bad/idle) NUNCA viajan solos: cada sitio
+ * donde se usan lleva además texto o un icono. Un panel que solo distingue "bien" de
+ * "mal" por el color deja fuera a quien no distingue el rojo del verde, que es
+ * alrededor de un 8% de los hombres.
+ *
+ * ── Por qué el acento NO es el rojo corporativo ──────────────────────────────
+ * En esta app el rojo ya significa algo: "esta métrica empeoró" (ver `compare.ts`,
+ * donde `movement` e `improved` son campos distintos a propósito). Si además fuera
+ * el color de marca y de los botones primarios, significaría dos cosas a la vez y
+ * un botón se leería igual que un dato que va mal. El acento se queda en índigo,
+ * que no compite con ningún estado.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+@theme {
+  --color-canvas: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-line: #e2e8f0;
+
+  --color-ink: #0f172a;
+  --color-ink-soft: #64748b;
+  --color-ink-faint: #94a3b8;
+
+  --color-brand: #4f46e5;
+  --color-brand-soft: #eef2ff;
+
+  --color-good: #047857;
+  --color-good-soft: #ecfdf5;
+  --color-warn: #b45309;
+  --color-warn-soft: #fffbeb;
+  --color-bad: #b91c1c;
+  --color-bad-soft: #fef2f2;
+  --color-idle: #64748b;
+  --color-idle-soft: #f1f5f9;
+
+  /* El color del texto que va ENCIMA de un fondo `good` sólido (la insignia de
+     "Supera amplia"). Existe como token porque es el único sitio donde el tema
+     no se resuelve redefiniendo un color: en claro el verde es oscuro y encima
+     va blanco; en oscuro el verde es claro y encima tiene que ir casi negro.
+     Escribir `text-white` a pelo ahí dejaba la insignia ilegible en oscuro. */
+  --color-on-good: #ffffff;
+
+  /* Paleta categórica de los gráficos. Estos tres valores NO se eligieron a ojo:
+     salen del validador de la skill `dataviz`, que comprueba banda de luminosidad,
+     croma mínimo, separación entre pares para daltonismo (deutan/tritan) y contraste
+     contra la superficie. Los tres pasan sobre blanco, con un aviso: la aqua queda
+     en 2,82:1, por debajo de 3:1. Ese aviso obliga a "relieve" — o sea, etiquetas
+     visibles. Por eso la leyenda del gráfico de calidad lleva el valor escrito al
+     lado y no solo un cuadradito de color. */
+  --color-series-1: #2a78d6;
+  --color-series-2: #eb6834;
+  --color-series-3: #1baf7a;
+}
+
+/**
+ * Modo oscuro.
+ *
+ * Sigue al tema del teléfono; no hay interruptor en la app. Quien trabaja en un
+ * turno no va a entrar a unos ajustes para cambiar el color: ya lo eligió una vez
+ * en su sistema.
+ *
+ * ── Esto NO es el tema claro invertido ───────────────────────────────────────
+ * Un tema oscuro automático se hace poniendo los mismos colores al revés, y sale
+ * mal: un verde que contrasta 5,5:1 sobre blanco contrasta 1,9:1 sobre un fondo
+ * oscuro, y la insignia se vuelve ilegible. Cada valor de aquí abajo se midió
+ * contra ESTA superficie (#1e2640). Todos los textos pasan 4,5:1 y los tres
+ * colores de gráfico pasan 3:1 — de hecho en oscuro pasan los tres, mientras que
+ * en claro la aqua se queda en 2,82:1. El aviso de "relieve" de arriba es un
+ * problema del tema claro, no de este.
+ *
+ * Los tres colores de gráfico son las mismas tres tintas de la paleta de
+ * referencia, en su escalón para fondo oscuro. No son otros colores: es el mismo
+ * azul, el mismo naranja y la misma aqua, pisados para este fondo, para que un
+ * gráfico no cambie de identidad al cambiar de tema.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Sin esto, los controles nativos —el desplegable de "Ordenado por" y el de
+       "Evolución"— se pintarían claros sobre la app oscura. No es cosmética: es
+       la lista desplegable la que se abre blanca en mitad de la pantalla. */
+    color-scheme: dark;
+
+    --color-canvas: #121824;
+    --color-surface: #1e2640;
+    --color-line: #2e3a5c;
+
+    --color-ink: #ffffff;
+    --color-ink-soft: #94a3b8;
+    --color-ink-faint: #64748b;
+
+    --color-brand: #818cf8;
+    --color-brand-soft: #252c52;
+
+    --color-good: #34d399;
+    --color-good-soft: #0f3d2e;
+    --color-warn: #fbbf24;
+    --color-warn-soft: #40300d;
+    --color-bad: #f87171;
+    --color-bad-soft: #45201f;
+    --color-idle: #94a3b8;
+    --color-idle-soft: #262f45;
+
+    /* El verde de oscuro es claro, así que encima va casi negro y no blanco. */
+    --color-on-good: #0b231a;
+
+    --color-series-1: #3987e5;
+    --color-series-2: #d95926;
+    --color-series-3: #199e70;
+  }
+}
+
+html {
+  /* La app se consulta con una mano y a veces con guantes: nada por debajo de 16px
+     en el cuerpo, y ningún objetivo táctil por debajo de 44px. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  /* Espacio para la tab bar fija + el área segura del iPhone. */
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+/* Los números de las métricas se leen en columna y se comparan entre filas: con
+   cifras de ancho variable, las comas bailan y comparar cuesta más de lo que debería. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

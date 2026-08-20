@@ -9,7 +9,7 @@ import type { Tier, TierId } from "../metrics/index.ts";
  * teléfono a medio brillo en un pasillo del local.
  */
 const TIER_STYLES: Record<TierId, string> = {
-  supera_amplia: "bg-good text-white",
+  supera_amplia: "bg-good text-on-good",
   supera: "bg-good-soft text-good ring-1 ring-good/20",
   cerca: "bg-warn-soft text-warn ring-1 ring-warn/20",
   bajo: "bg-bad-soft text-bad ring-1 ring-bad/20",

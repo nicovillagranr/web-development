@@ -15,7 +15,7 @@ import { formatMetricValue, formatNumber, getMetric } from "../metrics/index.ts"
  * añade un cuarto tipo de incidencia, entra en el registro y aparece aquí.
  */
 
-/** Colores validados con el script de la skill `dataviz`. Ver la nota en index.css. */
+/** Colores validados con el script de la skill `dataviz`. Ver la nota en App.css. */
 const SERIES_COLORS = ["var(--color-series-1)", "var(--color-series-2)", "var(--color-series-3)"];
 
 /**
