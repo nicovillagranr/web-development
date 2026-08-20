@@ -1,7 +1,7 @@
 # Plan: Integración Supabase en ShopReact (WiseBikes E-Commerce)
 
 > **Documento histórico.** Se escribió cuando este proyecto se llamaba `proyecto-6`
-> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/privados/shopreact/`.
+> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/privados/02-shopreact/`.
 > El texto de abajo conserva la nomenclatura original: donde diga *proyecto-6*, lee
 > **shopreact**; donde diga *proyecto-7*, lee **sport-mindset**.
 

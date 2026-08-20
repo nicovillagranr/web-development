@@ -1,7 +1,7 @@
 # Plan: Integración Supabase en Sport Mindset
 
 > **Documento histórico.** Se escribió cuando este proyecto se llamaba `proyecto-7`
-> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/portfolio/sport-mindset/`.
+> y vivía en `08-projects/01-react/`. Hoy es `00-portfolio/01-react/privados/01-sport-mindset/`.
 > El texto de abajo conserva la nomenclatura original: donde diga *proyecto-7*, lee
 > **sport-mindset**; donde diga *proyecto-6*, lee **shopreact**; donde diga
 > *proyecto-8*, lee **smart-cooler-ui**.

@@ -23,11 +23,11 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 
 | | Proyecto | Qué demuestra | Stack | |
 |---|---|---|---|---|
-| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-6.webp" width="150"> | **Clon de Falabella.com** *(ejercicio académico)* | Rutas dinámicas y *API routes* en Next.js sobre un catálogo con categorías y destacados. | Next.js 16 · Tailwind v4 | **[Demo](https://proyecto-next-2.vercel.app/)** · [Código](00-portfolio/02-next/falabella-clone) |
-| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario y lista de compras. **40 tests en verde** (Vitest + Testing Library). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/portfolio/smart-cooler-ui) |
-| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-4.webp" width="150"> | **Sport Mindset** | E-commerce que consume **mi propia Products API**: la URL entra por variable de entorno y la app falla al arrancar si no está configurada, en vez de romperse a medio camino. *En desarrollo.* | React 19 · Tailwind v4 · React Router | [Código](00-portfolio/01-react/portfolio/sport-mindset) |
+| <img src="01-learning/00-docs/01-assets/proyectos/store-pulse.jpg" width="150"> | **Store Pulse** | PWA instalable con las métricas de un local en tres niveles: local, equipo y persona. Cada métrica se declara una vez en un registro que dice hacia qué lado mejora, así que la flecha y el color de cada variación salen del dato en vez de repetirse a mano. **TypeScript estricto, Zod en la frontera y 82 tests en verde.** | React 19 · TypeScript · Tailwind v4 · Recharts · Zod | **[Demo](https://nico-villagran.com/store-pulse/)** · [Código](00-portfolio/01-react/portfolio/01-store-pulse) |
+| <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario persistido en localStorage y recetas sugeridas según lo guardado. **40 tests en verde** (Vitest). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/portfolio/02-smart-cooler-ui) |
+| <img src="01-learning/00-docs/01-assets/proyectos/projex.webp" width="150"> | **Projex** | Landing por secciones con animaciones de entrada y **formulario de contacto con validación accesible**: los errores se anuncian con `role="alert"` y el foco queda atrapado en el menú y el modal. El envío es una demo, sin backend. | React 19 · Tailwind v4 · Framer Motion · React Router | **[Demo](https://nico-villagran.com/projex/)** · [Código](00-portfolio/01-react/portfolio/03-projex) |
 
-Hay más proyectos en [`00-portfolio/`](00-portfolio) — landings, práctica de layout y versiones iterativas. Los tres de arriba son los que mejor representan lo que sé hacer hoy.
+Van **ordenados por dificultad técnica**, igual que las carpetas del repo, y son **los que están publicados**: es el mismo criterio que decide qué vive en [`00-portfolio/01-react/portfolio/`](00-portfolio/01-react/portfolio) — estar en la API y responder en el dominio. En [`00-portfolio/`](00-portfolio) hay más: un clon de Falabella con App Router desplegado en Vercel, landings, práctica de layout y versiones iterativas.
 
 ## APIs propias
 
@@ -73,9 +73,16 @@ Two doors: the finished work, and the path that led to it.
 00-portfolio/     Proyectos aplicados — lo que enseño / Applied projects
    00-hosting/       el sitio del portfolio / the portfolio site
    01-react/         proyectos React + Vite
-      portfolio/     el escaparate / the showcase
-      privados/      practica, sin terminar y archivo / practice, WIP and archive
+      portfolio/     el escaparate: lo publicado / the showcase: what is live
+         01-store-pulse/  02-smart-cooler-ui/  03-projex/
+      privados/      en curso, practica y archivo / WIP, practice and archive
+         01-sport-mindset/ ... 07-smart-cooler-ui-versions/
    02-next/          proyectos Next.js
+      privados/      ninguno publicado todavia / none published yet
+
+   El NN de cada proyecto ordena por dificultad tecnica, de mas a menos.
+   El slug es lo que identifica: 03-projex se publica en /projex/.
+   NN orders by technical difficulty; the slug is the identity.
 
 01-learning/      La ruta de aprendizaje / The learning path
    00-docs/          documentación, estándares y decisiones

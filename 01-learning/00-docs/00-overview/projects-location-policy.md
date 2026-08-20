@@ -7,13 +7,20 @@ Regla de oro: **un proyecto, un solo sitio**. Si un ejercicio crece hasta volver
 | Tipo | Definición | Ubicación canónica |
 |---|---|---|
 | Ejercicio de aprendizaje | Drill corto para practicar un concepto del módulo. Vida útil: la sesión + repaso. | `0X-tema/.../proyecto-N/` dentro del módulo correspondiente |
-| Proyecto aplicado | Trabajo completo, con README, deploy o intención de portfolio. | `00-portfolio/{stack}/<slug>/` — slug con el nombre del proyecto, nunca numerado |
+| Proyecto aplicado | Trabajo completo, con README, deploy o intención de portfolio. | `00-portfolio/{stack}/{portfolio\|privados}/NN-<slug>/` — `NN` ordena por dificultad, el slug identifica |
 
 ## Carpetas canónicas para proyectos aplicados
 
-- `00-portfolio/01-react/` — proyectos React + Vite, divididos en dos:
-  - `portfolio/` — **el escaparate**: lo que enseño cuando alguien viene a evaluar mi trabajo.
-  - `privados/` — el resto: práctica que ya cumplió, proyectos sin terminar y archivo histórico.
+**Todas** las carpetas de stack se dividen en las mismas dos, con el mismo criterio:
+
+- `portfolio/` — **el escaparate**: los proyectos publicados, es decir, los que están
+  en la API *y* respondiendo en el dominio. Nada más entra aquí.
+- `privados/` — todo lo demás: trabajo en curso, práctica que ya cumplió y archivo histórico.
+
+`portfolio/` solo se crea donde hay algo que la cumpla. Un stack cuyos proyectos no estén
+publicados tiene solo `privados/`; la carpeta vacía no se deja puesta esperando.
+
+- `00-portfolio/01-react/` — proyectos React + Vite.
 - `00-portfolio/02-next/` — proyectos Next.js.
 - `00-portfolio/03-bootstrap/` — proyectos Bootstrap (crear cuando haga falta).
 - `00-portfolio/04-tailwind/` — proyectos puramente Tailwind/CSS (crear cuando haga falta).
@@ -31,31 +38,49 @@ Regla de oro: **un proyecto, un solo sitio**. Si un ejercicio crece hasta volver
 1. **Un proyecto vive en una sola carpeta.** Si necesitas referirte a él desde otro módulo, enlaza con un README de stub, no copies código.
 2. **Cuando un drill crece a portfolio**, se *mueve* a `00-portfolio/`. No queda copia detrás.
 3. **`package.json.name`** debe coincidir con el nombre de la carpeta padre (o el slug del proyecto si es un nombre real tipo `nexusai-landing`) y debe ser único en todo el repo.
-4. **En `00-portfolio/` no hay numeración**: cada carpeta se llama como el proyecto
-   (`projex`, `shopreact`, `sport-mindset`…). Para los publicados, el **slug** —no la
-   ruta completa— coincide con su ruta en el hosting y con el `path` de la API:
-   `00-portfolio/01-react/portfolio/projex/` se publica en `/projex/`.
-   La numeración `proyecto-N` sobrevive solo en `01-learning/`, donde es local a la
-   carpeta padre y el orden sí significa algo (cronología del temario).
+4. **En `00-portfolio/` las carpetas van numeradas por dificultad técnica**, dentro de
+   cada `portfolio/` y cada `privados/`: `NN-slug`, del más difícil al más simple
+   (`01-store-pulse`, `02-smart-cooler-ui`, `03-projex`…). El número ordena; **el slug
+   es lo que identifica** y es el que coincide con la ruta publicada y con el `path`
+   de la API: `01-react/portfolio/03-projex/` se publica en `/projex/`, no en
+   `/03-projex/`. En `01-learning/` sigue viva la numeración `proyecto-N`, que ahí
+   significa otra cosa: cronología del temario.
 
-   *Por qué:* mientras `00-portfolio/` estuvo numerado, el número de la carpeta, el
-   slot publicado y las rutas de los `og:url`/`RewriteBase` se desincronizaron tres
-   veces. Un nombre no se desincroniza.
+   *Por qué el número:* la lista deja de ser alfabética y pasa a decir algo. Quien abre
+   la carpeta ve primero lo más difícil, que es lo que quiero que mire primero.
 
-5. **`portfolio/` vs `privados/` es una decisión de escaparate, no de calidad.** Un
-   proyecto entra en `portfolio/` cuando quiero que alguien lo mire; si además está
-   desplegado, lleva ✅ en `00-portfolio/README.md`. Son dos cosas distintas y la
-   segunda se comprueba con un `curl`, no de memoria.
+   *Riesgo asumido, y cómo se contiene:* la numeración de `00-portfolio/` ya se
+   desincronizó tres veces del slot publicado y de las rutas `og:url`/`RewriteBase`,
+   y por eso se había eliminado. Ahora se vuelve a usar **con una diferencia**: el
+   número no participa de ninguna URL. El `base` de Vite, el `path` de la API y los
+   `og:url` van por el slug, así que renumerar no puede romper el sitio. Lo único que
+   sí rompe es el **`repo` de la API**, que lleva la ruta completa de GitHub — ver la
+   regla 6. Reordenar por dificultad obliga a repasar ese campo.
 
-   *Por qué:* la columna ✅ llegó a marcar como publicados dos proyectos que
-   devolvían 404. Un criterio verificable no se puede creer por error.
+5. **En `portfolio/` solo hay proyectos publicados.** Un proyecto entra cuando cumple
+   las dos condiciones a la vez: **está en la API** (`/projects`) y **responde en el
+   dominio**. Si falta cualquiera de las dos vive en `privados/`, por bueno que sea el
+   código; y en cuanto las cumple, se mueve. Las dos se comprueban con un `curl`, no de
+   memoria.
+
+   **El criterio es el mismo para todos los stacks**, no solo para React. Que un proyecto
+   merezca el escaparate es una decisión previa y mía; lo que la hace efectiva es
+   publicarlo — subirlo al dominio y darlo de alta en la API. Hasta que eso pasa, el
+   proyecto está en `privados/` aunque yo ya haya decidido que es bueno.
+
+   *Por qué:* antes esto eran dos ejes separados —la carpeta decía una intención
+   («quiero que alguien lo mire») y el ✅ decía un hecho— y discreparon en las dos
+   direcciones a la vez: `sport-mindset` estaba en el escaparate sin desplegar, y
+   `store-pulse` figuraba como privado mientras se servía en el dominio y aparecía en
+   la API. Con un solo eje, y verificable, no queda nada que sincronizar a mano.
 
 6. **Mover un proyecto entre `portfolio/` y `privados/` no cambia su URL.** El `base`
    está escrito literal en cada `vite.config` (`base: '/projex/'`), así que la carpeta
    y la ruta publicada solo están unidas por esta convención, no por código. Al mover
-   algo, revisa a mano que `base`, el `path` de la API y el enlace del README sigan
-   diciendo lo mismo.
-5. **Antes de crear un proyecto nuevo**, correr `scripts/check-duplicate-projects.ps1` para confirmar que el nombre elegido está libre.
+   algo, revisa a mano que `base`, el `path` de la API, el **`repo` de la API** y el
+   enlace del README sigan diciendo lo mismo — el `repo` apunta a la ruta completa
+   dentro de GitHub, así que es el único que se rompe con un cambio de carpeta.
+7. **Antes de crear un proyecto nuevo**, correr `scripts/check-duplicate-projects.ps1` para confirmar que el nombre elegido está libre.
 
 ## Detección de violaciones
 
