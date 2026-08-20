@@ -28,8 +28,11 @@ function PreviewAbout({ data }) {
         <h2 className="font-heading text-3xl sm:text-5xl font-bold leading-tight tracking-tight text-text-primary">
           {data.name}
         </h2>
+        {/* "X años de experiencia" junto al rol se lee como antigüedad laboral.
+            El ancla de formación es concreta y comprobable, y no promete un
+            historial de empleo que todavía no existe. */}
         <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-text-secondary">
-          {data.based} · {data.years} años de experiencia
+          {data.based} · Programando desde 2021
         </div>
       </div>
 
@@ -38,7 +41,10 @@ function PreviewAbout({ data }) {
       <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-dashed border-line-hover py-2 sm:py-3">
         <KPI label="proyectos" value={data.projects} />
         <KPI label="online" value={data.online} accent="emerald" />
-        <KPI label="años" value={data.years === "—" ? "—" : `${data.years}+`} accent="amber" />
+        {/* Sin el `+`: afirmaba "dos o más", que es más de lo que se puede
+            sostener. Y la etiqueta nombra la unidad, para que el número no se
+            confunda con años cotizados. */}
+        <KPI label="años en React" value={data.years} accent="amber" />
       </div>
     </div>
   );

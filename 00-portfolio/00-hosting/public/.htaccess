@@ -8,7 +8,41 @@ ErrorDocument 404 /404.html
   Header set Expires 0
 </FilesMatch>
 
-# Assets with content hash in filename — cache forever (immutable)
-<FilesMatch "\.(js|css|woff2?|ttf|webp|png|svg)$">
+# Bundles de Vite — cache eterna (immutable)
+#
+# `immutable` no significa "cachea mucho tiempo": es la promesa de que el
+# archivo NUNCA va a cambiar, y el navegador la cumple al pie de la letra
+# (con F5 ni siquiera manda la petición). Solo se puede prometer eso cuando
+# el nombre lleva el hash del contenido, porque entonces un cambio produce
+# un nombre distinto: index-CLUy3E5A.js, Satoshi-Variable-CFg-z2ne.woff2.
+#
+# El patrón exige ese hash de 8 caracteres antes de la extensión, así que
+# solo entran aquí los archivos generados por Vite.
+<FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css|woff2?|ttf)$">
   Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Iconos, logos y og:image — nombre estable, contenido que sí cambia
+#
+# Estos conservan el nombre entre deploys (favicon.ico, icon.svg...), así que
+# la promesa anterior sería mentira: prometerla dejaba los favicons viejos
+# clavados en el navegador hasta un año, sin forma de refrescarlos recargando.
+# Aquí se revalidan siempre; cuando no han cambiado el servidor contesta 304
+# sin cuerpo, que cuesta prácticamente nada.
+<FilesMatch "\.(png|svg|ico|jpe?g|webp|avif)$">
+  Header set Cache-Control "public, max-age=0, must-revalidate"
+</FilesMatch>
+
+# Manifest, datos y archivos de rastreo — nombre estable, contenido que cambia
+#
+# Sin ninguna regla el navegador no deja de cachear: se INVENTA la caducidad
+# (caché heurística, ~10% del tiempo que lleve el archivo sin modificarse).
+# Esa invención crece cuanto más tiempo pases sin desplegar, justo al revés
+# de lo que conviene.
+#
+# Importa sobre todo por data-snapshot.json: es el respaldo del que tira el
+# sitio si la API se cae, y generate-snapshot.js lo regenera en cada build
+# precisamente para que esté fresco. Cachearlo a ciegas anula ese trabajo.
+<FilesMatch "\.(webmanifest|json|xml|txt)$">
+  Header set Cache-Control "public, max-age=0, must-revalidate"
 </FilesMatch>

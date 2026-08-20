@@ -46,7 +46,7 @@ export default function Hero({ projects = [], profile, loading = false }) {
         { k: "name", v: data.name, type: "str" },
         { k: "role", v: data.role, type: "str" },
         { k: "based", v: data.based, type: "str" },
-        { k: "years", v: data.years, type: "num" },
+        { k: "years_react", v: data.years, type: "num" },
         { k: "projects", v: data.projects, type: "num" },
         { k: "online", v: data.online, type: "num" },
         { k: "status", v: data.status, type: "str" },

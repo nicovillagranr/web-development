@@ -4,90 +4,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Meta description para SEO: incluye nombre completo + stack tecnológico para mejorar ranking en búsquedas de "Nicolás Villagrán", "React developer", etc -->
   <meta name="description"
-    content="Nicolás Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development" />
+    content="Nicolás Villagrán - React developer. TypeScript • JavaScript • Modern Web Development" />
 
-  <!-- Open Graph: metadatos para redes sociales (Facebook, LinkedIn, WhatsApp) -->
   <meta property="og:type" content="website">
-  <!-- og:title: título que aparece al compartir en redes (con nombre completo para branding) -->
-  <meta property="og:title" content="Nicolás Villagrán | React & Next.js Developer">
-  <!-- og:description: descripción que aparece en preview de redes sociales, incluye skills principales -->
+  <meta property="og:title" content="Nicolás Villagrán | React Developer">
   <meta property="og:description"
-    content="Nicolás Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development">
+    content="Nicolás Villagrán - React developer. TypeScript • JavaScript • Modern Web Development">
 
-  <!-- Imagen (landscape para LinkedIn/Twitter) -->
-  <meta property="og:image" content="https://nico-villagran.com/og-image.png">
+  <!-- Imagen principal (landscape) para LinkedIn, X y Facebook -->
+  <meta property="og:image" content="https://nico-villagran.com/og-image-v2.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Nicolás Villagrán, Frontend Developer — React, TypeScript, Tailwind, Vitest">
 
   <!-- Imagen secundaria, más alta, para el preview de móvil.
        Las medidas declaradas tienen que coincidir con las reales del archivo:
        el scraper reserva el hueco del preview con estos números ANTES de bajar
        la imagen, así que si mienten el recorte lo decide él. -->
-  <meta property="og:image" content="https://nico-villagran.com/og-image-square.png">
+  <meta property="og:image" content="https://nico-villagran.com/og-image-square-v2.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="800">
   <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Nicolás Villagrán, Frontend Developer — React, TypeScript, Tailwind, Vitest">
 
   <meta property="og:url" content="https://nico-villagran.com">
 
   <!-- Twitter Card: metadatos específicos para compartir en Twitter/X -->
   <meta name="twitter:card" content="summary_large_image">
   <!-- twitter:title: título que ve en Twitter, con nombre completo para SEO personal -->
-  <meta name="twitter:title" content="Nicolás Villagrán | React & Next.js Developer">
+  <meta name="twitter:title" content="Nicolás Villagrán | React Developer">
   <!-- twitter:description: descripción en Tweet, incluye skills principales -->
   <meta name="twitter:description"
-    content="Nicolás Villagrán - React & Next.js developer. TypeScript • JavaScript • Modern Web Development">
-  <!-- twitter:image: imagen que aparece en preview de Tweet -->
-  <meta name="twitter:image" content="https://nico-villagran.com/og-image-square.png">
+    content="Nicolás Villagrán - React developer. TypeScript • JavaScript • Modern Web Development">
+  <!-- twitter:image: con summary_large_image la tarjeta es 1.91:1, así que va la
+       versión landscape; la alta se recortaría por arriba y por abajo. -->
+  <meta name="twitter:image" content="https://nico-villagran.com/og-image-v2.png">
+  <meta name="twitter:image:alt" content="Nicolás Villagrán, Frontend Developer — React, TypeScript, Tailwind, Vitest">
 
   <!-- Theme -->
   <meta name="theme-color" content="#080510">
   <meta name="author" content="Nicolás Villagrán">
 
-
-  <!-- Preconexión con la API de proyectos (cross-origin: el sitio vive en nico-villagran.com y la API en *.vercel.app)
-       Cuando React monta, useProjects dispara fetch() a /projects y /profile. Antes de bajar ese JSON, el navegador debe:
-         1) Resolver el DNS de la API (~20-120ms)
-         2) Abrir conexión TCP (~1 RTT)
-         3) Negociar handshake TLS (~1-2 RTT)
-       En total, ~100-400ms de "saludo" antes de pedir nada útil — y eso bloquea el primer render del Catalog.
-       Con preconnect, el navegador hace esos 3 pasos en paralelo al parseo del HTML, así cuando el fetch dispara la conexión ya está caliente.
-       dns-prefetch queda como fallback para navegadores antiguos que no soportan preconnect. -->
   <link rel="preconnect" href="https://00-portfolio-projects-api.vercel.app" crossorigin>
   <link rel="dns-prefetch" href="https://00-portfolio-projects-api.vercel.app">
 
-  <!-- Favicon (isotipo "N", ver public/favicon/icon.svg)
-       Ojo con las rutas: en Vite, public/ NO es un segmento de URL. Es una bandeja cuyo
-       contenido se copia tal cual al raíz de dist/, así que la ruta pública es /favicon/...
-       Si escribes /public/favicon/... funciona en el dev server (ahí el archivo existe
-       físicamente en esa ruta) pero en el build Vite lo trata como un import y lo duplica
-       en /assets/ con hash: acabas con el icono dos veces y una URL nueva en cada build.
-
-       Y el atributo sizes NO escala nada: solo DESCRIBE cuánto mide el archivo para que el
-       navegador elija cuál bajar. Poner un número mayor no agranda el dibujo. Para que el
-       logo se lea a 16px lo que importa es que la forma sea sólida y llene el lienzo. -->
   <link rel="icon" type="image/svg+xml" href="/favicon/icon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
   <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <meta name="msapplication-TileColor" content="#080510">
 
-  <!-- PWA manifest -->
   <link rel="manifest" href="/favicon/site.webmanifest">
 
   <!-- Título del sitio -->
   <title>Proyectos | Nicolás Villagrán</title>
 
-  <!-- JSON-LD Structured Data: Le dice a Google exactamente quién eres (schema.org Person)
-       - Nombre: tu nombre completo como aparece en Google Search Results
-       - alternateName: variaciones de nombre para que Google entienda que son la misma persona
-       - jobTitle: título profesional visible en búsquedas
-       - skills: array de tecnologías para mejorar ranking en búsquedas específicas (React, Next.js, etc.)
-       - sameAs: URLs de redes sociales para verificación de identidad (agregar cuando tengas GitHub, LinkedIn)
-  -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -95,10 +68,19 @@
     "name": "Nicolás Villagrán",
     "alternateName": ["Nico Villagrán", "Nicolas Villagran", "Nico Villa", "Nicolás Villagran"],
     "url": "https://nico-villagran.com",
-    "jobTitle": "React & Next.js Developer",
-    "description": "React & Next.js developer. TypeScript • JavaScript • Modern Web Development",
-    "image": "https://nico-villagran.com/logo.png",
-    "skills": ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion", "React Router", "React Icons", "CSS modular", "EmailJS", "Supabase", "npm", "Vercel"],
+    "jobTitle": "Frontend Developer",
+    "description": "React developer. TypeScript • JavaScript • Modern Web Development",
+    "image": "https://nico-villagran.com/favicon/web-app-manifest-512x512-v2.png",
+    "skills": [
+      "JavaScript", "TypeScript", "HTML", "CSS",
+      "React", "React Router", "Framer Motion", "Zod", "Recharts", "React Icons",
+      "Tailwind CSS", "CSS Modules", "Sass", "Less", "BEM", "Bootstrap",
+      "Vitest", "Testing Library",
+      "Git", "Vite", "pnpm", "ESLint", "Prettier", "Docker",
+      "Node.js", "json-server",
+      "Vercel", "Hostinger",
+      "Claude Code", "Claude Design"
+    ],
     "sameAs": [
       "https://github.com/nicovillagranr",
       "https://www.linkedin.com/in/nico-villagran/"

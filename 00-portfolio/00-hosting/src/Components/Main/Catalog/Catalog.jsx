@@ -2,7 +2,7 @@ import { useState } from "react";
 import ProjectCard from "./ProjectCard";
 import CatalogSkeleton from "./CatalogSkeleton";
 
-const FILTERS = ["Todos", "React", "Next.js", "APIs"];
+const FILTERS = ["Todos", "React", "APIs"];
 const GROUP_ORDER = ["React", "Next.js", "APIs"];
 
 export default function Catalog({ projects = [], loading = false, error = null }) {
