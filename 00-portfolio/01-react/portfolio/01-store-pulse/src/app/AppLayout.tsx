@@ -10,20 +10,20 @@ import { NavLink, Outlet } from "react-router-dom";
  * Dos pestañas y no tres: el nivel de "trabajador" es el detalle de una persona
  * concreta, así que no puede ser una pestaña hasta que la app sepa quién eres (eso
  * llega con la autenticación). Hasta entonces se entra desde el ranking.
+ *
+ * Ninguna de las dos apunta a `/`: esa ruta solo rebota al equipo, y el motivo está
+ * escrito en `App.tsx`. "Equipo" lleva `end: false` justamente para seguir encendida
+ * en el detalle de una persona, que cuelga de ella.
  */
 
 const TABS = [
-  { to: "/", label: "Local", end: true },
   { to: "/equipo", label: "Equipo", end: false },
+  { to: "/local", label: "Local", end: true },
 ] as const;
 
 export function AppLayout() {
   return (
     <div className="mx-auto min-h-dvh w-full max-w-lg">
-      <main className="flex flex-col gap-4 p-4">
-        <Outlet />
-      </main>
-
       <nav
         aria-label="Secciones"
         className="border-line bg-surface fixed inset-x-0 bottom-0 z-10 border-t pb-[env(safe-area-inset-bottom)]"
@@ -48,6 +48,9 @@ export function AppLayout() {
           ))}
         </ul>
       </nav>
+      <main className="flex flex-col gap-4 p-4">
+        <Outlet />
+      </main>
     </div>
   );
 }

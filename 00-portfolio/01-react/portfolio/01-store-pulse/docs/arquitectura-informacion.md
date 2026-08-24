@@ -16,15 +16,21 @@ Tres niveles de información, **dos pestañas**:
 │      contenido              │
 │                             │
 ├─────────────────────────────┤
-│    Local    │    Equipo     │   ← tab bar inferior (pulgar)
+│    Equipo   │    Local      │   ← tab bar inferior (pulgar)
 └─────────────────────────────┘
 ```
 
-| Ruta                | Nivel | Pantalla   |
-| ------------------- | ----- | ---------- |
-| `/`                 | 1     | Local      |
-| `/equipo`           | 2     | Equipo     |
-| `/equipo/:workerId` | 3     | Trabajador |
+| Ruta                | Nivel | Pantalla           |
+| ------------------- | ----- | ------------------ |
+| `/`                 | —     | rebota a `/equipo` |
+| `/local`            | 1     | Local              |
+| `/equipo`           | 2     | Equipo             |
+| `/equipo/:workerId` | 3     | Trabajador         |
+
+**Por qué la app abre en el equipo y no en el local.** Se abre antes de un turno, y lo primero
+que se quiere ver es cómo va la gente; el local es el contexto, no la pregunta de entrada. `/` no
+renderiza nada: rebota a `/equipo` para que el detalle de una persona pueda seguir colgando de
+`/equipo` y marcando su pestaña.
 
 **Por qué dos pestañas y no tres.** El Nivel 3 es el detalle de _una persona concreta_, así que no
 puede ser una pestaña hasta que la app sepa quién eres — y eso llega con la autenticación (Fase 9).
