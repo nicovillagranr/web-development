@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 
 // Importamos las imagenes de los proyectos
 import portfolioImg1 from "../../assets/images/3-Portfolio/portfolio-1.webp"

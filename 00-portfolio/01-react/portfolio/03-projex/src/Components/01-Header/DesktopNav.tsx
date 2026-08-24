@@ -1,4 +1,4 @@
-import NavItem from "./NavItem.jsx";
+import NavItem from "./NavItem.tsx";
 
 function DesktopNav({ navItems }) {
     return (

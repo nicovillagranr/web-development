@@ -3,7 +3,7 @@ import { useRef } from "react"
 import { FaCalendar, FaUser } from "react-icons/fa"
 
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 
 // Importamos las imágenes de noticias
 import newsImage1 from "../../assets/images/5-News/news-1.webp"

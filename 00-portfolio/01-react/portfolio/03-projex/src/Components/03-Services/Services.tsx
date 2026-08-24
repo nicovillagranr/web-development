@@ -1,5 +1,5 @@
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 
 // Importamos las imágenes de los servicios
 import service1Img from "../../assets/images/2-Services/idea.webp"

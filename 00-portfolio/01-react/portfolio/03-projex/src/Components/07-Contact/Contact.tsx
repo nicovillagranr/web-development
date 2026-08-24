@@ -2,13 +2,13 @@
 import { useState } from "react"
 
 // Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 // Importamos ContactForm
-import ContactForm from "./ContactForm.jsx"
+import ContactForm from "./ContactForm.tsx"
 // Importamos ContactInfo
-import ContactInfo from "./ContactInfo.jsx"
+import ContactInfo from "./ContactInfo.tsx"
 // Importamos MapModal
-import MapModal from "./MapModal.jsx"
+import MapModal from "./MapModal.tsx"
 
 function Contact() {
     const [isMapOpen, setIsMapOpen] = useState(false)

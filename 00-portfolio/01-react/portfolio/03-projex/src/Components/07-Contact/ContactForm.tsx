@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ContactValidation } from "./ContactValidation.jsx"
+import { ContactValidation } from "./ContactValidation.tsx"
 
 function ContactForm() {
     const { validate } = ContactValidation()

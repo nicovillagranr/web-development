@@ -3,15 +3,15 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import "./assets/styles/App.css";
 
-import Header from "./Components/01-Header/Header.jsx";
-import Hero from "./Components/02-Hero/Hero.jsx";
-import Services from "./Components/03-Services/Services.jsx";
-import Portfolio from "./Components/04-Portfolio/Portfolio.jsx";
-import Team from "./Components/05-Team/Team.jsx";
-import News from "./Components/06-News/News.jsx";
-import Contact from "./Components/07-Contact/Contact.jsx";
-import Footer from "./Components/08-Footer/Footer.jsx";
-import NotFound from "./Components/NotFound/404.jsx";
+import Header from "./Components/01-Header/Header.tsx";
+import Hero from "./Components/02-Hero/Hero.tsx";
+import Services from "./Components/03-Services/Services.tsx";
+import Portfolio from "./Components/04-Portfolio/Portfolio.tsx";
+import Team from "./Components/05-Team/Team.tsx";
+import News from "./Components/06-News/News.tsx";
+import Contact from "./Components/07-Contact/Contact.tsx";
+import Footer from "./Components/08-Footer/Footer.tsx";
+import NotFound from "./Components/NotFound/404.tsx";
 
 const MotionMain = motion.main;
 

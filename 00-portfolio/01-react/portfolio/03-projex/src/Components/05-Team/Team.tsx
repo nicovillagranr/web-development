@@ -1,5 +1,5 @@
 ﻿// Importamos SectionTitle
-import SectionTitle from "../SectionTitle/SectionTitle.jsx"
+import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 import { FaTwitter, FaPinterest, FaFacebook, FaGoogle, FaLinkedin } from "react-icons/fa"
 
 // Importamos las imagenes de los miembros del equipo

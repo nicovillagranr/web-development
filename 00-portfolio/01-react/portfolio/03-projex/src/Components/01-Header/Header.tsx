@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
-import LogoSection from "./LogoSection.jsx";
-import DesktopNav from "./DesktopNav.jsx";
-import MobileNav from "./MobileNav.jsx";
+import LogoSection from "./LogoSection.tsx";
+import DesktopNav from "./DesktopNav.tsx";
+import MobileNav from "./MobileNav.tsx";
 
-import { navItems } from "./headerConstants.js";
+import { navItems } from "./headerConstants.ts";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);

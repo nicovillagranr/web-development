@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import FocusTrap from "focus-trap-react";
-import NavItem from "./NavItem.jsx";
+import NavItem from "./NavItem.tsx";
 
 const MotionMenu = motion.ul;
 
