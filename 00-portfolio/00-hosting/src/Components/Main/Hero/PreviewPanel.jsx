@@ -25,9 +25,14 @@ function PreviewAbout({ data }) {
 
       <div>
         <div className="font-mono text-xs text-text-muted mb-1">{data.role}</div>
-        <h2 className="font-heading text-3xl sm:text-5xl font-bold leading-tight tracking-tight text-text-primary">
+        {/* El h1 de la página, y el único de los tres paneles que lo lleva: el
+            título de un portfolio personal es el nombre de la persona, y los
+            otros dos paneles son secciones suyas, no páginas aparte. Vive aquí
+            dentro porque no hay otro sitio donde el nombre se pinte, y "about"
+            es la pestaña por defecto: en el primer render siempre está visible. */}
+        <h1 className="font-heading text-3xl sm:text-5xl font-bold leading-tight tracking-tight text-text-primary">
           {data.name}
-        </h2>
+        </h1>
         {/* "X años de experiencia" junto al rol se lee como antigüedad laboral,
             y una fecha de inicio obliga a defender un arco que el repositorio
             público no acompaña. El título es una credencial concreta, con fecha
