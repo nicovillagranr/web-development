@@ -25,6 +25,21 @@ import { formatMetricValue } from "../metrics/index.ts";
  *
  * Sin ejes, sin rejilla y sin etiquetas. Un minigráfico no responde "cuánto", que
  * es lo que dice el número de al lado: responde "hacia dónde va".
+ *
+ * ── Por qué el ancho cede y el número no ─────────────────────────────────────
+ * `WIDTH` y `HEIGHT` son el tamaño IDEAL y el sistema de coordenadas del dibujo,
+ * no el tamaño en pantalla: eso lo fija el `w-16` de abajo, que puede encogerse.
+ * Antes el SVG iba con `shrink-0`, o sea 64 px intocables, y en una tarjeta
+ * estrecha el que se quedaba sin sitio era el número de al lado, que partía
+ * "3,21 min" en dos líneas. Como eso pasaba a partir de una centésima de píxel,
+ * dentro de una misma fila una tarjeta se iba a dos líneas y su vecina no, y el
+ * grid quedaba con huecos.
+ *
+ * El orden de prioridad es el correcto al revés: el número es el dato y el
+ * minigráfico es el contexto, así que cuando falta sitio encoge el gráfico.
+ * `viewBox` hace que el dibujo se reescale solo — por eso las coordenadas de
+ * aquí abajo no se enteran de nada.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 
 const WIDTH = 64;
@@ -96,7 +111,13 @@ export function Sparkline({
       width={WIDTH}
       height={HEIGHT}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      className="shrink-0 overflow-visible"
+      /* `min-w-0` es el que hace el trabajo: un elemento reemplazado (un SVG, una
+         imagen) trae `min-width: auto`, que en la práctica significa "no encojas
+         por debajo de tu tamaño propio". Sin ponerlo a 0, `shrink` no sirve de
+         nada. Y sin `preserveAspectRatio` explícito el valor por defecto ya es el
+         que queremos: el dibujo se reescala entero y se centra, sin deformar ni
+         el punto final ni los extremos redondeados del trazo. */
+      className="h-5 w-16 min-w-0 shrink overflow-visible"
       role="img"
       /* Un minigráfico sin descripción es una imagen vacía para un lector de
          pantalla. Se le cuenta el recorrido, que es justo lo que el vidente ve. */

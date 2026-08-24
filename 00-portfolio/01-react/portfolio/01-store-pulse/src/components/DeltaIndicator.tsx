@@ -68,7 +68,14 @@ export function DeltaIndicator({
         : "sin cambio";
 
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium ${tone}`}>
+    /* `whitespace-nowrap` mantiene la línea entera de una pieza. Sin él, en una
+       tarjeta estrecha "▼ 0,25 min vs S32" se repartía en dos o tres líneas, y como
+       cada persona tiene su propio texto, dos tarjetas vecinas acababan con alturas
+       distintas. Lo que cede aquí es la referencia: es el único trozo que se repite
+       igual en las catorce tarjetas, así que recortarlo no pierde información. */
+    <span
+      className={`inline-flex min-w-0 items-center gap-1 text-xs font-medium whitespace-nowrap ${tone}`}
+    >
       <span aria-hidden="true">{ARROWS[comparison.movement]}</span>
       <span className="tabular">
         {metric
@@ -83,7 +90,9 @@ export function DeltaIndicator({
       {/* El lector de pantalla recibe el significado, no el símbolo: "▲ 4,2%" leído
           en voz alta no dice si eso es bueno. */}
       <span className="sr-only">({meaning})</span>
-      {referenceLabel ? <span className="text-ink-faint font-normal">{referenceLabel}</span> : null}
+      {referenceLabel ? (
+        <span className="text-ink-faint min-w-0 truncate font-normal">{referenceLabel}</span>
+      ) : null}
     </span>
   );
 }

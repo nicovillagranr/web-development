@@ -144,9 +144,19 @@ export function TeamPage() {
 
             return (
               <li key={entry.worker.id}>
+                {/* `h-full` no es decorativo: el `<li>` sí se estira hasta la altura
+                    de su fila (es lo que hace el grid por defecto), pero la tarjeta
+                    de dentro no heredaba nada de eso y se quedaba a la altura de su
+                    contenido. Si una vecina medía una línea más, debajo de esta
+                    aparecía un hueco con el fondo de la página asomando.
+
+                    Con el resto de arreglos de esta pantalla las filas ya salen
+                    parejas solas, así que esto es el cinturón además de los
+                    tirantes: cubre el caso raro (una fuente enorme del sistema, un
+                    idioma que alarga los textos) sin volver a dejar agujeros. */}
                 <Link
                   to={`/equipo/${entry.worker.id}`}
-                  className="border-line bg-surface flex min-h-14 flex-col gap-2 rounded-2xl border p-3"
+                  className="border-line bg-surface flex h-full min-h-14 flex-col gap-2 rounded-2xl border p-3"
                 >
                   {/* La posición sale del nombre y pasa a ser su propio elemento.
                       No es solo estético: metida dentro del `truncate`, un nombre
@@ -176,7 +186,13 @@ export function TeamPage() {
                       persona con un "todo" (el máximo del equipo) que en estas
                       métricas no significa nada. Ver la nota larga en Sparkline.tsx. */}
                   <div className="flex items-center justify-between gap-2">
-                    <span className="tabular text-ink text-base font-semibold">
+                    {/* `shrink-0` + `whitespace-nowrap`: el número no cede sitio y no
+                        se parte nunca. "3,21 min" tiene un espacio en medio, y ese
+                        espacio es un punto de corte válido para el navegador: en
+                        cuanto le faltaba un pelo de ancho se iba a "3,21" / "min" y
+                        la tarjeta crecía 24 px. Quien cede ahora es el minigráfico
+                        (ver la nota en Sparkline.tsx). */}
+                    <span className="tabular text-ink shrink-0 text-base font-semibold whitespace-nowrap">
                       {formatMetricValue(entry.value, metric)}
                     </span>
                     <Sparkline
