@@ -1,6 +1,13 @@
 import { NavLink } from "react-router-dom"
 
-function NavItem({ to, text, onClick }) {
+// Definimos los types que va a recibir como argumento el componente NavItem
+type NavItemProps = {
+    to: string
+    text: string
+    onClick?: () => void
+}
+
+function NavItem({ to, text, onClick }: NavItemProps) {
     return (
         <li>
             <NavLink to={to} onClick={onClick} className={({ isActive }) =>

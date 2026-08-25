@@ -1,11 +1,16 @@
+// Hooks
 import { useState } from "react";
+
+// Icons
 import { FaBars, FaTimes } from "react-icons/fa";
 
-import LogoSection from "./LogoSection.tsx";
+// Components
+import LogoSection from "./Logo.tsx";
 import DesktopNav from "./DesktopNav.tsx";
 import MobileNav from "./MobileNav.tsx";
 
-import { navItems } from "./headerConstants.ts";
+// Data
+import { navItems } from "./navItems.ts"
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,21 +27,15 @@ function Header() {
             className="md:hidden text-white text-2xl"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isOpen}
-          >
-            {isOpen ? (
-              <FaTimes className="w-7 h-7" />
-            ) : (
-              <FaBars className="w-7 h-7" />
-            )}
+            aria-expanded={isOpen}>
+            {isOpen ? (<FaTimes className="w-7 h-7" />) : (<FaBars className="w-7 h-7" />)}
           </button>
         </div>
 
         <MobileNav
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          navItems={navItems}
-        />
+          navItems={navItems} />
       </nav>
     </header>
   );

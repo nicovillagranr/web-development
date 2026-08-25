@@ -1,105 +1,72 @@
-// Importamos useRef para manejar el scroll
+// Hook
 import { useRef } from "react"
+
+// Icons
 import { FaCalendar, FaUser } from "react-icons/fa"
 
-// Importamos SectionTitle
+// Components
 import SectionTitle from "../SectionTitle/SectionTitle.tsx"
 
-// Importamos las imágenes de noticias
-import newsImage1 from "../../assets/images/5-News/news-1.webp"
-import newsImage2 from "../../assets/images/5-News/news-2.webp"
-import newsImage3 from "../../assets/images/5-News/news-3.webp"
-
-// Creamos el array de noticias para recorrerlo con un .map()
-const news = [
-    {
-        id: 1,
-        image: newsImage1,
-        title: "Why performance matters more than features in early-stage products",
-        date: "August 20, 2023",
-        datetime: "2023-08-20",
-        text: "In early products, speed, accessibility and clarity are often sacrificed for features. We explain why prioritizing fundamentals reduces technical debt and accelerates real growth.",
-        author: "Projex Team",
-    },
-    {
-        id: 2,
-        image: newsImage2,
-        title: "How we approach front-end architecture for scalable projects",
-        date: "August 28, 2023",
-        datetime: "2023-08-28",
-        text: "From component structure to data separation, we share the principles we follow to keep front-end projects maintainable as they grow.",
-        author: "Projex Team",
-    },
-    {
-        id: 3,
-        image: newsImage3,
-        title: "Good UX is invisible: lessons from real client projects",
-        date: "September 3, 2023",
-        datetime: "2023-09-03",
-        text: "Users rarely notice good UX, but they immediately feel when it's missing. Here are practical insights we apply to avoid friction and confusion.",
-        author: "Projex Team",
-    },
-    {
-        id: 4,
-        image: newsImage1,
-        title: "Why most websites fail before users read the content",
-        date: "September 10, 2023",
-        datetime: "2023-09-10",
-        text: "Slow load times, poor hierarchy and unclear messaging cause users to leave before engaging. We break down the most common mistakes and how to avoid them.",
-        author: "Projex Team",
-    }
-]
+// Data
+import { news } from "./newsData.ts"
 
 function News() {
-
-    const scrollRef = useRef(null)
+    // Referencias
+    const scrollRef = useRef<HTMLUListElement>(null)
 
     // Función para manejar el scroll horizontal con la rueda del mouse
-    const handleWheel = (e) => {
+    const handleWheel = (e: React.WheelEvent<HTMLUListElement>) => {
         const el = scrollRef.current
         if (!el) return
-
         // Solo intercepta si existe overflow horizontal real
         if (el.scrollWidth <= el.clientWidth) return
-
         // Desplazamiento
         el.scrollLeft += e.deltaY
     }
 
     return (
-        <section className="w-full min-h-[75vh] py-6 bg-primary flex flex-col items-center justify-center">
-
+        <section className="flex min-h-[75vh] w-full flex-col items-center justify-center bg-primary py-6">
             {/* News Title */}
             <SectionTitle className="text-white" title="Insights & Updates" level={1} />
 
             {/* Cards */}
-            <ul onWheel={handleWheel} ref={scrollRef} className="w-[75%] mt-6 mb-6 flex gap-6 overflow-x-auto flex-nowrap scroll-smooth scrollbar-none">
-
+            <ul onWheel={handleWheel} ref={scrollRef} className="scrollbar-none mt-6 mb-6 flex w-[75%] flex-nowrap gap-6 overflow-x-auto scroll-smooth">
                 {news.map((newItem) => (
-                    <li key={newItem.id} className="shrink-0 w-[85vw] sm:w-75 md:w-90">
-                        <article className="flex flex-col h-full">
+                    <li key={newItem.id} className="w-[85vw] shrink-0 sm:w-75 md:w-90">
+                        <article className="flex h-full flex-col">
 
                             {/* Imagen */}
-                            <div className="w-full h-48 overflow-hidden">
-                                <img decoding="async" width="200" height="200" draggable="false" src={newItem.image} alt={newItem.title} className="w-full h-full object-cover" />
+                            <div className="h-48 w-full overflow-hidden">
+                                <img
+                                    decoding="async"
+                                    width="200"
+                                    height="200"
+                                    draggable="false"
+                                    src={newItem.image}
+                                    alt={newItem.title}
+                                    className="h-full w-full object-cover" />
                             </div>
 
-                            <h3 className="text-xl font-bold mt-4 mb-2 text-white line-clamp-2">{newItem.title}</h3>
-                            <p className="text-gray-300 text-xs line-clamp-3">{newItem.text}</p>
+                            {/* Titulo */}
+                            <h3 className="mt-4 mb-2 line-clamp-2 text-xl font-bold text-white">{newItem.title}</h3>
+
+                            {/* Texto */}
+                            <p className="line-clamp-3 text-xs text-gray-300">{newItem.text}</p>
 
                             {/* Autor y Fecha */}
-                            <div className="w-full flex justify-start gap-10 items-center mt-3 text-sm text-gray-300">
+                            <div className="mt-3 flex w-full items-center justify-start gap-10 text-sm text-gray-300">
                                 <div className="flex items-center gap-2">
-                                    <FaUser className="w-5 h-5" aria-hidden="true" />
+                                    <FaUser className="h-5 w-5" aria-hidden="true" />
                                     <span>{newItem.author}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                    <FaCalendar className="w-5 h-5" aria-hidden="true" />
-                                    <time dateTime={newItem.datetime}>{newItem.date}</time>
+                                    <FaCalendar className="h-5 w-5" aria-hidden="true" />
+                                    <time dateTime={newItem.datetime}>
+                                        {newItem.date}
+                                    </time>
                                 </div>
                             </div>
-
                         </article>
                     </li>
                 ))}
@@ -107,4 +74,5 @@ function News() {
         </section>
     )
 }
+
 export default News
