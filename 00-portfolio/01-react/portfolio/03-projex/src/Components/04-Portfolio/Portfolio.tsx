@@ -40,12 +40,12 @@ function PortfolioItem({ image, title, big }: PortfolioDataType) {
                 <div className="flex gap-4">
                     {/* Detalle interno (demo) */}
                     <button
-                        aria-label={`Project Details: ${title}`}
+                        aria-label={`Ver detalle: ${title}`}
                         type="button"
                         onClick={handleDemoClick}
                         className="border border-white px-4 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-black"
                     >
-                        Project Details
+                        Ver detalle
                     </button>
                 </div>
 
@@ -64,7 +64,7 @@ function PortfolioItem({ image, title, big }: PortfolioDataType) {
 function Portfolio() {
     return (
         <section className="flex min-h-[75vh] w-full flex-col items-center bg-primary py-10">
-            <SectionTitle className="text-white" title="Selected Work" level={1} />
+            <SectionTitle className="text-white" title="Trabajos seleccionados" level={1} />
             {/* Grid */}
             <div className="mt-8 grid w-[80%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {portfolioItems.map((item) => {

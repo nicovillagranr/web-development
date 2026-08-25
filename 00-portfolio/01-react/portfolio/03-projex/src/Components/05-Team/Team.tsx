@@ -22,7 +22,7 @@ function Team() {
     return (
         <section className="flex min-h-[75vh] w-full flex-col items-center justify-center bg-surface px-4 py-4">
             {/* Title */}
-            <SectionTitle className="text-black" title="People Behind the Product" level={1} />
+            <SectionTitle className="text-black" title="Quiénes están detrás" level={1} />
             {/* Members */}
             <ul className="mt-6 grid w-full max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {members.map((member) => (
@@ -60,7 +60,7 @@ function Team() {
                                         <button
                                             type="button"
                                             key={social.platform}
-                                            aria-label={`${social.platform} demo`}
+                                            aria-label={`${social.platform} (demo)`}
                                             className="flex h-9 w-9 items-center justify-center rounded-full transition-transform hover:scale-110 md:h-7 md:w-7"
                                             style={{ backgroundColor: social.bg }}>
                                             <IconComponent className="h-5 w-5 text-white md:h-4 md:w-4" />

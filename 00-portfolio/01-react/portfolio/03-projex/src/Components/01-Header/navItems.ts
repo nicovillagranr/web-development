@@ -1,8 +1,8 @@
 export const navItems = [
-  { to: "/", text: "Home" },
-  { to: "/services", text: "Services" },
-  { to: "/portfolio", text: "Portfolio" },
-  { to: "/team", text: "Our Team" },
-  { to: "/news", text: "News" },
-  { to: "/contact", text: "Contact Us" },
+  { to: "/", text: "Inicio" },
+  { to: "/services", text: "Servicios" },
+  { to: "/portfolio", text: "Proyectos" },
+  { to: "/team", text: "Equipo" },
+  { to: "/news", text: "Novedades" },
+  { to: "/contact", text: "Contacto" },
 ];

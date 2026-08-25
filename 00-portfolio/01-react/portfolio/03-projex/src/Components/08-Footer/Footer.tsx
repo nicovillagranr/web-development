@@ -2,10 +2,10 @@ import { Link } from "react-router-dom"
 import { FaHome } from "react-icons/fa"
 
 const navLinks = [
-    { to: "/services", label: "Services" },
-    { to: "/portfolio", label: "Work" },
-    { to: "/team", label: "Team" },
-    { to: "/contact", label: "Contact" },
+    { to: "/services", label: "Servicios" },
+    { to: "/portfolio", label: "Proyectos" },
+    { to: "/team", label: "Equipo" },
+    { to: "/contact", label: "Contacto" },
 ]
 
 function Footer() {
@@ -20,12 +20,12 @@ function Footer() {
                     Projex
                 </span>
                 <span className="text-white/60 text-[10px] tracking-widest uppercase">
-                    Building scalable web products
+                    Construimos productos web que escalan
                 </span>
             </Link>
 
             {/* Nav links — solo desktop */}
-            <nav aria-label="Footer navigation" className="hidden sm:flex items-center gap-6">
+            <nav aria-label="Navegación del pie de página" className="hidden sm:flex items-center gap-6">
                 {navLinks.map(({ to, label }) => (
                     <Link key={to} to={to} className="text-white/60 text-xs tracking-wide hover:text-primary transition-colors duration-200">
                         {label}

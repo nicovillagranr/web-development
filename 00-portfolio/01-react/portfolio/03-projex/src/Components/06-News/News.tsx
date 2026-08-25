@@ -27,7 +27,7 @@ function News() {
     return (
         <section className="flex min-h-[75vh] w-full flex-col items-center justify-center bg-primary py-6">
             {/* News Title */}
-            <SectionTitle className="text-white" title="Insights & Updates" level={1} />
+            <SectionTitle className="text-white" title="Ideas y novedades" level={1} />
 
             {/* Cards */}
             <ul onWheel={handleWheel} ref={scrollRef} className="scrollbar-none mt-6 mb-6 flex w-[75%] flex-nowrap gap-6 overflow-x-auto scroll-smooth">

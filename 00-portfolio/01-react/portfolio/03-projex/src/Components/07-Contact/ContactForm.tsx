@@ -49,7 +49,7 @@ function ContactForm() {
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
                         <label htmlFor="contact-name" className="text-sm font-medium text-gray-800">
-                            Name
+                            Nombre
                         </label>
                         <p id="contact-name-error" role="alert" aria-live="polite" className="text-xs text-red-500">
                             {errors.name}
@@ -59,7 +59,7 @@ function ContactForm() {
                         id="contact-name"
                         type="text"
                         name="name"
-                        placeholder="Name"
+                        placeholder="Nombre"
                         value={formData.name}
                         onChange={handleChange}
                         autoComplete="name"
@@ -72,7 +72,7 @@ function ContactForm() {
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
                         <label htmlFor="contact-email" className="text-sm font-medium text-gray-800">
-                            Email
+                            Correo
                         </label>
                         <p id="contact-email-error" role="alert" aria-live="polite" className="text-xs text-red-500">
                             {errors.email}
@@ -82,7 +82,7 @@ function ContactForm() {
                         id="contact-email"
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        placeholder="Correo electrónico"
                         value={formData.email}
                         onChange={handleChange}
                         autoComplete="email"
@@ -96,7 +96,7 @@ function ContactForm() {
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
                         <label htmlFor="contact-message" className="text-sm font-medium text-gray-800">
-                            Message
+                            Mensaje
                         </label>
                         <p id="contact-message-error" role="alert" aria-live="polite" className="text-xs text-red-500">
                             {errors.message}
@@ -105,7 +105,7 @@ function ContactForm() {
                     <textarea
                         id="contact-message"
                         name="message"
-                        placeholder="Message"
+                        placeholder="Mensaje"
                         rows={6}
                         value={formData.message}
                         onChange={handleChange}
@@ -117,7 +117,7 @@ function ContactForm() {
 
                 {status === "success" && (
                     <p role="status" aria-live="polite" className="text-xs text-green-600 text-right">
-                        Message sent successfully
+                        Mensaje enviado correctamente
                     </p>
                 )}
             </form>

@@ -9,7 +9,7 @@ function LogoSection() {
                     <FaHome className="w-5 h-5" aria-hidden="true" />
                     <span>Projex</span>
                 </NavLink>
-                <span className="text-white font-medium text-xs md:text-sm">Scalable Web Products</span>
+                <span className="text-white font-medium text-xs md:text-sm">Productos web que escalan</span>
             </div>
         </div>
     );

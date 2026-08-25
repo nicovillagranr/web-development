@@ -28,7 +28,7 @@ function Hero() {
     const initialState = shouldUseStaticHero ? false : "hidden"
 
     return (
-        <section className="relative flex min-h-[75vh] w-full items-center justify-center overflow-hidden" aria-label="Hero Section">
+        <section className="relative flex min-h-[75vh] w-full items-center justify-center overflow-hidden" aria-label="Sección principal">
             {/* Video: solo renderiza si NO hay reduce-motion/saveData */}
             {!shouldUseStaticHero && (
                 <video
@@ -65,38 +65,39 @@ function Hero() {
                             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
                         </span>
 
-                        Web & Product Studio
+                        Estudio web y de producto
                     </motion.span>
 
                     {/* H1 */}
                     <motion.h1 variants={itemVariants} className="text-3xl leading-tight font-bold text-white sm:text-4xl lg:text-5xl">
-                        Digital products built to{" "}
-                        <span className="text-primary">grow</span>{" "}
-                        with your business
+                        Productos digitales hechos para{" "}
+                        <span className="text-primary">crecer</span>{" "}
+                        junto a tu negocio
                     </motion.h1>
 
                     {/* Subtítulo */}
                     <motion.h2 role="doc-subtitle" variants={itemVariants} className="mt-3 text-lg leading-snug font-light text-white/80 sm:text-xl lg:text-2xl">
-                        Design, performance and scalability — from day one.
+                        Diseño, rendimiento y escalabilidad desde el primer día.
                     </motion.h2>
 
                     {/* Descripción */}
                     <motion.p variants={itemVariants} className="mt-4 mb-8 max-w-md text-sm leading-relaxed text-white/70 sm:text-base">
-                        We help startups and small teams turn ideas into fast,
-                        accessible and scalable web products. No bloated
-                        features. No shortcuts. Just solid foundations.
+                        Ayudamos a startups y equipos pequeños a convertir ideas en
+                        productos web rápidos, accesibles y escalables. Sin
+                        funcionalidades de relleno. Sin atajos. Solo cimientos
+                        sólidos.
                     </motion.p>
 
                     {/* CTA */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-3 sm:w-sm md:flex-row">
                         {/* CTA Principal */}
                         <Link to="/contact" className="flex min-h-12 w-full items-center justify-center rounded-md border-2 border-primary bg-primary text-sm font-bold text-white transition-all hover:bg-transparent hover:text-white sm:text-base">
-                            Contact Us
+                            Contáctanos
                         </Link>
 
                         {/* CTA Secundario */}
                         <Link to="/team" className="flex min-h-12 w-full items-center justify-center rounded-md border-2 border-white/60 bg-transparent text-sm font-bold text-white transition-all hover:bg-white hover:text-dark sm:text-base">
-                            Meet the Team
+                            Conoce al equipo
                         </Link>
                     </motion.div>
                 </motion.div>
@@ -113,7 +114,7 @@ function Hero() {
                             height={300}
                             draggable="false"
                             src={businessImg}
-                            alt="Compatible devices"
+                            alt="Dispositivos compatibles"
                             className="relative drop-shadow-2xl"
                         />
                     </div>

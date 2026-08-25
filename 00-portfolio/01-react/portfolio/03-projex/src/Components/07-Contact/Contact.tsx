@@ -16,7 +16,7 @@ function Contact() {
     return (
         <section className="w-full min-h-[75vh] py-5 bg-surface flex flex-col items-center justify-center">
 
-            <SectionTitle className="text-black" title="Contact Us" level={1} />
+            <SectionTitle className="text-black" title="Contáctanos" level={1} />
 
             <div className="w-full flex flex-col px-5 md:px-60 mt-10 md:flex-row gap-10">
                 <ContactForm />

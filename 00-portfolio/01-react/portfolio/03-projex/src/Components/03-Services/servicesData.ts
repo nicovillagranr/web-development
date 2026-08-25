@@ -16,19 +16,19 @@ export const services: ServiceItem[] = [
     {
         id: 1,
         img: service1Img,
-        title: "HTML & CSS Architecture",
-        text: "Clean, semantic and accessible layouts designed to scale. We build interfaces that are easy to maintain, fast to load and friendly for users and search engines."
+        title: "Arquitectura HTML y CSS",
+        text: "Maquetados limpios, semánticos y accesibles, pensados para crecer. Construimos interfaces fáciles de mantener, rápidas de cargar y amables tanto para las personas como para los buscadores."
     },
     {
         id: 2,
         img: service2Img,
-        title: "SEO Optimization",
-        text: "Performance is not optional. We optimize loading times, structure and metadata so your product is visible and fast from the start."
+        title: "Optimización SEO",
+        text: "El rendimiento no es opcional. Optimizamos tiempos de carga, estructura y metadatos para que tu producto sea visible y rápido desde el primer día."
     },
     {
         id: 3,
         img: service3Img,
-        title: "UI Systems & Design Consistency",
-        text: "We create reusable components and visual systems that keep your product consistent as it grows — no redesign every six months."
+        title: "Sistemas de UI y consistencia visual",
+        text: "Creamos componentes reutilizables y sistemas visuales que mantienen tu producto coherente a medida que crece, sin rediseños cada seis meses."
     }
 ];

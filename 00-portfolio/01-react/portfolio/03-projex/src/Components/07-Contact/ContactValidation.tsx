@@ -3,21 +3,21 @@ export function ContactValidation() {
         const errors = {}
 
         if (!formData.name.trim()) {
-            errors.name = "Name is required"
+            errors.name = "El nombre es obligatorio"
         } else if (formData.name.length < 2) {
-            errors.name = "Name must be at least 2 characters long"
+            errors.name = "El nombre debe tener al menos 2 caracteres"
         }
 
         if (!formData.email.trim()) {
-            errors.email = "Email is required"
+            errors.email = "El correo es obligatorio"
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            errors.email = "Invalid email address"
+            errors.email = "El correo no es válido"
         }
 
         if (!formData.message.trim()) {
-            errors.message = "Message is required"
+            errors.message = "El mensaje es obligatorio"
         } else if (formData.message.length < 10) {
-            errors.message = "Message must be at least 10 characters long"
+            errors.message = "El mensaje debe tener al menos 10 caracteres"
         }
 
         return errors

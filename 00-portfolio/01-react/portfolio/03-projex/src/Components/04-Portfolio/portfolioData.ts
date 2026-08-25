@@ -19,33 +19,33 @@ export const portfolioItems: PortfolioDataType[] = [
     {
         id: 1,
         image: portfolioImg1,
-        title: "Landing Page for a SaaS Productivity Platform",
+        title: "Landing page para una plataforma SaaS de productividad",
         big: true,
     },
     {
         id: 2,
         image: portfolioImg2,
-        title: "Marketing Website for a Digital Consulting Agency",
+        title: "Sitio de marketing para una consultora digital",
         big: true,
     },
     {
         id: 3,
         image: portfolioImg3,
-        title: "E-commerce Front-End for a Retail Brand",
+        title: "Front-end de e-commerce para una marca de retail",
     },
     {
         id: 4,
         image: portfolioImg4,
-        title: "Dashboard UI for a Web Analytics Tool",
+        title: "Interfaz de dashboard para una herramienta de analítica web",
     },
     {
         id: 5,
         image: portfolioImg5,
-        title: "Corporate Website for a Financial Services Company",
+        title: "Sitio corporativo para una empresa de servicios financieros",
     },
     {
         id: 6,
         image: portfolioImg6,
-        title: "Portfolio Website for a Creative Professional",
+        title: "Sitio de portafolio para una profesional creativa",
     },
 ]

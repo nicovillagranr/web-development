@@ -26,7 +26,7 @@ function Header() {
             type="button"
             className="md:hidden text-white text-2xl"
             onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={isOpen}>
             {isOpen ? (<FaTimes className="w-7 h-7" />) : (<FaBars className="w-7 h-7" />)}
           </button>

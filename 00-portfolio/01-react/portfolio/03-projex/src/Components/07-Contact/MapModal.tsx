@@ -79,13 +79,13 @@ function MapModal({ onClose }) {
             {/* Contenedor principal del modal. */}
             <div ref={modalRef} tabIndex={-1} className="relative w-[90%] max-w-lg overflow-hidden rounded-lg bg-white">
                 {/* Boton para cerrar el modal. */}
-                <button ref={closeButtonRef} type="button" onClick={onClose} className="absolute right-3 top-3 text-4xl" aria-label="Close map">
+                <button ref={closeButtonRef} type="button" onClick={onClose} className="absolute right-3 top-3 text-4xl" aria-label="Cerrar mapa">
                     &times;
                 </button>
 
                 {/* Mapa embebido de la ubicacion. */}
                 <iframe
-                    title="Location map"
+                    title="Mapa de ubicación"
                     src={CONTACT_MAP_URL}
                     className="h-80 w-full"
                     loading="lazy"
