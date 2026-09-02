@@ -47,7 +47,6 @@
  *   ¿Atascado? Las pistas están en `exercise-01.pistas.md`, de una en una.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — DECLARAR no es LLAMAR
  * ─────────────────────────────────────────────────────────────────────────────
@@ -86,25 +85,27 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) En `function saludar(nombre: string)`, ¿qué es `nombre`?
-export const r1: "parámetro" | "argumento" | "propiedad" | "elemento" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r1: "parámetro" | "argumento" | "propiedad" | "elemento" =
+  "parámetro";
+// ¿Por qué? → Nombre es el parámetro que recibe la función.
 
 // 2) En `saludar("Ana")`, ¿qué es `"Ana"`?
-export const r2: "parámetro" | "argumento" | "propiedad" | "elemento" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r2: "parámetro" | "argumento" | "propiedad" | "elemento" =
+  "argumento";
+// ¿Por qué? → La función ya está montada, y para el llamado se usa el término argumento.
 
 // 3) En `function saludar(nombre: string)`, ¿qué es la palabra `string`?
-export const r3: "tipo" | "valor" | "argumento" | "constante" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r3: "tipo" | "valor" | "argumento" | "constante" = "tipo";
+// ¿Por qué? → El tipo de dato que se le da a nombre
 
 // 4) `saludar("Ana")` entero, como expresión, ¿qué es?
-export const r4: "llamada" | "declaración" | "firma" | "asignación" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r4: "llamada" | "declaración" | "firma" | "asignación" = "llamada";
+// ¿Por qué? → Es un claro llamado a la función con paso de argumento
 
 // 5) En `const saludo = saludar("Ana")`, ¿qué es `saludo`?
-export const r5: "constante" | "parámetro" | "propiedad" | "argumento" = "SIN_RESPONDER"
-// ¿Por qué? →
-
+export const r5: "constante" | "parámetro" | "propiedad" | "argumento" =
+  "constante";
+// ¿Por qué? → Es una variable constante que va a almacenar el llamado a la función con el argumento "Ana" fijo.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — RETORNAR no es IMPRIMIR
@@ -142,23 +143,34 @@ export const r5: "constante" | "parámetro" | "propiedad" | "argumento" = "SIN_R
  *    ese valor no se puede seguir usando — y es justo lo contrario.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 6) La `saludar` del recordatorio, ¿qué hace con el texto `Hola, Ana`?
-export const r6: "lo retorna" | "lo imprime" | "lo guarda" = "SIN_RESPONDER"
-// ¿Por qué? →
+/* Las tres líneas del fragmento que usan los drills 6 y 7, aquí al lado para no
+ * tener que subir a buscarlas:
+ *
+ *     function saludar(nombre: string): string {
+ *       return `Hola, ${nombre}`      ← el drill 6 pregunta por ESTA
+ *     }
+ *
+ *     const saludo = saludar("Ana")
+ *     console.log(saludo)             ← y el drill 7 por ESTA
+ */
 
-// 7) Y la línea `console.log(saludo)`, ¿qué hace con él?
-export const r7: "lo retorna" | "lo imprime" | "lo guarda" = "SIN_RESPONDER"
-// ¿Por qué? →
+// 6) La línea `return `Hola, ${nombre}``, ¿qué hace con ese texto?
+export const r6: "lo retorna" | "lo imprime" | "lo guarda" = "lo retorna";
+// ¿Por qué? → Antecede con return, todo lo que vaya a la derecha será lo retornado
+
+// 7) Y la línea `console.log(saludo)`, ¿qué hace con el texto que le llega?
+export const r7: "lo retorna" | "lo imprime" | "lo guarda" = "lo imprime";
+// ¿Por qué? → console.log imprimirá lo que esté guardado en la const saludo, en este caso el argumento fijo es "Ana" y se le agrega el string fijo "Hola, "
 
 // 8) `function avisar(t: string): void { console.log(t) }`
 //    ¿Qué acaba valiendo `x` en `const x = avisar("hola")`?
-export const r8: "undefined" | "hola" | "void" | "null" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r8: "undefined" | "hola" | "void" | "null" = "undefined";
+// ¿Por qué? → No hay retorno del dato definido en la función, por lo tanto lo que vale `x` es undefined
 
 // 9) En esa misma `avisar`, ¿qué es la palabra `void`?
-export const r9: "el tipo de retorno" | "un valor" | "el parámetro" = "SIN_RESPONDER"
-// ¿Por qué? →
-
+export const r9: "el tipo de retorno" | "un valor" | "el parámetro" =
+  "el tipo de retorno";
+// ¿Por qué? → El tipo void representa la ausencia de un valor de retorno de una función.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — cada pieza pertenece a algo
@@ -198,16 +210,19 @@ export const r9: "el tipo de retorno" | "un valor" | "el parámetro" = "SIN_RESP
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 10) En `const usuario = { nombre: "Ana" }`, ¿qué es `nombre`?
-export const r10: "propiedad" | "parámetro" | "elemento" | "valor" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r10: "propiedad" | "parámetro" | "elemento" | "valor" =
+  "propiedad";
+// ¿Por qué? → Lo que está dentro de un objeto son propiedades y dentro hay valores.
 
 // 11) En ese mismo objeto, ¿qué es `"Ana"`?
-export const r11: "el valor" | "la propiedad" | "el tipo" | "el argumento" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r11: "el valor" | "la propiedad" | "el tipo" | "el argumento" =
+  "el valor";
+// ¿Por qué? → Es el valor de la propiedad nombre dentro del objeto.
 
 // 12) En `const colores = ["rojo", "verde"]`, ¿qué es `"rojo"`?
-export const r12: "elemento" | "propiedad" | "parámetro" | "argumento" = "SIN_RESPONDER"
-// ¿Por qué? →
+export const r12: "elemento" | "propiedad" | "parámetro" | "argumento" =
+  "elemento";
+// ¿Por qué? → A diferencia de un objeto, un array es una colección de elementos.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 12 estén en verde, la prueba de verdad no es el test: es explicar el
