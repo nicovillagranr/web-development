@@ -21,6 +21,9 @@ import {
 // Parser que traduce codigo numerico API a categoria/intensidad.
 import { parseWeather } from "../utils/weatherParser.js";
 
+// Nombres en español de cada categoría, para el texto alternativo del icono.
+import { weatherTranslationsES } from "./Settings/constants/weatherTranslations.es.js";
+
 // ================= MAPA DE ICONOS =================
 // Estructura central para resolver icono por:
 // - categoria
@@ -88,7 +91,7 @@ export function WeatherIcon({ code, isDay = true, size = 0, className = "" }) {
     return (
         <img
             src={icon}
-            alt={category || "weather"}
+            alt={weatherTranslationsES[category] || "Estado del clima"}
             width={size || undefined}
             height={size || undefined}
             className={`block ${className}`}

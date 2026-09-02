@@ -186,7 +186,7 @@ export function useWeather({
     useEffect(() => {
         if (!lat || !lon) {
             setRaw(null);
-            setError("Configuracion de ubicacion incompleta");
+            setError("Configuración de ubicación incompleta");
             return;
         }
 

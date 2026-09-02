@@ -52,7 +52,7 @@ export default function WeatherSettings({
 
     return (
         <WeatherSettingsShell isActive={isActive} gradient={gradient}>
-            <SettingsHeader title="Clima y pronostico" onBack={handleClose} />
+            <SettingsHeader title="Clima y pronóstico" onBack={handleClose} />
 
             <div className="flex-1 pb-10 overflow-y-auto overscroll-contain no-scrollbar">
                 {!weather && isLoading && (
@@ -95,7 +95,7 @@ export default function WeatherSettings({
 
                         {!!error && (
                             <div className="mx-4 mt-2 rounded-xl bg-amber-500/20 border border-amber-200/40 px-3 py-2 text-xs text-amber-50 flex items-center justify-between gap-2">
-                                <span>Error de actualizacion. Mostrando ultimo dato valido.</span>
+                                <span>Error de actualización. Mostrando último dato válido.</span>
                                 <button type="button" onClick={() => retry?.()} className={ERROR_BANNER_BTN}>
                                     Reintentar
                                 </button>
