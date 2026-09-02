@@ -35,3 +35,13 @@ dev-dist
 .env
 .env.*
 !.env.example
+
+# Los nombres reales del local. `src/mocks/report.ts` se versiona con nombres de
+# relleno; si existe un `*.private.ts` al lado, sólo lo lee el servidor de
+# desarrollo (ver src/mocks/roster.ts) y nunca entra al build. Que este archivo
+# falte es lo normal: un clon del repositorio no lo tiene ni lo necesita.
+*.private.ts
+
+# Los reportes de origen tampoco se versionan, ni siquiera para probar el
+# importador. Viven fuera del repositorio.
+*.pdf
