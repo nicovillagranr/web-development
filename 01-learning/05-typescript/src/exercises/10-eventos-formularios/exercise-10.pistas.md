@@ -405,3 +405,285 @@ onClick={() => alEnviar({ nombre, email })}
 `{ nombre, email }` es la forma corta de `{ nombre: nombre, email: email }`. Y esta
 es exactamente la línea que necesita el drill 3, con otros nombres.
 </details>
+
+---
+
+# Escalera F — cambiar una lista es construir otra
+
+> Aviso sobre las pistas 3 de esta escalera: en los seis peldaños `pnpm typecheck`
+> está **en silencio**. Mutar un array es código perfectamente válido en TypeScript,
+> así que aquí no hay error de compilador que citar. En su lugar va el dato duro:
+> qué devuelve cada método y qué ve React.
+
+## F1 — `conUnoMas`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El enunciado pide dos cosas y el starter solo cumple una: devuelve una lista con el
+elemento nuevo, sí, pero la de entrada también acabó con un elemento más. Pregúntate
+cuántos arrays hay en juego cuando la función termina. Tienen que ser dos.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`push` no fabrica nada: escribe dentro del array que le das. Lo que necesitas es lo
+contrario — partir del contenido del viejo y construir uno aparte.
+
+La sintaxis que hace eso ya la tienes en la TEORÍA 2 del archivo, en la primera de
+las tres líneas.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+```js
+const a = ["a"]
+a.push("b")     // devuelve 2, el NÚMERO de elementos. Y `a` ahora es ["a","b"]
+[...a, "b"]     // devuelve ["a","b"] y `a` sigue como estaba
+```
+
+`push` devuelve la longitud nueva, no el array.
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export function conUnoMas(lista: string[], nuevo: string): string[] {
+  return [...lista, nuevo]
+}
+```
+
+Los tres puntos vuelcan uno a uno los elementos de `lista` dentro de un array recién
+creado, y luego se añade `nuevo` al final. La lista de entrada no se toca.
+</details>
+
+---
+
+## F2 — `sinElQueSea`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Buscar la posición y recortar por ahí es pensar en términos de "dónde está". Hay otra
+forma de pensarlo que no necesita la posición: **quedarse con los que cumplen una
+condición**. Descríbelo con esa frase y el método aparece solo.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`splice` corta sobre el array original. El que necesitas recorre y devuelve uno nuevo
+con los que pasan el filtro — está en la segunda línea de la TEORÍA 2.
+
+Y fíjate en que ese método resuelve gratis el caso raro del test: si el elemento no
+está, no pasa nada especial, simplemente ninguno se cae.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+```js
+const a = ["a","b"]
+a.splice(0, 1)              // devuelve ["a"], los QUITADOS. Y `a` queda ["b"]
+a.filter((t) => t !== "a")  // devuelve ["b"] y `a` sigue ["a","b"]
+```
+
+`splice` devuelve lo que arrancó, no lo que queda. Es el error de lectura clásico.
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export function sinElQueSea(lista: string[], quitar: string): string[] {
+  return lista.filter((t) => t !== quitar)
+}
+```
+
+`filter` construye un array nuevo con los elementos cuya condición da `true`. Como la
+condición es "que NO sea el que quiero quitar", sobreviven todos menos ese. Y si no
+está, sobreviven todos: por eso sale una copia igual.
+</details>
+
+---
+
+## F3 — `conUnoCambiado`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Los dos anteriores cambiaban cuántos elementos hay. Este no: salen los mismos, pero
+uno de ellos es distinto. Necesitas un método que recorra y **transforme cada
+elemento**, decidiendo uno por uno si lo dejas igual o lo cambias.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Es la tercera línea de la TEORÍA 2, y ya lo has usado en el drill 4 del archivo para
+marcar una tarea. Míralo: la forma es idéntica.
+
+Dentro, para cada elemento decides con un ternario: si es el que buscas devuelves el
+nuevo, y si no devuelves el que había.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+```js
+const a = ["a","b"]
+a[0] = "z"                           // no devuelve nada útil. `a` es ["z","b"]
+a.map((t) => (t === "a" ? "z" : t))  // devuelve ["z","b"] y `a` sigue ["a","b"]
+```
+
+Asignar por índice es escribir sobre el original. `map` siempre devuelve un array
+nuevo, con exactamente la misma cantidad de elementos.
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): string[] {
+  return lista.map((t) => (t === viejo ? nuevo : t))
+}
+```
+
+`map` visita cada elemento y guarda en el array nuevo lo que devuelvas para él. Los
+que no coinciden se devuelven tal cual, y por eso sobreviven sin cambios.
+</details>
+
+---
+
+## F4 — `ListaQueCrece`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Aquí está el fallo que da nombre a la escalera, y lo raro es lo que NO pasa: no hay
+error en consola, no hay error de tipos, y el dato se guarda de verdad. Solo que la
+pantalla no cambia.
+
+La pregunta que lo desbloquea: ¿cómo decide React si tiene que volver a pintar?
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+React no mira dentro del array para ver si tiene más cosas. Compara **si es el mismo
+array de antes**, y `push` te deja exactamente el mismo. Le estás entregando al setter
+lo que ya tenía guardado.
+
+Ya has resuelto esto en el F1: entrégale al setter lo que devuelve aquella función.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Typecheck en silencio y test rojo. Lo que sale al ejecutar:
+
+| | starter | esperado |
+|---|---|---|
+| tras 1 click | 0 `<li>` | 1 `<li>` con "item 1" |
+| tras 2 clicks | 0 `<li>` | 2 `<li>` |
+
+Cero, no uno: la pantalla nunca se entera. Y si metes un `console.log(items)` dentro
+de `añadir` verás que el array SÍ va creciendo. Ese contraste es el ejercicio.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const añadir = () => {
+  setItems([...items, `item ${items.length + 1}`])
+}
+```
+
+Es el F1 escrito dentro del componente. Al entregarle un array recién construido, la
+comparación que hace React da distinto y se repinta.
+</details>
+
+---
+
+## F5 — `ListaQueMengua`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Mismo fallo que el F4, otra operación. Si el F4 ya lo tienes, aquí solo cambia qué
+función del primer tramo te toca copiar.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`splice` sobre el array del estado es el `push` del peldaño anterior: escribe en el
+que ya tenías. Usa el del F2 y entrégale al setter lo que devuelve.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+El starter tiene un segundo problema, más feo que el primero: como `splice` sí muta,
+el array del estado se queda con dos elementos aunque la pantalla siga enseñando tres.
+A partir de ahí lo que ves y lo que hay dejan de coincidir, y los siguientes clicks
+borran cosas que no esperas.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const quitar = (item: string) => {
+  setItems(items.filter((i) => i !== item))
+}
+```
+
+El F2 dentro del componente. Fíjate en que desaparecen las dos líneas de buscar la
+posición: `filter` no necesita saber dónde está, solo cuál no quieres.
+</details>
+
+---
+
+## F6 — `MiniGestor`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+No hay nada nuevo en este peldaño. Son las tres operaciones que ya has escrito, cada
+una en su sitio. Si te atascas no es de este drill: vuelve al F1, F2 o F3 según cuál
+de las tres falle.
+
+La única diferencia es que aquí los elementos son objetos, no textos.
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`marcar` es el que tiene truco. No puedes cambiarle la propiedad al objeto que
+encuentres, porque eso es mutar un piso más abajo: el array sería nuevo pero el objeto
+seguiría siendo el mismo.
+
+Necesitas devolver un objeto **nuevo** para el que cambia, copiando lo que ya tenía y
+pisando solo la propiedad que toca. Esa forma exacta está en el drill 4 del archivo.
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Los tres métodos y qué devuelve cada uno, para tenerlos juntos:
+
+```js
+[...items, nuevo]                                      // añadir
+items.filter((i) => i.id !== id)                       // quitar
+items.map((i) => (i.id === id ? { ...i, hecho } : i))  // cambiar uno
+```
+
+Y ojo con `find` más asignación: `find` te devuelve **el objeto de dentro del array**,
+no una copia. Cambiarle una propiedad muta el estado aunque no toques el array.
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const añadir = () => {
+  const nuevo: ItemMini = { id: crypto.randomUUID(), texto: `item ${items.length + 1}`, hecho: false }
+  setItems([...items, nuevo])
+}
+
+const marcar = (id: string, hecho: boolean) => {
+  setItems(items.map((i) => (i.id === id ? { ...i, hecho } : i)))
+}
+
+const borrar = (id: string) => {
+  setItems(items.filter((i) => i.id !== id))
+}
+```
+
+Las tres devuelven algo nuevo y ninguna toca lo que había. En `marcar`,
+`{ ...i, hecho }` copia todas las propiedades del item y luego pisa `hecho` con el
+valor que llega — por eso el objeto resultante es otro, y React ve el cambio.
+
+Esto es, línea por línea, lo que le falta al drill 6.
+</details>

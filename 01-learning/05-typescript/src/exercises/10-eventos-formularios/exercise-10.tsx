@@ -32,6 +32,8 @@
  *   TEORÍA 2 · el estado que es una lista       →  drills 4, 5, 6
  *   ESCALERA E · el estado vive arriba  →  E1-E6, al final del archivo
  *                (si el drill 3 se te atraganta, baja ahí y vuelve)
+ *   ESCALERA F · cambiar una lista es construir otra  →  F1-F6, después de la E
+ *                (para el drill 6. Los tres primeros peldaños no llevan React)
  *
  * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/10-eventos-formularios/exercise-10.test.tsx
@@ -388,4 +390,179 @@ export function PadreQueEntregaLosDos({ alEnviar }: { alEnviar: (datos: { nombre
  * Y la pieza que no está en ningún peldaño —`{ texto, prioridad }` sin `id` ni
  * `hecha`— es la del 09: la frontera entrega datos del dominio, no lo que le
  * sobra a quien los tiene.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA F — cambiar una lista es construir otra
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Seis peldaños para desmontar el drill 6. La frase entera es esta, y cada
+ * peldaño añade una pieza:
+ *
+ *   **Para cambiar un array de estado construyes uno NUEVO y lo guardas.
+ *     El que ya tenías no se toca nunca.**
+ *
+ *   F1-F3 · las tres operaciones en JavaScript pelado, sin React encima
+ *   F4-F5 · las mismas dentro de un componente, donde el fallo se ve en pantalla
+ *   F6    · las tres juntas: el drill 6 en miniatura
+ *
+ * 👀 Los tres primeros no son componentes: son funciones que reciben un array y
+ *    devuelven otro. Sin hooks, sin JSX. El concepto es de JavaScript, y verlo
+ *    sin React delante es la mitad del trabajo.
+ *
+ * ⚠️ EN ESTA ESCALERA EL TYPECHECK NO TE CUBRE, en ninguno de los seis. Mutar un
+ *    array es código válido, así que el compilador se calla en los seis starters y
+ *    el único que los caza es el test. Es a propósito: ese silencio ES el tema.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// F1) `conUnoMas` — recibe una lista de textos y devuelve OTRA con el nuevo al
+//     final. La lista que te dan tiene que quedarse exactamente como estaba.
+//     El starter usa el método que todo el mundo usa para añadir, y es justo el
+//     que aquí no sirve. Mira lo que devuelve ese método, además de lo que hace.
+//     → conUnoMas(["a"], "b")   →   ["a", "b"],  y la original sigue siendo ["a"]
+export function conUnoMas(lista: string[], nuevo: string): string[] {
+  lista.push(nuevo)
+  return lista
+}
+// conUnoMas(["a"], "b")
+
+// F2) `sinElQueSea` — devuelve otra lista sin el texto que te digan. La original,
+//     intacta. Si el texto no está, sale una copia igual.
+//     El starter recorre y va sacando del array que le pasaron.
+//     → sinElQueSea(["a", "b"], "a")   →   ["b"]
+export function sinElQueSea(lista: string[], quitar: string): string[] {
+  const posicion = lista.indexOf(quitar)
+  if (posicion !== -1) lista.splice(posicion, 1)
+  return lista
+}
+// sinElQueSea(["a", "b"], "a")
+
+// F3) `conUnoCambiado` — devuelve otra lista con uno de los textos sustituido por
+//     otro. Los demás, igual. Y la original sin tocar.
+//     El starter escribe directamente en la posición.
+//     → conUnoCambiado(["a", "b"], "a", "z")   →   ["z", "b"]
+export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): string[] {
+  const posicion = lista.indexOf(viejo)
+  if (posicion !== -1) lista[posicion] = nuevo
+  return lista
+}
+// conUnoCambiado(["a", "b"], "a", "z")
+
+/* Los tres de arriba son las tres líneas de la TEORÍA 2, sin React. Si los tienes
+ * en verde, lo que viene es exactamente lo mismo con un `useState` alrededor. */
+
+// F4) `ListaQueCrece` — un botón "Añadir" y una <ul> con un <li> por texto. Cada
+//     pulsación mete uno nuevo: "item 1", "item 2"… según cuántos haya ya.
+//     Aquí es donde el fallo se hace visible: el starter guarda bien el dato y la
+//     pantalla no se entera. Compara lo que le entregas al setter con lo que él
+//     tenía guardado antes, y pregúntate en qué se diferencian.
+export function ListaQueCrece() {
+  const [items, setItems] = useState<string[]>([])
+
+  const añadir = () => {
+    items.push(`item ${items.length + 1}`)
+    setItems(items)
+  }
+
+  return (
+    <div>
+      <button type="button" onClick={añadir}>Añadir</button>
+      <ul>
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+// <ListaQueCrece />
+
+// F5) `ListaQueMengua` — arranca con tres items ya puestos y cada uno tiene su
+//     botón "Quitar". Al pulsarlo, ese item desaparece y los otros se quedan.
+//     El starter tiene el mismo problema del F4 con la operación del F2.
+export function ListaQueMengua() {
+  const [items, setItems] = useState<string[]>(['uno', 'dos', 'tres'])
+
+  const quitar = (item: string) => {
+    const posicion = items.indexOf(item)
+    items.splice(posicion, 1)
+    setItems(items)
+  }
+
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item}>
+          {item}
+          <button type="button" aria-label={`Quitar ${item}`} onClick={() => quitar(item)}>
+            Quitar
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+// <ListaQueMengua />
+
+// F6) `MiniGestor` — el drill 6 sin formulario ni componentes hijos: un botón que
+//     añade, y cada item con su casilla para marcarlo y su botón para borrarlo.
+//     Un item marcado se pinta con <s> alrededor del texto.
+//     Las tres operaciones a la vez. Si los cinco anteriores están en verde, este
+//     no tiene nada nuevo: es copiarlas al sitio que toca.
+type ItemMini = { id: string; texto: string; hecho: boolean }
+
+export function MiniGestor() {
+  const [items, setItems] = useState<ItemMini[]>([])
+
+  const añadir = () => {
+    const nuevo: ItemMini = { id: crypto.randomUUID(), texto: `item ${items.length + 1}`, hecho: false }
+    items.push(nuevo)
+    setItems(items)
+  }
+
+  const marcar = (id: string, hecho: boolean) => {
+    const encontrado = items.find((i) => i.id === id)
+    if (encontrado) encontrado.hecho = hecho
+    setItems(items)
+  }
+
+  const borrar = (id: string) => {
+    const posicion = items.findIndex((i) => i.id === id)
+    if (posicion !== -1) items.splice(posicion, 1)
+    setItems(items)
+  }
+
+  return (
+    <div>
+      <button type="button" onClick={añadir}>Añadir</button>
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            <input
+              type="checkbox"
+              checked={item.hecho}
+              aria-label={`Marcar ${item.texto}`}
+              onChange={(e) => marcar(item.id, e.target.checked)} />
+            {item.hecho ? <s>{item.texto}</s> : item.texto}
+            <button type="button" aria-label={`Borrar ${item.texto}`} onClick={() => borrar(item.id)}>
+              Borrar
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+// <MiniGestor />
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Con los seis en verde, el drill 6 se lee entero:
+ *
+ *   la Tarea completa la arma el gestor, no el formulario   ← ya lo tenías
+ *   añadir es devolver otra lista con uno más               ← F1, F4
+ *   borrar es devolver otra sin ese                         ← F2, F5
+ *   marcar es devolver otra con ese cambiado                ← F3, F6
+ *
+ * Y la pieza que hace que todo esto importe: React no mira DENTRO del array para
+ * ver si cambió. Solo comprueba si es el mismo de antes. Por eso `push` te deja
+ * el dato guardado y la pantalla igual — el fallo más silencioso del bloque.
  * ───────────────────────────────────────────────────────────────────────────── */

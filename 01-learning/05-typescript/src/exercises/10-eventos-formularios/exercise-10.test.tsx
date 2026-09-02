@@ -14,6 +14,12 @@ import {
   PadreQueLimpia,
   PadreConDosCajas,
   PadreQueEntregaLosDos,
+  conUnoMas,
+  sinElQueSea,
+  conUnoCambiado,
+  ListaQueCrece,
+  ListaQueMengua,
+  MiniGestor,
 } from './exercise-10'
 
 const tareaDe = (id: string, texto: string, hecha = false) =>
@@ -154,5 +160,86 @@ describe('10-eventos-formularios / exercise-10 — escalera E', () => {
     await userEvent.type(caja2, 'n@a.com')
     await userEvent.click(screen.getByRole('button', { name: 'Enviar' }))
     expect(espia).toHaveBeenLastCalledWith({ nombre: 'Nico', email: 'n@a.com' })
+  })
+})
+
+describe('10-eventos-formularios / exercise-10 — escalera F', () => {
+  it('F1) conUnoMas — devuelve otra lista y no toca la original', () => {
+    const original = ['a']
+    const resultado = conUnoMas(original, 'b')
+
+    expect(resultado).toEqual(['a', 'b'])
+    expect(original).toEqual(['a']) // la de entrada, intacta
+    expect(resultado).not.toBe(original) // y son dos arrays distintos
+  })
+
+  it('F2) sinElQueSea — devuelve otra lista sin ese, y no toca la original', () => {
+    const original = ['a', 'b']
+    const resultado = sinElQueSea(original, 'a')
+
+    expect(resultado).toEqual(['b'])
+    expect(original).toEqual(['a', 'b'])
+    expect(resultado).not.toBe(original)
+  })
+
+  it('F2) sinElQueSea — si no está, sale una copia igual', () => {
+    const original = ['a', 'b']
+    const resultado = sinElQueSea(original, 'z')
+
+    expect(resultado).toEqual(['a', 'b'])
+    expect(resultado).not.toBe(original)
+  })
+
+  it('F3) conUnoCambiado — sustituye uno y deja los demás', () => {
+    const original = ['a', 'b']
+    const resultado = conUnoCambiado(original, 'a', 'z')
+
+    expect(resultado).toEqual(['z', 'b'])
+    expect(original).toEqual(['a', 'b'])
+    expect(resultado).not.toBe(original)
+  })
+
+  it('F4) ListaQueCrece — cada click añade uno Y se ve en pantalla', async () => {
+    render(<ListaQueCrece />)
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
+    expect(screen.getAllByRole('listitem')).toHaveLength(1)
+    expect(screen.getByText('item 1')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.getByText('item 2')).toBeInTheDocument()
+  })
+
+  it('F5) ListaQueMengua — quita el pulsado y deja los otros', async () => {
+    render(<ListaQueMengua />)
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Quitar dos' }))
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.queryByText('dos')).not.toBeInTheDocument()
+    expect(screen.getByText('uno')).toBeInTheDocument()
+    expect(screen.getByText('tres')).toBeInTheDocument()
+  })
+
+  it('F6) MiniGestor — añade, marca y borra, y las tres se ven', async () => {
+    render(<MiniGestor />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+
+    // marcar: el texto pasa a ir tachado
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Marcar item 1' }))
+    expect(screen.getByText('item 1').tagName).toBe('S')
+
+    // y el otro sigue sin marcar
+    expect(screen.getByRole('checkbox', { name: 'Marcar item 2' })).not.toBeChecked()
+
+    // borrar: desaparece solo ese
+    await userEvent.click(screen.getByRole('button', { name: 'Borrar item 1' }))
+    expect(screen.getAllByRole('listitem')).toHaveLength(1)
+    expect(screen.queryByText('item 1')).not.toBeInTheDocument()
   })
 })
