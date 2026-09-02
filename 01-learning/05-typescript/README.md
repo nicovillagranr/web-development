@@ -31,6 +31,7 @@ pnpm build        # build de producción
 
 ```
 src/exercises/
+├── 00-vocabulario/          nombrar las piezas, no resolver lógica
 ├── 01-tipos-basicos/
 ├── 02-funciones/
 ├── 03-arrays/
@@ -636,3 +637,48 @@ Sé directo. Sé técnico. Sé exigente. Prioriza claridad y razonamiento.
 No me trates como principiante absoluto. Pero tampoco asumas conocimientos avanzados de TypeScript.
 
 </details>
+
+---
+
+## Sesión 2 sep 2026 — se monta `00-vocabulario/exercise-01` y el bloque `11`
+
+Tres archivos nuevos, **los tres sin resolver**. Verificados con el protocolo §8 de
+`docs/AUTORIA-DRILLS.md`: solución completa en verde primero, luego vaciados a starter y
+comprobado drill a drill que cada uno da señal.
+
+| Archivo | Drills | Starter da |
+|---|---|---|
+| `00-vocabulario/exercise-01.ts` | 12 | 12 errores TS2322 + 12 tests rojos |
+| `11-useState-useReducer/exercise-01.tsx` | 5 | 9 errores de tipos + 3 tests rojos |
+| `11-useState-useReducer/exercise-02.tsx` | 5 | 1 error de tipos + 5 tests rojos |
+
+**`00-vocabulario/exercise-01` — las piezas de una función.** Doce drills en tres bloques
+(declarar/llamar · retornar/imprimir · propiedad/elemento/parámetro) sobre un único
+fragmento de cinco líneas que se reutiliza entero. Cada respuesta es una palabra de una
+unión de literales, así que una palabra inventada da error de tipos y una válida pero
+equivocada da test rojo. El starter es `"SIN_RESPONDER"`, que no está en ningún menú.
+
+Sus pistas van **por bloque y en tres niveles**, no por drill y en cuatro, y está
+justificado dentro del propio archivo: con una respuesta de una palabra entre cuatro, una
+pista por drill sería la solución. Por lo mismo el nivel 3 no cita a `tsc` — los doce
+drills escupen el mismo mensaje y no distingue nada.
+
+**El bloque `11` empezó siendo un archivo y acabó siendo dos.** Con los 7 drills juntos
+llegaba a 317 líneas contra el techo de ~230, y §1 dice que eso se arregla partiendo, no
+recortando prosa. Además eran dos conceptos distintos. Quedaron en 230 y 239 líneas:
+
+- **`exercise-01`** — de dónde saca `useState` el tipo del estado: la inferencia desde el
+  valor inicial, y los tres iniciales que no bastan (`null`, `{}`, `[]`).
+- **`exercise-02`** — el setter guarda, no devuelve: `=> void`, leer el estado justo
+  después de setear, y la forma funcional.
+
+**Los drills 3, 4 y 5 del `01` son, a propósito, los errores reales que tenía pendientes
+en `03-projex/07-Contact`**, con otros nombres. El cierre del archivo se lo dice.
+
+**Dos starters hubo que rediseñarlos.** `Interruptor` y `GuardarNombre` compilaban y
+pasaban el test con el fallo dentro: no eran ejercicios. Los cazó el paso 4 del protocolo
+(comprobar drill a drill que hay señal en algún sitio), que es exactamente para esto.
+
+Los recuentos que anuncian las cabeceras están medidos, no estimados: el `01` dice "2 de
+los 5 pasan el test con el fallo dentro" (drills 3 y 4) y el `02` dice "solo 1 de los 5 da
+error de tipos" (drill 1). Si se toca un starter, hay que recontar.
