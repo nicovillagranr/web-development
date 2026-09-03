@@ -1,5 +1,65 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Preflight (el reset que viene dentro de `@import "tailwindcss"`) deja los
+ * controles a cero: `border: 0` y `background-color: transparent`. Es a
+ * propósito — Tailwind asume que vas a estilizar cada botón con clases.
+ *
+ * Aquí no queremos eso: es un cuaderno con botones e inputs repartidos por
+ * decenas de `exercise-NN.tsx`, y no toca ensuciarlos con `className` que no
+ * tienen nada que ver con lo que enseña cada ejercicio. Así que se les devuelve
+ * un aspecto usable de una vez, para todos.
+ *
+ * Va todo en `@layer base` a propósito: las reglas dentro de una capa PIERDEN
+ * contra las utilidades de Tailwind, así que el día que pongas
+ * `className="bg-blue-600"` en un botón, esa clase gana. Si estas reglas
+ * estuvieran fuera de la capa, ganarían ellas y las clases no harían nada.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  button {
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--color-slate-300);
+    border-radius: 0.375rem;
+    background-color: var(--color-white);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: var(--color-slate-50);
+  }
+
+  button:active {
+    background-color: var(--color-slate-100);
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  select,
+  textarea {
+    padding: 0.375rem 0.625rem;
+    border: 1px solid var(--color-slate-300);
+    border-radius: 0.375rem;
+    background-color: var(--color-white);
+  }
+
+  /* El foco visible es lo primero que se lleva por delante un reset, y es justo
+   * lo que necesita quien navega con teclado. */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-blue-500);
+    outline-offset: 1px;
+  }
 }
