@@ -682,3 +682,62 @@ pasaban el test con el fallo dentro: no eran ejercicios. Los cazó el paso 4 del
 Los recuentos que anuncian las cabeceras están medidos, no estimados: el `01` dice "2 de
 los 5 pasan el test con el fallo dentro" (drills 3 y 4) y el `02` dice "solo 1 de los 5 da
 error de tipos" (drill 1). Si se toca un starter, hay que recontar.
+
+---
+
+## Sesión 3 sep 2026 — se cierra el bloque 10 y arranca la ampliación de formularios
+
+Dos partes. Primero se commitea lo que quedaba suelto del bloque `10`: la escalera F
+resuelta entera, el drill 6 cerrado (pendiente desde agosto) y el alta de Tailwind v4
+en el cuaderno. Bloque `10` en 19/19, 99 tests verdes en sus 10 archivos.
+
+Después se abre una **ampliación de la carpeta `10`**, `exercise-11` a `exercise-15`,
+pedida así: llegar al nivel de formularios de Projex y Smart-Cooler para poder migrar
+el `07-Contact` a mano.
+
+### El diagnóstico salió del código, no de la intuición
+
+Los 21 errores que `tsc` escupe hoy sobre `03-projex/07-Contact` no son 21 problemas:
+
+| Nº | Error | Concepto |
+|---|---|---|
+| 12 | `TS2339` sobre `{}` | uno solo: `useState({})` y `const errors = {}` sin forma |
+| 3 | `TS7006` | el evento y el `formData` sin tipar |
+| 2 | `TS7031` | props desestructuradas — bloque `09`, ya cerrado |
+| 4 | `TS2339` sobre `never` + `TS7006` | `useRef(null)` del `MapModal`: es del bloque `14` |
+
+Y dos cosas que **no dan error y están mal**, que es lo que justifica la ampliación:
+`useState("idle")` infiere `string`, así que un `setStatus("sucess")` compila y el
+mensaje de éxito no sale nunca; y el botón de enviar vive en `ContactInfo` atado por
+`form="contact-form"`, sin recibir el `status`, así que sigue pulsable durante el
+`await` de 1,5 s.
+
+**La brecha con el bloque 10:** sus diez archivos montan un `useState` por campo. Los
+dos formularios reales tienen el estado en un objeto y lo actualizan por clave
+computada — `[name]: value` en Projex, `setField("name", v)` en Smart-Cooler. Ese
+salto no estaba en ningún drill.
+
+### `exercise-11` — un objeto para todo el formulario
+
+5 drills, sin resolver. Dos funciones puras (spread de objeto y clave computada con
+`keyof`) y tres componentes que van montando el manejador único hasta el
+`ChangeEvent<HTMLInputElement | HTMLTextAreaElement>` que sirve al `<textarea>`.
+
+**Mecanismo nuevo, y conviene saber que existe:** el drill 2 —`campo: string` en vez de
+`keyof Perfil`— funciona perfectamente en tiempo de ejecución, así que ningún test lo
+puede cazar. La señal se le da con un `@ts-expect-error` en el archivo de test sobre una
+llamada con una clave inventada: si el starter acepta cualquier `string`, la directiva
+sobra y `typecheck` canta `TS2578`. Se comprobó primero que los `.test.tsx` entran en
+`tsc -b` (entran). Es la primera vez que un drill de este repo pone su señal ahí.
+
+Verificado con el protocolo §8: con las soluciones puestas, 7 de 7 en verde y typecheck
+0. Como starters, 3 tests rojos y 3 errores de tipos, con los 5 drills dando señal en
+algún sitio. El recuento de la cabecera está medido y hubo que corregirlo: son **2** los
+que pasan el test con el fallo dentro (el 2 y el 3), no 1 como decía el primer borrador.
+
+**El drill 6 se retiró en el camino.** Con él el archivo llegaba a 308 líneas y la
+cabecera a 50, contra los techos de ~230 y 40. Repetía entero el JSX del drill 5 para
+añadir un botón "Descartar", así que su concepto —el valor inicial compartido entre el
+`useState` y el botón de limpiar— se va al capstone, donde limpiar el formulario después
+de enviar forma parte del componente real. Quedan 249 líneas: 19 por encima del techo
+nominal, dentro del rango que ya tiene el bloque (203-363).
