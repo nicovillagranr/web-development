@@ -49,9 +49,14 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import { useState } from 'react'
-type Prioridad = 'baja' | 'media' | 'alta'
-type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
+import { useState } from "react";
+type Prioridad = "baja" | "media" | "alta";
+type Tarea = {
+  id: string;
+  texto: string;
+  prioridad: Prioridad;
+  hecha: boolean;
+};
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el reparto de responsabilidades
@@ -87,12 +92,18 @@ type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
 // 1) `CampoTexto` — un <input> controlado DESDE FUERA: pinta el `texto` que le
 //    llega y avisa por `alEscribir` de lo que se teclea. No tiene estado propio.
 //    El starter entrega el manejador sin traducir.
-export function CampoTexto({ texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void }) {
+export function CampoTexto({
+  texto,
+  alEscribir,
+}: {
+  texto: string;
+  alEscribir: (valor: string) => void;
+}) {
   return (
     // Con value guardamos el texto escrito
     // Con onChange nos avisamos de lo tecleado
     <input value={texto} onChange={(e) => alEscribir(e.target.value)} />
-  )
+  );
 }
 // <CampoTexto texto="hola" alEscribir={(v) => console.log(v)} />   // "hola"
 
@@ -100,21 +111,35 @@ export function CampoTexto({ texto, alEscribir }: { texto: string; alEscribir: (
 //    que el campo: pinta la que le llega y avisa de la elegida.
 //    `alElegir` pide una `Prioridad`, y el DOM no sabe nada de ese tipo.
 //    Restricción: sin `as`.
-export function SelectorPrioridad({ prioridad, alElegir }: { prioridad: Prioridad; alElegir: (p: Prioridad) => void }) {
+export function SelectorPrioridad({
+  prioridad,
+  alElegir,
+}: {
+  prioridad: Prioridad;
+  alElegir: (p: Prioridad) => void;
+}) {
   return (
-    <select value={prioridad} onChange={(e) => {
-      switch (e.target.value) {
-        case 'baja': alElegir('baja'); break
-        case 'media': alElegir('media'); break
-        case 'alta': alElegir('alta'); break
-      }
-    }}
+    <select
+      value={prioridad}
+      onChange={(e) => {
+        switch (e.target.value) {
+          case "baja":
+            alElegir("baja");
+            break;
+          case "media":
+            alElegir("media");
+            break;
+          case "alta":
+            alElegir("alta");
+            break;
+        }
+      }}
     >
       <option value="baja">Baja</option>
       <option value="media">Media</option>
       <option value="alta">Alta</option>
     </select>
-  )
+  );
 }
 // <SelectorPrioridad prioridad="media" alElegir={(p) => console.log(p)} />
 
@@ -123,26 +148,31 @@ export function SelectorPrioridad({ prioridad, alElegir }: { prioridad: Priorida
 //    queda limpio: campo vacío y prioridad de vuelta en "media".
 //    Con el campo vacío no entrega nada. Y no recarga la página, claro.
 //    Fíjate en lo que `alAñadir` pide: ni `id` ni `hecha`. Eso no es cosa suya.
-export function FormularioTarea({ alAñadir }: { alAñadir: (datos: { texto: string; prioridad: Prioridad }) => void }) {
-  const [texto, setTexto] = useState('')
-  const [prioridad, setPrioridad] = useState<Prioridad>('media')
+export function FormularioTarea({
+  alAñadir,
+}: {
+  alAñadir: (datos: { texto: string; prioridad: Prioridad }) => void;
+}) {
+  const [texto, setTexto] = useState("");
+  const [prioridad, setPrioridad] = useState<Prioridad>("media");
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault()
-      if (texto) {
-        alAñadir({ texto, prioridad })
-        setTexto('')
-        setPrioridad('media')
-      }
-    }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (texto) {
+          alAñadir({ texto, prioridad });
+          setTexto("");
+          setPrioridad("media");
+        }
+      }}
+    >
       <CampoTexto texto={texto} alEscribir={setTexto} />
       <SelectorPrioridad prioridad={prioridad} alElegir={setPrioridad} />
       <button type="submit">Añadir</button>
     </form>
-  )
+  );
 }
 // <FormularioTarea alAñadir={(d) => console.log(d)} />
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el estado que es una lista
@@ -183,23 +213,31 @@ export function FormularioTarea({ alAñadir }: { alAñadir: (datos: { texto: str
 // type Prioridad = 'baja' | 'media' | 'alta'
 // type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
 
-export function FilaTarea({ tarea, alMarcar, alBorrar }: {
-  tarea: Tarea; alMarcar: (id: string, hecha: boolean) => void; alBorrar: (id: string) => void
+export function FilaTarea({
+  tarea,
+  alMarcar,
+  alBorrar,
+}: {
+  tarea: Tarea;
+  alMarcar: (id: string, hecha: boolean) => void;
+  alBorrar: (id: string) => void;
 }) {
   return (
     <li>
       <input
         type="checkbox"
         checked={tarea.hecha}
-        onChange={(e) => alMarcar(tarea.id, e.target.checked)} />
+        onChange={(e) => alMarcar(tarea.id, e.target.checked)}
+      />
       {tarea.texto}
       <button
         aria-label={`Borrar ${tarea.texto}`}
-        onClick={() => alBorrar(tarea.id)}>
+        onClick={() => alBorrar(tarea.id)}
+      >
         Borrar
       </button>
     </li>
-  )
+  );
 }
 // <FilaTarea tarea={…} alMarcar={…} alBorrar={…} />
 
@@ -207,18 +245,27 @@ export function FilaTarea({ tarea, alMarcar, alBorrar }: {
 //    a cada una lo que necesita para avisar hacia arriba.
 //    Este componente no decide nada: solo reparte.
 //    Restricción: `key` va en el elemento que devuelve el map, y sale de la tarea.
-export function ListaTareas({ tareas, alMarcar, alBorrar }: {
-  tareas: Tarea[]
-  alMarcar: (id: string, hecha: boolean) => void
-  alBorrar: (id: string) => void
+export function ListaTareas({
+  tareas,
+  alMarcar,
+  alBorrar,
+}: {
+  tareas: Tarea[];
+  alMarcar: (id: string, hecha: boolean) => void;
+  alBorrar: (id: string) => void;
 }) {
   return (
     <ul>
       {tareas.map((tarea) => (
-        <FilaTarea key={tarea.id} tarea={tarea} alMarcar={alMarcar} alBorrar={alBorrar} />
+        <FilaTarea
+          key={tarea.id}
+          tarea={tarea}
+          alMarcar={alMarcar}
+          alBorrar={alBorrar}
+        />
       ))}
     </ul>
-  )
+  );
 }
 // <ListaTareas tareas={[]} alMarcar={…} alBorrar={…} />
 
@@ -229,28 +276,27 @@ export function ListaTareas({ tareas, alMarcar, alBorrar }: {
 //    porque los tres tienen la misma forma.
 //    El starter añade la tarea de la manera que parece obvia y no funciona.
 export function GestorDeTareas() {
-  const [tareas, setTareas] = useState<Tarea[]>([])
+  const [tareas, setTareas] = useState<Tarea[]>([]);
 
   const añadir = (datos: { texto: string; prioridad: Prioridad }) => {
-    const nueva: Tarea = { id: crypto.randomUUID(), hecha: false, ...datos }
-    tareas.push(nueva)
-    setTareas(tareas)
-  }
+    const nueva: Tarea = { id: crypto.randomUUID(), hecha: false, ...datos };
+    setTareas([...tareas, nueva]);
+  };
 
   const marcar = (id: string, hecha: boolean) => {
-    setTareas(tareas.map((t) => (t.id === id ? { ...t, hecha } : t)))
-  }
+    setTareas(tareas.map((t) => (t.id === id ? { ...t, hecha } : t)));
+  };
 
   const borrar = (id: string) => {
-    setTareas(tareas.filter((t) => t.id !== id))
-  }
+    setTareas(tareas.filter((t) => t.id !== id));
+  };
 
   return (
     <div>
       <FormularioTarea alAñadir={añadir} />
       <ListaTareas tareas={tareas} alMarcar={marcar} alBorrar={borrar} />
     </div>
-  )
+  );
 }
 // <GestorDeTareas />
 
@@ -259,7 +305,6 @@ export function GestorDeTareas() {
  * es un ejercicio: es una feature con la misma forma que las de un proyecto de
  * verdad. Repásala y búscale los nueve archivos dentro — están todos.
  * ───────────────────────────────────────────────────────────────────────────── */
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA E — el estado vive arriba
@@ -283,12 +328,8 @@ export function GestorDeTareas() {
 export function EtiquetaTexto({ texto }: { texto: string }) {
   // Creamos una variable que guarde una copia del texto
   // En el primer render se crea con el texto que le llega
-  const copia = texto
-  return (
-    <p>
-      {copia}
-    </p>
-  )
+  const copia = texto;
+  return <p>{copia}</p>;
 }
 // <EtiquetaTexto texto="hola" />
 
@@ -296,11 +337,7 @@ export function EtiquetaTexto({ texto }: { texto: string }) {
 //     Ojo con lo que le entregas al hueco: entregar una función y llamarla no es
 //     lo mismo, y es el primer concepto de esta carpeta.
 export function BotonQueAvisa({ alPulsar }: { alPulsar: () => void }) {
-  return (
-    <button onClick={alPulsar}>
-      Pulsa
-    </button>
-  )
+  return <button onClick={alPulsar}>Pulsa</button>;
 }
 // <BotonQueAvisa alPulsar={() => {}} />
 
@@ -309,17 +346,17 @@ export function BotonQueAvisa({ alPulsar }: { alPulsar: () => void }) {
 //     el <p> del padre tiene que decir "hola".
 //     El padre está ignorando lo que el hijo le cuenta.
 function CajaQueAvisa({ alEscribir }: { alEscribir: (valor: string) => void }) {
-  return <input onChange={(e) => alEscribir(e.target.value)} />
+  return <input onChange={(e) => alEscribir(e.target.value)} />;
 }
 
 export function PadreQueGuarda() {
-  const [texto, setTexto] = useState('') // texto parte con "", cuando se usa setTexto este string cambia
+  const [texto, setTexto] = useState(""); // texto parte con "", cuando se usa setTexto este string cambia
   return (
     <div>
       <CajaQueAvisa alEscribir={setTexto} />
       <p>{texto}</p>
     </div>
-  )
+  );
 }
 // <PadreQueGuarda />
 
@@ -327,19 +364,27 @@ export function PadreQueGuarda() {
 //     vacía el estado. Al pulsarlo, el campo tiene que quedarse vacío también.
 //     Ahora el campo se queda con lo escrito, porque va por libre.
 //     El starter monta la caja del peldaño anterior, que solo sabe avisar.
-function CajaControlada({ texto, alEscribir }: { texto: string; alEscribir: (valor: string) => void },) {
-  return <input value={texto} onChange={(e) => alEscribir(e.target.value)} />
+function CajaControlada({
+  texto,
+  alEscribir,
+}: {
+  texto: string;
+  alEscribir: (valor: string) => void;
+}) {
+  return <input value={texto} onChange={(e) => alEscribir(e.target.value)} />;
 }
 
 export function PadreQueLimpia() {
-  const [texto, setTexto] = useState('')
+  const [texto, setTexto] = useState("");
   return (
     <div>
       <CajaControlada texto={texto} alEscribir={setTexto} />
-      <button type="button" onClick={() => setTexto('')}>Limpiar</button>
+      <button type="button" onClick={() => setTexto("")}>
+        Limpiar
+      </button>
       <p>Guardado: {texto}</p>
     </div>
-  )
+  );
 }
 // <PadreQueLimpia />
 
@@ -348,8 +393,8 @@ export function PadreQueLimpia() {
 //     la segunda y el de abajo, sin que se pisen.
 //     El starter tiene los cables cruzados: cada caja avisa al estado del otro.
 export function PadreConDosCajas() {
-  const [nombre, setNombre] = useState('')
-  const [email, setEmail] = useState('')
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
   return (
     <div>
       <CajaControlada texto={nombre} alEscribir={setNombre} />
@@ -357,7 +402,7 @@ export function PadreConDosCajas() {
       <p>nombre: {nombre}</p>
       <p>email: {email}</p>
     </div>
-  )
+  );
 }
 // <PadreConDosCajas />
 
@@ -365,16 +410,22 @@ export function PadreConDosCajas() {
 //     "Enviar", `alEnviar` recibe los dos datos JUNTOS, en un objeto con las
 //     claves `nombre` y `email`.
 //     Lee la firma de `alEnviar`: pide una cosa, no dos.
-export function PadreQueEntregaLosDos({ alEnviar }: { alEnviar: (datos: { nombre: string; email: string }) => void }) {
-  const [nombre, setNombre] = useState('')
-  const [email, setEmail] = useState('')
+export function PadreQueEntregaLosDos({
+  alEnviar,
+}: {
+  alEnviar: (datos: { nombre: string; email: string }) => void;
+}) {
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
   return (
     <div>
       <CajaControlada texto={nombre} alEscribir={setNombre} />
       <CajaControlada texto={email} alEscribir={setEmail} />
-      <button type="button" onClick={() => alEnviar({ nombre, email })}>Enviar</button>
+      <button type="button" onClick={() => alEnviar({ nombre, email })}>
+        Enviar
+      </button>
     </div>
-  )
+  );
 }
 // <PadreQueEntregaLosDos alEnviar={(d) => console.log(d)} />
 
@@ -420,19 +471,16 @@ export function PadreQueEntregaLosDos({ alEnviar }: { alEnviar: (datos: { nombre
 //     que aquí no sirve. Mira lo que devuelve ese método, además de lo que hace.
 //     → conUnoMas(["a"], "b")   →   ["a", "b"],  y la original sigue siendo ["a"]
 export function conUnoMas(lista: string[], nuevo: string): string[] {
-  lista.push(nuevo)
-  return lista
+  return [...lista, nuevo];
 }
-// conUnoMas(["a"], "b")
+// conUnoMas(["a"], "b") -> ["a", "b"]
 
 // F2) `sinElQueSea` — devuelve otra lista sin el texto que te digan. La original,
 //     intacta. Si el texto no está, sale una copia igual.
 //     El starter recorre y va sacando del array que le pasaron.
 //     → sinElQueSea(["a", "b"], "a")   →   ["b"]
 export function sinElQueSea(lista: string[], quitar: string): string[] {
-  const posicion = lista.indexOf(quitar)
-  if (posicion !== -1) lista.splice(posicion, 1)
-  return lista
+  return lista.filter((t) => t !== quitar); // Todo el que sea diferente a quitar quedará en la copia
 }
 // sinElQueSea(["a", "b"], "a")
 
@@ -440,10 +488,13 @@ export function sinElQueSea(lista: string[], quitar: string): string[] {
 //     otro. Los demás, igual. Y la original sin tocar.
 //     El starter escribe directamente en la posición.
 //     → conUnoCambiado(["a", "b"], "a", "z")   →   ["z", "b"]
-export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): string[] {
-  const posicion = lista.indexOf(viejo)
-  if (posicion !== -1) lista[posicion] = nuevo
-  return lista
+export function conUnoCambiado(
+  lista: string[],
+  viejo: string,
+  nuevo: string,
+): string[] {
+  // Se mapea cada elemento del array, si el elemento es igual al viejo, lo sustituye por el nuevo, sino lo deja igual
+  return lista.map((elemento) => (elemento === viejo ? nuevo : elemento));
 }
 // conUnoCambiado(["a", "b"], "a", "z")
 
@@ -456,23 +507,24 @@ export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): s
 //     pantalla no se entera. Compara lo que le entregas al setter con lo que él
 //     tenía guardado antes, y pregúntate en qué se diferencian.
 export function ListaQueCrece() {
-  const [items, setItems] = useState<string[]>([])
+  const [items, setItems] = useState<string[]>([]);
 
   const añadir = () => {
-    items.push(`item ${items.length + 1}`)
-    setItems(items)
-  }
+    setItems([...items, `item ${items.length + 1}`]);
+  };
 
   return (
-    <div>
-      <button type="button" onClick={añadir}>Añadir</button>
+    <>
+      <button type="button" onClick={añadir}>
+        Añadir
+      </button>
       <ul>
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-    </div>
-  )
+    </>
+  );
 }
 // <ListaQueCrece />
 
@@ -480,26 +532,28 @@ export function ListaQueCrece() {
 //     botón "Quitar". Al pulsarlo, ese item desaparece y los otros se quedan.
 //     El starter tiene el mismo problema del F4 con la operación del F2.
 export function ListaQueMengua() {
-  const [items, setItems] = useState<string[]>(['uno', 'dos', 'tres'])
+  const [items, setItems] = useState<string[]>(["uno", "dos", "tres"]);
 
   const quitar = (item: string) => {
-    const posicion = items.indexOf(item)
-    items.splice(posicion, 1)
-    setItems(items)
-  }
+    setItems(sinElQueSea(items, item));
+  };
 
   return (
     <ul>
       {items.map((item) => (
         <li key={item}>
           {item}
-          <button type="button" aria-label={`Quitar ${item}`} onClick={() => quitar(item)}>
+          <button
+            type="button"
+            aria-label={`Quitar ${item}`}
+            onClick={() => quitar(item)}
+          >
             Quitar
           </button>
         </li>
       ))}
     </ul>
-  )
+  );
 }
 // <ListaQueMengua />
 
@@ -508,32 +562,34 @@ export function ListaQueMengua() {
 //     Un item marcado se pinta con <s> alrededor del texto.
 //     Las tres operaciones a la vez. Si los cinco anteriores están en verde, este
 //     no tiene nada nuevo: es copiarlas al sitio que toca.
-type ItemMini = { id: string; texto: string; hecho: boolean }
+type ItemMini = { id: string; texto: string; hecho: boolean };
 
 export function MiniGestor() {
-  const [items, setItems] = useState<ItemMini[]>([])
+  const [items, setItems] = useState<ItemMini[]>([]);
 
   const añadir = () => {
-    const nuevo: ItemMini = { id: crypto.randomUUID(), texto: `item ${items.length + 1}`, hecho: false }
-    items.push(nuevo)
-    setItems(items)
-  }
+    const nuevo: ItemMini = {
+      id: crypto.randomUUID(),
+      texto: `item ${items.length + 1}`,
+      hecho: false,
+    };
+    // Creamos un nuevo arreglo usando el operador spread
+    setItems([...items, nuevo]);
+  };
 
   const marcar = (id: string, hecho: boolean) => {
-    const encontrado = items.find((i) => i.id === id)
-    if (encontrado) encontrado.hecho = hecho
-    setItems(items)
-  }
+    setItems(items.map((i) => (i.id === id ? { ...i, hecho } : i)));
+  };
 
   const borrar = (id: string) => {
-    const posicion = items.findIndex((i) => i.id === id)
-    if (posicion !== -1) items.splice(posicion, 1)
-    setItems(items)
-  }
+    setItems(items.filter((i) => i.id !== id));
+  };
 
   return (
     <div>
-      <button type="button" onClick={añadir}>Añadir</button>
+      <button type="button" onClick={añadir}>
+        Añadir
+      </button>
       <ul>
         {items.map((item) => (
           <li key={item.id}>
@@ -541,16 +597,21 @@ export function MiniGestor() {
               type="checkbox"
               checked={item.hecho}
               aria-label={`Marcar ${item.texto}`}
-              onChange={(e) => marcar(item.id, e.target.checked)} />
+              onChange={(e) => marcar(item.id, e.target.checked)}
+            />
             {item.hecho ? <s>{item.texto}</s> : item.texto}
-            <button type="button" aria-label={`Borrar ${item.texto}`} onClick={() => borrar(item.id)}>
+            <button
+              type="button"
+              aria-label={`Borrar ${item.texto}`}
+              onClick={() => borrar(item.id)}
+            >
               Borrar
             </button>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
 // <MiniGestor />
 
