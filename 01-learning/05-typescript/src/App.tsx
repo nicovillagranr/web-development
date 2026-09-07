@@ -1,9 +1,6 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
-import {
-  AliasConError,
-  PerfilValidado,
-} from "./exercises/10-eventos-formularios/exercise-12";
+import { AliasConError, PerfilValidado } from "./exercises/10-eventos-formularios/exercise-12";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -88,8 +85,8 @@ function Tarjeta({ n, nombre, mirar, campos, resuelto = false, children }: Tarje
   );
 }
 
-/* La leyenda va una sola vez arriba, no dentro de cada tarjeta: es la misma para las
- * cuatro y repetirla cuatro veces solo añade ruido. */
+/* La leyenda va una sola vez arriba, no dentro de cada tarjeta: es la misma para todas
+ * y repetirla en cada una solo añade ruido. */
 function Leyenda() {
   return (
     <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">

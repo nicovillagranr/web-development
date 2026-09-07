@@ -876,3 +876,29 @@ es el destino declarado del archivo.
 
 **Deuda de autoría:** el archivo mide 415 líneas contra un techo de ~230, por meter tres
 TEORÍAS en uno solo. El `12` va partido en dos.
+
+### Se monta el `12` — el objeto de errores
+
+10 drills a petición suya, 3 teorías, dos componentes al final. **La TEORÍA 3 es el
+estrechamiento**, uno de los dos huecos que el `11` dejó contestados solo en el chat:
+ahora está escrito antes de que ningún drill lo exija.
+
+Reparto: `{}` sin forma (1-3) · la clave opcional (4-6) · comprobar antes de usar
+(7-10). El drill 1 es calcado al `const errors = {}` de `07-Contact`, y el 9 al
+`useState({})`: entre los dos son los 12 errores de tipos que ese archivo repite.
+
+Dos cosas que el protocolo §8 cazó y conviene no repetir:
+
+- **La `⚠️ TRAMPA` de la TEORÍA 2 spoileaba el drill 4.** Decía que `errores !== {}` es
+  siempre `true`, que es exactamente lo que el compilador imprime (`TS2839`) y la
+  respuesta del drill que había veinte líneas más abajo. Se cambió por la trampa del
+  `""` falsy. **La `SINTAXIS` de la TEORÍA 3 era el cuerpo literal del drill 7**; se
+  reescribió con `typeof` sobre `string | number`, así que ahora hay que transferir.
+- **El drill 4 es el único del repo que sale en las tres herramientas**: test,
+  `typecheck` (`TS2839`) y `pnpm lint` (`no-constant-binary-expression`). Se dejó así a
+  propósito y la Pista 3 lo cuenta, porque ver dos herramientas señalar la misma línea
+  enseña más que cualquier explicación.
+
+**Deuda declarada, no disimulada:** 298 líneas contra el techo de ~230. Se recortaron
+las teorías hasta el mínimo; lo que no cabe son 10 drills con dos componentes React
+dentro. Las salidas son bajar a 8 o partirlo en 12+13, y la decisión es suya.
