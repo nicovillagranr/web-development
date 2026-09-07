@@ -275,6 +275,16 @@ export function ListaTareas({
 //    `marcar` y `borrar` ya están escritos: léelos antes de escribir `añadir`,
 //    porque los tres tienen la misma forma.
 //    El starter añade la tarea de la manera que parece obvia y no funciona.
+
+// type Prioridad = "baja" | "media" | "alta";
+
+// type Tarea = {
+// id: string;
+// texto: string;
+// prioridad: Prioridad;
+// hecha: boolean;
+// };
+
 export function GestorDeTareas() {
   const [tareas, setTareas] = useState<Tarea[]>([]);
 

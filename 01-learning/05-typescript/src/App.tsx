@@ -6,6 +6,12 @@ import {
   GestorDeTareas,
 } from "./exercises/10-eventos-formularios/exercise-10";
 
+import {
+  PerfilQueEscribe,
+  PerfilDosCampos,
+  PerfilConBio,
+} from "./exercises/10-eventos-formularios/exercise-11";
+
 /* BANCO DE PRUEBAS — para ver un componente vivo en el navegador.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y la etiqueta de abajo por el que quieras mirar
@@ -50,12 +56,42 @@ function App() {
       <hr />
 
       <section>
-        <h2>Drill 6 · GestorDeTareas 🔴</h2>
+        <h2>Drill 6 · GestorDeTareas ✅</h2>
         <p>
           El capstone. Escribe una tarea, dale a "Añadir" y mira la lista de
           abajo.
         </p>
         <GestorDeTareas />
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Drill 7 · PerfilQueEscribe ✅</h2>
+        <p>
+          Escribe tu nombre, y mira el perfil que aparece en la derecha.
+          Deberías ver tu nombre.
+        </p>
+        <PerfilQueEscribe />
+      </section>
+
+      <section>
+        <h2>Drill 8 · PerfilDosCampos ✅</h2>
+        <p>
+          Escribe tu nombre y tu apellido, y mira el perfil que aparece en la
+          derecha. Deberías ver tu nombre y tu apellido.
+        </p>
+        <PerfilDosCampos />
+      </section>
+
+      <section>
+        <h2>Drill 9 · PerfilConBio ⏳</h2>
+        <p>
+          Los dos campos de arriba más un &lt;textarea&gt; para la bio, y sigue
+          habiendo un solo manejador. Escribe en Alias: responde. Escribe en
+          Bio: no pasa nada, y la consola no dice ni una palabra.
+        </p>
+        <PerfilConBio />
       </section>
     </>
   );

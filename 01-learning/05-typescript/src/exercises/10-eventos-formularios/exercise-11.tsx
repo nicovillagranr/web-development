@@ -75,7 +75,7 @@ import type { ChangeEvent } from "react";
  *    objeto que te dieron ya no es el que era.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 📌 El type de los seis drills:
+// 📌 El type de los cinco drills:
 type Perfil = { alias: string; ciudad: string; bio: string };
 
 // 1) `conAliasCambiado` — recibe un perfil y un alias nuevo, y devuelve OTRO perfil
@@ -83,10 +83,9 @@ type Perfil = { alias: string; ciudad: string; bio: string };
 //    estaba.
 //    El starter escribe encima del que le pasaron.
 export function conAliasCambiado(perfil: Perfil, alias: string): Perfil {
-  perfil.alias = alias;
-  return perfil;
+  return { ...perfil, alias };
 }
-// conAliasCambiado({ alias: "nico", ciudad: "Santiago", bio: "" }, "nv")
+// conAliasCambiado({ alias: "nico", ciudad: "Santiago", bio: "" }, "nv") -> { alias: "nv", ciudad: "Santiago", bio: "" }
 
 // 2) `conCampoCambiado` — lo mismo, pero ahora QUÉ campo se pisa llega como
 //    parámetro. Un `"ciudad"` con el valor "Iquique" devuelve el perfil con la
@@ -96,12 +95,12 @@ export function conAliasCambiado(perfil: Perfil, alias: string): Perfil {
 //    es un campo válido.
 export function conCampoCambiado(
   perfil: Perfil,
-  campo: string,
+  campo: keyof Perfil,
   valor: string,
 ): Perfil {
   return { ...perfil, [campo]: valor };
 }
-// conCampoCambiado({ alias: "nico", ciudad: "Santiago", bio: "" }, "ciudad", "Iquique")
+// conCampoCambiado({ alias: "nico", ciudad: "Santiago", bio: "" }, "ciudad", "Iquique") -> { alias: "nico", ciudad: "Iquique", bio: "" }
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — un manejador para todos
@@ -146,7 +145,7 @@ export function PerfilQueEscribe() {
   });
 
   const alEscribir = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerfil({ alias: e.target.value });
+    setPerfil(conAliasCambiado(perfil, e.target.value));
   };
 
   return (
@@ -167,12 +166,16 @@ export function PerfilQueEscribe() {
 export function PerfilDosCampos() {
   const [perfil, setPerfil] = useState<Perfil>({
     alias: "",
-    ciudad: "Santiago",
+    ciudad: "",
     bio: "",
   });
 
   const alEscribir = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerfil((prev) => conCampoCambiado(prev, "alias", e.target.value));
+    const nombreDelCampo = e.target.name;
+    const valorIngresado = e.target.value;
+    if (nombreDelCampo === "alias" || nombreDelCampo === "ciudad") {
+      setPerfil(conCampoCambiado(perfil, nombreDelCampo, valorIngresado));
+    }
   };
 
   return (
@@ -208,7 +211,16 @@ export function PerfilConBio() {
   });
 
   const alEscribir = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const nombreDelCampo = e.target.name;
+    const valorIngresado = e.target.value;
+    if (nombreDelCampo === "alias" || nombreDelCampo === "ciudad") {
+      setPerfil(conCampoCambiado(perfil, nombreDelCampo, valorIngresado));
+    }
+  };
+
+  const alEscribirBio = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const name = e.target.name;
+    const value = e.target.value;
     if (name === "alias" || name === "ciudad") {
       setPerfil((prev) => conCampoCambiado(prev, name, value));
     }
@@ -232,7 +244,7 @@ export function PerfilConBio() {
         name="bio"
         aria-label="Bio"
         value={perfil.bio}
-        onChange={alEscribir}
+        onChange={alEscribirBio}
       />
       <p>{perfil.alias}</p>
       <p>{perfil.ciudad}</p>

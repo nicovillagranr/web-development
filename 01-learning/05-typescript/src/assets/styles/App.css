@@ -40,11 +40,31 @@
     background-color: var(--color-slate-100);
   }
 
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  input[type="password"],
-  input[type="search"],
+  /* La lista blanca de antes (`input[type="text"]`, `[type="email"]`…) dejaba fuera
+   * el caso más común del cuaderno: un `<input>` a secas, sin `type`. El navegador
+   * lo trata como `type="text"`, pero el SELECTOR no: `[type="text"]` mira el
+   * atributo ESCRITO en el HTML, no el valor por defecto que aplica el navegador
+   * al no encontrarlo. Resultado: de los 94 inputs del repo, ~79 se quedaban sin
+   * estilo.
+   *
+   * Se le da la vuelta a la regla: entran TODOS los inputs MENOS los que no son
+   * una caja de texto. Así un ejercicio nuevo hereda el aspecto sin tener que
+   * acordarse de poner `type`, que es justo lo que no queremos que distraiga.
+   *
+   * `:not(a, b, c)` toma la especificidad de su argumento más específico — aquí
+   * (0,1,1), exactamente la misma que tenía `input[type="text"]`. O sea: la regla
+   * no pesa más que antes y sigue perdiendo contra las utilidades de Tailwind. */
+  input:not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="color"],
+      [type="file"],
+      [type="submit"],
+      [type="button"],
+      [type="reset"],
+      [type="image"]
+    ),
   select,
   textarea {
     padding: 0.375rem 0.625rem;
