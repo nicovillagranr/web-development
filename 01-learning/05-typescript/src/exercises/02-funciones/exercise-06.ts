@@ -38,7 +38,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-06.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE 0 — la receta vs cocinarla  ·  TÚ aprietas el gatillo
  * -------------------------------------------------------------------------- */
@@ -47,37 +46,46 @@
 //    👉 El cuerpo: el starter devuelve "" fijo y nunca la llama. Dispárala con `fn()`.
 //      correr(() => "hola") → "hola"
 export function correr(fn: () => string): string {
-  return fn()
+  return fn();
 }
-correr(() => 'hola')
+correr(() => "hola");
 
 // 2) `aplicar` — recibe un dato y una función, y aplica la función AL dato.
 //    👉 El cuerpo: el starter devuelve `x` sin tocarlo. Pásalo por la función: `fn(x)`.
 //      aplicar(5, (n) => n * 2) → 10
 export function aplicar(x: number, fn: (n: number) => number): number {
-  return fn(x)
+  return fn(x);
 }
 // return: 11
-aplicar(10, (n) => n + 1)
+aplicar(10, (n) => n + 1);
 
 // 3) `aplicarDosVeces` — aplica la función, y al resultado le aplica la MISMA otra vez.
 //    👉 El cuerpo: el starter devuelve `x`. La SALIDA de la 1ª llamada ENTRA en la 2ª.
 //      aplicarDosVeces(3, (n) => n + 1) → 5   // 3 → 4 → 5
 export function aplicarDosVeces(x: number, fn: (n: number) => number): number {
-  return fn(fn(x))
+  return fn(fn(x));
 }
-aplicarDosVeces(10, (n) => n * 2) // 40
+aplicarDosVeces(10, (n) => n * 2); // 40
 
 // 4) `elegirYaplicar` — te ENTREGAN dos funciones; según `cond`, cocinas solo UNA.
 //    👉 El cuerpo: el starter devuelve `x` e ignora ambas. Llama a la que toca.
 //       (entregar ≠ ejecutar: las dos llegan, solo una se dispara)
 //      elegirYaplicar(10, true,  (n) => n + 1, (n) => n - 1) → 11
 //      elegirYaplicar(10, false, (n) => n + 1, (n) => n - 1) → 9
-export function elegirYaplicar(x: number, cond: boolean, siSi: (n: number) => number, siNo: (n: number) => number,): number {
-  return cond ? siSi(x) : siNo(x)
+export function elegirYaplicar(
+  x: number,
+  cond: boolean,
+  siSi: (n: number) => number,
+  siNo: (n: number) => number,
+): number {
+  return cond ? siSi(x) : siNo(x);
 }
-elegirYaplicar(10, true, (n) => n + 1, (n) => n - 1) // 11
-
+elegirYaplicar(
+  10,
+  true,
+  (n) => n + 1,
+  (n) => n - 1,
+); // 11
 
 /* ---------------------------------------------------------------------------
  * ▸ EXPLICACIÓN 2 — ahora el MÉTODO llama a tu función por ti
@@ -95,11 +103,9 @@ elegirYaplicar(10, true, (n) => n + 1, (n) => n - 1) // 11
 //    👉 El cuerpo: el starter devuelve la lista igual. Deja que `.map` llame a `fn`.
 //      aplicarACadaUno([1, 2, 3], (n) => n * 10) → [10, 20, 30]
 export function aplicarACadaUno(items: number[], fn: (n: number) => number): number[] {
-  return items.map(fn)
+  return items.map(fn);
 }
-aplicarACadaUno([1, 2, 3], (n) => n * 10) // [10, 20, 30]
-
-
+aplicarACadaUno([1, 2, 3], (n) => n * 10); // [10, 20, 30]
 
 /* ---------------------------------------------------------------------------
  * ▸ EXPLICACIÓN 3 — la firma del callback manda
@@ -126,17 +132,19 @@ aplicarACadaUno([1, 2, 3], (n) => n * 10) // [10, 20, 30]
 // 6) `mapConIndice` — transforma cada item usando también su POSICIÓN.
 //      mapConIndice(["a","b","c"], (item, i) => `${i}:${item}`) → ["0:a","1:b","2:c"]
 export function mapConIndice(items: string[], fn: (item: string, i: number) => string): string[] {
-  return items.map(fn)
+  return items.map(fn);
 }
 // return: ["1 Hacer la cama", "2 Aspirar la casa", "3 Lavar la loza"]
-mapConIndice(["Hacer la cama", "Aspirar la casa", "Lavar la loza"], (item, i) => `${i + 1} ${item}`)
+mapConIndice(
+  ["Hacer la cama", "Aspirar la casa", "Lavar la loza"],
+  (item, i) => `${i + 1} ${item}`,
+);
 
 // 7) `transformarA` — convierte una lista de números en una de strings.
 //      transformarA([1, 2], (n) => `#${n}`) → ["#1", "#2"]
 export function transformarA(nums: number[], fn: (n: number) => string): string[] {
-  return nums.map(fn)
+  return nums.map(fn);
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — elegir entre callbacks y el `| undefined` del find
@@ -145,20 +153,32 @@ export function transformarA(nums: number[], fn: (n: number) => string): string[
 // 8) `aplicarSegun` — si `cond`, aplica `siVerdad`; si no, `siFalso`.
 //      aplicarSegun(5, true, (n) => n + 1, (n) => n - 1) → 6
 //      aplicarSegun(5, false, (n) => n + 1, (n) => n - 1) → 4
-export function aplicarSegun(n: number, cond: boolean, siVerdad: (n: number) => number, siFalso: (n: number) => number): number {
-  return cond ? siVerdad(n) : siFalso(n)
+export function aplicarSegun(
+  n: number,
+  cond: boolean,
+  siVerdad: (n: number) => number,
+  siFalso: (n: number) => number,
+): number {
+  return cond ? siVerdad(n) : siFalso(n);
 }
-aplicarSegun(5, true, (n) => n + 1, (n) => n - 1)
+aplicarSegun(
+  5,
+  true,
+  (n) => n + 1,
+  (n) => n - 1,
+);
 
 // 9) `primerQueCumple` — el primer número que cumple, o undefined si ninguno.
 //      primerQueCumple([1, 2, 3, 4], (n) => n > 2) → 3
 //      primerQueCumple([1, 2], (n) => n > 5) → undefined
-export function primerQueCumple(nums: number[], cumple: (n: number) => boolean): number | undefined {
-  return nums.find(cumple)
+export function primerQueCumple(
+  nums: number[],
+  cumple: (n: number) => boolean,
+): number | undefined {
+  return nums.find(cumple);
 }
-primerQueCumple([1, 2, 3, 4], (n) => n > 2) // 3
-primerQueCumple([], (n) => n > 2) // undefined
-
+primerQueCumple([1, 2, 3, 4], (n) => n > 2); // 3
+primerQueCumple([], (n) => n > 2); // undefined
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: dos callbacks encadenados (transformar y luego decidir)
@@ -166,7 +186,15 @@ primerQueCumple([], (n) => n > 2) // undefined
 
 // 10) `mapYfiltra` — transforma cada número y luego se queda con los que cumplen.
 //      mapYfiltra([1, 2, 3], (n) => n * 10, (n) => n > 15) → [20, 30]
-export function mapYfiltra(nums: number[], transformar: (n: number) => number, mantener: (n: number) => boolean,): number[] {
-  return nums.map(transformar).filter(mantener)
+export function mapYfiltra(
+  nums: number[],
+  transformar: (n: number) => number,
+  mantener: (n: number) => boolean,
+): number[] {
+  return nums.map(transformar).filter(mantener);
 }
-mapYfiltra([1, 2, 3], (n) => n * 10, (n) => n > 15) // [20, 30]
+mapYfiltra(
+  [1, 2, 3],
+  (n) => n * 10,
+  (n) => n > 15,
+); // [20, 30]

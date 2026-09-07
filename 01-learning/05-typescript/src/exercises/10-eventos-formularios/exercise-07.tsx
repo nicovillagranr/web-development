@@ -49,8 +49,7 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import type { MouseEvent, ChangeEvent } from 'react'
-
+import type { MouseEvent, ChangeEvent } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — quién es quién cuando hay hijos
@@ -93,7 +92,7 @@ export function BotonAvisaSuId({ avisar }: { avisar: (t: string) => void }) {
     <button id="guardar" onClick={(e) => avisar(e.currentTarget.id)}>
       Guardar
     </button>
-  )
+  );
 }
 // <BotonAvisaSuId avisar={(t) => console.log(t)} />   // "guardar"
 
@@ -105,7 +104,7 @@ export function BotonConIcono({ avisar }: { avisar: (t: string) => void }) {
     <button id="borrar" onClick={(e) => avisar(e.currentTarget.id)}>
       <span>🗑</span> Borrar
     </button>
-  )
+  );
 }
 // <BotonConIcono avisar={(t) => console.log(t)} />   // "borrar"
 
@@ -123,10 +122,9 @@ export function ListaDeTareas({ avisar }: { avisar: (t: string) => void }) {
         Dos
       </li>
     </ul>
-  )
+  );
 }
 // <ListaDeTareas avisar={(t) => console.log(t)} />   // "dos"
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — y por qué no están tipados igual
@@ -167,12 +165,12 @@ export function ListaDeTareas({ avisar }: { avisar: (t: string) => void }) {
 //    value. Un <button> admite `value` como cualquier campo, y en el DOM es string.
 //    El manejador vive fuera del JSX y su anotación es lo único que hay que tocar.
 export function BotonAvisaSuValor({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.currentTarget.value)
+  const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.currentTarget.value);
   return (
     <button value="rojo" onClick={manejar}>
       Elegir
     </button>
-  )
+  );
 }
 // <BotonAvisaSuValor avisar={(t) => console.log(t)} />   // "rojo"
 
@@ -181,10 +179,8 @@ export function BotonAvisaSuValor({ avisar }: { avisar: (t: string) => void }) {
 //    toca es su anotación.
 //    Este drill exige un import nuevo, y sale de 'react'.
 export function CampoAvisaLoEscrito({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: ChangeEvent<HTMLInputElement>) => avisar(e.currentTarget.value)
-  return (
-    <input onChange={manejar} />
-  )
+  const manejar = (e: ChangeEvent<HTMLInputElement>) => avisar(e.currentTarget.value);
+  return <input onChange={manejar} />;
 }
 // <CampoAvisaLoEscrito avisar={(t) => console.log(t)} />   // "hey"
 
@@ -195,19 +191,21 @@ export function CampoAvisaLoEscrito({ avisar }: { avisar: (t: string) => void })
 //    del otro antes de avisar.
 export function TarjetaQueIgnoraElBoton({ avisar }: { avisar: (t: string) => void }) {
   return (
-    <article onClick={(e) => {
-      // Este if evalúa si el click le pasa por encima de la tarjeta
-      // Si lo hace, avisa con "tarjeta"
-      // Si no lo hace, no hace nada
-      if (e.target === e.currentTarget) {
-        avisar('tarjeta')
-      }
-    }}>
+    <article
+      onClick={(e) => {
+        // Este if evalúa si el click le pasa por encima de la tarjeta
+        // Si lo hace, avisa con "tarjeta"
+        // Si no lo hace, no hace nada
+        if (e.target === e.currentTarget) {
+          avisar("tarjeta");
+        }
+      }}
+    >
       Tarjeta
       {/* <button onClick={(e) => e.stopPropagation()}>Borrar</button> Alterenativa: Mata el evento */}
       <button>Borrar</button>
-    </article >
-  )
+    </article>
+  );
 }
 // <TarjetaQueIgnoraElBoton avisar={(t) => console.log(t)} />   // "tarjeta", y nada al pulsar Borrar
 

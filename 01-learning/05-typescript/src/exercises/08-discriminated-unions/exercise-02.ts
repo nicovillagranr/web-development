@@ -58,8 +58,7 @@
 export type Figura =
   | { tipo: "circulo"; radio: number }
   | { tipo: "rectangulo"; ancho: number; alto: number }
-  | { tipo: "cuadrado"; lado: number }
-
+  | { tipo: "cuadrado"; lado: number };
 
 /* ── BLOQUE A — el discriminante es una propiedad ──────────────────────────── */
 
@@ -68,19 +67,21 @@ export type Figura =
 //       nombreTipo({ tipo: "circulo", radio: 2 }) → "circulo"
 export function nombreTipo(figura: Figura): string {
   // completa aquí (una línea: lee la propiedad discriminante)
-  return figura.tipo
+  return figura.tipo;
 }
-nombreTipo({ tipo: "circulo", radio: 2 }) // "circulo"  --- IGNORE ---
+nombreTipo({ tipo: "circulo", radio: 2 }); // "circulo"  --- IGNORE ---
 
 // A2) Área de DOS casos. Estrecha leyendo `figura.tipo` (NO `typeof`).
 //     Para "rectangulo" usa ancho*alto; para "cuadrado" usa lado².
 //       areaPlana({ tipo: "rectangulo", ancho: 3, alto: 4 }) → 12
-export function areaPlana(figura: { tipo: "rectangulo"; ancho: number; alto: number } | { tipo: "cuadrado"; lado: number }): number {
+export function areaPlana(
+  figura: { tipo: "rectangulo"; ancho: number; alto: number } | { tipo: "cuadrado"; lado: number },
+): number {
   // completa aquí (if sobre figura.tipo + early return, o if/else)
   if (figura.tipo === "rectangulo") {
-    return figura.ancho * figura.alto
+    return figura.ancho * figura.alto;
   }
-  return figura.lado ** 2
+  return figura.lado ** 2;
 }
 
 // A3) Con `switch` sobre las TRES variantes de Figura, devuelve una etiqueta:
@@ -89,12 +90,14 @@ export function areaPlana(figura: { tipo: "rectangulo"; ancho: number; alto: num
 export function etiqueta(figura: Figura): string {
   // completa aquí (switch (figura.tipo) { case ... })
   switch (figura.tipo) {
-    case "circulo": return "Círculo"
-    case "rectangulo": return "Rectángulo"
-    case "cuadrado": return "Cuadrado"
+    case "circulo":
+      return "Círculo";
+    case "rectangulo":
+      return "Rectángulo";
+    case "cuadrado":
+      return "Cuadrado";
   }
 }
-
 
 /* ── BLOQUE B — exhaustividad con `never` ──────────────────────────────────── */
 
@@ -107,12 +110,15 @@ export function etiqueta(figura: Figura): string {
 export function areaTotal(figura: Figura): number {
   // completa aquí (switch con los 3 case + default con `never`)
   switch (figura.tipo) {
-    case "circulo": return Math.PI * figura.radio ** 2
-    case "rectangulo": return figura.ancho * figura.alto
-    case "cuadrado": return figura.lado ** 2
+    case "circulo":
+      return Math.PI * figura.radio ** 2;
+    case "rectangulo":
+      return figura.ancho * figura.alto;
+    case "cuadrado":
+      return figura.lado ** 2;
     default: {
-      const _exhaustivo: never = figura
-      return _exhaustivo
+      const _exhaustivo: never = figura;
+      return _exhaustivo;
     }
   }
 }
@@ -125,16 +131,20 @@ export type Figura2 =
   | { tipo: "circulo"; radio: number }
   | { tipo: "rectangulo"; ancho: number; alto: number }
   | { tipo: "cuadrado"; lado: number }
-  | { tipo: "triangulo"; a: number; b: number; c: number }
+  | { tipo: "triangulo"; a: number; b: number; c: number };
 export function perimetro(figura: Figura2): number {
   switch (figura.tipo) {
-    case "circulo": return 2 * Math.PI * figura.radio
-    case "rectangulo": return 2 * (figura.ancho + figura.alto)
-    case "cuadrado": return 4 * figura.lado
-    case "triangulo": return figura.a + figura.b + figura.c
+    case "circulo":
+      return 2 * Math.PI * figura.radio;
+    case "rectangulo":
+      return 2 * (figura.ancho + figura.alto);
+    case "cuadrado":
+      return 4 * figura.lado;
+    case "triangulo":
+      return figura.a + figura.b + figura.c;
     default: {
-      const _exhaustivo: never = figura
-      return _exhaustivo
+      const _exhaustivo: never = figura;
+      return _exhaustivo;
     }
   }
 }

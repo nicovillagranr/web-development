@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * 📌 RECORDATORIO — la firma del setter, que es de lo que va todo el archivo:
@@ -49,7 +49,6 @@ import { useState } from "react"
  *    casi todos es "va un paso por detrás" y en pantalla se nota al instante.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — lo que el setter NO te da
  * ─────────────────────────────────────────────────────────────────────────────
@@ -87,13 +86,13 @@ import { useState } from "react"
 //    El starter guarda bien, y luego le pide al setter que le devuelva lo que
 //    acaba de guardar para vaciar con eso. Mira su firma antes de escribir nada.
 export function GuardarNombre() {
-  const [texto, setTexto] = useState("")
-  const [guardado, setGuardado] = useState("")
+  const [texto, setTexto] = useState("");
+  const [guardado, setGuardado] = useState("");
 
   const guardar = () => {
-    const loGuardado = setGuardado(texto)
-    setTexto(loGuardado)
-  }
+    const loGuardado = setGuardado(texto);
+    setTexto(loGuardado);
+  };
 
   return (
     <div>
@@ -101,7 +100,7 @@ export function GuardarNombre() {
       <button onClick={guardar}>Guardar</button>
       <p>{guardado === "" ? "Nada guardado" : `Guardado: ${guardado}`}</p>
     </div>
-  )
+  );
 }
 
 // 2) `ContadorConAviso` — un botón "Sumar" que sube el número y, además, deja un
@@ -111,13 +110,13 @@ export function GuardarNombre() {
 //    Compila sin una queja, y el aviso va siempre un paso por detrás.
 //    Lo que necesitas ya lo has calculado una línea antes.
 export function ContadorConAviso() {
-  const [n, setN] = useState(0)
-  const [aviso, setAviso] = useState("")
+  const [n, setN] = useState(0);
+  const [aviso, setAviso] = useState("");
 
   const sumar = () => {
-    setN(n + 1)
-    setAviso(`Ahora vale ${n}`)
-  }
+    setN(n + 1);
+    setAviso(`Ahora vale ${n}`);
+  };
 
   return (
     <div>
@@ -125,9 +124,8 @@ export function ContadorConAviso() {
       <p>{aviso}</p>
       <button onClick={sumar}>Sumar</button>
     </div>
-  )
+  );
 }
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — la FORMA FUNCIONAL del setter
@@ -169,19 +167,19 @@ export function ContadorConAviso() {
 //    Un <p> con el número.
 //    El starter ya llama dos veces y aun así sube de uno en uno.
 export function ContadorDoble() {
-  const [n, setN] = useState(0)
+  const [n, setN] = useState(0);
 
   const sumarDos = () => {
-    setN(n + 1)
-    setN(n + 1)
-  }
+    setN(n + 1);
+    setN(n + 1);
+  };
 
   return (
     <div>
       <p>{n}</p>
       <button onClick={sumarDos}>Sumar 2</button>
     </div>
-  )
+  );
 }
 
 // 4) `RegistroDoble` — un botón "Registrar 2" que mete DOS entradas de una vez,
@@ -190,12 +188,12 @@ export function ContadorDoble() {
 //    El drill 3 con el mismo defecto, pero sobre un array: aquí no se pierde un
 //    número, se pierde una entrada entera.
 export function RegistroDoble() {
-  const [clicks, setClicks] = useState<string[]>([])
+  const [clicks, setClicks] = useState<string[]>([]);
 
   const registrarDos = () => {
-    setClicks([...clicks, `Click ${clicks.length + 1}`])
-    setClicks([...clicks, `Click ${clicks.length + 1}`])
-  }
+    setClicks([...clicks, `Click ${clicks.length + 1}`]);
+    setClicks([...clicks, `Click ${clicks.length + 1}`]);
+  };
 
   return (
     <div>
@@ -206,7 +204,7 @@ export function RegistroDoble() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 // 5) `ContadorConTope` — un botón "Sumar 2" que sube de dos en dos, con dos
@@ -216,19 +214,19 @@ export function RegistroDoble() {
 //    que decidirse con el valor que llega, no con el de este render. Piensa dónde
 //    cabe ese `if` cuando lo que entregas ya no es un número.
 export function ContadorConTope() {
-  const [n, setN] = useState(0)
+  const [n, setN] = useState(0);
 
   const sumarDos = () => {
-    setN(n >= 3 ? n : n + 1)
-    setN(n >= 3 ? n : n + 1)
-  }
+    setN(n >= 3 ? n : n + 1);
+    setN(n >= 3 ? n : n + 1);
+  };
 
   return (
     <div>
       <p>{n}</p>
       <button onClick={sumarDos}>Sumar 2</button>
     </div>
-  )
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

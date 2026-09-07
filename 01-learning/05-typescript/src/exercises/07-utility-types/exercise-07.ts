@@ -44,8 +44,7 @@
  *     pnpm test:run src/exercises/07-utility-types/exercise-07.test.ts
  * ===========================================================================*/
 
-
-type Usuario = { id: number; nombre: string; email: string; password: string }
+type Usuario = { id: number; nombre: string; email: string; password: string };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — `Pick` en el RETORNO: fabricar una vista reducida
@@ -61,19 +60,18 @@ type Usuario = { id: number; nombre: string; email: string; password: string }
 //      vistaPublica({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
 //        → { id: 1, nombre: "Ana" }
 export function vistaPublica(u: Usuario): Pick<Usuario, "id" | "nombre"> {
-  return { id: u.id, nombre: u.nombre }
+  return { id: u.id, nombre: u.nombre };
 }
 
-type Producto = { nombre: string; precio: number; stock: number; sku: string }
+type Producto = { nombre: string; precio: number; stock: number; sku: string };
 
 // 2) `tarjetaProducto` — mismo patrón, otro tipo: de un Producto completo, devuelve
 //    solo `nombre` y `precio` (lo que se ve en una tarjeta de tienda).
 //      tarjetaProducto({ nombre: "Té", precio: 1000, stock: 5, sku: "TE-01" })
 //        → { nombre: "Té", precio: 1000 }
 export function tarjetaProducto(p: Producto): Pick<Producto, "nombre" | "precio"> {
-  return { nombre: p.nombre, precio: p.precio }
+  return { nombre: p.nombre, precio: p.precio };
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — `Pick` en el PARÁMETRO: pedir solo lo que necesitas
@@ -89,15 +87,14 @@ export function tarjetaProducto(p: Producto): Pick<Producto, "nombre" | "precio"
 //       cuerpo (ahora devuelve "").
 //      etiquetaPrecio({ nombre: "Té", precio: 1000 }) → "Té: $1000"
 export function etiquetaPrecio(p: Pick<Producto, "nombre" | "precio">): string {
-  return `${p.nombre}: $${p.precio}`
+  return `${p.nombre}: $${p.precio}`;
 }
 
 // 4) `infoStock` — refuerzo: solo necesita `nombre` y `stock`.
 //      infoStock({ nombre: "Té", stock: 5 }) → "Té: 5 en stock"
 export function infoStock(p: Pick<Producto, "nombre" | "stock">): string {
-  return `${p.nombre}: ${p.stock} en stock`
+  return `${p.nombre}: ${p.stock} en stock`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: una lista de objetos → una lista de vistas (Pick + map)
@@ -113,5 +110,5 @@ export function infoStock(p: Pick<Producto, "nombre" | "stock">): string {
 //      listaPublica([{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }])
 //        → [{ id: 1, nombre: "Ana" }]
 export function listaPublica(usuarios: Usuario[]): Pick<Usuario, "id" | "nombre">[] {
-  return usuarios.map((usuario) => vistaPublica(usuario))
+  return usuarios.map((usuario) => vistaPublica(usuario));
 }

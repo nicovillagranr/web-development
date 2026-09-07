@@ -31,33 +31,33 @@
 // 1) `masLargo` — el que tenga más `length` (vale para strings y arrays).
 //    masLargo("abc", "de") → "abc" ; masLargo([1], [1, 2, 3]) → [1, 2, 3]
 export function masLargo<T extends { length: number }>(a: T, b: T): T {
-  return a.length > b.length ? a : b
+  return a.length > b.length ? a : b;
 }
-masLargo('abc', 'de') // 'abc'
-masLargo([1], [1, 2, 3]) // [1, 2, 3]
+masLargo("abc", "de"); // 'abc'
+masLargo([1], [1, 2, 3]); // [1, 2, 3]
 
 // 2) `idDe` — el id de cualquier objeto que tenga id.
 //    idDe({ id: 5, nombre: "x" }) → 5
 export function idDe<T extends { id: number }>(x: T): number {
-  return x.id
+  return x.id;
 }
-idDe({ id: 5, nombre: 'x' }) // 5
+idDe({ id: 5, nombre: "x" }); // 5
 
 /* --- BLOQUE B — listas de cosas con id --- */
 
 // 3) `idsDe` — los ids de una lista de objetos con id.
 //    idsDe([{ id: 1 }, { id: 2 }]) → [1, 2]
 export function idsDe<T extends { id: number }>(xs: T[]): number[] {
-  return xs.map((x) => x.id)
+  return xs.map((x) => x.id);
 }
-idsDe([{ id: 1 }, { id: 2 }]) // [1, 2]
+idsDe([{ id: 1 }, { id: 2 }]); // [1, 2]
 
 // 4) `porId` — el objeto con ese id, o undefined.
 //    porId([{ id: 1 }, { id: 2 }], 2) → { id: 2 }
 export function porId<T extends { id: number }>(xs: T[], id: number): T | undefined {
-  return xs.find((x) => x.id === id)
+  return xs.find((x) => x.id === id);
 }
-porId([{ id: 1 }, { id: 2 }], 2) // { id: 2 }
+porId([{ id: 1 }, { id: 2 }], 2); // { id: 2 }
 
 /* --- BLOQUE C — CAPSTONE: campeón por un criterio --- */
 
@@ -66,6 +66,7 @@ porId([{ id: 1 }, { id: 2 }], 2) // { id: 2 }
 export function maxPor<T>(xs: T[], valor: (x: T) => number): T | undefined {
   return xs.reduce<T | undefined>(
     (m, x) => (m === undefined || valor(x) > valor(m) ? x : m),
-    undefined,)
+    undefined,
+  );
 }
-maxPor([{ v: 1 }, { v: 5 }, { v: 3 }], (x) => x.v) // { v: 5 }
+maxPor([{ v: 1 }, { v: 5 }, { v: 3 }], (x) => x.v); // { v: 5 }

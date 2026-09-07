@@ -85,10 +85,8 @@
  *   `obj.prop = ...`), ✅ devuelve SIEMPRE un objeto nuevo con `{ ...obj, ... }`.
  * ═══════════════════════════════════════════════════════════════════════════*/
 
-
-type Usuario = { nombre: string; edad: number; activo: boolean }
-type Producto = { nombre: string; precio: number; stock: number }
-
+type Usuario = { nombre: string; edad: number; activo: boolean };
+type Producto = { nombre: string; precio: number; stock: number };
 
 /* ── Bloque A: copiar y pisar una propiedad ───────────────────────────────── */
 
@@ -98,7 +96,7 @@ type Producto = { nombre: string; precio: number; stock: number }
 //        → { nombre: "Ana", edad: 30, activo: true }   (otro objeto distinto)
 export function copiarUsuario(u: Usuario): Usuario {
   // Se copia todo lo que tiene Usuario en un nuevo objeto, y se devuelve ese nuevo objeto.
-  return { ...u }
+  return { ...u };
 }
 
 // 2) ✏️ RENOMBRAR. `renombrar` copia el usuario y cambia SOLO `nombre` por el que
@@ -106,18 +104,18 @@ export function copiarUsuario(u: Usuario): Usuario {
 //      renombrar({ nombre: "Ana", edad: 30, activo: true }, "Eva")
 //        → { nombre: "Eva", edad: 30, activo: true }
 export function renombrar(u: Usuario, nuevoNombre: string): Usuario {
-  return { ...u, nombre: nuevoNombre }
+  return { ...u, nombre: nuevoNombre };
 }
-renombrar({ nombre: "Ana", edad: 30, activo: true }, "Eva") // resultado: { nombre: "Eva", edad: 30, activo: true }
+renombrar({ nombre: "Ana", edad: 30, activo: true }, "Eva"); // resultado: { nombre: "Eva", edad: 30, activo: true }
 
 // 3) 🎂 CUMPLIR AÑOS. `cumplirAnios` copia el usuario con la edad +1. Este es EL
 //    patrón del capstone: lee su propia propiedad y le suma 1.
 //      cumplirAnios({ nombre: "Ana", edad: 30, activo: true })
 //        → { nombre: "Ana", edad: 31, activo: true }
 export function cumplirAnios(u: Usuario): Usuario {
-  return { ...u, edad: u.edad + 1 }
+  return { ...u, edad: u.edad + 1 };
 }
-cumplirAnios({ nombre: "Ana", edad: 30, activo: true }) // resultado: { nombre: "Ana", edad: 31, activo: true }
+cumplirAnios({ nombre: "Ana", edad: 30, activo: true }); // resultado: { nombre: "Ana", edad: 31, activo: true }
 
 /* ── Bloque B: otros tipos de cambio (booleano, calcular desde lo que había) ── */
 
@@ -125,7 +123,7 @@ cumplirAnios({ nombre: "Ana", edad: 30, activo: true }) // resultado: { nombre: 
 //      desactivar({ nombre: "Ana", edad: 30, activo: true })
 //        → { nombre: "Ana", edad: 30, activo: false }
 export function desactivar(u: Usuario): Usuario {
-  return { ...u, activo: false }
+  return { ...u, activo: false };
 }
 
 // 5) 📦 VENDER UNO. `venderUno` copia el producto con el stock en uno MENOS.
@@ -133,7 +131,7 @@ export function desactivar(u: Usuario): Usuario {
 //      venderUno({ nombre: "Lápiz", precio: 500, stock: 3 })
 //        → { nombre: "Lápiz", precio: 500, stock: 2 }
 export function venderUno(p: Producto): Producto {
-  return { ...p, stock: p.stock - 1 }
+  return { ...p, stock: p.stock - 1 };
 }
 
 // 6) 💸 APLICAR IVA. `aplicarIva` copia el producto con el precio multiplicado por
@@ -142,10 +140,10 @@ export function venderUno(p: Producto): Producto {
 //      aplicarIva({ nombre: "Lápiz", precio: 1000, stock: 3 }, 0.19)
 //        → { nombre: "Lápiz", precio: 1190, stock: 3 }
 export function aplicarIva(p: Producto, iva: number): Producto {
-  return { ...p, precio: p.precio * (1 + iva) }
+  return { ...p, precio: p.precio * (1 + iva) };
 }
-aplicarIva({ nombre: "Lápiz", precio: 1000, stock: 3 }, 0.19) // resultado: { nombre: "Lápiz", precio: 1190, stock: 3 }
-aplicarIva({ nombre: "Goma", precio: 500, stock: 2 }, 0.10) // resultado: { nombre: "Goma", precio: 550, stock: 2 }
+aplicarIva({ nombre: "Lápiz", precio: 1000, stock: 3 }, 0.19); // resultado: { nombre: "Lápiz", precio: 1190, stock: 3 }
+aplicarIva({ nombre: "Goma", precio: 500, stock: 2 }, 0.1); // resultado: { nombre: "Goma", precio: 550, stock: 2 }
 
 /* ── Bloque C: capstone — el patrón DENTRO de un reduce (cierra el círculo) ──── */
 
@@ -160,11 +158,17 @@ aplicarIva({ nombre: "Goma", precio: 500, stock: 2 }, 0.10) // resultado: { nomb
 //      ]) → { total: 800, items: 2 }
 //      resumirCompra([]) → { total: 0, items: 0 }
 export function resumirCompra(productos: Producto[]): { total: number; items: number } {
-  return productos.reduce((acum, producto) => {
-    return {
-      total: acum.total + producto.precio,
-      items: acum.items + 1
-    }
-  }, { total: 0, items: 0 })
+  return productos.reduce(
+    (acum, producto) => {
+      return {
+        total: acum.total + producto.precio,
+        items: acum.items + 1,
+      };
+    },
+    { total: 0, items: 0 },
+  );
 }
-resumirCompra([{ nombre: "Lápiz", precio: 500, stock: 3 }, { nombre: "Goma", precio: 300, stock: 1 }]) // resultado: { total: 800, items: 2 }
+resumirCompra([
+  { nombre: "Lápiz", precio: 500, stock: 3 },
+  { nombre: "Goma", precio: 300, stock: 1 },
+]); // resultado: { total: 800, items: 2 }

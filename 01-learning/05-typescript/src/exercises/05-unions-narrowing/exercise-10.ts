@@ -19,7 +19,7 @@
  *     pnpm test:run src/exercises/05-unions-narrowing/exercise-10.test.ts
  * ===========================================================================*/
 
-export type Valor = string | number | null
+export type Valor = string | number | null;
 
 /* --- BLOQUE A — un valor --- */
 
@@ -27,12 +27,12 @@ export type Valor = string | number | null
 //    aTexto(null) → "—" ; aTexto(5) → "$5" ; aTexto("hi") → "hi"
 export function aTexto(v: Valor): string {
   switch (typeof v) {
-    case 'number':
-      return `$${v}`
-    case 'string':
-      return v
+    case "number":
+      return `$${v}`;
+    case "string":
+      return v;
     default:
-      return '—'
+      return "—";
   }
 }
 
@@ -40,26 +40,26 @@ export function aTexto(v: Valor): string {
 //    esVacio(null) → true ; esVacio("") → true ; esVacio("a") → false ; esVacio(0) → false
 export function esVacio(v: Valor): boolean {
   switch (typeof v) {
-    case 'string':
-      return v === ''
+    case "string":
+      return v === "";
     default:
-      return v === null
+      return v === null;
   }
 }
-esVacio(10) // false porque
+esVacio(10); // false porque
 
 /* --- BLOQUE B — una lista: limpiar y sumar --- */
 
 // 3) `soloValidos` — quita los null (deja `(string | number)[]`).
 //    soloValidos(["a", null, 5]) → ["a", 5]
 export function soloValidos(vs: Valor[]): (string | number)[] {
-  return vs.filter((v) => v !== null)
+  return vs.filter((v) => v !== null);
 }
 
 // 4) `sumarNumericos` — suma solo los números.
 //    sumarNumericos([1, "a", 2, null]) → 3
 export function sumarNumericos(vs: Valor[]): number {
-  return vs.filter((v) => typeof v === 'number').reduce((a, b) => a + b, 0)
+  return vs.filter((v) => typeof v === "number").reduce((a, b) => a + b, 0);
 }
 
 /* --- BLOQUE C — CAPSTONE: resumen --- */
@@ -67,5 +67,5 @@ export function sumarNumericos(vs: Valor[]): number {
 // 5) `resumen` — "<n> válidos, suma <total>".
 //    resumen(["a", null, 5, "b"]) → "3 válidos, suma 5"
 export function resumen(vs: Valor[]): string {
-  return vs.filter((v) => v !== null).length + ' válidos, suma ' + sumarNumericos(vs)
+  return vs.filter((v) => v !== null).length + " válidos, suma " + sumarNumericos(vs);
 }

@@ -77,8 +77,7 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-import type { ReactNode } from 'react'
-
+import type { ReactNode } from "react";
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: `children` a secas
@@ -90,13 +89,8 @@ import type { ReactNode } from 'react'
 //    `className="marco"` y el children dentro, tal cual llega.
 //    <Marco><p>Hola</p></Marco>  →  <article class="marco"><p>Hola</p></article>
 export function Marco({ children }: { children: ReactNode }) {
-  return (
-    <article className="marco">
-      {children}
-    </article>
-  )
+  return <article className="marco">{children}</article>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — `children` CONVIVIENDO con props normales
@@ -109,13 +103,13 @@ export function Marco({ children }: { children: ReactNode }) {
 //    <section> que contenga, EN ESTE ORDEN: un <h3> con el título, y el children.
 //    <Tarjeta titulo="Perfil"><p>Ana</p></Tarjeta>
 //      →  <section><h3>Perfil</h3><p>Ana</p></section>
-export function Tarjeta({ titulo, children }: { titulo: string, children: ReactNode }) {
+export function Tarjeta({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
     <section>
       <h3>{titulo}</h3>
       {children}
     </section>
-  )
+  );
 }
 
 // 3) `CajaOpcional` — recibe `children` OPCIONAL (`children?: ReactNode`).
@@ -125,11 +119,8 @@ export function Tarjeta({ titulo, children }: { titulo: string, children: ReactN
 //    <CajaOpcional />                       →  <p>Vacío</p>
 //    <CajaOpcional><b>Hola</b></CajaOpcional> →  <div><b>Hola</b></div>
 export function CajaOpcional({ children }: { children?: ReactNode }) {
-  return (
-    children ? <div>{children}</div> : <p>Vacío</p>
-  )
+  return children ? <div>{children}</div> : <p>Vacío</p>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — SLOTS NOMBRADOS: JSX que entra por una prop con nombre
@@ -150,13 +141,13 @@ export function CajaOpcional({ children }: { children?: ReactNode }) {
 //    el children dentro (en ese orden).
 //    <Layout cabecera={<h1>Web</h1>}><p>Cuerpo</p></Layout>
 //      →  <div><header><h1>Web</h1></header><main><p>Cuerpo</p></main></div>
-export function Layout({ cabecera, children }: { cabecera: ReactNode, children: ReactNode }) {
+export function Layout({ cabecera, children }: { cabecera: ReactNode; children: ReactNode }) {
   return (
     <div>
       <header>{cabecera}</header>
       <main>{children}</main>
     </div>
-  )
+  );
 }
 
 // 5) `PanelDoble` — recibe `izquierda` y `derecha` (las dos ReactNode). NO usa
@@ -166,15 +157,14 @@ export function Layout({ cabecera, children }: { cabecera: ReactNode, children: 
 //    `className="der"` y la derecha.
 //    <PanelDoble izquierda={<p>A</p>} derecha={<p>B</p>} />
 //      →  <div><div class="izq"><p>A</p></div><div class="der"><p>B</p></div></div>
-export function PanelDoble({ izquierda, derecha }: { izquierda: ReactNode, derecha: ReactNode }) {
+export function PanelDoble({ izquierda, derecha }: { izquierda: ReactNode; derecha: ReactNode }) {
   return (
     <div>
       <div className="izq">{izquierda}</div>
       <div className="der">{derecha}</div>
     </div>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — SLOT OPCIONAL (aquí se junta con el ejercicio 03)
@@ -196,16 +186,23 @@ export function PanelDoble({ izquierda, derecha }: { izquierda: ReactNode, derec
 //      →  <section><h2>Aviso</h2><p>Texto</p></section>
 //    <Dialogo titulo="Aviso" pie={<button>Ok</button>}><p>Texto</p></Dialogo>
 //      →  <section><h2>Aviso</h2><p>Texto</p><footer><button>Ok</button></footer></section>
-export function Dialogo({ titulo, children, pie }: { titulo: string, children: ReactNode, pie?: ReactNode }) {
+export function Dialogo({
+  titulo,
+  children,
+  pie,
+}: {
+  titulo: string;
+  children: ReactNode;
+  pie?: ReactNode;
+}) {
   return (
     <section>
       <h2>{titulo}</h2>
       {children}
       {pie && <footer>{pie}</footer>}
     </section>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — ⚠️ EL ELEMENTO vs EL COMPONENTE (vuelve la CAFETERA)
@@ -238,20 +235,20 @@ export function Dialogo({ titulo, children, pie }: { titulo: string, children: R
 
 // Componente auxiliar YA ESCRITO, para que los drills 7 y 8 tengan algo que pasarse.
 export function Estrella() {
-  return <span>★</span>
+  return <span>★</span>;
 }
 
 // 7) `ConIcono` — recibe `icono` (ReactNode: un elemento YA construido) y `texto`
 //    (string). Retorna un <p> con el icono primero y el texto después.
 //    <ConIcono icono={<Estrella />} texto="Favorito" />  →  <p><span>★</span>Favorito</p>
 //                     └─ fíjate: aquí SÍ hay `<... />`, lo construye quien llama
-export function ConIcono({ icono, texto }: { icono: ReactNode, texto: string }) {
+export function ConIcono({ icono, texto }: { icono: ReactNode; texto: string }) {
   return (
     <p>
       {icono}
       {texto}
     </p>
-  )
+  );
 }
 
 // 8) `ConIconoFn` — recibe `Icono` (una FUNCIÓN sin argumentos que retorna
@@ -259,15 +256,14 @@ export function ConIcono({ icono, texto }: { icono: ReactNode, texto: string }) 
 //    texto después — pero aquí lo construyes TÚ dentro, con `<Icono />`.
 //    <ConIconoFn Icono={Estrella} texto="Favorito" />  →  <p><span>★</span>Favorito</p>
 //                        └─ sin `<... />`: entregas la función, no el resultado
-export function ConIconoFn({ Icono, texto }: { Icono: () => ReactNode, texto: string }) {
+export function ConIconoFn({ Icono, texto }: { Icono: () => ReactNode; texto: string }) {
   return (
     <p>
       <Icono />
       {texto}
     </p>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — CAPSTONE: una página con tres slots, dos de ellos opcionales
@@ -282,11 +278,11 @@ export function ConIconoFn({ Icono, texto }: { Icono: () => ReactNode, texto: st
 //      · `children` ReactNode, obligatoria
 //      · `pie`      ReactNode, OPCIONAL
 export type PaginaProps = {
-  titulo: string
-  cabecera?: ReactNode
-  children: ReactNode
-  pie?: ReactNode
-}
+  titulo: string;
+  cabecera?: ReactNode;
+  children: ReactNode;
+  pie?: ReactNode;
+};
 
 // 10) `Pagina` — usa `PaginaProps`. Retorna un <div> que contenga, EN ESTE ORDEN:
 //       · SOLO si hay `cabecera`, un <header> con ella dentro
@@ -308,5 +304,5 @@ export function Pagina({ titulo, cabecera, children, pie }: PaginaProps) {
       <main>{children}</main>
       {pie && <footer>{pie}</footer>}
     </div>
-  )
+  );
 }

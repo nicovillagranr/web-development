@@ -68,7 +68,6 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: `interface` para tipar props
  * ════════════════════════════════════════════════════════════════════════════
@@ -81,19 +80,16 @@
 //      · `nombre` string
 //      · `url`    string
 export interface AvatarProps {
-  nombre: string,
-  url: string
+  nombre: string;
+  url: string;
 }
 
 //    `Avatar` — usa `AvatarProps`. Retorna un <img> con `src` = url y `alt` = nombre.
 //    (Un <img> no lleva cierre propio: se escribe `<img ... />`.)
 //    <Avatar nombre="Ana" url="/ana.png" />  →  <img src="/ana.png" alt="Ana">
 export function Avatar({ nombre, url }: AvatarProps) {
-  return (
-    <img src={url} alt={nombre} />
-  )
+  return <img src={url} alt={nombre} />;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — `extends`: una BASE común y variantes que añaden
@@ -105,15 +101,15 @@ export function Avatar({ nombre, url }: AvatarProps) {
 
 // Base YA ESCRITA — la comparten los drills 2 y 3.
 export interface ElementoProps {
-  id: number
-  nombre: string
+  id: number;
+  nombre: string;
 }
 
 // 2) Define `ProductoProps` extendiendo `ElementoProps` y añadiendo:
 //      · `precio` number
 //    Expórtala.
 export interface ProductoProps extends ElementoProps {
-  precio: number
+  precio: number;
 }
 
 //    `FilaProducto` — usa `ProductoProps`. Retorna un <li> con `nombre` + ": " +
@@ -122,15 +118,17 @@ export interface ProductoProps extends ElementoProps {
 //    <FilaProducto id={1} nombre="Pan" precio={2} />  →  <li>Pan: 2€</li>
 export function FilaProducto({ nombre, precio }: ProductoProps) {
   return (
-    <li>{nombre}: {precio}€</li>
-  )
+    <li>
+      {nombre}: {precio}€
+    </li>
+  );
 }
 
 // 3) Define `UsuarioProps` extendiendo `ElementoProps` y añadiendo:
 //      · `email` string
 //    Expórtala.
 export interface UsuarioProps extends ElementoProps {
-  email: string
+  email: string;
 }
 
 //    `FilaUsuario` — usa `UsuarioProps`. Retorna un <li> con `nombre` + " (" +
@@ -138,10 +136,11 @@ export interface UsuarioProps extends ElementoProps {
 //    <FilaUsuario id={1} nombre="Ana" email="a@b.com" />  →  <li>Ana (a@b.com)</li>
 export function FilaUsuario({ nombre, email }: UsuarioProps) {
   return (
-    <li>{nombre} ({email})</li>
-  )
+    <li>
+      {nombre} ({email})
+    </li>
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — `extends` de VARIAS bases a la vez
@@ -156,18 +155,18 @@ export function FilaUsuario({ nombre, email }: UsuarioProps) {
  */
 
 export interface ConEstilo {
-  className: string
+  className: string;
 }
 
 export interface Etiquetable {
-  etiqueta: string
+  etiqueta: string;
 }
 
 // 4) Define `ChipProps` extendiendo `ConEstilo` Y `Etiquetable`, y añadiendo:
 //      · `onQuitar` una función sin argumentos que no devuelve nada
 //    Expórtala.
 export interface ChipProps extends ConEstilo, Etiquetable {
-  onQuitar: () => void
+  onQuitar: () => void;
 }
 
 //    `Chip` — usa `ChipProps`. Retorna un <span> con el `className` puesto, que
@@ -182,9 +181,8 @@ export function Chip({ className, etiqueta, onQuitar }: ChipProps) {
       {etiqueta}
       <button onClick={onQuitar}>x</button>
     </span>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — DERIVAR del dominio: `Pick`, `Omit`, `Partial`
@@ -198,29 +196,31 @@ export function Chip({ className, etiqueta, onQuitar }: ChipProps) {
 //    interface Articulo { id: number; nombre: string; precio: number;
 //                         descripcion: string; enStock: boolean }
 export interface Articulo {
-  id: number
-  nombre: string
-  precio: number
-  descripcion: string
-  enStock: boolean
+  id: number;
+  nombre: string;
+  precio: number;
+  descripcion: string;
+  enStock: boolean;
 }
 
 // 5) `Pick` — define `ResumenProps` como EXACTAMENTE las propiedades `nombre` y
 //    `precio` de `Articulo`. Expórtala. (Una línea; no escribas los tipos a mano.)
-export type ResumenProps = Pick<Articulo, 'nombre' | 'precio'>
+export type ResumenProps = Pick<Articulo, "nombre" | "precio">;
 
 //    `Resumen` — usa `ResumenProps`. Retorna un <p> con `nombre` + " — " +
 //    `precio` + "€".
 //    <Resumen nombre="Pan" precio={2} />  →  <p>Pan — 2€</p>
 export function Resumen({ nombre, precio }: ResumenProps) {
   return (
-    <p>{nombre} — {precio}€</p>
-  )
+    <p>
+      {nombre} — {precio}€
+    </p>
+  );
 }
 
 // 6) `Omit` — define `AltaProps` como `Articulo` SIN la propiedad `id` (en un
 //    alta el id todavía no existe: lo asigna el servidor). Expórtala.
-export type AltaProps = Omit<Articulo, 'id'>
+export type AltaProps = Omit<Articulo, "id">;
 
 //    `Alta` — usa `AltaProps`. Retorna un <article> con un <h3> con el `nombre`
 //    y un <p> con la `descripcion`.
@@ -232,13 +232,13 @@ export function Alta({ nombre, descripcion }: AltaProps) {
       <h3>{nombre}</h3>
       <p>{descripcion}</p>
     </article>
-  )
+  );
 }
 
 // 7) `Partial` — define `ParcheProps` como `Articulo` con TODAS las propiedades
 //    opcionales (es un formulario de edición: mandas solo lo que cambias).
 //    Expórtala.
-export type ParcheProps = Partial<Articulo>
+export type ParcheProps = Partial<Articulo>;
 
 //    `Parche` — usa `ParcheProps`. Retorna un <p> con `nombre` + " — " + `precio`
 //    + "€", usando "(sin nombre)" si no llegó nombre y `0` si no llegó precio.
@@ -250,10 +250,11 @@ export type ParcheProps = Partial<Articulo>
 //    <Parche />                          →  <p>(sin nombre) — 0€</p>
 export function Parche({ nombre, precio }: ParcheProps) {
   return (
-    <p>{nombre ?? '(sin nombre)'} — {precio ?? 0}€</p>
-  )
+    <p>
+      {nombre ?? "(sin nombre)"} — {precio ?? 0}€
+    </p>
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — ⚠️ LA TRAMPA: `Omit` NO comprueba que la clave exista
@@ -275,9 +276,8 @@ export function Parche({ nombre, precio }: ParcheProps) {
 //      · `AltaSana` = `Articulo` omitiendo `'id'`   ← bien escrito
 //    No cambies nada más. El test comprueba que `AltaRota` TODAVÍA exige `id`
 //    (prueba de que el typo pasó desapercibido) y que `AltaSana` ya no.
-export type AltaRota = Omit<Articulo, 'idd'>
-export type AltaSana = Omit<Articulo, 'id'>
-
+export type AltaRota = Omit<Articulo, "idd">;
+export type AltaSana = Omit<Articulo, "id">;
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — CAPSTONE: derivar Y extender en el mismo tipo
@@ -292,9 +292,9 @@ export type AltaSana = Omit<Articulo, 'id'>
 //    `Articulo` con `nombre` y `precio` (usa `Pick` en el `extends`), y añadir:
 //      · `destacado` boolean, OPCIONAL
 //      · `onComprar` una función sin argumentos que no devuelve nada
-export interface TarjetaProductoProps extends Pick<Articulo, 'nombre' | 'precio'> {
-  destacado?: boolean
-  onComprar: () => void
+export interface TarjetaProductoProps extends Pick<Articulo, "nombre" | "precio"> {
+  destacado?: boolean;
+  onComprar: () => void;
 }
 
 // 10) `TarjetaProducto` — usa `TarjetaProductoProps`. Retorna un <article> con
@@ -309,10 +309,10 @@ export interface TarjetaProductoProps extends Pick<Articulo, 'nombre' | 'precio'
 //       →  <article class="destacada">...</article>
 export function TarjetaProducto({ nombre, precio, destacado, onComprar }: TarjetaProductoProps) {
   return (
-    <article className={destacado ? 'destacada' : 'normal'}>
+    <article className={destacado ? "destacada" : "normal"}>
       <h3>{nombre}</h3>
       <b>{precio}€</b>
       <button onClick={onComprar}>Comprar</button>
     </article>
-  )
+  );
 }

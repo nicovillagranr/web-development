@@ -41,7 +41,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-03.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE A — recoger números sueltos
  * -------------------------------------------------------------------------- */
@@ -51,13 +50,13 @@
 //       no compila) → conviértelo en `...nums`. Y el cuerpo (devuelve 0).
 //      sumarTodos(1, 2, 3) → 6     sumarTodos() → 0
 export function sumarTodos(...nums: number[]): number {
-  return nums.reduce((acumulador, elemento) => acumulador + elemento, 0)
+  return nums.reduce((acumulador, elemento) => acumulador + elemento, 0);
 }
 
 // 2) `concatenar` — une todas las palabras con un espacio.
 //      concatenar("hola", "qué", "tal") → "hola qué tal"
 export function concatenar(...palabras: string[]): string {
-  return palabras.join(" ")
+  return palabras.join(" ");
 }
 
 /* ---------------------------------------------------------------------------
@@ -69,15 +68,14 @@ export function concatenar(...palabras: string[]): string {
 //       argumentos sueltos (el spread del otro lado).
 //      maximo(3, 9, 5) → 9
 export function maximo(...nums: number[]): number {
-  return Math.max(...nums)
+  return Math.max(...nums);
 }
 // 4) `etiquetar` — un prefijo FIJO seguido de los items separados por coma.
 //    👉 Aquí hay un parámetro normal (`prefijo`) Y un rest (`...items`).
 //      etiquetar("Tags", "a", "b", "c") → "Tags: a, b, c"
 export function etiquetar(prefijo: string, ...items: string[]): string {
-  return `${prefijo}: ${items.join(", ")}`
+  return `${prefijo}: ${items.join(", ")}`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: recoger y procesar
@@ -88,7 +86,7 @@ export function etiquetar(prefijo: string, ...items: string[]): string {
 //      promedio(2, 4, 6) → 4     promedio() → 0
 export function promedio(...nums: number[]): number {
   if (nums.length === 0) {
-    return 0
+    return 0;
   }
-  return Math.round(nums.reduce((acumulador, elemento) => acumulador + elemento, 0) / nums.length)
+  return Math.round(nums.reduce((acumulador, elemento) => acumulador + elemento, 0) / nums.length);
 }

@@ -83,36 +83,31 @@
  *   Reglas: ❌ nada de `any`, ❌ nada de `as X`, ❌ no mutes el array de entrada.
  * ═══════════════════════════════════════════════════════════════════════════*/
 
-
 /* ── Bloque: aplicar la máquina a UN valor (sin array) ─────────────────────── */
 
 // 1) 🍊 EL EXPRIMIDOR. `aplicar` recibe un número y una máquina, y devuelve el
 //    resultado de pasar el número por la máquina UNA vez.
 //      aplicar(5, (valor) => valor + 1) → 6 ; aplicar(3, (valor) => valor * 10) → 30
 export function aplicar(num: number, transformar: (valor: number) => number): number {
-  return transformar(num)
+  return transformar(num);
 }
-aplicar(1, (valor) => valor + 1)
+aplicar(1, (valor) => valor + 1);
 
 // 2) 🏷️ LA ETIQUETADORA. Lo mismo pero con texto: recibe un texto y una máquina
 //    de texto, y devuelve el texto ya transformado UNA vez.
 //      aplicarTexto("hola", (palabra) => palabra.toUpperCase()) → "HOLA"
 export function aplicarTexto(texto: string, transformar: (palabra: string) => string): string {
-  return transformar(texto)
+  return transformar(texto);
 }
-aplicarTexto("nicolas", (palabra) => palabra.toUpperCase())
+aplicarTexto("nicolas", (palabra) => palabra.toUpperCase());
 
 // 3) 🧺 DOS LAVADAS SEGUIDAS. `dosVeces` pasa el número por la máquina DOS veces
 //    (el resultado de la primera entra a la segunda).
 //      dosVeces(1, (valor) => valor + 10) → 21 ; dosVeces(2, (valor) => valor * 2) → 8
-export function dosVeces(
-  num: number,
-  transformar: (valor: number) => number
-): number {
-  return transformar(transformar(num))
+export function dosVeces(num: number, transformar: (valor: number) => number): number {
+  return transformar(transformar(num));
 }
-dosVeces(1, (valor) => valor + 100)
-
+dosVeces(1, (valor) => valor + 100);
 
 /* ── Bloque: aplicar la máquina sobre cada elemento de un array (fábrica) ───── */
 
@@ -120,35 +115,38 @@ dosVeces(1, (valor) => valor + 100)
 //    (Es tu propio `.map`: le entregas la máquina y él la aplica a cada uno.)
 //      mapear([1, 2, 3], (valor) => valor + 10) → [11, 12, 13]
 export function mapear(nums: number[], transformar: (valor: number) => number): number[] {
-  return nums.map(transformar)
+  return nums.map(transformar);
 }
-mapear([1, 2, 3], (valor) => valor + 10) // resultado: [11, 12, 13]
+mapear([1, 2, 3], (valor) => valor + 10); // resultado: [11, 12, 13]
 
 // 5) 🏭🏭🏭 TRES PASADAS. `aplicaTresVeces` pasa CADA número por la máquina TRES
 //    veces. (Adentro del .map repites la idea del drill 3, pero una vez más.)
 //      aplicaTresVeces([1, 2], (valor) => valor + 10) → [31, 32]
 //      aplicaTresVeces([1, 2], (valor) => valor * 2)  → [8, 16]
 export function aplicaTresVeces(nums: number[], transformar: (valor: number) => number): number[] {
-  return nums.map((num) => transformar(transformar(transformar(num))))
+  return nums.map((num) => transformar(transformar(transformar(num))));
 }
-aplicaTresVeces([1], valor => valor + 10) // resultado 31
+aplicaTresVeces([1], (valor) => valor + 10); // resultado 31
 
 // 6) 🏭 PASADAS A PEDIDO. `aplicaNVeces` pasa cada número por la máquina la
 //    cantidad de veces que diga `cuantasVeces`. Si es 0, el número sale igual.
 //    (Pista: aquí un bucle `for` dentro del map sí vale.)
 //      aplicaNVeces([1], (valor) => valor + 1, 3) → [4]    (1 → 2 → 3 → 4)
 //      aplicaNVeces([2], (valor) => valor * 2, 2) → [8]    (2 → 4 → 8)
-export function aplicaNVeces(nums: number[], transformar: (valor: number) => number, cuantasVeces: number,): number[] {
+export function aplicaNVeces(
+  nums: number[],
+  transformar: (valor: number) => number,
+  cuantasVeces: number,
+): number[] {
   return nums.map((num) => {
-    let resultado = num
+    let resultado = num;
     for (let i = 0; i < cuantasVeces; i++) {
-      resultado = transformar(resultado)
+      resultado = transformar(resultado);
     }
-    return resultado
-  })
+    return resultado;
+  });
 }
-aplicaNVeces([1], (valor) => valor + 1, 3) // resultado: [4]
-
+aplicaNVeces([1], (valor) => valor + 1, 3); // resultado: [4]
 
 /* ── Bloque: la máquina cambia el tipo / trabaja sobre objetos ─────────────── */
 
@@ -156,17 +154,16 @@ aplicaNVeces([1], (valor) => valor + 1, 3) // resultado: [4]
 //    a cada uno su código "#<id>" (de objeto sale un texto).
 //      etiquetas([{ id: 1 }, { id: 2 }]) → ["#1", "#2"]
 export function etiquetas(productos: { id: number }[]): string[] {
-  return productos.map((producto) => String(`#${producto.id}`)) // ← provisional: le falta el "#".
+  return productos.map((producto) => String(`#${producto.id}`)); // ← provisional: le falta el "#".
 }
-etiquetas([{ id: 1 }, { id: 2 }]) // resultado: ["#1", "#2"]
+etiquetas([{ id: 1 }, { id: 2 }]); // resultado: ["#1", "#2"]
 
 // 8) 📢 CARTEL EN MAYÚSCULAS. `nombresEnMayuscula` recibe usuarios con `nombre` y
 //    devuelve cada nombre en MAYÚSCULAS.
 //      nombresEnMayuscula([{ nombre: "ana" }, { nombre: "leo" }]) → ["ANA", "LEO"]
 export function nombresEnMayuscula(usuarios: { nombre: string }[]): string[] {
-  return usuarios.map((usuario) => usuario.nombre.toUpperCase()) // ← provisional: no los pone en mayúscula.
+  return usuarios.map((usuario) => usuario.nombre.toUpperCase()); // ← provisional: no los pone en mayúscula.
 }
-
 
 /* ── Bloque: combinar dos máquinas / encadenar ─────────────────────────────── */
 
@@ -174,10 +171,18 @@ export function nombresEnMayuscula(usuarios: { nombre: string }[]): string[] {
 //    `transformar`, y luego deja SOLO los que aprueban la prueba `cumpleCondicion`.
 //    (Pista: .map(transformar) y luego .filter(cumpleCondicion), encadenados.)
 //      transformarYFiltrar([1, 2, 3], (valor) => valor * 10, (valor) => valor > 15) → [20, 30]
-export function transformarYFiltrar(nums: number[], transformar: (valor: number) => number, cumpleCondicion: (valor: number) => boolean,): number[] {
-  return nums.map(transformar).filter(cumpleCondicion)
+export function transformarYFiltrar(
+  nums: number[],
+  transformar: (valor: number) => number,
+  cumpleCondicion: (valor: number) => boolean,
+): number[] {
+  return nums.map(transformar).filter(cumpleCondicion);
 }
-transformarYFiltrar([1, 2, 3], (valor) => valor * 10, (valor) => valor > 15) // resultado: [20, 30]
+transformarYFiltrar(
+  [1, 2, 3],
+  (valor) => valor * 10,
+  (valor) => valor > 15,
+); // resultado: [20, 30]
 
 // 10) 🧾 CAJA REGISTRADORA (capstone). Pasa cada número por la máquina y devuelve
 //     la SUMA de todos los resultados (un solo número, no un array).
@@ -185,6 +190,6 @@ transformarYFiltrar([1, 2, 3], (valor) => valor * 10, (valor) => valor > 15) // 
 //       aplicaYSuma([1, 2, 3], (valor) => valor * 2) → 12    (2 + 4 + 6)
 //       aplicaYSuma([], (valor) => valor + 1)        → 0
 export function aplicaYSuma(nums: number[], transformar: (valor: number) => number): number {
-  return nums.map(transformar).reduce((acum, valor) => acum + valor, 0)
+  return nums.map(transformar).reduce((acum, valor) => acum + valor, 0);
 }
-aplicaYSuma([1, 2, 3], (valor) => valor * 2) // resultado: 12
+aplicaYSuma([1, 2, 3], (valor) => valor * 2); // resultado: 12

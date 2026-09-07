@@ -181,7 +181,10 @@ export function ordenarPorPrecio(ps: Producto[]): Producto[] {
   return ps.sort((a, b) => a.precio - b.precio);
 }
 // Escribe una lista que quede DESTROZADA solo por haber llamado a la función:
-export const P3_07_ENTRADA: Producto[] = [{ id: 1, nombre: "Té", precio: 200 }, { id: 2, nombre: "Cola", precio: 100 }];
+export const P3_07_ENTRADA: Producto[] = [
+  { id: 1, nombre: "Té", precio: 200 },
+  { id: 2, nombre: "Cola", precio: 100 },
+];
 // Por qué: .sort() no fabrica una lista nueva. Ordena la que le das en el sitio,
 // y encima devuelve esa misma lista, no una copia. Así que aquí solo existe un
 // array con tres nombres: ps, el que se reordena y el que sale por el return.
@@ -235,7 +238,7 @@ export const P3_08_ENTRADA: unknown = "Hola";
 export type Ajustes = {
   tema: string;
   idioma: string;
-  fuente: number
+  fuente: number;
 };
 
 export const AJUSTES_BASE: Ajustes = { tema: "claro", idioma: "es", fuente: 16 };
@@ -305,11 +308,7 @@ export const P3_10_ENTRADA: Producto = { id: 1, nombre: "Té", precio: 100 };
 
 // Debe pintar el <span> SOLO cuando hay pendientes, y nada cuando no los hay.
 export function Aviso({ cantidad }: { cantidad: number }) {
-  return (
-    <div>
-      {cantidad && <span>{cantidad} pendientes</span>}
-    </div>
-  )
+  return <div>{cantidad && <span>{cantidad} pendientes</span>}</div>;
 }
 // Escribe una cantidad que no pinte el <span>... y aun así ensucie la pantalla:
 export const P3_11_ENTRADA: number = 0;

@@ -46,7 +46,6 @@
  *     pnpm test:run src/exercises/01-tipos-basicos/exercise-06.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE A — `unknown` + estrechar con `typeof`
  * ---------------------------------------------------------------------------
@@ -61,43 +60,38 @@
 //      describir(true)  → "otro"
 export function describir(x: unknown): string {
   if (typeof x === "string") {
-    return `texto: ${x.toUpperCase()}`
-  }
-  else if (typeof x === "number") {
-    return `número: ${x}`
-  }
-  else {
-    return `otro`
+    return `texto: ${x.toUpperCase()}`;
+  } else if (typeof x === "number") {
+    return `número: ${x}`;
+  } else {
+    return `otro`;
   }
 }
 // Return: texto: HOLA
-describir("hola")
+describir("hola");
 // Return: número: 5
-describir(5)
+describir(5);
 // Return: otro
-describir(true)
-
+describir(true);
 
 // 2) `longitud` — largo si tiene sentido, -1 si no.
 //    👉 string → su .length, array → su .length, cualquier otra cosa → -1.
 //      longitud("hola") → 4   longitud([1, 2, 3]) → 3   longitud(5) → -1
 export function longitud(x: unknown): number {
   if (typeof x === "string") {
-    return x.length
-  }
-  else if (Array.isArray(x)) {
-    return x.length
-  }
-  else {
-    return -1
+    return x.length;
+  } else if (Array.isArray(x)) {
+    return x.length;
+  } else {
+    return -1;
   }
 }
 // Return: 4
-longitud("hola")
+longitud("hola");
 // Return: 3
-longitud([1, 2, 3])
+longitud([1, 2, 3]);
 // Return: -1
-longitud(5)
+longitud(5);
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — el peligro de `any` en carne propia
@@ -110,10 +104,9 @@ longitud(5)
 //      aMayusculas("hola") → "HOLA"   aMayusculas(5) → ""
 export function aMayusculas(x: unknown): string {
   if (typeof x === "string") {
-    return x.toUpperCase()
-  }
-  else {
-    return ""
+    return x.toUpperCase();
+  } else {
+    return "";
   }
 }
 
@@ -123,16 +116,15 @@ export function aMayusculas(x: unknown): string {
 //      sumarSiNumeros(2, 3) → 5   sumarSiNumeros("2", "3") → 0
 export function sumarSiNumeros(a: unknown, b: unknown): number {
   if (typeof a === "number" && typeof b === "number") {
-    return a + b
-  }
-  else {
-    return 0
+    return a + b;
+  } else {
+    return 0;
   }
 }
 // Return: 0
-sumarSiNumeros("2", "3")
+sumarSiNumeros("2", "3");
 // Return: 5
-sumarSiNumeros(2, 3)
+sumarSiNumeros(2, 3);
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: un formateador que aguanta cualquier entrada
@@ -148,15 +140,12 @@ sumarSiNumeros(2, 3)
 //      formatear(true) → "bool: true"      formatear(null) → "?"
 export function formatear(x: unknown): string {
   if (typeof x === "string") {
-    return `texto: ${x}`
-  }
-  else if (typeof x === "number") {
-    return `número: ${x}`
-  }
-  else if (typeof x === "boolean") {
-    return `bool: ${x}`
-  }
-  else {
-    return "?"
+    return `texto: ${x}`;
+  } else if (typeof x === "number") {
+    return `número: ${x}`;
+  } else if (typeof x === "boolean") {
+    return `bool: ${x}`;
+  } else {
+    return "?";
   }
 }

@@ -43,14 +43,13 @@
  *     pnpm test:run src/exercises/01-tipos-basicos/exercise-09.test.ts
  * ===========================================================================*/
 
-
 interface Persona {
-  nombre: string
-  edad: number
+  nombre: string;
+  edad: number;
 }
 
 interface Empleado extends Persona {
-  salario: number
+  salario: number;
 }
 
 /* ---------------------------------------------------------------------------
@@ -64,7 +63,7 @@ interface Empleado extends Persona {
 //       puedes leer la edad) y el cuerpo (se deja la edad).
 //      presentar({ nombre: "Ana", edad: 30 }) → "Soy Ana, 30 años"
 export function presentar(p: Persona): string {
-  return `Soy ${p.nombre}, ${p.edad} años`
+  return `Soy ${p.nombre}, ${p.edad} años`;
 }
 
 // 2) `ficha` — "<nombre>: $<salario>".
@@ -72,9 +71,8 @@ export function presentar(p: Persona): string {
 //       y el cuerpo (devuelve ""). Necesitas el tipo EXTENDIDO.
 //      ficha({ nombre: "Ana", edad: 30, salario: 1000 }) → "Ana: $1000"
 export function ficha(e: Empleado): string {
-  return `${e.nombre}: $${e.salario}`
+  return `${e.nombre}: $${e.salario}`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — construir la extendida a partir de la base (extends en el RETORNO)
@@ -88,16 +86,15 @@ export function ficha(e: Empleado): string {
 //      contratar({ nombre: "Ana", edad: 30 }, 1000)
 //        → { nombre: "Ana", edad: 30, salario: 1000 }
 export function contratar(p: Persona, salario: number): Empleado {
-  return { ...p, salario }
+  return { ...p, salario };
 }
 
-
 interface Vehiculo {
-  marca: string
+  marca: string;
 }
 
 interface Coche extends Vehiculo {
-  puertas: number
+  puertas: number;
 }
 
 // 4) `describirCoche` — "<marca> de <puertas> puertas".
@@ -105,9 +102,8 @@ interface Coche extends Vehiculo {
 //       tipo EXTENDIDO (`Coche`), no la base.
 //      describirCoche({ marca: "Seat", puertas: 5 }) → "Seat de 5 puertas"
 export function describirCoche(c: Coche): string {
-  return `${c.marca} de ${c.puertas} puertas`
+  return `${c.marca} de ${c.puertas} puertas`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: lista de la interface extendida (filter + map)
@@ -119,6 +115,12 @@ export function describirCoche(c: Coche): string {
 //       la lista entera sin filtrar ni quedarse con el nombre).
 //      bienPagados([{ nombre: "Ana", edad: 30, salario: 1000 }, { nombre: "Leo", edad: 25, salario: 500 }], 800) → ["Ana"]
 export function bienPagados(empleados: Empleado[], minimo: number): string[] {
-  return empleados.filter(e => e.salario >= minimo).map(e => e.nombre)
+  return empleados.filter((e) => e.salario >= minimo).map((e) => e.nombre);
 }
-bienPagados([{ nombre: "Ana", edad: 30, salario: 1000 }, { nombre: "Leo", edad: 25, salario: 500 }], 800) // ["Ana"]
+bienPagados(
+  [
+    { nombre: "Ana", edad: 30, salario: 1000 },
+    { nombre: "Leo", edad: 25, salario: 500 },
+  ],
+  800,
+); // ["Ana"]

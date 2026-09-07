@@ -58,8 +58,7 @@
 export type EstadoUsuario =
   | { estado: "cargando" }
   | { estado: "exito"; usuario: { nombre: string; edad: number } }
-  | { estado: "error"; mensaje: string }
-
+  | { estado: "error"; mensaje: string };
 
 /* ── BLOQUE A — leer un campo que solo existe en una variante ──────────────── */
 
@@ -67,7 +66,7 @@ export type EstadoUsuario =
 //    estaCargando({ estado: "cargando" }) → true
 //    estaCargando({ estado: "error", mensaje: "x" }) → false
 export function estaCargando(e: EstadoUsuario): boolean {
-  return e.estado === "cargando"
+  return e.estado === "cargando";
 }
 
 // 2) `nombreSiExito` — el nombre del usuario si es "exito"; si no, null.
@@ -76,10 +75,9 @@ export function estaCargando(e: EstadoUsuario): boolean {
 //    (Estrecha por e.estado ANTES de tocar e.usuario.)
 export function nombreSiExito(e: EstadoUsuario): string | null {
   if (e.estado === "exito") {
-    return e.usuario.nombre
-  }
-  else {
-    return null
+    return e.usuario.nombre;
+  } else {
+    return null;
   }
 }
 
@@ -88,13 +86,11 @@ export function nombreSiExito(e: EstadoUsuario): string | null {
 //    edadOcero({ estado: "error", mensaje: "x" }) → 0
 export function edadOcero(e: EstadoUsuario): number {
   if (e.estado === "exito") {
-    return e.usuario.edad
-  }
-  else {
-    return 0
+    return e.usuario.edad;
+  } else {
+    return 0;
   }
 }
-
 
 /* ── BLOQUE B — el switch que cubre todos los estados ──────────────────────── */
 
@@ -104,9 +100,12 @@ export function edadOcero(e: EstadoUsuario): number {
 //      "error"    → `Error: ${mensaje}` (usa e.mensaje)
 export function mensajeEstado(e: EstadoUsuario): string {
   switch (e.estado) {
-    case "cargando": return "Cargando…"
-    case "exito": return `Hola, ${e.usuario.nombre}`
-    case "error": return `Error: ${e.mensaje}`
+    case "cargando":
+      return "Cargando…";
+    case "exito":
+      return `Hola, ${e.usuario.nombre}`;
+    case "error":
+      return `Error: ${e.mensaje}`;
   }
 }
 
@@ -119,12 +118,15 @@ export function mensajeEstado(e: EstadoUsuario): string {
 //      "error"    → `❌ ${mensaje}`
 export function resumenEstado(e: EstadoUsuario): string {
   switch (e.estado) {
-    case "cargando": return "⏳ esperando"
-    case "exito": return `✅ ${e.usuario.nombre} (${e.usuario.edad})`
-    case "error": return `❌ ${e.mensaje}`
+    case "cargando":
+      return "⏳ esperando";
+    case "exito":
+      return `✅ ${e.usuario.nombre} (${e.usuario.edad})`;
+    case "error":
+      return `❌ ${e.mensaje}`;
     default: {
-      const _exhaustivo: never = e
-      return _exhaustivo
+      const _exhaustivo: never = e;
+      return _exhaustivo;
     }
   }
 }

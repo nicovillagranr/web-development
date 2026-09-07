@@ -28,9 +28,9 @@
  *     pnpm test:run src/exercises/05-unions-narrowing/exercise-04.test.ts
  * ===========================================================================*/
 
-export type Color = 'rojo' | 'verde' | 'azul'
-export type Estado = 'activo' | 'inactivo' | 'pendiente'
-export type Plan = 'free' | 'pro' | 'enterprise'
+export type Color = "rojo" | "verde" | "azul";
+export type Estado = "activo" | "inactivo" | "pendiente";
+export type Plan = "free" | "pro" | "enterprise";
 
 /* --- BLOQUE A — mapear literal → valor --- */
 
@@ -38,12 +38,12 @@ export type Plan = 'free' | 'pro' | 'enterprise'
 //    colorHex("rojo") → "#ff0000"
 export function colorHex(c: Color): string {
   switch (c) {
-    case 'rojo':
-      return '#ff0000'
-    case 'verde':
-      return '#00ff00'
-    case 'azul':
-      return '#0000ff'
+    case "rojo":
+      return "#ff0000";
+    case "verde":
+      return "#00ff00";
+    case "azul":
+      return "#0000ff";
   }
 }
 
@@ -51,12 +51,12 @@ export function colorHex(c: Color): string {
 //    etiquetaEstado("activo") → "Activo"
 export function etiquetaEstado(e: Estado): string {
   switch (e) {
-    case 'activo':
-      return 'Activo'
-    case 'inactivo':
-      return 'Inactivo'
-    case 'pendiente':
-      return 'Pendiente'
+    case "activo":
+      return "Activo";
+    case "inactivo":
+      return "Inactivo";
+    case "pendiente":
+      return "Pendiente";
   }
 }
 
@@ -66,19 +66,19 @@ export function etiquetaEstado(e: Estado): string {
 //    descuentoPorPlan("pro") → 10
 export function descuentoPorPlan(p: Plan): number {
   switch (p) {
-    case 'free':
-      return 0
-    case 'pro':
-      return 10
-    case 'enterprise':
-      return 20
+    case "free":
+      return 0;
+    case "pro":
+      return 10;
+    case "enterprise":
+      return 20;
   }
 }
 
 // 4) `esActivo` — ¿el estado es "activo"?
 //    esActivo("activo") → true ; esActivo("pendiente") → false
 export function esActivo(e: Estado): boolean {
-  return e === 'activo'
+  return e === "activo";
 }
 
 /* --- BLOQUE C — CAPSTONE: reusar un mapeo --- */
@@ -86,5 +86,5 @@ export function esActivo(e: Estado): boolean {
 // 5) `badge` — "Etiqueta (clave)" reusando etiquetaEstado.
 //    badge("activo") → "Activo (activo)"
 export function badge(e: Estado): string {
-  return `${etiquetaEstado(e)} (${e})`
+  return `${etiquetaEstado(e)} (${e})`;
 }

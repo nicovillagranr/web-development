@@ -35,20 +35,20 @@
 //    formatear(5) → "$5" ; formatear("hola") → "hola"
 export function formatear(x: string | number): string {
   if (typeof x === "string") {
-    return x
+    return x;
   }
-  return `$${x}`
+  return `$${x}`;
 }
-formatear("hola") // "hola"
-formatear(290) // "$290"
+formatear("hola"); // "hola"
+formatear(290); // "$290"
 
 // 2) `longitudOValor` — string → su longitud ; number → el número.
 //    longitudOValor("hola") → 4 ; longitudOValor(7) → 7
 export function longitudOValor(x: string | number): number {
   if (typeof x === "string") {
-    return x.length
+    return x.length;
   }
-  return x
+  return x;
 }
 
 /* --- BLOQUE B — devolver la unión, y mapear --- */
@@ -57,9 +57,9 @@ export function longitudOValor(x: string | number): number {
 //    duplicar(5) → 10 ; duplicar("ab") → "abab"
 export function duplicar(x: string | number): string | number {
   if (typeof x === "string") {
-    return x + x
+    return x + x;
   }
-  return x * 2
+  return x * 2;
 }
 
 // 4) `aTexto` — formatea cada elemento: number → "#<n>" ; string → MAYÚSCULAS.
@@ -67,12 +67,12 @@ export function duplicar(x: string | number): string | number {
 export function aTexto(xs: (string | number)[]): string[] {
   return xs.map((elemento) => {
     if (typeof elemento === "string") {
-      return elemento.toUpperCase()
+      return elemento.toUpperCase();
     }
-    return `#${elemento}`
-  })
+    return `#${elemento}`;
+  });
 }
-aTexto(["hola", 5, "HOLA", 5, 5]) // ["HOLA", "#5", "HOLA", "#5", "#5"]
+aTexto(["hola", 5, "HOLA", 5, 5]); // ["HOLA", "#5", "HOLA", "#5", "#5"]
 
 /* --- BLOQUE C — CAPSTONE: filtrar por tipo + reducir --- */
 
@@ -80,5 +80,5 @@ aTexto(["hola", 5, "HOLA", 5, 5]) // ["HOLA", "#5", "HOLA", "#5", "#5"]
 //    (usa un predicado de tipo en el filter)
 //    sumarNumeros([1, "x", 2, "y", 3]) → 6
 export function sumarNumeros(xs: (string | number)[]): number {
-  return xs.filter((x): x is number => typeof x === "number").reduce((a, b) => a + b, 0)
+  return xs.filter((x): x is number => typeof x === "number").reduce((a, b) => a + b, 0);
 }

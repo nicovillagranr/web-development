@@ -57,7 +57,6 @@
  * 📝 Trazado comentado bajo cada función. Descoméntalo para ver el valor.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — la función es un VALOR
  * ─────────────────────────────────────────────────────────────────────────────
@@ -99,17 +98,17 @@
 //    qué va dentro de ese array, y no son textos.
 //    → guardarEnLista(() => "café")   →   [ () => "café" ]
 export function guardarEnLista(receta: () => string): Array<() => string> {
-  return [receta]
+  return [receta];
 }
-guardarEnLista(() => "café") // → [ () => "café" ]
+guardarEnLista(() => "café"); // → [ () => "café" ]
 
 // 2) `ejecutar` — te dan una receta y tú quieres el plato. El tipo de retorno es
 //    `string`, así que lo que devuelvas tiene que ser el texto, no la receta.
 //    → ejecutar(() => "café")   →   "café"
 export function ejecutar(receta: () => string): string {
-  return receta()
+  return receta();
 }
-ejecutar(() => "café") // → "café"
+ejecutar(() => "café"); // → "café"
 
 // 3) `entregar` — la misma receta, al revés: que la llame otro más tarde. Fíjate
 //    en que el tipo de retorno ya no es el mismo que el del drill 2, y que los
@@ -118,21 +117,20 @@ ejecutar(() => "café") // → "café"
 //    → entregar(() => "café")     →   la función, sin llamar
 //    → entregar(() => "café")()   →   "café"   ← estos `()` de fuera sí cocinan
 export function entregar(receta: () => string): () => string {
-  return receta
+  return receta;
 }
-entregar(() => "café")() // → "café"
-
+entregar(() => "café")(); // → "café"
 
 /* Estos dos ayudantes ya están escritos y hacen de "el otro que llama": reciben
  * tu función y la llaman ellos. Los usas en los drills 4, 5 y 6. No los toques. */
 export function llamaConTexto(fn: (t: string) => void): void {
-  fn("click")
+  fn("click");
 }
 
 export function llamaConObjeto(fn: (suceso: { type: string }) => void): void {
-  fn({ type: "click" })
+  fn({ type: "click" });
 }
-llamaConObjeto((suceso) => console.log(suceso)) // → { type: 'click' }
+llamaConObjeto((suceso) => console.log(suceso)); // → { type: 'click' }
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el CALLBACK: tú entregas, otro llama
@@ -205,9 +203,9 @@ llamaConObjeto((suceso) => console.log(suceso)) // → { type: 'click' }
 // }
 
 export function entregarPelado(avisar: (t: string) => void): void {
-  llamaConTexto(avisar)
+  llamaConTexto(avisar);
 }
-entregarPelado((t) => console.log(t)) // → "click"
+entregarPelado((t) => console.log(t)); // → "click"
 
 // 5) `entregarEnvuelto` — el mismo `llamaConTexto`, que sigue pasando un texto.
 //    Pero `avisarLargo` no quiere el texto: quiere cuántas letras tiene. Móntalo
@@ -216,10 +214,9 @@ entregarPelado((t) => console.log(t)) // → "click"
 //    📌 llamaConTexto(fn: (t: string) => void)
 //    → entregarEnvuelto(espia)   →   espia recibe 5   ("click" tiene 5 letras)
 export function entregarEnvuelto(avisarLargo: (n: number) => void): void {
-  llamaConTexto((dato) => avisarLargo(dato.length))
+  llamaConTexto((dato) => avisarLargo(dato.length));
 }
-entregarEnvuelto((n) => console.log(n)) // → 5
-
+entregarEnvuelto((n) => console.log(n)); // → 5
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — cuando lo que te pasan es un OBJETO
@@ -256,9 +253,9 @@ entregarEnvuelto((n) => console.log(n)) // → 5
 //    📌 llamaConObjeto(fn: (suceso: { type: string }) => void)
 //    → entregarSacandoDelObjeto(espia)   →   espia recibe "click"
 export function entregarSacandoDelObjeto(avisar: (t: string) => void): void {
-  llamaConObjeto((suceso) => avisar(suceso.type))
+  llamaConObjeto((suceso) => avisar(suceso.type));
 }
-entregarSacandoDelObjeto((t) => console.log(t)) // → "click"
+entregarSacandoDelObjeto((t) => console.log(t)); // → "click"
 
 /* ═════════════════════════════════════════════════════════════════════════════
  * BLOQUE R — REFUERZO: el envoltorio como ENRUTADOR        ·  drills 7 al 14
@@ -302,14 +299,13 @@ entregarSacandoDelObjeto((t) => console.log(t)) // → "click"
  *    único que revisa eres tú. El drill 14 es exactamente eso.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-export type Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
+export type Usuario = { nombre: string; edad: number; cuenta: { alias: string } };
 
 /* Dos ayudantes más, que llaman con otras formas. Tampoco se tocan. */
 export function llamaConUsuario(fn: (u: Usuario) => void): void {
-  fn({ nombre: "Nico", edad: 30, cuenta: { alias: "@nico" } })
+  fn({ nombre: "Nico", edad: 30, cuenta: { alias: "@nico" } });
 }
-llamaConUsuario((u) => console.log(u.edad)) // → 30
-
+llamaConUsuario((u) => console.log(u.edad)); // → 30
 
 /* Y para los drills 12 y 13 no hay ayudante inventado: el que llama es `.forEach`,
  * que ya usas a diario. Su firma, que conviene tener delante:
@@ -318,7 +314,7 @@ llamaConUsuario((u) => console.log(u.edad)) // → 30
  *                               fn(valor, índice, arrayCompleto)
  *
  * O sea, `.forEach` llama a tu función con TRES argumentos, quieras o no. */
-export const COLORES = ["rojo", "verde", "azul"]
+export const COLORES = ["rojo", "verde", "azul"];
 
 // 7) `avisarEnMayusculas` — llega un texto y `avisar` pide un texto, así que los
 //    tipos ya encajan. Pero no quieres el mismo texto: lo quieres en mayúsculas.
@@ -336,7 +332,7 @@ export function avisarEnMayusculas(avisar: (t: string) => void): void {
   // 1. llamaConTexto LLAMA a mi envoltorio y le pasa "click".
   // 2. mi envoltorio LLAMA a avisar y le pasa "CLICK".
   // 3. avisar hace su efecto y se acaba. Nada vuelve hacia atrás.
-  llamaConTexto((t) => avisar(t.toUpperCase()))
+  llamaConTexto((t) => avisar(t.toUpperCase()));
 }
 // avisarEnMayusculas((t) => console.log(t))
 
@@ -347,7 +343,7 @@ export function avisarEnMayusculas(avisar: (t: string) => void): void {
 //       Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
 //    → avisarNombre(espia)   →   espia recibe "Nico"
 export function avisarNombre(avisar: (n: string) => void): void {
-  llamaConUsuario((u) => avisar(u.nombre))
+  llamaConUsuario((u) => avisar(u.nombre));
 }
 // avisarNombre((n) => console.log(n))
 
@@ -358,7 +354,7 @@ export function avisarNombre(avisar: (n: string) => void): void {
 //       Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
 //    → avisarEdad(espia)   →   espia recibe 30
 export function avisarEdad(avisar: (n: number) => void): void {
-  llamaConUsuario((u) => avisar(u.edad))
+  llamaConUsuario((u) => avisar(u.edad));
 }
 // avisarEdad((n) => console.log(n))
 
@@ -369,7 +365,7 @@ export function avisarEdad(avisar: (n: number) => void): void {
 //        Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
 //     → avisarAlias(espia)   →   espia recibe "@nico"
 export function avisarAlias(avisar: (a: string) => void): void {
-  llamaConUsuario((u) => avisar(u.cuenta.alias))
+  llamaConUsuario((u) => avisar(u.cuenta.alias));
 }
 // avisarAlias((a) => console.log(a))
 
@@ -381,7 +377,7 @@ export function avisarAlias(avisar: (a: string) => void): void {
 //        Usuario = { nombre: string; edad: number; cuenta: { alias: string } }
 //     → avisarResumen(espia)   →   espia recibe "Nico (30)"
 export function avisarResumen(avisar: (t: string) => void): void {
-  llamaConUsuario((u) => avisar(`${u.nombre} (${u.edad})`))
+  llamaConUsuario((u) => avisar(`${u.nombre} (${u.edad})`));
 }
 // avisarResumen((t) => console.log(t))
 
@@ -392,9 +388,9 @@ export function avisarResumen(avisar: (t: string) => void): void {
 //     📌 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
 //     → listarConPosicion(espia)   →   "1. rojo", "2. verde", "3. azul"
 export function listarConPosicion(avisar: (t: string) => void): void {
-  COLORES.forEach((color, i) => avisar(`${i + 1}. ${color}`))
+  COLORES.forEach((color, i) => avisar(`${i + 1}. ${color}`));
 }
-listarConPosicion((t) => console.log(t)) // → 1. rojo, 2. verde, 3. azul
+listarConPosicion((t) => console.log(t)); // → 1. rojo, 2. verde, 3. azul
 
 // 13) `avisarCadaColor` — el mismo recorrido, que sigue pasando tres argumentos.
 //     Pero ahora solo quieres el color, sin número ni nada más.
@@ -410,9 +406,9 @@ listarConPosicion((t) => console.log(t)) // → 1. rojo, 2. verde, 3. azul
 //     📌 COLORES.forEach(fn)  →  fn(valor, índice, arrayCompleto)
 //     → avisarCadaColor(espia)   →   "rojo", "verde", "azul"
 export function avisarCadaColor(avisar: (t: string) => void): void {
-  COLORES.forEach((color) => avisar(color))
+  COLORES.forEach((color) => avisar(color));
 }
-avisarCadaColor((t) => console.log(t)) // → rojo, verde, azul
+avisarCadaColor((t) => console.log(t)); // → rojo, verde, azul
 
 // 14) `entregarQueRetorna` — el cierre, y una firma que parece no encajar: `medir`
 //     devuelve un `number` donde el hueco pide algo que no devuelve nada. Míralo
@@ -424,9 +420,9 @@ avisarCadaColor((t) => console.log(t)) // → rojo, verde, azul
 //     📌 llamaConTexto(fn: (t: string) => void)
 //     → entregarQueRetorna(espia)   →   espia recibe "click" y devuelve 5
 export function entregarQueRetorna(medir: (t: string) => number): void {
-  llamaConTexto(medir)
+  llamaConTexto(medir);
 }
-entregarQueRetorna((t) => t.length) // → 5
+entregarQueRetorna((t) => t.length); // → 5
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 14 estén en verde, el 02 hace esto mismo con un botón de verdad: el
  * que llama es React y lo que te pasa es un objeto — el EVENTO. O sea, el drill 6

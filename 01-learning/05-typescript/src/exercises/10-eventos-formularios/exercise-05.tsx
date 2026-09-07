@@ -48,14 +48,13 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import { useState } from 'react'
-import type { MouseEvent, KeyboardEvent } from 'react'
+import { useState } from "react";
+import type { MouseEvent, KeyboardEvent } from "react";
 
 /* Los tres alias del 04, ya tallados. Aquí se usan en el TIPO DE UNA PROP. */
-export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
-export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
-export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
-
+export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void;
+export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void;
+export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void;
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — una prop cuyo valor es una función
@@ -98,11 +97,7 @@ export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 
 // export type ManejadorDeClic = (e: MouseEvent<HTMLButtonElement>) => void
 export function BotonRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeClic }) {
-  return (
-    <button onClick={alPulsar}>
-      Avisar
-    </button>
-  )
+  return <button onClick={alPulsar}>Avisar</button>;
 }
 // <BotonRecibeManejador alPulsar={(e) => console.log(e.type)} />
 
@@ -116,7 +111,7 @@ export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlac
     <a href="/inicio" onClick={alPulsar}>
       Ir
     </a>
-  )
+  );
 }
 // <EnlaceRecibeManejador alPulsar={(e) => console.log(e.type)} />
 
@@ -126,12 +121,9 @@ export function EnlaceRecibeManejador({ alPulsar }: { alPulsar: ManejadorDeEnlac
 
 // export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecla }) {
-  return (
-    <input onKeyDown={alTeclear} />
-  )
+  return <input onKeyDown={alTeclear} />;
 }
 // <CampoRecibeManejador alTeclear={(e) => console.log(e.key)} />
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cuando el hijo tiene algo que aportar
@@ -167,14 +159,20 @@ export function CampoRecibeManejador({ alTeclear }: { alTeclear: ManejadorDeTecl
 //    apañárselas para darle las dos.
 //    Monta un <button> "Avisar" que lleve ese id como atributo y que al pulsarlo
 //    ejecute el manejador con la información completa.
-export type ManejadorConId = (e: MouseEvent<HTMLButtonElement>, id: string) => void
+export type ManejadorConId = (e: MouseEvent<HTMLButtonElement>, id: string) => void;
 
-export function BotonConIdRecibeManejador({ id, alPulsar }: { id: string; alPulsar: ManejadorConId }) {
+export function BotonConIdRecibeManejador({
+  id,
+  alPulsar,
+}: {
+  id: string;
+  alPulsar: ManejadorConId;
+}) {
   return (
     <button id={id} onClick={(e) => alPulsar(e, id)}>
       Avisar
     </button>
-  )
+  );
 }
 // <BotonConIdRecibeManejador id="guardar" alPulsar={(e, id) => console.log(e.type, id)} /> // "click", "guardar"
 
@@ -187,13 +185,21 @@ export function BotonConIdRecibeManejador({ id, alPulsar }: { id: string; alPuls
 // export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
 // export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
 
-export function BarraRecibeDos({ alGuardar, alSalir, }: { alGuardar: ManejadorDeClic, alSalir: ManejadorDeEnlace }) {
+export function BarraRecibeDos({
+  alGuardar,
+  alSalir,
+}: {
+  alGuardar: ManejadorDeClic;
+  alSalir: ManejadorDeEnlace;
+}) {
   return (
     <>
       <button onClick={alGuardar}>Guardar</button>
-      <a href="/salir" onClick={alSalir}>Salir</a>
+      <a href="/salir" onClick={alSalir}>
+        Salir
+      </a>
     </>
-  )
+  );
 }
 // <BarraRecibeDos alGuardar={(e) => console.log(e.type)} alSalir={(e) => console.log(e.type)} />
 
@@ -201,14 +207,14 @@ export function BarraRecibeDos({ alGuardar, alSalir, }: { alGuardar: ManejadorDe
  * Guarda un número con `useState` y le pasa al hijo una función que lo sube. Fíjate
  * en que el hijo no sabe nada de ese número — solo recibe algo que llamar. */
 export function PanelDeConteo() {
-  const [total, setTotal] = useState(0)
-  const sumar: ManejadorDeClic = () => setTotal(total + 1)
+  const [total, setTotal] = useState(0);
+  const sumar: ManejadorDeClic = () => setTotal(total + 1);
   return (
     <div>
       <p>Total: {total}</p>
       <BotonDeAccion texto="Sumar" alPulsar={sumar} />
     </div>
-  )
+  );
 }
 
 // 6) `BotonDeAccion` — el cierre, y el hijo que monta `PanelDeConteo` aquí arriba.
@@ -225,7 +231,7 @@ export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: Ma
     <button type="button" onClick={alPulsar}>
       {texto}
     </button>
-  )
+  );
 }
 // <BotonDeAccion texto="Sumar" alPulsar={(e) => console.log(e.type)} />
 
@@ -258,12 +264,9 @@ export function BotonDeAccion({ texto, alPulsar }: { texto: string; alPulsar: Ma
 //     Restricción: el padre no se toca. Y como aquí ese padre es el test, el error de
 //     tipos de este peldaño sale en el `.test.tsx`, no en este archivo.
 export function TarjetaDeUsuario({ nombre }: { nombre: string }) {
-  return (
-    <p>{nombre}</p>
-  )
+  return <p>{nombre}</p>;
 }
 // <TarjetaDeUsuario nombre="Nico" />   // <p>Nico</p>
-
 
 // P2) `Insignia` — recibe una prop llamada `onClick` cuyo valor es un TEXTO, y lo
 //     pinta dentro de un <span>. No hay ningún clic aquí: es una etiqueta de texto
@@ -271,14 +274,9 @@ export function TarjetaDeUsuario({ nombre }: { nombre: string }) {
 //     Sí, se llama `onClick` a propósito. Sobre un componente tuyo ese nombre no
 //     tiene ningún poder — cabe un string igual que cabría un número.
 export function Insignia({ onClick }: { onClick: string }) {
-  return (
-    <span>
-      {onClick}
-    </span>
-  )
+  return <span>{onClick}</span>;
 }
 // <Insignia onClick="nuevo" />   // <span>nuevo</span>
-
 
 // P3) `BotonCastellano` — el primero de un par: dos botones idénticos, cada uno con
 //     la prop llamada de una manera. Este recibe la suya en castellano, `alPulsar`,
@@ -289,10 +287,9 @@ export function BotonCastellano({ alPulsar }: { alPulsar: () => void }) {
     <button type="button" onClick={alPulsar}>
       Pulsa
     </button>
-  )
+  );
 }
 // <BotonCastellano alPulsar={() => console.log('clic')} />
-
 
 // P4) `BotonIngles` — el mismo botón exacto que P3, con la prop llamada `onClick` en
 //     vez de `alPulsar`. Ojo, que aquí `onClick` va a aparecer dos veces y no son la
@@ -304,21 +301,20 @@ export function BotonIngles({ onClick }: { onClick: () => void }) {
     <button type="button" onClick={onClick}>
       Pulsa
     </button>
-  )
+  );
 }
 // <BotonIngles onClick={() => console.log('clic')} />
 
-
 /* ⬇️ ESTE PADRE YA ESTÁ ESCRITO. No lo toques: es el peldaño P5 visto desde arriba. */
 export function PanelMini() {
-  const [total, setTotal] = useState(0)
-  const subir = () => setTotal(total + 1)
+  const [total, setTotal] = useState(0);
+  const subir = () => setTotal(total + 1);
   return (
     <div>
       <p>Mini: {total}</p>
       <BotonMini alSubir={subir} />
     </div>
-  )
+  );
 }
 
 // P5) `BotonMini` — el hijo que `PanelMini` monta aquí arriba. Pinta un <button>
@@ -330,10 +326,9 @@ export function BotonMini({ alSubir }: { alSubir: () => void }) {
     <button type="button" onClick={alSubir}>
       Subir
     </button>
-  )
+  );
 }
 // (se ve montado dentro de <PanelMini />)
-
 
 // P6) `PanelBilingue` — el cierre. Guarda un total con `useState` y monta DOS
 //     botones que suben ese mismo total: el `BotonCastellano` de P3 y el
@@ -342,18 +337,17 @@ export function BotonMini({ alSubir }: { alSubir: () => void }) {
 //     Los dos hijos son el mismo botón escrito dos veces con la prop llamada
 //     distinto, y los dos suman. Esa es la frase de la escalera, ya en verde.
 export function PanelBilingue() {
-  const [total, setTotal] = useState(0)
-  const sumar = () => setTotal(total + 1)
+  const [total, setTotal] = useState(0);
+  const sumar = () => setTotal(total + 1);
   return (
     <div>
       <p>Bilingüe: {total}</p>
       <BotonCastellano alPulsar={sumar} />
       <BotonIngles onClick={sumar} />
     </div>
-  )
+  );
 }
 // <PanelBilingue />
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 drills y los 6 peldaños estén en verde: llevas cinco archivos

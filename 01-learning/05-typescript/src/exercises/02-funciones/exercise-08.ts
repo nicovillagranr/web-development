@@ -36,7 +36,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-08.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE 0 — componer y aplicar YA (devuelve el número, sin envolver)
  * -------------------------------------------------------------------------- */
@@ -45,10 +44,18 @@
 //    el número.
 //    👉 El starter devuelve `x` sin tocarlo. Anida: la de dentro corre primero.
 //      componerYaplicar2(3, (n) => n + 1, (n) => n * 2) → 8
-export function componerYaplicar2(x: number, funcionUno: (n: number) => number, funcionDos: (n: number) => number): number {
-  return funcionDos(funcionUno(x))
+export function componerYaplicar2(
+  x: number,
+  funcionUno: (n: number) => number,
+  funcionDos: (n: number) => number,
+): number {
+  return funcionDos(funcionUno(x));
 }
-componerYaplicar2(3, (n) => n + 1, (n) => n * 2) // 8
+componerYaplicar2(
+  3,
+  (n) => n + 1,
+  (n) => n * 2,
+); // 8
 
 // 2) `componerYaplicar3` — aplica `f`, luego `g`, luego `h`. Devuelve el número.
 //      componerYaplicar3(4, (n) => n + 1, (n) => n * 2, (n) => n - 3) → 7
@@ -56,9 +63,9 @@ export function componerYaplicar3(
   x: number,
   funcionUno: (n: number) => number,
   funcionDos: (n: number) => number,
-  funcionTres: (n: number) => number
+  funcionTres: (n: number) => number,
 ): number {
-  return funcionTres(funcionDos(funcionUno(x)))
+  return funcionTres(funcionDos(funcionUno(x)));
 }
 
 // 3) `componerCambiandoTipo` — `f` va de string→number, `g` de number→string. El
@@ -68,12 +75,15 @@ export function componerYaplicar3(
 export function componerCambiandoTipo(
   s: string,
   funcionUno: (s: string) => number,
-  funcionDos: (n: number) => string)
-  : string {
-  return funcionDos(funcionUno(s))
+  funcionDos: (n: number) => string,
+): string {
+  return funcionDos(funcionUno(s));
 }
-componerCambiandoTipo('hola', (s) => s.length, (n) => `len:${n}`) // "len:4"
-
+componerCambiandoTipo(
+  "hola",
+  (s) => s.length,
+  (n) => `len:${n}`,
+); // "len:4"
 
 /* ---------------------------------------------------------------------------
  * ▸ EXPLICACIÓN 2 — ahora ENVUELVE: devolver la función compuesta (la cafetera)
@@ -100,17 +110,31 @@ componerCambiandoTipo('hola', (s) => s.length, (n) => `len:${n}`) // "len:4"
 
 // 4) `encadenar` — devuelve una función que aplica `f` y luego `g`.
 //      const h = encadenar((n) => n + 1, (n) => n * 2); h(3) → 8
-export function encadenar(funcionUno: (n: number) => number, funcionDos: (n: number) => number): (n: number) => number {
-  return (n) => funcionDos(funcionUno(n))
+export function encadenar(
+  funcionUno: (n: number) => number,
+  funcionDos: (n: number) => number,
+): (n: number) => number {
+  return (n) => funcionDos(funcionUno(n));
 }
-encadenar((n) => n + 1, (n) => n * 2)(3) // Operación: n=3 -> n+1=4 -> n*2=8
+encadenar(
+  (n) => n + 1,
+  (n) => n * 2,
+)(3); // Operación: n=3 -> n+1=4 -> n*2=8
 
 // 5) `encadenarTres` — aplica `f`, luego `g`, luego `h`.
 //      const t = encadenarTres((n) => n + 1, (n) => n * 2, (n) => n - 3); t(3) → 5
-export function encadenarTres(f: (n: number) => number, g: (n: number) => number, h: (n: number) => number): (n: number) => number {
-  return (n) => h(g(f(n)))
+export function encadenarTres(
+  f: (n: number) => number,
+  g: (n: number) => number,
+  h: (n: number) => number,
+): (n: number) => number {
+  return (n) => h(g(f(n)));
 }
-encadenarTres((n) => n + 1, (n) => n * 2, (n) => n - 3)(4) // Operación: n=4 -> n+1=5 -> n*2=10 -> n-3=7
+encadenarTres(
+  (n) => n + 1,
+  (n) => n * 2,
+  (n) => n - 3,
+)(4); // Operación: n=4 -> n+1=5 -> n*2=10 -> n-3=7
 /* ---------------------------------------------------------------------------
  * BLOQUE B — encadenar CAMBIANDO de tipo y "aplicar dos veces"
  * -------------------------------------------------------------------------- */
@@ -118,18 +142,24 @@ encadenarTres((n) => n + 1, (n) => n * 2, (n) => n - 3)(4) // Operación: n=4 ->
 // 6) `procesar` — `f` convierte string→number, `g` convierte number→string; la
 //    función resultante va de string a string.
 //      const p = procesar((s) => s.length, (n) => `len:${n}`); p("hola") → "len:4"
-export function procesar(f: (s: string) => number, g: (n: number) => string): (s: string) => string {
-  return (s) => g(f(s))
+export function procesar(
+  f: (s: string) => number,
+  g: (n: number) => string,
+): (s: string) => string {
+  return (s) => g(f(s));
 }
 
-procesar((s) => s.length, (n) => `len:${n}`)("hola") // Operación: "hola" -> f: length=4 -> g: `len:${4}` -> "len:4"
+procesar(
+  (s) => s.length,
+  (n) => `len:${n}`,
+)("hola"); // Operación: "hola" -> f: length=4 -> g: `len:${4}` -> "len:4"
 
 // 7) `repetir2` — devuelve una función que aplica `f` DOS veces seguidas.
 //      const d = repetir2((n) => n + 3); d(1) → 7    (1 → 4 → 7)
 export function repetir2(f: (n: number) => number): (n: number) => number {
-  return (n) => f(f(n))
+  return (n) => f(f(n));
 }
-repetir2((n) => n + 3)(1) // Operación: n=1 -> n+3=4 -> n+3=7
+repetir2((n) => n + 3)(1); // Operación: n=1 -> n+3=4 -> n+3=7
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: componer y aplicar de una
@@ -138,7 +168,15 @@ repetir2((n) => n + 3)(1) // Operación: n=1 -> n+3=4 -> n+3=7
 // 8) `encadenarYaplicar` — aplica `f` y luego `g` directamente a `n` (devuelve el
 //    número, no una función).
 //      encadenarYaplicar(3, (n) => n + 1, (n) => n * 2) → 8
-export function encadenarYaplicar(n: number, funcionUno: (n: number) => number, funcionDos: (n: number) => number,): number {
-  return funcionDos(funcionUno(n))
+export function encadenarYaplicar(
+  n: number,
+  funcionUno: (n: number) => number,
+  funcionDos: (n: number) => number,
+): number {
+  return funcionDos(funcionUno(n));
 }
-encadenarYaplicar(3, (n) => n + 1, (n) => n * 2) // Operación: n=3 -> n+1=4 -> n*2=8
+encadenarYaplicar(
+  3,
+  (n) => n + 1,
+  (n) => n * 2,
+); // Operación: n=3 -> n+1=4 -> n*2=8

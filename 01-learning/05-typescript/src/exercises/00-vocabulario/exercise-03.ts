@@ -46,7 +46,6 @@
  *   ¿Atascado? Las pistas están en `exercise-03.pistas.md`, de una en una.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el símbolo y los datos
  * ─────────────────────────────────────────────────────────────────────────────
@@ -82,21 +81,20 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) En `edad || 18`, ¿qué es `||`?
-export const r1: "el operador" | "el operando" | "la expresión" = "SIN_RESPONDER"
+export const r1: "el operador" | "el operando" | "la expresión" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 2) En esa misma línea, ¿qué es `edad`?
-export const r2: "el operador" | "un operando" | "la expresión" = "SIN_RESPONDER"
+export const r2: "el operador" | "un operando" | "la expresión" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 3) `nombre.length > 2` entero, ¿qué es?
-export const r3: "una expresión" | "una declaración" | "un operador" = "SIN_RESPONDER"
+export const r3: "una expresión" | "una declaración" | "un operador" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 4) `c ? a : b` toma tres operandos. ¿Cómo se le llama por eso?
-export const r4: "ternario" | "binario" | "unario" = "SIN_RESPONDER"
+export const r4: "ternario" | "binario" | "unario" = "SIN_RESPONDER";
 // ¿Por qué? →
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — `false` no es "falsy"
@@ -135,22 +133,21 @@ export const r4: "ternario" | "binario" | "unario" = "SIN_RESPONDER"
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 5) `0` no es `false`, pero `||` lo descarta igual. ¿Qué es `0`, entonces?
-export const r5: "falsy" | "false" | "null" = "SIN_RESPONDER"
+export const r5: "falsy" | "false" | "null" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 6) Y `false` a secas, ¿qué es?
-export const r6: "un valor" | "una categoría" | "un operador" = "SIN_RESPONDER"
+export const r6: "un valor" | "una categoría" | "un operador" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 7) `[]` (un array vacío) puesto a prueba en un `if`, ¿qué es?
-export const r7: "truthy" | "falsy" | "undefined" = "SIN_RESPONDER"
+export const r7: "truthy" | "falsy" | "undefined" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 8) Quieres descartar solo `null` y `undefined`, y que el `0` sobreviva.
 //     ¿Qué operador usas?
-export const r8: "??" | "||" | "&&" = "SIN_RESPONDER"
+export const r8: "??" | "||" | "&&" = "SIN_RESPONDER";
 // ¿Por qué? →
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — juntar texto tiene nombre
@@ -191,19 +188,19 @@ export const r8: "??" | "||" | "&&" = "SIN_RESPONDER"
 
 // 9) En `const saludo = `Hola, ${nombre}``, ¿cómo se llama esa forma de escribir
 //     el texto, con comillas invertidas?
-export const r9: "template literal" | "concatenación" | "interpolación" = "SIN_RESPONDER"
+export const r9: "template literal" | "concatenación" | "interpolación" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 10) Y el `${nombre}` de dentro, ¿qué es?
-export const r10: "una interpolación" | "un operando" | "una propiedad" = "SIN_RESPONDER"
+export const r10: "una interpolación" | "un operando" | "una propiedad" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 11) En `"Hola, " + nombre`, ¿cómo se llama lo que hace el `+` con dos textos?
-export const r11: "concatenación" | "interpolación" | "suma" = "SIN_RESPONDER"
+export const r11: "concatenación" | "interpolación" | "suma" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 12) En `const largo = nombre.length > 2`, ¿qué es `length`?
-export const r12: "una propiedad" | "un método" | "un parámetro" = "SIN_RESPONDER"
+export const r12: "una propiedad" | "un método" | "un parámetro" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 /* ─────────────────────────────────────────────────────────────────────────────

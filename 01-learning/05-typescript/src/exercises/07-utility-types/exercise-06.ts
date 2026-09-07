@@ -41,8 +41,7 @@
  *     pnpm test:run src/exercises/07-utility-types/exercise-06.test.ts
  * ===========================================================================*/
 
-
-type Punto = { x: number; y: number }
+type Punto = { x: number; y: number };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — el SPREAD a solas (piso de los VALORES)
@@ -58,9 +57,9 @@ type Punto = { x: number; y: number }
 //       el resultado NO es el mismo objeto (otra caja, mismo contenido).
 //      copiar({ x: 3, y: 4 }) → { x: 3, y: 4 }  (pero es un objeto distinto)
 export function copiar(punto: Punto): Punto {
-  return { ...punto }
+  return { ...punto };
 }
-copiar({ x: 3, y: 4 }) // Al usar spread devuelve una copia del original
+copiar({ x: 3, y: 4 }); // Al usar spread devuelve una copia del original
 
 // 2) `combinar` — copia `a` y pisa con `b` encima. Si los dos traen `x`,
 //    gana el `x` de `b` (va a la derecha).
@@ -68,18 +67,18 @@ copiar({ x: 3, y: 4 }) // Al usar spread devuelve una copia del original
 //      combinar({ x: 0, y: 0 }, { x: 5, y: 9 }) → { x: 5, y: 9 }
 //      combinar({ x: 1, y: 1 }, { x: 2, y: 2 }) → { x: 2, y: 2 }  (gana b)
 export function combinar(a: Punto, b: Punto): Punto {
-  return { ...a, ...b }
+  return { ...a, ...b };
 }
-combinar({ x: 0, y: 0 }, { x: 5, y: 9 }) // En este caso la función pide recibir 2 parámetros tipo Punto que reciben 2 argumentos. Punto es un objeto.
+combinar({ x: 0, y: 0 }, { x: 5, y: 9 }); // En este caso la función pide recibir 2 parámetros tipo Punto que reciben 2 argumentos. Punto es un objeto.
 
 // 3) `combinarTres` — encadena tres: `a`, luego `b` encima, luego `c` encima.
 //    Gana SIEMPRE el último que toca cada propiedad.
 //    👉 El starter ignora `b` y `c`. Encadena los tres spreads.
 //      combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 }) → { x: 9, y: 9 }
 export function combinarTres(a: Punto, b: Punto, c: Punto): Punto {
-  return { ...a, ...b, ...c }
+  return { ...a, ...b, ...c };
 }
-combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 })
+combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 });
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — el `Partial` a solas (piso de los TIPOS)
@@ -99,11 +98,11 @@ combinarTres({ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 9, y: 9 })
 //      tomarParcial({})             → {}
 //      tomarParcial({ x: 5, y: 9 }) → { x: 5, y: 9 }
 export function tomarParcial(p: Partial<Punto>): Partial<Punto> {
-  return { ...p }
+  return { ...p };
 }
-tomarParcial({ x: 5 }) // Resultado: { x: 5 } // Partial lo acepta
-tomarParcial({}) // Resultado: {} // Partial lo acepta
-tomarParcial({ x: 5, y: 9 }) // Resultado: { x: 5, y: 9 } // Partial lo acepta
+tomarParcial({ x: 5 }); // Resultado: { x: 5 } // Partial lo acepta
+tomarParcial({}); // Resultado: {} // Partial lo acepta
+tomarParcial({ x: 5, y: 9 }); // Resultado: { x: 5, y: 9 } // Partial lo acepta
 
 // 5) `combinarParciales` — junta DOS parches parciales. Fíjate bien en el
 //    retorno: como NO hay base debajo, el resultado puede seguir incompleto
@@ -116,10 +115,9 @@ tomarParcial({ x: 5, y: 9 }) // Resultado: { x: 5, y: 9 } // Partial lo acepta
 //      combinarParciales({ x: 1 }, { x: 2 }) → { x: 2 }   (gana el último)
 //      combinarParciales({}, { y: 7 })       → { y: 7 }
 export function combinarParciales(p1: Partial<Punto>, p2: Partial<Punto>): Partial<Punto> {
-  return { ...p1, ...p2 }
+  return { ...p1, ...p2 };
 }
-combinarParciales({ x: 5 }, { y: 9 })
-
+combinarParciales({ x: 5 }, { y: 9 });
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — juntar los dos pisos: BASE completa + UN parche parcial
@@ -140,12 +138,12 @@ combinarParciales({ x: 5 }, { y: 9 })
 //      aplicarUnParche({ x: 0, y: 0 }, { x: 5 }) → { x: 5, y: 0 }  (y la pone la base)
 //      aplicarUnParche({ x: 3, y: 4 }, {})       → { x: 3, y: 4 }  (parche vacío: base intacta)
 export function aplicarUnParche(base: Punto, parche: Partial<Punto>): Punto {
-  return { ...base, ...parche }
+  return { ...base, ...parche };
 }
 // Resultado: {x: 5, y: 0}. Al aplicar un parche parcial, se pueden recibir parciales
-aplicarUnParche({ x: 0, y: 0 }, { x: 5 })
+aplicarUnParche({ x: 0, y: 0 }, { x: 5 });
 
-type Caja = { ancho: number; alto: number; color: string }
+type Caja = { ancho: number; alto: number; color: string };
 
 // 7) `aplicarUnParcheCaja` — el MISMO patrón, otro tipo (refuerzo). La base
 //    aporta las tres propiedades; el parche pisa las que trae.
@@ -153,11 +151,10 @@ type Caja = { ancho: number; alto: number; color: string }
 //      aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" })
 //        → { ancho: 10, alto: 5, color: "azul" }
 export function aplicarUnParcheCaja(base: Caja, parche: Partial<Caja>): Caja {
-  return { ...base, ...parche }
+  return { ...base, ...parche };
 }
 // Resultado: {ancho: 20, alto: 20, color: "azul"}
-aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" })
-
+aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" });
 
 /* ---------------------------------------------------------------------------
  * BLOQUE D — LA META: base + DOS parches = gemelo exacto del drill 1
@@ -173,7 +170,7 @@ aplicarUnParcheCaja({ ancho: 10, alto: 5, color: "rojo" }, { color: "azul" })
 //      aplicarDosParchesBis({ x: 0, y: 0 }, { x: 5 }, { y: 9 }) → { x: 5, y: 9 }
 //      aplicarDosParchesBis({ x: 0, y: 0 }, { x: 1 }, { x: 2 }) → { x: 2, y: 0 }  (gana el último)
 export function aplicarDosParchesBis(base: Punto, p1: Partial<Punto>, p2: Partial<Punto>): Punto {
-  return { ...base, ...p1, ...p2 }
+  return { ...base, ...p1, ...p2 };
 }
 // Resultado: {x: 5, y: 9}
-aplicarDosParchesBis({ x: 0, y: 0 }, { x: 5 }, { y: 9 })
+aplicarDosParchesBis({ x: 0, y: 0 }, { x: 5 }, { y: 9 });

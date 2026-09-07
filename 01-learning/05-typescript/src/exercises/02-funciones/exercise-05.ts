@@ -43,7 +43,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-05.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE A — callbacks que devuelven `void` (el patrón forEach)
  * ---------------------------------------------------------------------------
@@ -56,21 +55,20 @@
 //       acción de efecto) → ponlo `(n: number) => void`. Y el cuerpo (no recorre).
 //      const out: number[] = []; porCada([1,2,3], (n) => { out.push(n) })  → out = [1,2,3]
 export function porCada(nums: number[], accion: (n: number) => void): void {
-  nums.forEach(accion)
+  nums.forEach(accion);
 }
 porCada([1, 2, 3], (n) => {
-  console.log(n)
-})
+  console.log(n);
+});
 
 // 2) `cadaTexto` — lo mismo con strings.
 //      const out: string[] = []; cadaTexto(["a","b"], (t) => { out.push(t) }) → out = ["a","b"]
 export function cadaTexto(textos: string[], accion: (t: string) => void): void {
-  return textos.forEach(accion)
+  return textos.forEach(accion);
 }
 cadaTexto(["a", "b"], (t) => {
-  console.log(t)
-})
-
+  console.log(t);
+});
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — funciones `void` (efecto sobre una lista que recibe)
@@ -84,26 +82,24 @@ cadaTexto(["a", "b"], (t) => {
 //       empuja al registro que te pasan, no crees otro).
 //      const r: string[] = []; registrar(r, "hola"); registrar(r, "mundo")  → r = ["hola","mundo"]
 export function registrar(registro: string[], mensaje: string): void {
-  registro.push(mensaje)
+  registro.push(mensaje);
 }
-const r: string[] = []
-registrar(r, "hola")
-registrar(r, "mundo")
-console.log(r)
+const r: string[] = [];
+registrar(r, "hola");
+registrar(r, "mundo");
+console.log(r);
 
 // 4) `repetirAccion` — ejecuta `accion` con los índices 0, 1, ..., veces-1.
 //      const out: number[] = []; repetirAccion(3, (i) => { out.push(i) }) → out = [0,1,2]
 export function repetirAccion(veces: number, accion: (i: number) => void): void {
   for (let i = 0; i < veces; i++) {
-    accion(i)
+    accion(i);
   }
 }
 // return: [0,1,2]
 repetirAccion(3, (i) => {
-  console.log(i)
-})
-
-
+  console.log(i);
+});
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: efecto condicional
@@ -113,5 +109,5 @@ repetirAccion(3, (i) => {
 //    👉 Combina el recorrido con un filtro dentro: si `n > 0`, llama a `accion`.
 //      const out: number[] = []; porCadaPositivo([1,-2,3,0], (n) => { out.push(n) }) → out = [1,3]
 export function porCadaPositivo(nums: number[], accion: (n: number) => void): void {
-  nums.filter(number => number > 0).forEach(accion)
+  nums.filter((number) => number > 0).forEach(accion);
 }

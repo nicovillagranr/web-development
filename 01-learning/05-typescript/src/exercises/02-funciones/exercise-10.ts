@@ -41,8 +41,7 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-10.test.ts
  * ===========================================================================*/
 
-
-type Paso = (n: number) => number
+type Paso = (n: number) => number;
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — del paso suelto a la lista variable
@@ -52,7 +51,7 @@ type Paso = (n: number) => number
 //    👉 UN arreglo: el cuerpo (el starter ignora `paso` y devuelve `n`).
 //      aplicarUno(5, (n) => n * 2) → 10
 export function aplicarUno(n: number, paso: Paso): number {
-  return paso(n)
+  return paso(n);
 }
 
 // 2) `aplicarVarios` — aplica TODOS los pasos que reciba (cantidad variable).
@@ -60,10 +59,8 @@ export function aplicarUno(n: number, paso: Paso): number {
 //       sueltos) → ponlo `...pasos`. Y el cuerpo (devuelve `n` sin procesar).
 //      aplicarVarios(3, (n) => n + 1, (n) => n * 2) → 8
 export function aplicarVarios(n: number, ...pasos: Paso[]): number {
-  return pasos.reduce((acum, paso) => paso(acum), n)
+  return pasos.reduce((acum, paso) => paso(acum), n);
 }
-
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — montar la tubería y observar lo que pasa por ella
@@ -74,10 +71,13 @@ export function aplicarVarios(n: number, ...pasos: Paso[]): number {
 //       una función identidad).
 //      const p = crearPipeline((n) => n + 1, (n) => n * 2); p(3) → 8
 export function crearPipeline(...pasos: Paso[]): (n: number) => number {
-  return (n) => pasos.reduce((acum, paso) => paso(acum), n)
+  return (n) => pasos.reduce((acum, paso) => paso(acum), n);
 }
-const primerPipeline = crearPipeline((n) => n + 1, (n) => n * 2)
-primerPipeline(3) // 8
+const primerPipeline = crearPipeline(
+  (n) => n + 1,
+  (n) => n * 2,
+);
+primerPipeline(3); // 8
 
 // 4) `aplicarYregistrar` — aplica los pasos uno a uno y va apuntando cada resultado
 //    intermedio en `registro` (efecto). Devuelve el resultado final.
@@ -85,9 +85,11 @@ primerPipeline(3) // 8
 //       nada más (registro es el efecto, como en el ejercicio 05).
 //      const reg: number[] = []; aplicarYregistrar(3, [(n)=>n+1,(n)=>n*2], reg) → 8; reg = [4, 8]
 export function aplicarYregistrar(n: number, pasos: Paso[], registro: number[]): number {
-  return pasos.reduce((acum, paso) => { registro.push(paso(acum)); return paso(acum) }, n)
+  return pasos.reduce((acum, paso) => {
+    registro.push(paso(acum));
+    return paso(acum);
+  }, n);
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CALENTAMIENTO: un objeto de funciones que COMPARTEN un estado
@@ -120,31 +122,35 @@ export function aplicarYregistrar(n: number, pasos: Paso[], registro: number[]):
 //       un `let contenido` en la factory que las dos funciones toquen.
 //      const c = crearCaja(); c.guardar("hola"); c.ver() → "hola"
 export function crearCaja(): { guardar: (s: string) => void; ver: () => string } {
-  let contenido = ''
+  let contenido = "";
   return {
-    guardar: (s: string) => { contenido = s },
-    ver: () => contenido
-  }
+    guardar: (s: string) => {
+      contenido = s;
+    },
+    ver: () => contenido,
+  };
 }
-const miPrimeraCaja = crearCaja()
-miPrimeraCaja.guardar('hola')
-miPrimeraCaja.ver()
+const miPrimeraCaja = crearCaja();
+miPrimeraCaja.guardar("hola");
+miPrimeraCaja.ver();
 
 // 6) `crearContadorObj` — devuelve `{ incrementar, valor }` que comparten un número.
 //    👉 El starter no comparte estado. Pon un `let n` que las dos funciones compartan:
 //       `incrementar` lo sube, `valor` lo lee.
 //      const c = crearContadorObj(); c.incrementar(); c.incrementar(); c.valor() → 2
 export function crearContadorObj(): { incrementar: () => void; valor: () => number } {
-  let cant = 0
+  let cant = 0;
   return {
-    incrementar: () => { cant = cant + 1 },
+    incrementar: () => {
+      cant = cant + 1;
+    },
     valor: () => cant,
-  }
+  };
 }
-const miContador = crearContadorObj()
-miContador.incrementar()
-miContador.incrementar()
-miContador.valor() // 2
+const miContador = crearContadorObj();
+miContador.incrementar();
+miContador.incrementar();
+miContador.valor(); // 2
 
 /* ---------------------------------------------------------------------------
  * BLOQUE D — CAPSTONE: procesador con contador de usos (objeto de closures)
@@ -158,14 +164,20 @@ miContador.valor() // 2
 //       drill 5/6), y `ejecutar` aplica la tubería de pasos (como el 09).
 //      const proc = crearProcesador([(n) => n + 1, (n) => n * 2])
 //      proc.ejecutar(3) → 8; proc.ejecutar(10) → 22; proc.vecesUsado() → 2
-export function crearProcesador(pasos: Paso[]): { ejecutar: (n: number) => number; vecesUsado: () => number } {
-  let usos = 0
+export function crearProcesador(pasos: Paso[]): {
+  ejecutar: (n: number) => number;
+  vecesUsado: () => number;
+} {
+  let usos = 0;
   return {
-    ejecutar: (n: number) => { usos = usos + 1; return pasos.reduce((acum, paso) => paso(acum), n) },
+    ejecutar: (n: number) => {
+      usos = usos + 1;
+      return pasos.reduce((acum, paso) => paso(acum), n);
+    },
     vecesUsado: () => usos,
-  }
+  };
 }
-const i9 = crearProcesador([(n) => n + 1, (n) => n * 2])
-i9.ejecutar(3) // 8
-i9.ejecutar(10) // 22
-i9.vecesUsado() // 2
+const i9 = crearProcesador([(n) => n + 1, (n) => n * 2]);
+i9.ejecutar(3); // 8
+i9.ejecutar(10); // 22
+i9.vecesUsado(); // 2

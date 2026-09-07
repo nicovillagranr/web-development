@@ -42,7 +42,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-02.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE A — parámetro POR DEFECTO (`= valor`)
  * -------------------------------------------------------------------------- */
@@ -52,15 +51,14 @@
 //       `saludar("Ana")` (un solo argumento) sea válido, y (b) escribe el cuerpo.
 //      saludar("Ana") → "Hola, Ana"     saludar("Ana", "Hey") → "Hey, Ana"
 export function saludar(nombre: string, saludo = "Hola"): string {
-  return `${saludo}, ${nombre}`
+  return `${saludo}, ${nombre}`;
 }
 // 2) `potencia` — base elevada a `exp`; si no pasan exp, eleva al cuadrado (2).
 //    👉 Dos cosas: el valor por defecto de `exp` y el cuerpo.
 //      potencia(3) → 9     potencia(2, 3) → 8
 export function potencia(base: number, exp = 2): number {
-  return base ** exp
+  return base ** exp;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — parámetro OPCIONAL (`?`) → hay que contemplar el undefined
@@ -71,7 +69,7 @@ export function potencia(base: number, exp = 2): number {
 //       contempla que pueda faltar (si no hay sufijo, devuelve solo el texto).
 //      etiqueta("Hola") → "Hola"     etiqueta("Hola", "!") → "Hola!"
 export function etiqueta(texto: string, sufijo?: string): string {
-  return texto + (sufijo ?? "")
+  return texto + (sufijo ?? "");
 }
 
 // 4) `rango` — "min-max" si dan max; "min+" si no.
@@ -79,11 +77,10 @@ export function etiqueta(texto: string, sufijo?: string): string {
 //      rango(10, 20) → "10-20"     rango(10) → "10+"
 export function rango(min: number, max?: number): string {
   if (max === undefined) {
-    return `${min}+`
+    return `${min}+`;
   }
-  return `${min}-${max}`
+  return `${min}-${max}`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: varios por-defecto juntos
@@ -94,5 +91,5 @@ export function rango(min: number, max?: number): string {
 //    👉 Dos valores por defecto (`moneda = "$"`, `decimales = 2`) y escribe el cuerpo.
 //      formatearPrecio(5) → "$5.00"     formatearPrecio(5, "€", 1) → "€5.0"
 export function formatearPrecio(precio: number, moneda = "$", decimales = 2): string {
-  return `${moneda}${precio.toFixed(decimales)}`
+  return `${moneda}${precio.toFixed(decimales)}`;
 }

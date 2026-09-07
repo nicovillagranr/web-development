@@ -41,8 +41,7 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-04.test.ts
  * ===========================================================================*/
 
-
-type Operacion = (a: number, b: number) => number
+type Operacion = (a: number, b: number) => number;
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — el alias como tipo de PARÁMETRO y de CONSTANTE
@@ -53,39 +52,37 @@ type Operacion = (a: number, b: number) => number
 //       con UN solo parámetro, así que `(a, b) => ...` no encaja) y escribe el cuerpo.
 //      aplicar(2, 3, (a, b) => a + b) → 5     aplicar(10, 4, (a, b) => a - b) → 6
 export function aplicar(a: number, b: number, op: Operacion): number {
-  return op(a, b)
+  return op(a, b);
 }
-aplicar(2, 3, (a, b) => a + b)
+aplicar(2, 3, (a, b) => a + b);
 
 // 2) `restar` — la resta, como constante tipada con el alias (tipo a la IZQUIERDA).
 //    👉 Dos arreglos: el tipo (usa `: Operacion`) y el cuerpo (resta los dos).
 //      restar(10, 3) → 7
-export const restar: Operacion = (a, b) => a - b
-
+export const restar: Operacion = (a, b) => a - b;
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — otros alias de función reutilizados sobre listas
  * -------------------------------------------------------------------------- */
 
-type Predicado = (n: number) => boolean
+type Predicado = (n: number) => boolean;
 
 // 3) `contarSi` — cuántos números cumplen el predicado.
 //    👉 El tipo de `cumple` describe mal el retorno (number en vez de boolean).
 //       Usa `Predicado`.
 //      contarSi([1, 2, 3, 4], (n) => n % 2 === 0) → 2
 export function contarSi(nums: number[], cumple: Predicado): number {
-  return nums.filter(cumple).length
+  return nums.filter(cumple).length;
 }
-type Transformador = (texto: string) => string
+type Transformador = (texto: string) => string;
 
 // 4) `aplicarA` — transforma cada string de la lista con `t`.
 //      aplicarA(["a", "b"], (s) => s.toUpperCase()) → ["A", "B"]
 export function aplicarA(textos: string[], t: Transformador): string[] {
-  return textos.map(t)
+  return textos.map(t);
 }
-aplicarA(["Hola", "mundo"], (s) => s.toUpperCase()) // ["HOLA", "MUNDO"]
-aplicarA(["a", "b"], (s) => s.toLowerCase()) // ["a", "b"]
-
+aplicarA(["Hola", "mundo"], (s) => s.toUpperCase()); // ["HOLA", "MUNDO"]
+aplicarA(["a", "b"], (s) => s.toLowerCase()); // ["a", "b"]
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: el alias `Operacion` como "combinador" en un reduce
@@ -97,6 +94,7 @@ aplicarA(["a", "b"], (s) => s.toLowerCase()) // ["a", "b"]
 //      reducir([1, 2, 3], (a, b) => a + b, 0) → 6
 //      reducir([2, 3, 4], (a, b) => a * b, 1) → 24
 export function reducir(nums: number[], op: Operacion, inicial: number): number {
-  return nums.reduce(op, inicial)
-}reducir([2, 3, 4], (a, b) => a * b, 1) // 24
-reducir([1, 2, 3], (a, b) => a + b, 0) // 6
+  return nums.reduce(op, inicial);
+}
+reducir([2, 3, 4], (a, b) => a * b, 1); // 24
+reducir([1, 2, 3], (a, b) => a + b, 0); // 6

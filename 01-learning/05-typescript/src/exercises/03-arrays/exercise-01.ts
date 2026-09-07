@@ -81,7 +81,6 @@
  *
  * ===========================================================================*/
 
-
 /* ----------------------------------------------------------------------------
  * BLOQUE A — map: transformar cada elemento
  * -------------------------------------------------------------------------- */
@@ -89,25 +88,23 @@
 // 1) `doblarTodos` recibe un number[] y devuelve cada número multiplicado por 2.
 //      doblarTodos([1, 2, 3]) → [2, 4, 6]
 export function doblarTodos(nums: number[]): number[] {
-  return nums.map(n => n * 2)
+  return nums.map((n) => n * 2);
 }
-const numerosADoblar: number[] = [1, 2, 3]
-doblarTodos(numerosADoblar)
+const numerosADoblar: number[] = [1, 2, 3];
+doblarTodos(numerosADoblar);
 
 // 2) `aMayusculas` recibe un string[] y devuelve cada texto en MAYÚSCULAS.
 //      aMayusculas(["hola", "ts"]) → ["HOLA", "TS"]
 export function aMayusculas(textos: string[]): string[] {
-  return textos.map(a => a.toUpperCase())
+  return textos.map((a) => a.toUpperCase());
 }
-
 
 // 3) `longitudes` recibe un string[] y devuelve un number[] con la longitud de
 //    cada texto. (Aquí map CAMBIA el tipo: string[] → number[].)
 //      longitudes(["hola", "ab"]) → [4, 2]
 export function longitudes(textos: string[]): number[] {
-  return textos.map(t => t.length); // TODO: usa .map con .length
+  return textos.map((t) => t.length); // TODO: usa .map con .length
 }
-
 
 /* ----------------------------------------------------------------------------
  * BLOQUE B — filter: seleccionar elementos
@@ -117,18 +114,16 @@ export function longitudes(textos: string[]): number[] {
 //    (Pista: un número es par si `n % 2 === 0`.)
 //      soloPares([1, 2, 3, 4]) → [2, 4]
 export function soloPares(nums: number[]): number[] {
-  return nums.filter((n) => n % 2 === 0)
+  return nums.filter((n) => n % 2 === 0);
 }
-const lista = [1, 2, 3, 4]
-soloPares(lista)
-
+const lista = [1, 2, 3, 4];
+soloPares(lista);
 
 // 5) `palabrasLargas` recibe un string[] y devuelve solo las de 5 letras o más.
 //      palabrasLargas(["sol", "pelota", "ab", "camino"]) → ["pelota", "camino"]
 export function palabrasLargas(textos: string[]): string[] {
-  return textos.filter((p) => p.length >= 5)
+  return textos.filter((p) => p.length >= 5);
 }
-
 
 /* ----------------------------------------------------------------------------
  * BLOQUE C — reduce: combinar todo en un solo valor
@@ -138,17 +133,15 @@ export function palabrasLargas(textos: string[]): string[] {
 //    (Pista: .reduce((acc, n) => acc + n, 0).)
 //      sumarTodos([1, 2, 3, 4]) → 10 ; sumarTodos([]) → 0
 export function sumarTodos(nums: number[]): number {
-  return nums.reduce((acumulador, elemento) => acumulador + elemento, 0)
+  return nums.reduce((acumulador, elemento) => acumulador + elemento, 0);
 }
-
 
 // 7) `concatenar` recibe un string[] y los une en un solo string, en orden.
 //    (Pista: reduce con acumulador string e inicial "".)
 //      concatenar(["a", "b", "c"]) → "abc" ; concatenar([]) → ""
 export function concatenar(textos: string[]): string {
-  return textos.reduce((acumulador, elemento) => acumulador + elemento, "")
+  return textos.reduce((acumulador, elemento) => acumulador + elemento, "");
 }
-
 
 /* ----------------------------------------------------------------------------
  * BLOQUE D — TÚ recibes el callback (higher-order, como el 09)
@@ -160,15 +153,15 @@ export function concatenar(textos: string[]): string {
 //    resultante. Es tu propio "map": le pasas un number[] y un callback.
 //      transformarCada([1, 2, 3], (n) => n + 10) → [11, 12, 13]
 export function transformarCada(nums: number[], fn: (n: number) => number): number[] {
-  return nums.map(fn)
+  return nums.map(fn);
 }
-transformarCada([1, 2, 3], (n) => n + 10) // [11, 12, 13]
+transformarCada([1, 2, 3], (n) => n + 10); // [11, 12, 13]
 
 // 9) `contarSi(nums, cumple)` devuelve CUÁNTOS números cumplen el predicado.
 //    `cumple` es un callback que devuelve boolean. (Pista: filtra y mira .length.)
 //      contarSi([1, 2, 3, 4], (n) => n > 2) → 2     (el 3 y el 4)
 export function contarSi(nums: number[], cumple: (n: number) => boolean): number {
-  return nums.filter(cumple).length
+  return nums.filter(cumple).length;
 }
-const tablita = [1, 2, 3, 4]
-contarSi(tablita, (n) => n > 2) // (el 3 y el 4)
+const tablita = [1, 2, 3, 4];
+contarSi(tablita, (n) => n > 2); // (el 3 y el 4)

@@ -77,7 +77,6 @@ export function firstOf(list: readonly string[]) {
   return list[0];
 }
 
-
 // 3) `CONFIG` — objeto de configuración fijo. Las propiedades deben ser
 //    inmutables Y conservar sus valores literales (no ensanchados).
 //    Pista: una palabra al final del objeto.

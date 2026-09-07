@@ -48,8 +48,7 @@ export type Accion =
   | { tipo: "incrementar" }
   | { tipo: "decrementar" }
   | { tipo: "sumar"; cantidad: number }
-  | { tipo: "reiniciar" }
-
+  | { tipo: "reiniciar" };
 
 /* ── BLOQUE A — el reducer ─────────────────────────────────────────────────── */
 
@@ -63,42 +62,62 @@ export type Accion =
 //    aplicar(5, { tipo: "sumar", cantidad: 10 }) → 15
 export function aplicar(estado: number, accion: Accion): number {
   switch (accion.tipo) {
-    case "incrementar": return estado + 1
-    case "decrementar": return estado - 1
-    case "sumar": return estado + accion.cantidad
-    case "reiniciar": return 0
-    default: { const _exhaustivo: never = accion; return _exhaustivo }
+    case "incrementar":
+      return estado + 1;
+    case "decrementar":
+      return estado - 1;
+    case "sumar":
+      return estado + accion.cantidad;
+    case "reiniciar":
+      return 0;
+    default: {
+      const _exhaustivo: never = accion;
+      return _exhaustivo;
+    }
   }
 }
-aplicar(5, { tipo: "incrementar" }) // 6
+aplicar(5, { tipo: "incrementar" }); // 6
 
 // 2) `etiquetaAccion` — un texto legible por acción:
 //      "incrementar" → "+1" ; "decrementar" → "-1"
 //      "sumar"       → `+${cantidad}` ; "reiniciar" → "reset"
 export function etiquetaAccion(accion: Accion): string {
   switch (accion.tipo) {
-    case "incrementar": return "+1"
-    case "decrementar": return "-1"
-    case "sumar": return `+${accion.cantidad}`
-    case "reiniciar": return "reset"
-    default: { const _exhaustivo: never = accion; return _exhaustivo }
+    case "incrementar":
+      return "+1";
+    case "decrementar":
+      return "-1";
+    case "sumar":
+      return `+${accion.cantidad}`;
+    case "reiniciar":
+      return "reset";
+    default: {
+      const _exhaustivo: never = accion;
+      return _exhaustivo;
+    }
   }
 }
-etiquetaAccion({ tipo: "sumar", cantidad: 7 }) // "+7"
+etiquetaAccion({ tipo: "sumar", cantidad: 7 }); // "+7"
 
 // 3) `esDestructiva` — true solo para "reiniciar" (borra el progreso).
 //    esDestructiva({ tipo: "reiniciar" }) → true
 //    esDestructiva({ tipo: "sumar", cantidad: 3 }) → false
 export function esDestructiva(accion: Accion): boolean {
   switch (accion.tipo) {
-    case "reiniciar": return true
-    case "sumar": return false
-    case "incrementar": return false
-    case "decrementar": return false
-    default: { const _exhaustivo: never = accion; return _exhaustivo }
+    case "reiniciar":
+      return true;
+    case "sumar":
+      return false;
+    case "incrementar":
+      return false;
+    case "decrementar":
+      return false;
+    default: {
+      const _exhaustivo: never = accion;
+      return _exhaustivo;
+    }
   }
 }
-
 
 /* ── BLOQUE B — disparar varias acciones ───────────────────────────────────── */
 
@@ -106,9 +125,9 @@ export function esDestructiva(accion: Accion): boolean {
 //    devolviendo el estado final. (Pista: `reduce` usando tu propio `aplicar`.)
 //    aplicarTodas(0, [{ tipo: "incrementar" }, { tipo: "sumar", cantidad: 5 }, { tipo: "decrementar" }]) → 5
 export function aplicarTodas(estado: number, acciones: Accion[]): number {
-  return acciones.reduce((acumulador, actual) => aplicar(acumulador, actual), estado)
+  return acciones.reduce((acumulador, actual) => aplicar(acumulador, actual), estado);
 }
-aplicarTodas(0, [{ tipo: "incrementar" }, { tipo: "sumar", cantidad: 5 }, { tipo: "decrementar" }]) // 0+1+5-1=5
+aplicarTodas(0, [{ tipo: "incrementar" }, { tipo: "sumar", cantidad: 5 }, { tipo: "decrementar" }]); // 0+1+5-1=5
 
 // 5) CAPSTONE — un estado más rico: además del contador, un historial de
 //    etiquetas. `aplicarConHistorial` aplica la acción al contador (reusa
@@ -116,17 +135,16 @@ aplicarTodas(0, [{ tipo: "incrementar" }, { tipo: "sumar", cantidad: 5 }, { tipo
 //    mutar el estado original (devuelve uno nuevo con `...`).
 //    aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "incrementar" })
 //      → { contador: 1, historial: ["+1"] }
-export type EstadoContador = { contador: number; historial: string[] }
+export type EstadoContador = { contador: number; historial: string[] };
 
 export function aplicarConHistorial(estado: EstadoContador, accion: Accion): EstadoContador {
   return {
     contador: aplicar(estado.contador, accion),
     historial: [...estado.historial, etiquetaAccion(accion)],
-  }
+  };
 }
-aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "incrementar" }) // { contador: 1, historial: ["+1"] }
-aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "sumar", cantidad: 4 }) // { contador: 4, historial: ["+4"] }
-
+aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "incrementar" }); // { contador: 1, historial: ["+1"] }
+aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "sumar", cantidad: 4 }); // { contador: 4, historial: ["+4"] }
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE C — ENTENDER `aplicarConHistorial` DESDE EL SUELO (escalera de refuerzo)
@@ -149,7 +167,6 @@ aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "sumar", cantidad: 4
  * Reglas de siempre: ❌ nada de `any` ni `as`. Resuelve EN ORDEN.
  * ==========================================================================*/
 
-
 /* ── C1 — SACAR UN CAMPO de dentro del objeto ──────────────────────────────────
  * La pieza (a), sola. Recibes un `EstadoContador` (la cuenta) y devuelves SOLO el
  * número de dentro (el saldo). Nada más: aprender a "meter la mano en el objeto y
@@ -162,9 +179,9 @@ aplicarConHistorial({ contador: 0, historial: [] }, { tipo: "sumar", cantidad: 4
 // export type EstadoContador = { contador: number; historial: string[] }
 
 export function leerContador(estado: EstadoContador): number {
-  return estado.contador
+  return estado.contador;
 }
-leerContador({ contador: 7, historial: ["a", "b", "c"] }) // → 7
+leerContador({ contador: 7, historial: ["a", "b", "c"] }); // → 7
 
 /* ── C2 — AÑADIR a un array SIN romper el viejo ────────────────────────────────
  * La pieza (b), sola. Recibes un historial (lista de textos) y una etiqueta nueva,
@@ -179,12 +196,11 @@ leerContador({ contador: 7, historial: ["a", "b", "c"] }) // → 7
  *   agregarEtiqueta([], "reset")  → ["reset"]
  */
 export function agregarEtiqueta(historial: string[], etiqueta: string): string[] {
-  return [...historial, etiqueta]
+  return [...historial, etiqueta];
 }
-agregarEtiqueta(["+1"], "+2") // → ["+1", "+2"]
-agregarEtiqueta([], "reset") // → ["reset"]
-agregarEtiqueta(["+1", "+2"], "+3") // → ["+1", "+2", "+3"]
-
+agregarEtiqueta(["+1"], "+2"); // → ["+1", "+2"]
+agregarEtiqueta([], "reset"); // → ["reset"]
+agregarEtiqueta(["+1", "+2"], "+3"); // → ["+1", "+2", "+3"]
 
 /* ── C3 — CONSTRUIR el objeto de dos campos ────────────────────────────────────
  * La pieza (c), sola. Recibes un número y una lista, y devuelves un `EstadoContador`
@@ -197,11 +213,10 @@ agregarEtiqueta(["+1", "+2"], "+3") // → ["+1", "+2", "+3"]
  *   nuevoEstado(0, [])     → { contador: 0, historial: [] }
  */
 export function nuevoEstado(n: number, lista: string[]): EstadoContador {
-  return { contador: n, historial: lista }
+  return { contador: n, historial: lista };
 }
-nuevoEstado(5, ["+5"]) // → { contador: 5, historial: ["+5"] }
-nuevoEstado(0, []) // → { contador: 0, historial: [] }
-
+nuevoEstado(5, ["+5"]); // → { contador: 5, historial: ["+5"] }
+nuevoEstado(0, []); // → { contador: 0, historial: [] }
 
 /* ── C4 — COMBINAR (b)+(c): estado nuevo con contador dado + etiqueta añadida ───
  * Ahora juntas C2 y C3, pero los números ya te los DAN (todavía sin aplicar/
@@ -218,11 +233,14 @@ nuevoEstado(0, []) // → { contador: 0, historial: [] }
 
 // export type EstadoContador = { contador: number; historial: string[] }
 
-export function avanzarManual(estado: EstadoContador, nuevoContador: number, etiqueta: string): EstadoContador {
-  return { contador: nuevoContador, historial: [...estado.historial, etiqueta] }
+export function avanzarManual(
+  estado: EstadoContador,
+  nuevoContador: number,
+  etiqueta: string,
+): EstadoContador {
+  return { contador: nuevoContador, historial: [...estado.historial, etiqueta] };
 }
 // avanzarManual({ contador: 1, historial: ["+1"] }, 3, "+2") // → { contador: 3, historial: ["+1", "+2"] }
-
 
 /* ── C5 — EL CAPSTONE RECONSTRUIDO: ahora los valores los calculan tus funciones ─
  * Idéntico a C4, pero en vez de recibir `nuevoContador` y `etiqueta` ya hechos, los
@@ -240,6 +258,9 @@ export function avanzarManual(estado: EstadoContador, nuevoContador: number, eti
 // export type EstadoContador = { contador: number; historial: string[] }
 
 export function aplicarConHistorialBis(estado: EstadoContador, accion: Accion): EstadoContador {
-  return { contador: aplicar(estado.contador, accion), historial: [...estado.historial, etiquetaAccion(accion)] }
+  return {
+    contador: aplicar(estado.contador, accion),
+    historial: [...estado.historial, etiquetaAccion(accion)],
+  };
 }
 // aplicarConHistorialBis({ contador: 0, historial: [] }, { tipo: "incrementar" }) // → { contador: 1, historial: ["+1"] }

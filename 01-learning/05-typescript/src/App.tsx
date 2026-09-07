@@ -1,20 +1,18 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
 import {
-  PerfilQueEscribe,
-  PerfilDosCampos,
-  PerfilConBio,
-  PerfilCompacto,
-} from "./exercises/10-eventos-formularios/exercise-11";
+  AliasConError,
+  PerfilValidado,
+} from "./exercises/10-eventos-formularios/exercise-12";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y las tarjetas de abajo al cambiar de archivo
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: `exercise-11`, los cuatro drills que devuelven JSX (7, 8, 9 y 10).
- * Los seis primeros son funciones sueltas y no tienen nada que pintar: esos se
- * comprueban con `pnpm test:run` y `pnpm typecheck`.
+ * Ahora mismo: `exercise-12`, los dos drills que devuelven JSX (9 y 10). Los ocho
+ * primeros son funciones sueltas y no tienen nada que pintar: esos se comprueban
+ * con `pnpm test:run` y `pnpm typecheck`.
  *
  * LA IDEA DE LOS ESTILOS: cada drill pinta dos clases de cosa, y aquí se visten
  * distinto a propósito para que no se confundan.
@@ -39,28 +37,17 @@ type TarjetaProps = {
   children: ReactNode;
 };
 
-function Tarjeta({
-  n,
-  nombre,
-  mirar,
-  campos,
-  resuelto = false,
-  children,
-}: TarjetaProps) {
+function Tarjeta({ n, nombre, mirar, campos, resuelto = false, children }: TarjetaProps) {
   return (
     <section className="mb-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <header className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-5 py-3">
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-bold text-white">
           {n}
         </span>
-        <h2 className="font-mono text-sm font-semibold text-slate-800">
-          {nombre}
-        </h2>
+        <h2 className="font-mono text-sm font-semibold text-slate-800">{nombre}</h2>
         <span
           className={`ml-auto shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            resuelto
-              ? "bg-emerald-100 text-emerald-700"
-              : "bg-amber-100 text-amber-700"
+            resuelto ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
           }`}
         >
           {resuelto ? "✅ resuelto" : "⏳ starter puesto"}
@@ -128,55 +115,35 @@ function App() {
         Aprendiendo TypeScript + React + Arquitectura de Software
       </h1>
       <p className="mb-6 border-b border-slate-200 pb-6 text-sm text-slate-500">
-        <span className="font-mono text-slate-700">exercise-11</span> · un
-        objeto para todo el formulario — drills 7 a 10
+        <span className="font-mono text-slate-700">exercise-12</span> · el objeto de errores —
+        drills 9 y 10
       </p>
 
       <Leyenda />
 
       <Tarjeta
-        n={7}
-        nombre="PerfilQueEscribe"
-        mirar="Escribe en el campo Alias. La caja negra tiene que ir copiando lo que teclees."
+        n={9}
+        nombre="AliasConError"
+        mirar="Escribe algo en Alias y luego bórralo entero: al quedarse vacío tiene que aparecer el aviso, y al volver a escribir tiene que irse. Ojo, esto YA funciona en pantalla y el drill sigue estando mal — su única señal está en pnpm typecheck."
         campos="Alias"
       >
-        <PerfilQueEscribe />
-      </Tarjeta>
-
-      <Tarjeta
-        n={8}
-        nombre="PerfilDosCampos"
-        mirar="Dos campos y UN manejador. Cada uno tiene que escribir en su propia clave: lo que teclees en Ciudad no puede acabar en la caja del alias."
-        campos="Alias · Ciudad"
-      >
-        <PerfilDosCampos />
-      </Tarjeta>
-
-      <Tarjeta
-        n={9}
-        nombre="PerfilConBio"
-        mirar="Cuidado con este: escribe en los tres campos y verás que funciona TODO, Bio incluida. Y aun así está mal. Es el drill que demuestra que un test verde no basta — su única señal está en pnpm typecheck."
-        campos="Alias · Ciudad · Bio"
-      >
-        <PerfilConBio />
+        <AliasConError />
       </Tarjeta>
 
       <Tarjeta
         n={10}
-        nombre="PerfilCompacto"
-        mirar="Tiene que comportarse igual que el 9. Escribe en cualquiera de los tres: no pasa nada, y ningún campo admite una sola letra. Ojo, aquí typecheck tampoco dice nada."
-        campos="Alias · Ciudad · Bio"
+        nombre="PerfilValidado"
+        mirar="Antes de pulsar Guardar no puede haber ningún aviso en la página, ni siquiera vacío (inspecciona el HTML: hay tres párrafos ahí). Pulsa Guardar con el alias en blanco y tiene que salir uno solo."
+        campos="Alias · Ciudad · Bio · botón Guardar"
       >
-        <PerfilCompacto />
+        <PerfilValidado />
       </Tarjeta>
 
       <p className="mt-8 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
-        Los drills 1 a 6 son funciones sueltas, sin JSX, así que aquí no se
-        pueden ver. Su señal está en{" "}
-        <code className="font-mono text-slate-700">pnpm test:run</code> y en{" "}
-        <code className="font-mono text-slate-700">pnpm typecheck</code> — y 5
-        de los 10 pasan el test con el fallo dentro, así que hay que correr los
-        dos.
+        Los drills 1 a 8 son funciones sueltas, sin JSX, así que aquí no se pueden ver. Su señal
+        está en <code className="font-mono text-slate-700">pnpm test:run</code> y en{" "}
+        <code className="font-mono text-slate-700">pnpm typecheck</code> — y 2 de los 10 pasan el
+        test con el fallo dentro, así que hay que correr los dos.
       </p>
     </main>
   );

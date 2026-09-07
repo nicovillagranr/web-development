@@ -44,10 +44,7 @@
  *     pnpm test:run src/exercises/08-discriminated-unions/exercise-05.test.ts
  * ===========================================================================*/
 
-export type Resultado<T> =
-  | { ok: true; valor: T }
-  | { ok: false; error: string }
-
+export type Resultado<T> = { ok: true; valor: T } | { ok: false; error: string };
 
 /* ── BLOQUE A — leer un Resultado ──────────────────────────────────────────── */
 
@@ -55,7 +52,7 @@ export type Resultado<T> =
 //    respuesta. (No necesitas if/else.)
 //    esExito({ ok: true, valor: 5 }) → true
 export function esExito<T>(r: Resultado<T>): boolean {
-  return r.ok
+  return r.ok;
 }
 
 // 2) `valorODefecto` — el valor si salió bien; si no, el `porDefecto` que te pasan.
@@ -63,7 +60,7 @@ export function esExito<T>(r: Resultado<T>): boolean {
 //    valorODefecto({ ok: false, error: "x" }, 0) → 0
 export function valorODefecto<T>(r: Resultado<T>, porDefecto: T): T {
   // r.ok es true? en ese caso retorna r.valor, en caso de ser false retorna porDefecto
-  return r.ok ? r.valor : porDefecto
+  return r.ok ? r.valor : porDefecto;
 }
 
 // 3) `mensajeError` — el error si salió mal; si salió bien, null.
@@ -71,9 +68,8 @@ export function valorODefecto<T>(r: Resultado<T>, porDefecto: T): T {
 //    mensajeError({ ok: true, valor: 5 }) → null
 export function mensajeError<T>(r: Resultado<T>): string | null {
   // r.ok es true? en ese caso retorna null, en caso de ser false retorna r.error
-  return r.ok ? null : r.error
+  return r.ok ? null : r.error;
 }
-
 
 /* ── BLOQUE B — producir y transformar Resultados ──────────────────────────── */
 
@@ -83,9 +79,9 @@ export function mensajeError<T>(r: Resultado<T>): string | null {
 //    dividir(1, 0) → { ok: false, error: "división por cero" }
 export function dividir(a: number, b: number): Resultado<number> {
   if (b != 0) {
-    return { ok: true, valor: a / b }
+    return { ok: true, valor: a / b };
   }
-  return { ok: false, error: "división por cero" }
+  return { ok: false, error: "división por cero" };
 }
 
 // 5) CAPSTONE `mapResultado` — transforma el valor de éxito con `f`, dejando el
@@ -95,7 +91,7 @@ export function dividir(a: number, b: number): Resultado<number> {
 //    mapResultado({ ok: false, error: "x" }, (n) => n * 10) → { ok: false, error: "x" }
 export function mapResultado<T, U>(r: Resultado<T>, f: (valor: T) => U): Resultado<U> {
   if (r.ok) {
-    return { ok: true, valor: f(r.valor) }
+    return { ok: true, valor: f(r.valor) };
   }
-  return { ok: false, error: r.error }
+  return { ok: false, error: r.error };
 }

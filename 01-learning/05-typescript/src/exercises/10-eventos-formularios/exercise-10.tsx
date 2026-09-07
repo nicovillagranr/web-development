@@ -230,10 +230,7 @@ export function FilaTarea({
         onChange={(e) => alMarcar(tarea.id, e.target.checked)}
       />
       {tarea.texto}
-      <button
-        aria-label={`Borrar ${tarea.texto}`}
-        onClick={() => alBorrar(tarea.id)}
-      >
+      <button aria-label={`Borrar ${tarea.texto}`} onClick={() => alBorrar(tarea.id)}>
         Borrar
       </button>
     </li>
@@ -257,12 +254,7 @@ export function ListaTareas({
   return (
     <ul>
       {tareas.map((tarea) => (
-        <FilaTarea
-          key={tarea.id}
-          tarea={tarea}
-          alMarcar={alMarcar}
-          alBorrar={alBorrar}
-        />
+        <FilaTarea key={tarea.id} tarea={tarea} alMarcar={alMarcar} alBorrar={alBorrar} />
       ))}
     </ul>
   );
@@ -498,11 +490,7 @@ export function sinElQueSea(lista: string[], quitar: string): string[] {
 //     otro. Los demás, igual. Y la original sin tocar.
 //     El starter escribe directamente en la posición.
 //     → conUnoCambiado(["a", "b"], "a", "z")   →   ["z", "b"]
-export function conUnoCambiado(
-  lista: string[],
-  viejo: string,
-  nuevo: string,
-): string[] {
+export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): string[] {
   // Se mapea cada elemento del array, si el elemento es igual al viejo, lo sustituye por el nuevo, sino lo deja igual
   return lista.map((elemento) => (elemento === viejo ? nuevo : elemento));
 }
@@ -553,11 +541,7 @@ export function ListaQueMengua() {
       {items.map((item) => (
         <li key={item}>
           {item}
-          <button
-            type="button"
-            aria-label={`Quitar ${item}`}
-            onClick={() => quitar(item)}
-          >
+          <button type="button" aria-label={`Quitar ${item}`} onClick={() => quitar(item)}>
             Quitar
           </button>
         </li>

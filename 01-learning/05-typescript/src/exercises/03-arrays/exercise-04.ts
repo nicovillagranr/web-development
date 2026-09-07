@@ -29,41 +29,47 @@
  *     pnpm test:run src/exercises/03-arrays/exercise-04.test.ts
  * ===========================================================================*/
 
-export type Item = { id: number; nombre: string }
-export type Producto = { nombre: string; stock: number }
+export type Item = { id: number; nombre: string };
+export type Producto = { nombre: string; stock: number };
 
 /* --- BLOQUE A — find: el ELEMENTO o undefined --- */
 
 // 1) `primerPar` — el primer número par, o undefined si ninguno.
 //    primerPar([1, 3, 4, 6]) → 4 ; primerPar([1, 3]) → undefined
 export function primerPar(nums: number[]): number | undefined {
-  return nums.find((n) => n % 2 === 0)
+  return nums.find((n) => n % 2 === 0);
 }
-primerPar([1, 3, 4, 6]) // 4
-primerPar([1, 3]) // undefined
+primerPar([1, 3, 4, 6]); // 4
+primerPar([1, 3]); // undefined
 
 // 2) `buscarPorId` — el item cuyo id coincide, o undefined.
 //    buscarPorId([{id:1,nombre:"a"},{id:2,nombre:"b"}], 2) → {id:2,nombre:"b"}
 export function buscarPorId(items: Item[], id: number): Item | undefined {
-  return items.find((item) => item.id === id)
+  return items.find((item) => item.id === id);
 }
-buscarPorId([{ id: 1, nombre: 'a' }, { id: 2, nombre: 'b' }], 2) // {id:2,nombre:"b"}
+buscarPorId(
+  [
+    { id: 1, nombre: "a" },
+    { id: 2, nombre: "b" },
+  ],
+  2,
+); // {id:2,nombre:"b"}
 
 /* --- BLOQUE B — findIndex: la POSICIÓN o -1 --- */
 
 // 3) `posicionDe` — el índice de `objetivo`, o -1 si no está.
 //    posicionDe([10, 20, 30], 20) → 1 ; posicionDe([10], 99) → -1
 export function posicionDe(nums: number[], objetivo: number): number {
-  return nums.findIndex((n) => n === objetivo)
+  return nums.findIndex((n) => n === objetivo);
 }
-posicionDe([10, 20, 30], 20) // 1
+posicionDe([10, 20, 30], 20); // 1
 
 // 4) `indiceDelPrimerMayor` — el índice del primer número mayor que `limite`, o -1.
 //    indiceDelPrimerMayor([1, 5, 9], 4) → 1
 export function indiceDelPrimerMayor(nums: number[], limite: number): number {
-  return nums.findIndex((n) => n > limite)
+  return nums.findIndex((n) => n > limite);
 }
-indiceDelPrimerMayor([1, 5, 9], 4) // 1. En este caso el primero en ser mayor a 1 es 5, que está en la posición 1
+indiceDelPrimerMayor([1, 5, 9], 4); // 1. En este caso el primero en ser mayor a 1 es 5, que está en la posición 1
 
 /* --- BLOQUE C — CAPSTONE: find + el caso "no había" --- */
 
@@ -71,7 +77,10 @@ indiceDelPrimerMayor([1, 5, 9], 4) // 1. En este caso el primero en ser mayor a 
 //    (find puede dar undefined → usa `?.nombre ?? "agotado"`)
 //    nombreDelPrimeroConStock([{nombre:"a",stock:0},{nombre:"b",stock:3}]) → "b"
 export function nombreDelPrimeroConStock(productos: Producto[]): string {
-  return productos.find((p) => p.stock > 0)?.nombre ?? 'agotado' // En caso de que la propiedad nombre no exista, se devuelve "agotado"
+  return productos.find((p) => p.stock > 0)?.nombre ?? "agotado"; // En caso de que la propiedad nombre no exista, se devuelve "agotado"
 }
-nombreDelPrimeroConStock([]) // "agotado"
-nombreDelPrimeroConStock([{ nombre: 'Coca Cola', stock: 10 }, { nombre: 'Pepsi', stock: 3 }]) // "Coca Cola"
+nombreDelPrimeroConStock([]); // "agotado"
+nombreDelPrimeroConStock([
+  { nombre: "Coca Cola", stock: 10 },
+  { nombre: "Pepsi", stock: 3 },
+]); // "Coca Cola"

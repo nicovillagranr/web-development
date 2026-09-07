@@ -40,10 +40,7 @@
  *     pnpm test:run src/exercises/08-discriminated-unions/exercise-06.test.ts
  * ===========================================================================*/
 
-export type Resultado<T> =
-  | { ok: true; valor: T }
-  | { ok: false; error: string }
-
+export type Resultado<T> = { ok: true; valor: T } | { ok: false; error: string };
 
 /* ── BLOQUE A — fábricas de Resultado ──────────────────────────────────────── */
 
@@ -53,13 +50,13 @@ export type Resultado<T> =
 //    parseNumero("abc") → { ok: false, error: "no es un número" }
 //    Pista: `Number.isNaN(n)` para detectar el fallo.
 export function parseNumero(s: string): Resultado<number> {
-  const n = Number(s) // Puede ser un number o NaN
+  const n = Number(s); // Puede ser un number o NaN
   if (!Number.isNaN(n)) {
     // Si n no es NaN retorna true y n
-    return { ok: true, valor: n }
+    return { ok: true, valor: n };
   }
   // Si n es NaN, retorna false y error: "no es un número"
-  return { ok: false, error: "no es un número" }
+  return { ok: false, error: "no es un número" };
 }
 
 // 2) `raiz` — raíz cuadrada. Si `n` es negativo, error "negativo"; si no, ok con
@@ -68,11 +65,10 @@ export function parseNumero(s: string): Resultado<number> {
 //    raiz(-1) → { ok: false, error: "negativo" }
 export function raiz(n: number): Resultado<number> {
   if (n < 0) {
-    return { ok: false, error: "negativo" }
+    return { ok: false, error: "negativo" };
   }
-  return { ok: true, valor: Math.sqrt(n) }
+  return { ok: true, valor: Math.sqrt(n) };
 }
-
 
 /* ── BLOQUE B — combinar pasos ─────────────────────────────────────────────── */
 
@@ -82,9 +78,9 @@ export function raiz(n: number): Resultado<number> {
 //    andThen({ ok: false, error: "x" }, raiz) → { ok: false, error: "x" }
 export function andThen<T, U>(r: Resultado<T>, f: (valor: T) => Resultado<U>): Resultado<U> {
   if (r.ok) {
-    return f(r.valor)
+    return f(r.valor);
   }
-  return { ok: false, error: r.error }
+  return { ok: false, error: r.error };
 }
 
 // 4) `primerError` — recorre una lista de Resultados y devuelve el mensaje del
@@ -94,10 +90,10 @@ export function andThen<T, U>(r: Resultado<T>, f: (valor: T) => Resultado<U>): R
 export function primerError<T>(rs: Resultado<T>[]): string | null {
   for (const r of rs) {
     if (!r.ok) {
-      return r.error
+      return r.error;
     }
   }
-  return null
+  return null;
 }
 
 // 5) CAPSTONE `secuenciar` — junta una lista de Resultados en un SOLO Resultado:
@@ -106,16 +102,15 @@ export function primerError<T>(rs: Resultado<T>[]): string | null {
 //    secuenciar([{ ok: true, valor: 1 }, { ok: true, valor: 2 }]) → { ok: true, valor: [1, 2] }
 //    secuenciar([{ ok: true, valor: 1 }, { ok: false, error: "x" }]) → { ok: false, error: "x" }
 export function secuenciar<T>(rs: Resultado<T>[]): Resultado<T[]> {
-  const salida: T[] = []
+  const salida: T[] = [];
   for (const r of rs) {
     if (!r.ok) {
-      return { ok: false, error: r.error }
+      return { ok: false, error: r.error };
     }
-    salida.push(r.valor)
+    salida.push(r.valor);
   }
-  return { ok: true, valor: salida }
+  return { ok: true, valor: salida };
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE C — ENTENDER `secuenciar` DESDE EL SUELO (escalera de refuerzo)
@@ -131,7 +126,6 @@ export function secuenciar<T>(rs: Resultado<T>[]): Resultado<T[]> {
  *
  * Reglas de siempre: ❌ nada de `any` ni `as`. Resuelve EN ORDEN.
  * ==========================================================================*/
-
 
 /* ── C1 — ACUMULADOR PURO ──────────────────────────────────────────────────────
  * La pieza (a), sola. Recibes un array de números y devuelves un array NUEVO con
@@ -150,15 +144,14 @@ export function secuenciar<T>(rs: Resultado<T>[]): Resultado<T[]> {
  *   por10([])        → []            (cesta que nunca se llenó = array vacío)
  */
 export function por10(ns: number[]): number[] {
-  const salida: number[] = []
+  const salida: number[] = [];
   for (const n of ns) {
-    salida.push(n * 10)
+    salida.push(n * 10);
   }
-  return salida
+  return salida;
 }
 // por10([1, 2, 3]) // → [10, 20, 30]
 // por10([])        // → []
-
 
 /* ── C2 — ACUMULAR CON CORTE (short-circuit) ───────────────────────────────────
  * Ahora piezas (a)+(b) juntas, todavía SIN Resultado. Recorres números y los vas
@@ -180,18 +173,17 @@ export function por10(ns: number[]): number[] {
  *   soloPositivos([])         → []          (nada malo = array vacío)
  */
 export function soloPositivos(ns: number[]): number[] | null {
-  const salida: number[] = []
+  const salida: number[] = [];
   for (const n of ns) {
     if (n < 0) {
-      return null
+      return null;
     }
-    salida.push(n)
+    salida.push(n);
   }
-  return salida
+  return salida;
 }
 // soloPositivos([1, 2, 3])  // → [1, 2, 3]
 // soloPositivos([1, -5, 3]) // → null
-
 
 /* ── C3 — LO MISMO, PERO EL "MALO" ES UN Resultado con ok:false ────────────────
  * Último escalón antes del capstone. Idéntico a C2, pero en vez de números sueltos
@@ -209,20 +201,21 @@ export function soloPositivos(ns: number[]): number[] | null {
  *   valoresSiTodoOk([]) → []
  */
 export function valoresSiTodoOk(rs: Resultado<number>[]): number[] | null {
-  const salida: number[] = []   // (1) la cesta vacía — igual que en tu soloPositivos
-  for (const r of rs) {         //     recorro cada SOBRE (Resultado) de la lista
-    if (!r.ok) {                // (2) ¿sello rojo? → suelto la cesta entera y CORTO
-      return null               //     el `return` en un for...of SÍ sale de la función
-    }                           //     entera (esto es lo que reduce no puede hacer)
+  const salida: number[] = []; // (1) la cesta vacía — igual que en tu soloPositivos
+  for (const r of rs) {
+    //     recorro cada SOBRE (Resultado) de la lista
+    if (!r.ok) {
+      // (2) ¿sello rojo? → suelto la cesta entera y CORTO
+      return null; //     el `return` en un for...of SÍ sale de la función
+    } //     entera (esto es lo que reduce no puede hacer)
     // (3) si el `return null` de arriba no disparó, TS SABE que aquí el sello es
     //     ok:true → en esta rama el sobre SÍ tiene `.valor`. Lo echo a la cesta.
-    salida.push(r.valor)
+    salida.push(r.valor);
   }
-  return salida                 // (4) sobreviví el bucle entero → todos ok → cesta llena
+  return salida; // (4) sobreviví el bucle entero → todos ok → cesta llena
 }
 // valoresSiTodoOk([{ ok: true, valor: 1 }, { ok: true, valor: 2 }]) // → [1, 2]
 // valoresSiTodoOk([{ ok: true, valor: 1 }, { ok: false, error: "x" }]) // → null
-
 
 /* ── VUELTA AL CAPSTONE ────────────────────────────────────────────────────────
  * `secuenciar` = C3 con DOS cambios mínimos:

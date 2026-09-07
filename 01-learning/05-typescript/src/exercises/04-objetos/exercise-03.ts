@@ -82,12 +82,10 @@
  *   nuevas con spread / `.map` / `.filter`.
  * ═══════════════════════════════════════════════════════════════════════════*/
 
-
-type Usuario = { nombre: string; edad: number; activo: boolean }
-type Producto = { nombre: string; precio: number; stock: number }
-type Registro = { [id: string]: Usuario }
-type ItemCarrito = { id: string; nombre: string; cantidad: number }
-
+type Usuario = { nombre: string; edad: number; activo: boolean };
+type Producto = { nombre: string; precio: number; stock: number };
+type Registro = { [id: string]: Usuario };
+type ItemCarrito = { id: string; nombre: string; cantidad: number };
 
 /* ── Bloque D1: el objeto vive en un ARRAY → usa .map para elegir cuál ─────── */
 
@@ -98,31 +96,32 @@ type ItemCarrito = { id: string; nombre: string; cantidad: number }
 //                      {nombre:"Eva",edad:25,activo:true}], "Ana")
 //        → [{nombre:"Ana",edad:31,...}, {nombre:"Eva",edad:25,...}]
 export function cumplirAniosDe(usuarios: Usuario[], nombre: string): Usuario[] {
-  return (
-    usuarios.map((u) => {
-      if (u.nombre === nombre) {
-        return { ...u, edad: u.edad + 1 }
-      }
-      return u
-    })
-  )
+  return usuarios.map((u) => {
+    if (u.nombre === nombre) {
+      return { ...u, edad: u.edad + 1 };
+    }
+    return u;
+  });
 }
-cumplirAniosDe([{ nombre: "Ana", edad: 30, activo: true }, { nombre: "Eva", edad: 25, activo: true }], "Ana") // A Ana se le suma 1 a la edad porque la condicion se cumple
-
+cumplirAniosDe(
+  [
+    { nombre: "Ana", edad: 30, activo: true },
+    { nombre: "Eva", edad: 25, activo: true },
+  ],
+  "Ana",
+); // A Ana se le suma 1 a la edad porque la condicion se cumple
 
 // 2) 🔌 `desactivarA` devuelve un array nuevo donde SOLO el usuario con ese
 //    nombre queda con `activo: false`. El resto intacto.
 //      desactivarA([{nombre:"Ana",edad:30,activo:true}], "Ana")
 //        → [{nombre:"Ana",edad:30,activo:false}]
 export function desactivarA(usuarios: Usuario[], nombre: string): Usuario[] {
-  return (
-    usuarios.map((u) => {
-      if (u.nombre === nombre) {
-        return { ...u, activo: false }
-      }
-      return u
-    })
-  )
+  return usuarios.map((u) => {
+    if (u.nombre === nombre) {
+      return { ...u, activo: false };
+    }
+    return u;
+  });
 }
 
 // 3) 💸 `subirPrecio` recibe productos, un nombre y un monto. Devuelve un array
@@ -130,17 +129,15 @@ export function desactivarA(usuarios: Usuario[], nombre: string): Usuario[] {
 //      subirPrecio([{nombre:"Lápiz",precio:500,stock:3}], "Lápiz", 100)
 //        → [{nombre:"Lápiz",precio:600,stock:3}]
 export function subirPrecio(productos: Producto[], nombre: string, monto: number): Producto[] {
-  return (
-    productos.map((p) => {
-      if (p.nombre === nombre) {
-        return { ...p, precio: p.precio + monto }
-      }
-      return p
-    })
-  )
+  return productos.map((p) => {
+    if (p.nombre === nombre) {
+      return { ...p, precio: p.precio + monto };
+    }
+    return p;
+  });
 }
-subirPrecio([{ nombre: "Lápiz", precio: 500, stock: 3 }], "Lápiz", 100) // Lápiz a $600
-subirPrecio([{ nombre: "Tijeras", precio: 1000, stock: 2 }], "Tijeras", 200) // Tijeras a $1200
+subirPrecio([{ nombre: "Lápiz", precio: 500, stock: 3 }], "Lápiz", 100); // Lápiz a $600
+subirPrecio([{ nombre: "Tijeras", precio: 1000, stock: 2 }], "Tijeras", 200); // Tijeras a $1200
 
 /* ── Bloque D2: el objeto vive en un DICCIONARIO → spread + [id] (¡y guard!) ── */
 
@@ -151,28 +148,28 @@ subirPrecio([{ nombre: "Tijeras", precio: 1000, stock: 2 }], "Tijeras", 200) // 
 //      cumplirAniosEnRegistro({ u1: {nombre:"Ana",edad:30,activo:true} }, "u1")
 //        → { u1: { nombre:"Ana", edad:31, activo:true } }
 export function cumplirAniosEnRegistro(reg: Registro, id: string): Registro {
-  const u = reg[id] // Definimos que u será el usuario con ese id
+  const u = reg[id]; // Definimos que u será el usuario con ese id
   if (!u) {
-    return reg // Si no existe, no hacemos nada. Retorna el registro tal cual
+    return reg; // Si no existe, no hacemos nada. Retorna el registro tal cual
   }
-  return { ...reg, [id]: { ...u, edad: u.edad + 1 } } // Si existe, cambiamos la edad creando un nuevo objeto con la edad +1
+  return { ...reg, [id]: { ...u, edad: u.edad + 1 } }; // Si existe, cambiamos la edad creando un nuevo objeto con la edad +1
 }
-cumplirAniosEnRegistro({ u1: { nombre: "Ana", edad: 30, activo: true } }, "u1") // { u1: { nombre:"Ana", edad:31, activo:true } }
-cumplirAniosEnRegistro({ u1: { nombre: "Nico", edad: 23, activo: true } }, "u2") // { u1: { nombre:"Nico", edad:23, activo:true } } // Como el parámetro id no existe, no cambia el registro
+cumplirAniosEnRegistro({ u1: { nombre: "Ana", edad: 30, activo: true } }, "u1"); // { u1: { nombre:"Ana", edad:31, activo:true } }
+cumplirAniosEnRegistro({ u1: { nombre: "Nico", edad: 23, activo: true } }, "u2"); // { u1: { nombre:"Nico", edad:23, activo:true } } // Como el parámetro id no existe, no cambia el registro
 
 // 5) ✏️ `renombrarEnRegistro` cambia SOLO el nombre del usuario en ese id, por el
 //    `nuevoNombre`. Mismo esquema (guard + spread anidado + [id]).
 //      renombrarEnRegistro({ u1: {nombre:"Ana",edad:30,activo:true} }, "u1", "Eva")
 //        → { u1: { nombre:"Eva", edad:30, activo:true } }
 export function renombrarEnRegistro(reg: Registro, id: string, nuevoNombre: string): Registro {
-  const u = reg[id]
+  const u = reg[id];
   if (!u) {
-    return reg // Si no coincide, no hacemos nada. Retorna el registro tal cual
+    return reg; // Si no coincide, no hacemos nada. Retorna el registro tal cual
   }
-  return { ...reg, [id]: { ...u, nombre: nuevoNombre } }
+  return { ...reg, [id]: { ...u, nombre: nuevoNombre } };
 }
-renombrarEnRegistro({ u1: { nombre: "Ana", edad: 30, activo: true } }, "u1", "Eva") // { u1: { nombre:"Eva", edad:30, activo:true } } // Cambiamos el nombre
-renombrarEnRegistro({ u1: { nombre: "Nico", edad: 23, activo: true } }, "u2", "Matías") // { u1: { nombre:"Nico", edad:23, activo:true } } // Como el parámetro id no existe, no cambia el registro
+renombrarEnRegistro({ u1: { nombre: "Ana", edad: 30, activo: true } }, "u1", "Eva"); // { u1: { nombre:"Eva", edad:30, activo:true } } // Cambiamos el nombre
+renombrarEnRegistro({ u1: { nombre: "Nico", edad: 23, activo: true } }, "u2", "Matías"); // { u1: { nombre:"Nico", edad:23, activo:true } } // Como el parámetro id no existe, no cambia el registro
 
 /* ── Bloque D3: capstone carrito (patrón real e-commerce) ─────────────────── */
 
@@ -182,16 +179,14 @@ renombrarEnRegistro({ u1: { nombre: "Nico", edad: 23, activo: true } }, "u2", "M
 //      incrementarCantidad([{id:"a",nombre:"Lápiz",cantidad:1}], "a")
 //        → [{id:"a",nombre:"Lápiz",cantidad:2}]
 export function incrementarCantidad(carrito: ItemCarrito[], id: string): ItemCarrito[] {
-  return (
-    carrito.map((item) => {
-      if (item.id === id) {
-        return { ...item, cantidad: item.cantidad + 1 }
-      }
-      return item
-    })
-  )
+  return carrito.map((item) => {
+    if (item.id === id) {
+      return { ...item, cantidad: item.cantidad + 1 };
+    }
+    return item;
+  });
 }
-incrementarCantidad([{ id: "1", nombre: "Coca Cola", cantidad: 1 }], "1") // → [{ id:"1",nombre:"Coca Cola",cantidad:2" }])
+incrementarCantidad([{ id: "1", nombre: "Coca Cola", cantidad: 1 }], "1"); // → [{ id:"1",nombre:"Coca Cola",cantidad:2" }])
 
 // 7) 🐷🐷 CAPSTONE — `quitarUnaUnidad` baja en 1 la `cantidad` del item con ese
 //    id; y si esa cantidad llega a 0, el item DESAPARECE del carrito. Combina las
@@ -202,13 +197,10 @@ incrementarCantidad([{ id: "1", nombre: "Coca Cola", cantidad: 1 }], "1") // →
 //      quitarUnaUnidad([{id:"a",nombre:"Lápiz",cantidad:1}], "a")
 //        → []   (llegó a 0 → se elimina)
 export function quitarUnaUnidad(carrito: ItemCarrito[], id: string): ItemCarrito[] {
-  return (
-    carrito
-      .map((item) => item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item)
-      .filter((item) => item.cantidad > 0)
-  )
+  return carrito
+    .map((item) => (item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item))
+    .filter((item) => item.cantidad > 0);
 }
-quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 2 }], "a") // → [{ id:"a",nombre:"Lápiz",cantidad:1 }]
-quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 1 }], "a") // → []
-quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 0 }], "a") // → []
-
+quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 2 }], "a"); // → [{ id:"a",nombre:"Lápiz",cantidad:1 }]
+quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 1 }], "a"); // → []
+quitarUnaUnidad([{ id: "a", nombre: "Lápiz", cantidad: 0 }], "a"); // → []

@@ -55,16 +55,16 @@
    * (0,1,1), exactamente la misma que tenía `input[type="text"]`. O sea: la regla
    * no pesa más que antes y sigue perdiendo contra las utilidades de Tailwind. */
   input:not(
-      [type="checkbox"],
-      [type="radio"],
-      [type="range"],
-      [type="color"],
-      [type="file"],
-      [type="submit"],
-      [type="button"],
-      [type="reset"],
-      [type="image"]
-    ),
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="color"],
+    [type="file"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="image"]
+  ),
   select,
   textarea {
     padding: 0.375rem 0.625rem;

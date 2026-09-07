@@ -43,7 +43,10 @@ export type A1 = "admin" | "editor" | "lector";
 
 // A2) ¿Qué tipo tiene `validadores[0]`?  (el repo usa `noUncheckedIndexedAccess`)
 //     Ojo a las DOS cosas que hay que juntar aquí.
-export const validadores: Array<(t: string) => boolean> = [(t) => t.length > 0, (t) => t.trim() === t,];
+export const validadores: Array<(t: string) => boolean> = [
+  (t) => t.length > 0,
+  (t) => t.trim() === t,
+];
 export type A2 = ((t: string) => boolean) | undefined;
 // Por qué: `validadores` está declarado como `Array<(t: string) => boolean>`, o sea
 //   un array cuyos elementos son funciones que reciben un string y devuelven un
@@ -53,7 +56,6 @@ export type A2 = ((t: string) => boolean) | undefined;
 //   que la posición 0 exista — el array podría estar vacío. Los paréntesis son
 //   obligatorios: sin ellos, el `| undefined` se pegaría al valor de retorno en vez
 //   de a la función entera.
-
 
 // A3) ¿Qué tipo tiene `Partial<typeof PERFIL>["edad"]`?
 export const PERFIL = { nombre: "Nico", edad: 23, activo: true };
@@ -76,7 +78,7 @@ export type Producto = { id: number; nombre: string; precio: number };
 export function rebajar(p: Producto, pct: number) {
   return { ...p, precio: p.precio * (1 - pct / 100) };
 }
-rebajar({ id: 1, nombre: "Coca Cola", precio: 100 }, 25) // { id: 1, nombre: "Coca Cola", precio: 75 }
+rebajar({ id: 1, nombre: "Coca Cola", precio: 100 }, 25); // { id: 1, nombre: "Coca Cola", precio: 75 }
 
 // B2) ¿Cuál de estas tres líneas MUTA el objeto original? Pon la letra.
 //     (a)  const copia = { ...p, precio: 0 }
@@ -104,7 +106,7 @@ export type Empleado = { nombre: string; salario: number; activo: boolean };
 //     o más. Escribe también el tipo de retorno.
 //       nombresBienPagados([...], 2000) → ["Ana", "Luis"]
 export function nombresBienPagados(emps: Empleado[], minimo: number): string[] {
-  return emps.filter(e => e.activo && e.salario >= minimo).map(e => e.nombre);
+  return emps.filter((e) => e.activo && e.salario >= minimo).map((e) => e.nombre);
 }
 
 // C2) `unirRutas` recibe CUALQUIER cantidad de trozos de ruta —argumentos
@@ -112,24 +114,23 @@ export function nombresBienPagados(emps: Empleado[], minimo: number): string[] {
 //       unirRutas("api", "v1", "users") → "api/v1/users"
 //       unirRutas("solo") → "solo"
 export function unirRutas(...trozos: string[]): string {
-  return trozos.join('/');
+  return trozos.join("/");
 }
-unirRutas('api', 'v1', 'users') // -> "api/v1/users"
-unirRutas('solo') // -> "solo"
-unirRutas("") // -> ""
-
+unirRutas("api", "v1", "users"); // -> "api/v1/users"
+unirRutas("solo"); // -> "solo"
+unirRutas(""); // -> ""
 
 // C3) `creaEtiquetador` devuelve una FUNCIÓN que pega el prefijo capturado a lo
 //     que reciba. Anota el tipo de retorno (que es una función).
 //       const conHash = creaEtiquetador("#");   conHash("ts") → "#ts"
 export function creaEtiquetador(prefijo: string): (etiqueta: string) => string {
-  return (etiqueta: string) => `${prefijo}${etiqueta}`
+  return (etiqueta: string) => `${prefijo}${etiqueta}`;
 }
-const conHashtag = creaEtiquetador('#');
-conHashtag('ts')
+const conHashtag = creaEtiquetador("#");
+conHashtag("ts");
 /* ─────────────────────────────────────────────────────────────────────────────
-* PARTE D — Genéricos y utility types
-* ───────────────────────────────────────────────────────────────────────────*/
+ * PARTE D — Genéricos y utility types
+ * ───────────────────────────────────────────────────────────────────────────*/
 
 // D1) `porDefecto` devuelve el valor si existe y, si no, el de reserva. Hoy solo
 //     sirve para strings: generalízalo para que funcione con CUALQUIER tipo,
@@ -138,10 +139,9 @@ conHashtag('ts')
 //       porDefecto(undefined, "vacío") → "vacío" (string)
 //       porDefecto(5, 0) → 5 (number)
 export function porDefecto<T>(valor: T | undefined, reserva: T): T {
-  return valor ?? reserva
+  return valor ?? reserva;
 }
 // porDefecto("Hola", 10) // No pasa porque "Hola" define el <T> como string
-
 
 // Sondas del D2 (ya usadas, se quedan comentadas como registro):
 // type Usuario = { id: number; nombre: string; email: string; }
@@ -172,17 +172,12 @@ export const D2 = "b";
 //      Ojo al vocabulario: `X` no es un objeto, es un TIPO — ahí no se obtiene nada,
 //      esa línea se borra al compilar y en runtime no queda rastro de ella.
 
-
-
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * PARTE E — Uniones discriminadas
  * ───────────────────────────────────────────────────────────────────────────*/
 
 export type Peticion =
-  | { fase: "cargando" }
-  | { fase: "listo"; datos: string[] }
-  | { fase: "error"; mensaje: string };
+  { fase: "cargando" } | { fase: "listo"; datos: string[] } | { fase: "error"; mensaje: string };
 
 // E1) Devuelve un texto según la fase:
 //       cargando → "cargando…"
@@ -218,10 +213,10 @@ export function describir(p: Peticion): string {
 //       · la `insignia` dentro de un <span>, y SOLO si viene
 //       · los `children` detrás
 export type TarjetaProps = {
-  titulo: string,
-  insignia?: string,
-  children: ReactNode
-}
+  titulo: string;
+  insignia?: string;
+  children: ReactNode;
+};
 export function Tarjeta({ titulo, insignia, children }: TarjetaProps) {
   return (
     <article>
@@ -229,5 +224,5 @@ export function Tarjeta({ titulo, insignia, children }: TarjetaProps) {
       {insignia && <span>{insignia}</span>}
       {children}
     </article>
-  )
+  );
 }

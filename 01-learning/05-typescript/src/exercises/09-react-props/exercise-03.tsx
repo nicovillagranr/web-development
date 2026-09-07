@@ -72,11 +72,8 @@
 //    <Marca visible={true} />   →  <span>NUEVO</span>
 //    <Marca visible={false} />  →  (nada en el DOM)
 export function Marca({ visible }: { visible: boolean }) {
-  return (
-    visible ? <span>NUEVO</span> : null
-  )
+  return visible ? <span>NUEVO</span> : null;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — TERNARIO: elegir entre DOS salidas
@@ -91,9 +88,7 @@ export function Marca({ visible }: { visible: boolean }) {
 //    <Estado activo={true} />   →  <span>En línea</span>
 //    <Estado activo={false} />  →  <span>Desconectado</span>
 export function Estado({ activo }: { activo: boolean }) {
-  return (
-    <span>{activo ? "En línea" : "Desconectado"}</span>
-  )
+  return <span>{activo ? "En línea" : "Desconectado"}</span>;
 }
 
 // 3) `Acceso` — recibe `logueado` (boolean). Retorna, a nivel del return, uno de
@@ -105,10 +100,8 @@ export function Acceso({ logueado }: { logueado: boolean }) {
   return (
     // Si logueado viene con true, se renderiza el <p>, si viene con false se renderiza el <a>.
     logueado ? <p>Bienvenido</p> : <a>Entrar</a>
-  )
+  );
 }
-
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — `&&`: pintar ALGO o NADA
@@ -127,10 +120,8 @@ export function AvisoError({ mensaje }: { mensaje?: string }) {
   return (
     // El div se renderizará siempre, pero si hay mensaje se renderizará el <p>.
     // Si no hay mensaje no se renderizará el <p>.
-    <div>
-      {mensaje && <p>{mensaje}</p>}
-    </div>
-  )
+    <div>{mensaje && <p>{mensaje}</p>}</div>
+  );
 }
 
 // 5) `Insignia` — recibe `contador` (number). Retorna un <span> que SIEMPRE se
@@ -142,12 +133,9 @@ export function AvisoError({ mensaje }: { mensaje?: string }) {
 export function Insignia({ contador }: { contador: number }) {
   return (
     // El span se renderizará siempre, pero si el contador es mayor a 0 se renderizará el <b>.
-    <span>
-      {contador > 0 && <b>{contador}</b>}
-    </span>
-  )
+    <span>{contador > 0 && <b>{contador}</b>}</span>
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — EARLY RETURN: cortar arriba para no anidar
@@ -162,8 +150,8 @@ export function Insignia({ contador }: { contador: number }) {
 //    <Perfil />              →  <p>Cargando...</p>
 //    <Perfil nombre="Ana" /> →  <h2>Ana</h2>
 export function Perfil({ nombre }: { nombre?: string }) {
-  if (nombre === undefined) return <p>Cargando...</p>
-  return <h2>{nombre}</h2>
+  if (nombre === undefined) return <p>Cargando...</p>;
+  return <h2>{nombre}</h2>;
 }
 
 // 7) `Lista` — recibe `items` (string[]). Si el array está VACÍO, early return
@@ -174,13 +162,16 @@ export function Perfil({ nombre }: { nombre?: string }) {
 //    <Lista items={["a", "b"]} />      →  <ul><li>a</li><li>b</li></ul>
 export function Lista({ items }: { items: string[] }) {
   if (items.length === 0) {
-    return <p>Sin resultados</p>
+    return <p>Sin resultados</p>;
   }
   return (
-    <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>
-  )
+    <ul>
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — ⚠️ LA TRAMPA DEL `&&` CON NÚMEROS (bug real famoso)
@@ -204,16 +195,11 @@ export function Lista({ items }: { items: string[] }) {
 //      CarritoRoto → <div>0</div>   ❌ el 0 se coló como texto
 //      CarritoBien → <div></div>    ✅ nada, como debe ser
 export function CarritoRoto({ cantidad }: { cantidad: number }) {
-  return <div>{cantidad && <b>Tienes {cantidad}</b>}</div>
+  return <div>{cantidad && <b>Tienes {cantidad}</b>}</div>;
 }
 export function CarritoBien({ cantidad }: { cantidad: number }) {
-  return (
-    <div>
-      {cantidad > 0 && <b>Tienes {cantidad}</b>}
-    </div>
-  )
+  return <div>{cantidad > 0 && <b>Tienes {cantidad}</b>}</div>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — CAPSTONE: varias condiciones tejidas
@@ -226,10 +212,10 @@ export function CarritoBien({ cantidad }: { cantidad: number }) {
 //      · `mensaje`   string, opcional
 //      · `noLeidas`  number, obligatoria
 export type NotificacionProps = {
-  cargando: boolean
-  mensaje?: string
-  noLeidas: number
-}
+  cargando: boolean;
+  mensaje?: string;
+  noLeidas: number;
+};
 
 // 10) `Notificacion` — usa `NotificacionProps` y, EN ESTE ORDEN de decisiones:
 //       a. si `cargando` es true → early return <p>Cargando...</p>
@@ -247,14 +233,16 @@ export type NotificacionProps = {
 export function Notificacion({ cargando, mensaje, noLeidas }: NotificacionProps) {
   return (
     // Si cargando es true, se renderizará un <p>
-    cargando
-      ? <p>Cargando...</p>
+    cargando ? (
+      <p>Cargando...</p>
+    ) : (
       // Si no, se renderizará un <section>
       // Si no hay mensaje, se renderizará "Sin novedades". Si hay mensaje se renderizará el mensaje
       // Si no hay noLeidas, no se renderizará el <b>. Si hay noLeidas, se renderizará el <b>
-      : <section>
+      <section>
         <span>{mensaje || "Sin novedades"}</span>
         {noLeidas > 0 && <b>{noLeidas} sin leer</b>}
       </section>
-  )
+    )
+  );
 }

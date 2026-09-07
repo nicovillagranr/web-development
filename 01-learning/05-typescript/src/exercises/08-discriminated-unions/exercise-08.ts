@@ -41,9 +41,7 @@
  * ===========================================================================*/
 
 export type Empleado =
-  | { nombre: string; salario: number }
-  | { nombre: string; tarifaHora: number; horas: number }
-
+  { nombre: string; salario: number } | { nombre: string; tarifaHora: number; horas: number };
 
 /* ── BLOQUE A — campo común vs campo exclusivo ─────────────────────────────── */
 
@@ -51,7 +49,7 @@ export type Empleado =
 //    necesitas estrechar nada.
 //    nombreDe({ nombre: "Ana", salario: 3000 }) → "Ana"
 export function nombreDe(e: Empleado): string {
-  return e.nombre
+  return e.nombre;
 }
 
 // 2) `esPorHoras` — true si el empleado es del tipo "por horas". Detéctalo con
@@ -59,9 +57,8 @@ export function nombreDe(e: Empleado): string {
 //    esPorHoras({ nombre: "Beto", tarifaHora: 20, horas: 100 }) → true
 //    esPorHoras({ nombre: "Ana", salario: 3000 }) → false
 export function esPorHoras(e: Empleado): boolean {
-  return "tarifaHora" in e
+  return "tarifaHora" in e;
 }
-
 
 /* ── BLOQUE B — calcular estrechando con `in` ──────────────────────────────── */
 
@@ -71,9 +68,9 @@ export function esPorHoras(e: Empleado): boolean {
 //    pagoMensual({ nombre: "Beto", tarifaHora: 20, horas: 100 }) → 2000
 export function pagoMensual(e: Empleado): number {
   if ("salario" in e) {
-    return e.salario
+    return e.salario;
   }
-  return e.tarifaHora * e.horas
+  return e.tarifaHora * e.horas;
 }
 
 // 4) `describirEmpleado` — un texto que combina nombre + tipo + pago:
@@ -82,14 +79,14 @@ export function pagoMensual(e: Empleado): number {
 //    (Reusa pagoMensual para el número.)
 export function describirEmpleado(e: Empleado): string {
   if ("salario" in e) {
-    return `${e.nombre}: asalariado (${pagoMensual(e)})`
+    return `${e.nombre}: asalariado (${pagoMensual(e)})`;
   }
-  return `${e.nombre}: por horas (${pagoMensual(e)})`
+  return `${e.nombre}: por horas (${pagoMensual(e)})`;
 }
 
 // 5) CAPSTONE `nominaTotal` — suma el `pagoMensual` de una lista de empleados
 //    mezclados (asalariados y por horas).
 //    nominaTotal([{ nombre: "Ana", salario: 3000 }, { nombre: "Beto", tarifaHora: 20, horas: 100 }]) → 5000
 export function nominaTotal(empleados: Empleado[]): number {
-  return empleados.reduce((acumulador, empleado) => acumulador + pagoMensual(empleado), 0)
+  return empleados.reduce((acumulador, empleado) => acumulador + pagoMensual(empleado), 0);
 }

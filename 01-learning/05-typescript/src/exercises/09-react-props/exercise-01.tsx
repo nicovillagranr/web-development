@@ -82,8 +82,7 @@
  *     pnpm typecheck
  * ===========================================================================*/
 
-import type { ReactNode } from 'react'
-
+import type { ReactNode } from "react";
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: un componente es una función que RETORNA JSX
@@ -96,9 +95,8 @@ import type { ReactNode } from 'react'
 //    Ojo: sin props significa que la función no declara ningún parámetro.
 //    <Hola />  →  <p>Hola</p>
 export function Hola() {
-  return <p>Hola</p>
+  return <p>Hola</p>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — UNA prop: tipar el parámetro-objeto
@@ -119,7 +117,7 @@ export function Hola() {
 //    exactamente `Hola, ` + el nombre.
 //    <Saludo nombre="Nico" />  →  <p>Hola, Nico</p>
 export function Saludo(props: { nombre: string }) {
-  return <p>Hola, {props.nombre}</p>
+  return <p>Hola, {props.nombre}</p>;
 }
 
 // 3) `Contador` — recibe la prop `total` (number) y retorna un <span> con el
@@ -127,9 +125,8 @@ export function Saludo(props: { nombre: string }) {
 //    propiedad cambia: aquí NO es string.
 //    <Contador total={3} />  →  <span>Total: 3</span>
 export function Contador(props: { total: number }) {
-  return <span>Total: {props.total}</span>
+  return <span>Total: {props.total}</span>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — DESESTRUCTURAR el parámetro (mismo tipo, otra sintaxis)
@@ -151,9 +148,8 @@ export function Contador(props: { total: number }) {
 //    dentro del cuerpo debes poder escribir `euros`, no `props.euros`.
 //    <Precio euros={12} />  →  <b>12 €</b>
 export function Precio({ euros }: { euros: number }) {
-  return <b>{euros} €</b>
+  return <b>{euros} €</b>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — VARIAS props, una OPCIONAL, y el tipo con NOMBRE
@@ -173,7 +169,7 @@ export function Precio({ euros }: { euros: number }) {
 //      · `texto`         string, obligatoria
 //      · `deshabilitado` boolean, OPCIONAL
 //    Exporta el tipo (el test lo importa).
-export type BotonProps = { texto: string, deshabilitado?: boolean }
+export type BotonProps = { texto: string; deshabilitado?: boolean };
 
 //    `Boton` — retorna un <button> con `texto` dentro. El atributo `disabled` del
 //    botón debe valer lo que llegue en `deshabilitado`, y `false` si no llegó
@@ -181,7 +177,7 @@ export type BotonProps = { texto: string, deshabilitado?: boolean }
 //    <Boton texto="Enviar" />                      →  <button>Enviar</button>  (habilitado)
 //    <Boton texto="Enviar" deshabilitado={true} /> →  <button disabled>Enviar</button>
 export function Boton({ texto, deshabilitado }: BotonProps) {
-  return <button disabled={deshabilitado ?? false}>{texto}</button>
+  return <button disabled={deshabilitado ?? false}>{texto}</button>;
 }
 
 // 6) `Insignia` — recibe `texto` (string) y `variante`, que SOLO puede ser
@@ -190,10 +186,9 @@ export function Boton({ texto, deshabilitado }: BotonProps) {
 //    Aquí se ve la ganancia real de TS en React: <Insignia variante="rojo" />
 //    ni siquiera compila. El error se caza escribiendo, no en producción.
 //    <Insignia texto="Nuevo" variante="info" />  →  <span class="info">Nuevo</span>
-export function Insignia({ texto, variante }: { texto: string, variante: 'info' | 'alerta' }) {
-  return <span className={variante}>{texto}</span>
+export function Insignia({ texto, variante }: { texto: string; variante: "info" | "alerta" }) {
+  return <span className={variante}>{texto}</span>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — CAPSTONE: una prop que es un ARRAY de objetos del dominio
@@ -205,7 +200,7 @@ export function Insignia({ texto, variante }: { texto: string, variante: 'info' 
  * por ti — es un canal interno de React.
  */
 
-export type Usuario = { id: number; nombre: string }
+export type Usuario = { id: number; nombre: string };
 
 // 7) `ListaUsuarios` — recibe la prop `usuarios` (un array de `Usuario`) y
 //    retorna un <ul> con un <li> por cada usuario, mostrando su `nombre`.
@@ -216,11 +211,12 @@ export type Usuario = { id: number; nombre: string }
 export function ListaUsuarios({ usuarios }: { usuarios: Usuario[] }) {
   return (
     <ul>
-      {usuarios.map((usuario) => <li key={usuario.id}>{usuario.nombre}</li>)}
+      {usuarios.map((usuario) => (
+        <li key={usuario.id}>{usuario.nombre}</li>
+      ))}
     </ul>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — `children`: lo que va ENTRE las etiquetas también es una prop
@@ -252,10 +248,9 @@ export function ListaUsuarios({ usuarios }: { usuarios: Usuario[] }) {
 //    `className="caja"`. El contenido va dentro del div, tal cual llega.
 //    <Caja><p>Hola</p></Caja>  →  <div class="caja"><p>Hola</p></div>
 export function Caja({ children }: { children: ReactNode }) {
-  return <div className="caja">{children}</div>
+  return <div className="caja">{children}</div>;
 }
 // <Caja><p>Hola</p></Caja>  →  <div class="caja"><p>Hola</p></div>
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 6 — una prop puede ser una FUNCIÓN
@@ -289,10 +284,9 @@ export function Caja({ children }: { children: ReactNode }) {
 //    como contenido, que al hacer clic ejecute `onAccion`.
 //    <BotonAccion etiqueta="Borrar" onAccion={avisar} />  →  <button>Borrar</button>
 //                                                            (al clic, corre `avisar`)
-export function BotonAccion({ etiqueta, onAccion }: { etiqueta: string, onAccion: () => void }) {
-  return <button onClick={onAccion}>{etiqueta}</button>
+export function BotonAccion({ etiqueta, onAccion }: { etiqueta: string; onAccion: () => void }) {
+  return <button onClick={onAccion}>{etiqueta}</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 7 — CAPSTONE: las tres clases de prop en un solo componente
@@ -307,7 +301,7 @@ export function BotonAccion({ etiqueta, onAccion }: { etiqueta: string, onAccion
 //       · `children` el contenido (ReactNode)
 //       · `onCerrar` una función sin argumentos que no devuelve nada
 //     Expórtalo (el test lo importa).
-export type PanelProps = { titulo: string, children: ReactNode, onCerrar: () => void }
+export type PanelProps = { titulo: string; children: ReactNode; onCerrar: () => void };
 
 //     `Panel` — retorna un <section> que contenga, EN ESTE ORDEN:
 //       1. un <h2> con el título
@@ -322,5 +316,5 @@ export function Panel({ titulo, onCerrar, children }: PanelProps) {
       <button onClick={onCerrar}>Cerrar</button>
       {children}
     </section>
-  )
+  );
 }

@@ -23,7 +23,7 @@
 // 1) `totalPor` — suma de `valor(x)`.
 //    totalPor([{ p: 10 }, { p: 5 }], (x) => x.p) → 15
 export function totalPor<T>(xs: T[], valor: (x: T) => number): number {
-  return xs.reduce((s, x) => s + valor(x), 0)
+  return xs.reduce((s, x) => s + valor(x), 0);
 }
 
 // 2) `agruparPor` — listas por clave.
@@ -32,7 +32,7 @@ export function agruparPor<T>(xs: T[], clave: (x: T) => string): Record<string, 
   return xs.reduce<Record<string, T[]>>(
     (acc, x) => ({ ...acc, [clave(x)]: [...(acc[clave(x)] ?? []), x] }),
     {},
-  )
+  );
 }
 
 /* --- BLOQUE B — el mayor y el top 3 --- */
@@ -43,13 +43,13 @@ export function mayorPor<T>(xs: T[], valor: (x: T) => number): T | undefined {
   return xs.reduce<T | undefined>(
     (m, x) => (m === undefined || valor(x) > valor(m) ? x : m),
     undefined,
-  )
+  );
 }
 
 // 4) `top3Por` — los 3 de mayor `valor(x)`.
 //    top3Por([{ v: 1 }, { v: 5 }, { v: 3 }, { v: 2 }], (x) => x.v) → [{v:5},{v:3},{v:2}]
 export function top3Por<T>(xs: T[], valor: (x: T) => number): T[] {
-  return [...xs].sort((a, b) => valor(b) - valor(a)).slice(0, 3)
+  return [...xs].sort((a, b) => valor(b) - valor(a)).slice(0, 3);
 }
 
 /* --- BLOQUE C — CAPSTONE: componer agrupar + mayor --- */
@@ -62,8 +62,11 @@ export function mejorDeCadaGrupo<T>(
   clave: (x: T) => string,
   valor: (x: T) => number,
 ): Record<string, T | undefined> {
-  const grupos = agruparPor(xs, clave)
+  const grupos = agruparPor(xs, clave);
   return Object.fromEntries(
-    Object.entries(grupos).map(([k, lista]): [string, T | undefined] => [k, mayorPor(lista, valor)]),
-  )
+    Object.entries(grupos).map(([k, lista]): [string, T | undefined] => [
+      k,
+      mayorPor(lista, valor),
+    ]),
+  );
 }

@@ -51,10 +51,9 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import { useState } from 'react'
+import { useState } from "react";
 // import type { ChangeEvent } from 'react'
-import type { SubmitEvent } from 'react';
-
+import type { SubmitEvent } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el envío y el freno
@@ -94,29 +93,49 @@ import type { SubmitEvent } from 'react';
 //    El starter ya avisa; lo que no hace es lo segundo.
 export function FormularioAvisa({ alEnviar }: { alEnviar: () => void }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); alEnviar() }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        alEnviar();
+      }}
+    >
       <input name="nombre" />
       <button>Enviar</button>
     </form>
-  )
+  );
 }
-{/* <FormularioAvisa alEnviar={() => console.log('enviado')} /> */ }
+{
+  /* <FormularioAvisa alEnviar={() => console.log('enviado')} /> */
+}
 
 // 2) `FormularioConDosBotones` — el mismo formulario con dos botones: "Enviar", que
 //    envía, y "Limpiar", que llama a `alLimpiar` y **no debe enviar nada**.
 //    Ahora mismo "Limpiar" hace las dos cosas.
 //    Restricción: el `onSubmit` del <form> no se toca; el arreglo es cosa del botón.
-export function FormularioConDosBotones({ alEnviar, alLimpiar }: { alEnviar: () => void; alLimpiar: () => void }) {
+export function FormularioConDosBotones({
+  alEnviar,
+  alLimpiar,
+}: {
+  alEnviar: () => void;
+  alLimpiar: () => void;
+}) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); alEnviar() }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        alEnviar();
+      }}
+    >
       <input name="nombre" />
       {/* SOLUCIÓN: type="button" evita que este botón envíe el formulario */}
-      <button type="button" onClick={alLimpiar}>Limpiar</button>
+      <button type="button" onClick={alLimpiar}>
+        Limpiar
+      </button>
 
       {/* SOLUCIÓN: type="submit" (o dejarlo por defecto) para que se encargue de enviar */}
       <button type="submit">Enviar</button>
     </form>
-  )
+  );
 }
 // <FormularioConDosBotones alEnviar={() => {}} alLimpiar={() => {}} />
 
@@ -127,18 +146,17 @@ export function FormularioConDosBotones({ alEnviar, alLimpiar }: { alEnviar: () 
 //    Este drill exige un import nuevo, y sale de 'react'.
 export function FormularioManejadorFuera({ alEnviar }: { alEnviar: () => void }) {
   const manejar = (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    alEnviar()
-  }
+    e.preventDefault();
+    alEnviar();
+  };
   return (
     <form onSubmit={manejar}>
       <input name="nombre" />
       <button>Enviar</button>
     </form>
-  )
+  );
 }
 // <FormularioManejadorFuera alEnviar={() => {}} />
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — de dónde salen los datos
@@ -176,13 +194,18 @@ export function FormularioManejadorFuera({ alEnviar }: { alEnviar: () => void })
 //    lo que hay escrito. El `useState` y el campo ya están montados y funcionan.
 //    El starter va a buscar el dato al sitio equivocado.
 export function FormularioLeeElNombre({ alEnviar }: { alEnviar: (n: string) => void }) {
-  const [nombre, setNombre] = useState('')
+  const [nombre, setNombre] = useState("");
   return (
-    <form onSubmit={(e) => { e.preventDefault(); alEnviar(nombre) }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        alEnviar(nombre);
+      }}
+    >
       <input name="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
       <button type="submit">Enviar</button>
     </form>
-  )
+  );
 }
 // <FormularioLeeElNombre alEnviar={(n) => console.log(n)} />
 
@@ -190,17 +213,19 @@ export function FormularioLeeElNombre({ alEnviar }: { alEnviar: (n: string) => v
 //    campo se queda vacío, listo para el siguiente. Ahora se queda con lo enviado
 //    puesto.
 export function FormularioLimpiaAlEnviar({ alEnviar }: { alEnviar: (n: string) => void }) {
-  const [nombre, setNombre] = useState('')
+  const [nombre, setNombre] = useState("");
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      alEnviar(nombre);
-      setNombre('')
-    }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        alEnviar(nombre);
+        setNombre("");
+      }}
+    >
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
       <button type="submit">Enviar</button>
     </form>
-  )
+  );
 }
 // <FormularioLimpiaAlEnviar alEnviar={(n) => console.log(n)} />
 
@@ -209,19 +234,21 @@ export function FormularioLimpiaAlEnviar({ alEnviar }: { alEnviar: (n: string) =
 //    campo lleno, se envía y se limpia como antes.
 //    El starter envía siempre, aunque no haya nada escrito.
 export function FormularioNoEnviaVacio({ alEnviar }: { alEnviar: (n: string) => void }) {
-  const [nombre, setNombre] = useState('')
+  const [nombre, setNombre] = useState("");
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      if (nombre) {
-        alEnviar(nombre);
-        setNombre('')
-      }
-    }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (nombre) {
+          alEnviar(nombre);
+          setNombre("");
+        }
+      }}
+    >
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
       <button>Enviar</button>
     </form>
-  )
+  );
 }
 // <FormularioNoEnviaVacio alEnviar={(n) => console.log(n)} />
 
@@ -230,7 +257,6 @@ export function FormularioNoEnviaVacio({ alEnviar }: { alEnviar: (n: string) => 
  * valida y se limpia. Lo que le falta para ser el de un proyecto real es que la
  * función de arriba reciba DATOS y no piezas del DOM — y de eso va el 09.
  * ───────────────────────────────────────────────────────────────────────────── */
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA S — el click y el envío son DOS cosas
@@ -255,11 +281,7 @@ export function FormularioNoEnviaVacio({ alEnviar }: { alEnviar: (n: string) => 
 //     envío posible. Al pulsarlo registra "click".
 //     El starter escucha un evento que en este botón no va a ocurrir jamás.
 export function BotonSuelto({ registrar }: { registrar: (que: string) => void }) {
-  return (
-    <button onClick={() => registrar('click')}>
-      Pulsa
-    </button>
-  )
+  return <button onClick={() => registrar("click")}>Pulsa</button>;
 }
 // <BotonSuelto registrar={(q) => console.log(q)} />   // "click"
 
@@ -268,12 +290,15 @@ export function BotonSuelto({ registrar }: { registrar: (que: string) => void })
 //     Restricción: el <button> tiene que acabar sin un solo manejador encima.
 export function EnvioSinManejadorEnElBoton({ registrar }: { registrar: (que: string) => void }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
-      <button>
-        Enviar
-      </button>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        registrar("submit");
+      }}
+    >
+      <button>Enviar</button>
     </form>
-  )
+  );
 }
 // <EnvioSinManejadorEnElBoton registrar={(q) => console.log(q)} />   // "submit"
 
@@ -282,12 +307,15 @@ export function EnvioSinManejadorEnElBoton({ registrar }: { registrar: (que: str
 //     El starter solo tiene una de las dos.
 export function RegistraLosDos({ registrar }: { registrar: (que: string) => void }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
-      <button onClick={() => registrar('click')}>
-        Enviar
-      </button>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        registrar("submit");
+      }}
+    >
+      <button onClick={() => registrar("click")}>Enviar</button>
     </form>
-  )
+  );
 }
 // <RegistraLosDos registrar={(q) => console.log(q)} />   // "click", luego "submit"
 
@@ -297,12 +325,17 @@ export function RegistraLosDos({ registrar }: { registrar: (que: string) => void
 //     botón ES, no lo que hace.
 export function BotonQueNoProvoca({ registrar }: { registrar: (que: string) => void }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
-      <button type="button" onClick={() => registrar('click')}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        registrar("submit");
+      }}
+    >
+      <button type="button" onClick={() => registrar("click")}>
         Pulsa
       </button>
     </form>
-  )
+  );
 }
 // <BotonQueNoProvoca registrar={(q) => console.log(q)} />   // "click"
 
@@ -311,13 +344,18 @@ export function BotonQueNoProvoca({ registrar }: { registrar: (que: string) => v
 //     El starter dejó el formulario sin ningún botón capaz de enviarlo.
 export function EnterEnvia({ registrar }: { registrar: (que: string) => void }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); registrar('submit') }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        registrar("submit");
+      }}
+    >
       <input name="nombre" />
       <input name="email" />
       {/* Cambiado a type="submit" para activar el comportamiento nativo del Enter */}
       <button type="submit">Enviar</button>
     </form>
-  )
+  );
 }
 // <EnterEnvia registrar={(q) => console.log(q)} />   // "submit" al pulsar Enter
 
@@ -327,13 +365,18 @@ export function EnterEnvia({ registrar }: { registrar: (que: string) => void }) 
 //     click, y es el mismo freno del drill 1 puesto un paso antes.
 export function CortarAntesDeNacer({ registrar }: { registrar: (que: string) => void }) {
   return (
-    <form onSubmit={() => registrar('submit')}>
+    <form onSubmit={() => registrar("submit")}>
       {/* Recibimos el evento 'e' y llamamos a preventDefault para cortar el submit */}
-      <button onClick={(e) => { e.preventDefault(); registrar('click') }}>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          registrar("click");
+        }}
+      >
         Pulsa
       </button>
     </form>
-  )
+  );
 }
 // <CortarAntesDeNacer registrar={(q) => console.log(q)} />   // "click"
 

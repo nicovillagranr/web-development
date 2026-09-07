@@ -32,8 +32,7 @@
  *     pnpm test:run src/exercises/04-objetos/exercise-09.test.ts
  * ===========================================================================*/
 
-export type Item = { id: number; nombre: string }
-
+export type Item = { id: number; nombre: string };
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — CONSTRUIR el índice (a mano → reduce)
@@ -49,12 +48,12 @@ export type Item = { id: number; nombre: string }
 // export type Item = { id: number; nombre: string }
 
 export function ponerItem(indice: Record<number, Item>, item: Item): Record<number, Item> {
-  return { ...indice, [item.id]: item } // item.id es la clave
+  return { ...indice, [item.id]: item }; // item.id es la clave
 }
 // El return toma el objeto original, y como está vacío no copia nada. Luego pone el objeto con id 1
-ponerItem({}, { id: 1, nombre: "a" }) // -> { 1: { id: 1, nombre: "a" } }
+ponerItem({}, { id: 1, nombre: "a" }); // -> { 1: { id: 1, nombre: "a" } }
 // El return copia el objeto con id 1, y pega el objeto con id 2
-ponerItem({ 1: { id: 1, nombre: "a" } }, { id: 2, nombre: "b" }) // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
+ponerItem({ 1: { id: 1, nombre: "a" } }, { id: 2, nombre: "b" }); // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
 
 // 2) `indexarDosAMano` — mete DOS items, sin bucle, para ver el arrastre (como el
 //    meterDosAMano del 08). Reasignas `acc`:
@@ -64,16 +63,16 @@ ponerItem({ 1: { id: 1, nombre: "a" } }, { id: 2, nombre: "b" }) // -> { 1: { id
 //        return acc
 //    indexarDosAMano({id:1,nombre:"a"}, {id:2,nombre:"b"}) → { 1:{..}, 2:{..} }
 export function indexarDosAMano(a: Item, b: Item): Record<number, Item> {
-  let acumulador: Record<number, Item> = {} // Primero creamos un objeto vacío
+  let acumulador: Record<number, Item> = {}; // Primero creamos un objeto vacío
 
-  acumulador = ponerItem(acumulador, a) // Siguiendo la función anterior. El primer parámetro es el acumulador vacío y el segundo parámetro es el item a meter
-  acumulador = ponerItem(acumulador, b) // Siguiendo la función anterior. El primer parámetro es el acumulador ya con a dentro y el segundo parámetro viene a unirse con b
+  acumulador = ponerItem(acumulador, a); // Siguiendo la función anterior. El primer parámetro es el acumulador vacío y el segundo parámetro es el item a meter
+  acumulador = ponerItem(acumulador, b); // Siguiendo la función anterior. El primer parámetro es el acumulador ya con a dentro y el segundo parámetro viene a unirse con b
 
   // Retornamos el objeto terminado
-  return acumulador
+  return acumulador;
 }
 // Primera pasada: La función recibe acumulador vacío y a. La segunda pasada: La función recibe el acumulador con a dentro y b
-indexarDosAMano({ id: 1, nombre: "a" }, { id: 2, nombre: "b" }) // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
+indexarDosAMano({ id: 1, nombre: "a" }, { id: 2, nombre: "b" }); // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
 
 // 3) `indexarPorId` — la lista entera convertida en diccionario por id. Es drill 2,
 //    pero con `.reduce` sobre `items`. Empieza en `{}`.
@@ -81,11 +80,13 @@ indexarDosAMano({ id: 1, nombre: "a" }, { id: 2, nombre: "b" }) // -> { 1: { id:
 //    indexarPorId([{ id: 1, nombre: "a" }, { id: 2, nombre: "b" }]) → { 1:{..}, 2:{..} }
 export function indexarPorId(items: Item[]): Record<number, Item> {
   return items.reduce<Record<number, Item>>((acumulador, item) => {
-    return ponerItem(acumulador, item)
-  }, {})
+    return ponerItem(acumulador, item);
+  }, {});
 }
-indexarPorId([{ id: 1, nombre: "a" }, { id: 2, nombre: "b" }]) // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
-
+indexarPorId([
+  { id: 1, nombre: "a" },
+  { id: 2, nombre: "b" },
+]); // -> { 1: { id: 1, nombre: "a" }, 2: { id: 2, nombre: "b" } }
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — LEER con guard (el item puede no existir)
@@ -98,20 +99,19 @@ indexarPorId([{ id: 1, nombre: "a" }, { id: 2, nombre: "b" }]) // -> { 1: { id: 
 //    casillero; el tipo ya avisa que puede ser undefined.)
 //    buscar({ 1: {id:1,nombre:"a"} }, 1) → {id:1,nombre:"a"} ; buscar({}, 9) → undefined
 export function buscar(indice: Record<number, Item>, id: number): Item | undefined {
-  return indice[id]
+  return indice[id];
 }
-buscar({ 1: { id: 1, nombre: "a" } }, 1) // -> { id: 1, nombre: "a" }
-buscar({ 1: { id: 1, nombre: "a" } }, 9) // -> undefined
+buscar({ 1: { id: 1, nombre: "a" } }, 1); // -> { id: 1, nombre: "a" }
+buscar({ 1: { id: 1, nombre: "a" } }, 9); // -> undefined
 
 // 5) `nombrePorId` — el nombre del item, o "desconocido" si no está. Doble guard:
 //    `indice[id]?.nombre` (el nombre si el item existe) `?? "desconocido"`.
 //    nombrePorId({ 1: {id:1,nombre:"a"} }, 1) → "a" ; (.., 9) → "desconocido"
 export function nombrePorId(indice: Record<number, Item>, id: number): string {
-  return indice[id]?.nombre ?? "desconocido"
+  return indice[id]?.nombre ?? "desconocido";
 }
-nombrePorId({ 1: { id: 1, nombre: "a" } }, 9) // -> "desconocido", porque 9 no existe dentro del diccionario
-nombrePorId({ 1: { id: 1, nombre: "a" } }, 1) // -> "a", porque 1 si existe
-
+nombrePorId({ 1: { id: 1, nombre: "a" } }, 9); // -> "desconocido", porque 9 no existe dentro del diccionario
+nombrePorId({ 1: { id: 1, nombre: "a" } }, 1); // -> "a", porque 1 si existe
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — ACTUALIZAR inmutable (copiar el item, y volver a meterlo)
@@ -124,9 +124,9 @@ nombrePorId({ 1: { id: 1, nombre: "a" } }, 1) // -> "a", porque 1 si existe
 //    `nombre` (la regla "gana la última"). Aquí NO hay índice todavía: solo el item.
 //    renombrarItem({ id: 1, nombre: "a" }, "z") → { id: 1, nombre: "z" }
 export function renombrarItem(item: Item, nombre: string): Item {
-  return { ...item, nombre }
+  return { ...item, nombre };
 }
-renombrarItem({ id: 1, nombre: "a" }, "z") // -> { id: 1, nombre: "z" }
+renombrarItem({ id: 1, nombre: "a" }, "z"); // -> { id: 1, nombre: "z" }
 
 // 7) ⭐ `actualizarNombre` — cambia el nombre del item `id` (inmutable). Si el id no
 //    existe, devuelve el índice IGUAL. Junta el guard (bloque 2) con drill 6 + drill 1:
@@ -138,17 +138,20 @@ renombrarItem({ id: 1, nombre: "a" }, "z") // -> { id: 1, nombre: "z" }
 
 // export type Item = { id: number; nombre: string }
 
-export function actualizarNombre(indice: Record<number, Item>, id: number, nombre: string): Record<number, Item> {
-  const item = indice[id] // TIPO: Item | undefined (por noUncheckedIndexedAccess)
+export function actualizarNombre(
+  indice: Record<number, Item>,
+  id: number,
+  nombre: string,
+): Record<number, Item> {
+  const item = indice[id]; // TIPO: Item | undefined (por noUncheckedIndexedAccess)
   // VALOR (con id 1): { id: 1, nombre: "a" } — el Item pelado, sin el "1:" de fuera (la clave se queda en la capa 1)
   if (item === undefined) {
-    return indice
+    return indice;
   }
-  return ponerItem(indice, renombrarItem(item, nombre))
+  return ponerItem(indice, renombrarItem(item, nombre));
 }
-actualizarNombre({ 1: { id: 1, nombre: "a" } }, 1, "z") // -> { 1: { id: 1, nombre: "z" } }
-actualizarNombre({ 1: { id: 1, nombre: "a" } }, 9, "z") // -> { 1: { id: 1, nombre: "a" } } (el índice IGUAL: el id 9 no existe, el guard devuelve indice sin tocar nada)
-
+actualizarNombre({ 1: { id: 1, nombre: "a" } }, 1, "z"); // -> { 1: { id: 1, nombre: "z" } }
+actualizarNombre({ 1: { id: 1, nombre: "a" } }, 9, "z"); // -> { 1: { id: 1, nombre: "a" } } (el índice IGUAL: el id 9 no existe, el guard devuelve indice sin tocar nada)
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — CAPSTONE: muchos ids de golpe
@@ -159,7 +162,7 @@ actualizarNombre({ 1: { id: 1, nombre: "a" } }, 9, "z") // -> { 1: { id: 1, nomb
 //    NO es pieza nueva: es `nombrePorId` (drill 5) aplicado a cada id con `.map`.
 //    nombresDe({ 1:{id:1,nombre:"a"}, 2:{id:2,nombre:"b"} }, [1, 9, 2]) → ["a", "desconocido", "b"]
 export function nombresDe(indice: Record<number, Item>, ids: number[]): string[] {
-  return ids.map((id) => nombrePorId(indice, id))
+  return ids.map((id) => nombrePorId(indice, id));
 }
-nombresDe({ 1: { id: 1, nombre: "a" } }, [1, 9]) // -> ["a", "desconocido"]
-nombresDe({ 1: { id: 1, nombre: "a" } }, [1, 9, 2]) // -> ["a", "desconocido", "b"]
+nombresDe({ 1: { id: 1, nombre: "a" } }, [1, 9]); // -> ["a", "desconocido"]
+nombresDe({ 1: { id: 1, nombre: "a" } }, [1, 9, 2]); // -> ["a", "desconocido", "b"]

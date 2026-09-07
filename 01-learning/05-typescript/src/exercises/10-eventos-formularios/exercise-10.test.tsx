@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   CampoTexto,
   SelectorPrioridad,
@@ -20,226 +20,226 @@ import {
   ListaQueCrece,
   ListaQueMengua,
   MiniGestor,
-} from './exercise-10'
+} from "./exercise-10";
 
 const tareaDe = (id: string, texto: string, hecha = false) =>
-  ({ id, texto, prioridad: 'media', hecha }) as const
+  ({ id, texto, prioridad: "media", hecha }) as const;
 
-describe('10-eventos-formularios / exercise-10 — CAPSTONE: el formulario entero', () => {
-  it('1) CampoTexto — pinta lo que le llega y avisa con el texto', async () => {
-    const espia = vi.fn()
-    render(<CampoTexto texto="hola" alEscribir={espia} />)
-    const campo = screen.getByRole('textbox')
-    expect(campo).toHaveValue('hola')
-    await userEvent.type(campo, '!')
-    expect(espia).toHaveBeenLastCalledWith('hola!')
-  })
+describe("10-eventos-formularios / exercise-10 — CAPSTONE: el formulario entero", () => {
+  it("1) CampoTexto — pinta lo que le llega y avisa con el texto", async () => {
+    const espia = vi.fn();
+    render(<CampoTexto texto="hola" alEscribir={espia} />);
+    const campo = screen.getByRole("textbox");
+    expect(campo).toHaveValue("hola");
+    await userEvent.type(campo, "!");
+    expect(espia).toHaveBeenLastCalledWith("hola!");
+  });
 
-  it('2) SelectorPrioridad — pinta la que le llega y avisa con una Prioridad', async () => {
-    const espia = vi.fn()
-    render(<SelectorPrioridad prioridad="media" alElegir={espia} />)
-    const selector = screen.getByRole('combobox')
-    expect(selector).toHaveValue('media')
-    await userEvent.selectOptions(selector, 'alta')
-    expect(espia).toHaveBeenLastCalledWith('alta')
-  })
+  it("2) SelectorPrioridad — pinta la que le llega y avisa con una Prioridad", async () => {
+    const espia = vi.fn();
+    render(<SelectorPrioridad prioridad="media" alElegir={espia} />);
+    const selector = screen.getByRole("combobox");
+    expect(selector).toHaveValue("media");
+    await userEvent.selectOptions(selector, "alta");
+    expect(espia).toHaveBeenLastCalledWith("alta");
+  });
 
-  it('3) FormularioTarea — entrega texto y prioridad, y se deja limpio', async () => {
-    const espia = vi.fn()
-    render(<FormularioTarea alAñadir={espia} />)
-    const campo = screen.getByRole('textbox')
+  it("3) FormularioTarea — entrega texto y prioridad, y se deja limpio", async () => {
+    const espia = vi.fn();
+    render(<FormularioTarea alAñadir={espia} />);
+    const campo = screen.getByRole("textbox");
 
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(espia).not.toHaveBeenCalled()
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(espia).not.toHaveBeenCalled();
 
-    await userEvent.type(campo, 'Comprar pan')
-    await userEvent.selectOptions(screen.getByRole('combobox'), 'alta')
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
+    await userEvent.type(campo, "Comprar pan");
+    await userEvent.selectOptions(screen.getByRole("combobox"), "alta");
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
 
-    expect(espia).toHaveBeenLastCalledWith({ texto: 'Comprar pan', prioridad: 'alta' })
-    expect(campo).toHaveValue('')
-    expect(screen.getByRole('combobox')).toHaveValue('media')
-  })
+    expect(espia).toHaveBeenLastCalledWith({ texto: "Comprar pan", prioridad: "alta" });
+    expect(campo).toHaveValue("");
+    expect(screen.getByRole("combobox")).toHaveValue("media");
+  });
 
-  it('4) FilaTarea — la casilla avisa con id y estado; el botón, con el id', async () => {
-    const alMarcar = vi.fn()
-    const alBorrar = vi.fn()
-    render(<FilaTarea tarea={tareaDe('t-7', 'Regar')} alMarcar={alMarcar} alBorrar={alBorrar} />)
-    await userEvent.click(screen.getByRole('checkbox'))
-    expect(alMarcar).toHaveBeenLastCalledWith('t-7', true)
-    await userEvent.click(screen.getByRole('button'))
-    expect(alBorrar).toHaveBeenLastCalledWith('t-7')
-  })
+  it("4) FilaTarea — la casilla avisa con id y estado; el botón, con el id", async () => {
+    const alMarcar = vi.fn();
+    const alBorrar = vi.fn();
+    render(<FilaTarea tarea={tareaDe("t-7", "Regar")} alMarcar={alMarcar} alBorrar={alBorrar} />);
+    await userEvent.click(screen.getByRole("checkbox"));
+    expect(alMarcar).toHaveBeenLastCalledWith("t-7", true);
+    await userEvent.click(screen.getByRole("button"));
+    expect(alBorrar).toHaveBeenLastCalledWith("t-7");
+  });
 
-  it('5) ListaTareas — pinta una fila por tarea y reparte los avisos', async () => {
-    const alMarcar = vi.fn()
-    const alBorrar = vi.fn()
+  it("5) ListaTareas — pinta una fila por tarea y reparte los avisos", async () => {
+    const alMarcar = vi.fn();
+    const alBorrar = vi.fn();
     render(
       <ListaTareas
-        tareas={[tareaDe('t-1', 'Uno'), tareaDe('t-2', 'Dos')]}
+        tareas={[tareaDe("t-1", "Uno"), tareaDe("t-2", "Dos")]}
         alMarcar={alMarcar}
         alBorrar={alBorrar}
       />,
-    )
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
-    await userEvent.click(screen.getByRole('button', { name: 'Borrar Dos' }))
-    expect(alBorrar).toHaveBeenLastCalledWith('t-2')
-  })
+    );
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    await userEvent.click(screen.getByRole("button", { name: "Borrar Dos" }));
+    expect(alBorrar).toHaveBeenLastCalledWith("t-2");
+  });
 
-  it('6) GestorDeTareas — añade, marca y borra de verdad', async () => {
-    render(<GestorDeTareas />)
-    const campo = screen.getByRole('textbox')
+  it("6) GestorDeTareas — añade, marca y borra de verdad", async () => {
+    render(<GestorDeTareas />);
+    const campo = screen.getByRole("textbox");
 
-    await userEvent.type(campo, 'Regar')
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(screen.getByText('Regar')).toBeInTheDocument()
+    await userEvent.type(campo, "Regar");
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(screen.getByText("Regar")).toBeInTheDocument();
 
-    await userEvent.type(campo, 'Comprar pan')
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    await userEvent.type(campo, "Comprar pan");
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
 
-    const casillas = screen.getAllByRole('checkbox')
-    const primera = casillas[0]
-    if (!primera) throw new Error('no hay casillas')
-    await userEvent.click(primera)
-    expect(primera).toBeChecked()
+    const casillas = screen.getAllByRole("checkbox");
+    const primera = casillas[0];
+    if (!primera) throw new Error("no hay casillas");
+    await userEvent.click(primera);
+    expect(primera).toBeChecked();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Borrar Regar' }))
-    expect(screen.queryByText('Regar')).not.toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(1)
-  })
-})
+    await userEvent.click(screen.getByRole("button", { name: "Borrar Regar" }));
+    expect(screen.queryByText("Regar")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+  });
+});
 
-describe('10-eventos-formularios / exercise-10 — escalera E', () => {
-  it('E1) EtiquetaTexto — pinta la prop, y la sigue si cambia', () => {
-    const { rerender } = render(<EtiquetaTexto texto="hola" />)
-    expect(screen.getByText('hola')).toBeInTheDocument()
-    rerender(<EtiquetaTexto texto="adios" />)
-    expect(screen.getByText('adios')).toBeInTheDocument()
-  })
+describe("10-eventos-formularios / exercise-10 — escalera E", () => {
+  it("E1) EtiquetaTexto — pinta la prop, y la sigue si cambia", () => {
+    const { rerender } = render(<EtiquetaTexto texto="hola" />);
+    expect(screen.getByText("hola")).toBeInTheDocument();
+    rerender(<EtiquetaTexto texto="adios" />);
+    expect(screen.getByText("adios")).toBeInTheDocument();
+  });
 
-  it('E2) BotonQueAvisa — avisa al pulsar, y no antes', async () => {
-    const espia = vi.fn()
-    render(<BotonQueAvisa alPulsar={espia} />)
-    expect(espia).not.toHaveBeenCalled()
-    await userEvent.click(screen.getByRole('button'))
-    expect(espia).toHaveBeenCalledTimes(1)
-  })
+  it("E2) BotonQueAvisa — avisa al pulsar, y no antes", async () => {
+    const espia = vi.fn();
+    render(<BotonQueAvisa alPulsar={espia} />);
+    expect(espia).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button"));
+    expect(espia).toHaveBeenCalledTimes(1);
+  });
 
-  it('E3) PadreQueGuarda — lo tecleado en el hijo sube y se pinta arriba', async () => {
-    render(<PadreQueGuarda />)
-    await userEvent.type(screen.getByRole('textbox'), 'hola')
-    expect(screen.getByText('hola')).toBeInTheDocument()
-  })
+  it("E3) PadreQueGuarda — lo tecleado en el hijo sube y se pinta arriba", async () => {
+    render(<PadreQueGuarda />);
+    await userEvent.type(screen.getByRole("textbox"), "hola");
+    expect(screen.getByText("hola")).toBeInTheDocument();
+  });
 
-  it('E4) PadreQueLimpia — el botón del padre vacía el campo del hijo', async () => {
-    render(<PadreQueLimpia />)
-    const campo = screen.getByRole('textbox')
-    await userEvent.type(campo, 'hola')
-    expect(campo).toHaveValue('hola')
-    await userEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
-    expect(campo).toHaveValue('')
-  })
+  it("E4) PadreQueLimpia — el botón del padre vacía el campo del hijo", async () => {
+    render(<PadreQueLimpia />);
+    const campo = screen.getByRole("textbox");
+    await userEvent.type(campo, "hola");
+    expect(campo).toHaveValue("hola");
+    await userEvent.click(screen.getByRole("button", { name: "Limpiar" }));
+    expect(campo).toHaveValue("");
+  });
 
-  it('E5) PadreConDosCajas — los dos estados son independientes', async () => {
-    render(<PadreConDosCajas />)
-    const [caja1, caja2] = screen.getAllByRole('textbox')
-    if (!caja1 || !caja2) throw new Error('faltan cajas')
-    await userEvent.type(caja1, 'Nico')
-    await userEvent.type(caja2, 'n@a.com')
-    expect(screen.getByText('nombre: Nico')).toBeInTheDocument()
-    expect(screen.getByText('email: n@a.com')).toBeInTheDocument()
-  })
+  it("E5) PadreConDosCajas — los dos estados son independientes", async () => {
+    render(<PadreConDosCajas />);
+    const [caja1, caja2] = screen.getAllByRole("textbox");
+    if (!caja1 || !caja2) throw new Error("faltan cajas");
+    await userEvent.type(caja1, "Nico");
+    await userEvent.type(caja2, "n@a.com");
+    expect(screen.getByText("nombre: Nico")).toBeInTheDocument();
+    expect(screen.getByText("email: n@a.com")).toBeInTheDocument();
+  });
 
-  it('E6) PadreQueEntregaLosDos — entrega los dos juntos, en un objeto', async () => {
-    const espia = vi.fn()
-    render(<PadreQueEntregaLosDos alEnviar={espia} />)
-    const [caja1, caja2] = screen.getAllByRole('textbox')
-    if (!caja1 || !caja2) throw new Error('faltan cajas')
-    await userEvent.type(caja1, 'Nico')
-    await userEvent.type(caja2, 'n@a.com')
-    await userEvent.click(screen.getByRole('button', { name: 'Enviar' }))
-    expect(espia).toHaveBeenLastCalledWith({ nombre: 'Nico', email: 'n@a.com' })
-  })
-})
+  it("E6) PadreQueEntregaLosDos — entrega los dos juntos, en un objeto", async () => {
+    const espia = vi.fn();
+    render(<PadreQueEntregaLosDos alEnviar={espia} />);
+    const [caja1, caja2] = screen.getAllByRole("textbox");
+    if (!caja1 || !caja2) throw new Error("faltan cajas");
+    await userEvent.type(caja1, "Nico");
+    await userEvent.type(caja2, "n@a.com");
+    await userEvent.click(screen.getByRole("button", { name: "Enviar" }));
+    expect(espia).toHaveBeenLastCalledWith({ nombre: "Nico", email: "n@a.com" });
+  });
+});
 
-describe('10-eventos-formularios / exercise-10 — escalera F', () => {
-  it('F1) conUnoMas — devuelve otra lista y no toca la original', () => {
-    const original = ['a']
-    const resultado = conUnoMas(original, 'b')
+describe("10-eventos-formularios / exercise-10 — escalera F", () => {
+  it("F1) conUnoMas — devuelve otra lista y no toca la original", () => {
+    const original = ["a"];
+    const resultado = conUnoMas(original, "b");
 
-    expect(resultado).toEqual(['a', 'b'])
-    expect(original).toEqual(['a']) // la de entrada, intacta
-    expect(resultado).not.toBe(original) // y son dos arrays distintos
-  })
+    expect(resultado).toEqual(["a", "b"]);
+    expect(original).toEqual(["a"]); // la de entrada, intacta
+    expect(resultado).not.toBe(original); // y son dos arrays distintos
+  });
 
-  it('F2) sinElQueSea — devuelve otra lista sin ese, y no toca la original', () => {
-    const original = ['a', 'b']
-    const resultado = sinElQueSea(original, 'a')
+  it("F2) sinElQueSea — devuelve otra lista sin ese, y no toca la original", () => {
+    const original = ["a", "b"];
+    const resultado = sinElQueSea(original, "a");
 
-    expect(resultado).toEqual(['b'])
-    expect(original).toEqual(['a', 'b'])
-    expect(resultado).not.toBe(original)
-  })
+    expect(resultado).toEqual(["b"]);
+    expect(original).toEqual(["a", "b"]);
+    expect(resultado).not.toBe(original);
+  });
 
-  it('F2) sinElQueSea — si no está, sale una copia igual', () => {
-    const original = ['a', 'b']
-    const resultado = sinElQueSea(original, 'z')
+  it("F2) sinElQueSea — si no está, sale una copia igual", () => {
+    const original = ["a", "b"];
+    const resultado = sinElQueSea(original, "z");
 
-    expect(resultado).toEqual(['a', 'b'])
-    expect(resultado).not.toBe(original)
-  })
+    expect(resultado).toEqual(["a", "b"]);
+    expect(resultado).not.toBe(original);
+  });
 
-  it('F3) conUnoCambiado — sustituye uno y deja los demás', () => {
-    const original = ['a', 'b']
-    const resultado = conUnoCambiado(original, 'a', 'z')
+  it("F3) conUnoCambiado — sustituye uno y deja los demás", () => {
+    const original = ["a", "b"];
+    const resultado = conUnoCambiado(original, "a", "z");
 
-    expect(resultado).toEqual(['z', 'b'])
-    expect(original).toEqual(['a', 'b'])
-    expect(resultado).not.toBe(original)
-  })
+    expect(resultado).toEqual(["z", "b"]);
+    expect(original).toEqual(["a", "b"]);
+    expect(resultado).not.toBe(original);
+  });
 
-  it('F4) ListaQueCrece — cada click añade uno Y se ve en pantalla', async () => {
-    render(<ListaQueCrece />)
-    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+  it("F4) ListaQueCrece — cada click añade uno Y se ve en pantalla", async () => {
+    render(<ListaQueCrece />);
+    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(1)
-    expect(screen.getByText('item 1')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+    expect(screen.getByText("item 1")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
-    expect(screen.getByText('item 2')).toBeInTheDocument()
-  })
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    expect(screen.getByText("item 2")).toBeInTheDocument();
+  });
 
-  it('F5) ListaQueMengua — quita el pulsado y deja los otros', async () => {
-    render(<ListaQueMengua />)
-    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+  it("F5) ListaQueMengua — quita el pulsado y deja los otros", async () => {
+    render(<ListaQueMengua />);
+    expect(screen.getAllByRole("listitem")).toHaveLength(3);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Quitar dos' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
-    expect(screen.queryByText('dos')).not.toBeInTheDocument()
-    expect(screen.getByText('uno')).toBeInTheDocument()
-    expect(screen.getByText('tres')).toBeInTheDocument()
-  })
+    await userEvent.click(screen.getByRole("button", { name: "Quitar dos" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    expect(screen.queryByText("dos")).not.toBeInTheDocument();
+    expect(screen.getByText("uno")).toBeInTheDocument();
+    expect(screen.getByText("tres")).toBeInTheDocument();
+  });
 
-  it('F6) MiniGestor — añade, marca y borra, y las tres se ven', async () => {
-    render(<MiniGestor />)
+  it("F6) MiniGestor — añade, marca y borra, y las tres se ven", async () => {
+    render(<MiniGestor />);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Añadir' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    await userEvent.click(screen.getByRole("button", { name: "Añadir" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
 
     // marcar: el texto pasa a ir tachado
-    await userEvent.click(screen.getByRole('checkbox', { name: 'Marcar item 1' }))
-    expect(screen.getByText('item 1').tagName).toBe('S')
+    await userEvent.click(screen.getByRole("checkbox", { name: "Marcar item 1" }));
+    expect(screen.getByText("item 1").tagName).toBe("S");
 
     // y el otro sigue sin marcar
-    expect(screen.getByRole('checkbox', { name: 'Marcar item 2' })).not.toBeChecked()
+    expect(screen.getByRole("checkbox", { name: "Marcar item 2" })).not.toBeChecked();
 
     // borrar: desaparece solo ese
-    await userEvent.click(screen.getByRole('button', { name: 'Borrar item 1' }))
-    expect(screen.getAllByRole('listitem')).toHaveLength(1)
-    expect(screen.queryByText('item 1')).not.toBeInTheDocument()
-  })
-})
+    await userEvent.click(screen.getByRole("button", { name: "Borrar item 1" }));
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+    expect(screen.queryByText("item 1")).not.toBeInTheDocument();
+  });
+});

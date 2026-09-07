@@ -25,20 +25,19 @@
  *     pnpm test:run src/exercises/03-arrays/exercise-09.test.ts
  * ===========================================================================*/
 
-
 /* --- BLOQUE A — includes: ¿está? (boolean) --- */
 
 // 1) `contiene` — ¿está `x` en la lista?
 //    contiene([1, 2, 3], 2) → true ; contiene([1, 2], 9) → false
 export function contiene(nums: number[], x: number): boolean {
-  return nums.includes(x)
+  return nums.includes(x);
 }
 // contiene([1, 2, 3], 2) // true
 
 // 2) `tieneRol` — ¿el rol está en la lista de roles?
 //    tieneRol(["admin", "user"], "user") → true
 export function tieneRol(roles: string[], rol: string): boolean {
-  return roles.includes(rol)
+  return roles.includes(rol);
 }
 // tieneRol(['admin', 'user'], 'user') // true
 
@@ -47,24 +46,27 @@ export function tieneRol(roles: string[], rol: string): boolean {
 // 3) `indiceDe` — el puesto de `x` (por valor), o -1 si no está.
 //    indiceDe([10, 20, 30], 30) → 2 ; indiceDe([10], 99) → -1
 export function indiceDe(nums: number[], x: number): number {
-  return nums.indexOf(x)
+  return nums.indexOf(x);
 }
 // indiceDe([10, 20, 30], 30) // 2
 
 // 4) `unir` — pega las palabras en un solo texto con `sep` en medio.
 //    unir(["a", "b", "c"], "-") → "a-b-c"
 export function unir(palabras: string[], sep: string): string {
-  return palabras.join(sep)
+  return palabras.join(sep);
 }
 // unir(['a', 'b', 'c'], '-') // 'a-b-c'
 
 /* --- BLOQUE C — CAPSTONE: filtrar + map + join --- */
 
-export type Producto = { nombre: string; stock: number }
+export type Producto = { nombre: string; stock: number };
 
 // 5) `disponiblesComoTexto` — nombres de los productos con stock, unidos por `sep`.
 //    disponiblesComoTexto([{nombre:"a",stock:0},{nombre:"b",stock:2}], ", ") → "b"
 export function disponiblesComoTexto(productos: Producto[], sep: string): string {
-  return productos.filter((p) => p.stock > 0).map((p) => p.nombre).join(sep)
+  return productos
+    .filter((p) => p.stock > 0)
+    .map((p) => p.nombre)
+    .join(sep);
 }
 // disponiblesComoTexto([{ nombre: "Coca Cola", stock: 100 }, { nombre: 'Pepsi', stock: 2 }], ', ') // "Coca Cola, Pepsi"

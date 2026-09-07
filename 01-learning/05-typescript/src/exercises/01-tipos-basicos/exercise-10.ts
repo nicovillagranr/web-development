@@ -38,19 +38,18 @@
  *     pnpm test:run src/exercises/01-tipos-basicos/exercise-10.test.ts
  * ===========================================================================*/
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- misma arruga del 08: se consume como tipo con `typeof CATEGORIAS`
-const CATEGORIAS = ["bebida", "snack", "postre"] as const
-type Categoria = (typeof CATEGORIAS)[number]
+const CATEGORIAS = ["bebida", "snack", "postre"] as const;
+type Categoria = (typeof CATEGORIAS)[number];
 
 interface Producto {
-  nombre: string
-  precio: number
-  categoria: Categoria
+  nombre: string;
+  precio: number;
+  categoria: Categoria;
 }
 
 interface ProductoConId extends Producto {
-  id: number
+  id: number;
 }
 
 /* ---------------------------------------------------------------------------
@@ -63,7 +62,7 @@ interface ProductoConId extends Producto {
 //      crear({ nombre: "Té", precio: 1000, categoria: "bebida" }, 7)
 //        → { nombre: "Té", precio: 1000, categoria: "bebida", id: 7 }
 export function crear(p: Producto, id: number): ProductoConId {
-  return { ...p, id }
+  return { ...p, id };
 }
 
 // 2) `esBebida` — true si la categoría es "bebida".
@@ -71,16 +70,15 @@ export function crear(p: Producto, id: number): ProductoConId {
 //       inventadas) y el cuerpo (devuelve false siempre).
 //      esBebida("bebida") → true     esBebida("snack") → false
 export function esBebida(c: Categoria): boolean {
-  return c === "bebida"
+  return c === "bebida";
 }
 
 // 3) `descripcion` — "<nombre>: $<precio>".
 //    👉 UN arreglo: el cuerpo (el starter solo devuelve el nombre).
 //      descripcion({ nombre: "Té", precio: 1000, categoria: "bebida" }) → "Té: $1000"
 export function descripcion(p: Producto): string {
-  return `${p.nombre}: $${p.precio}`
+  return `${p.nombre}: $${p.precio}`;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — consultar el catálogo
@@ -92,10 +90,16 @@ export function descripcion(p: Producto): string {
 //      porCategoria([{...id:1, categoria:"bebida"}, {...id:2, categoria:"snack"}], "bebida")
 //        → [ el de id 1 ]
 export function porCategoria(productos: ProductoConId[], cat: Categoria): ProductoConId[] {
-  return productos.filter((p) => p.categoria === cat)
+  return productos.filter((p) => p.categoria === cat);
 }
 // return: el de id 1
-porCategoria([{ nombre: "Té", precio: 1000, categoria: "bebida", id: 1 }, { nombre: "Papas", precio: 800, categoria: "snack", id: 2 }], "bebida")
+porCategoria(
+  [
+    { nombre: "Té", precio: 1000, categoria: "bebida", id: 1 },
+    { nombre: "Papas", precio: 800, categoria: "snack", id: 2 },
+  ],
+  "bebida",
+);
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: oferta = categoría + precio máximo, devuelve nombres
@@ -110,7 +114,16 @@ porCategoria([{ nombre: "Té", precio: 1000, categoria: "bebida", id: 1 }, { nom
 //       (no filtra ni se queda con el nombre).
 //      ofertasDe([{ id:1, nombre:"Té", precio:1000, categoria:"bebida" }, { id:2, nombre:"Cola", precio:2000, categoria:"bebida" }], "bebida", 1500) → ["Té"]
 export function ofertasDe(productos: ProductoConId[], cat: Categoria, precioMax: number): string[] {
-  return productos.filter((producto) => producto.categoria === cat && producto.precio <= precioMax).map((producto) => producto.nombre)
+  return productos
+    .filter((producto) => producto.categoria === cat && producto.precio <= precioMax)
+    .map((producto) => producto.nombre);
 }
 // return: ["Té"] porque su precio está por debajo del precioMax
-ofertasDe([{ id: 1, nombre: "Té", precio: 1000, categoria: "bebida" }, { id: 2, nombre: "Cola", precio: 2000, categoria: "bebida" }], "bebida", 1500)
+ofertasDe(
+  [
+    { id: 1, nombre: "Té", precio: 1000, categoria: "bebida" },
+    { id: 2, nombre: "Cola", precio: 2000, categoria: "bebida" },
+  ],
+  "bebida",
+  1500,
+);

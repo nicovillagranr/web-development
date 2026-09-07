@@ -54,8 +54,7 @@
  *     pnpm test:run src/exercises/07-utility-types/exercise-05.test.ts
  * ===========================================================================*/
 
-
-type Punto = { x: number; y: number }
+type Punto = { x: number; y: number };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — entender el MERGE encadenado (sin bucle todavía)
@@ -71,10 +70,9 @@ type Punto = { x: number; y: number }
 //      aplicarDosParches({x:0,y:0}, {x:5}, {y:9}) → {x:5,y:9}
 //      aplicarDosParches({x:0,y:0}, {x:1}, {x:2}) → {x:2,y:0}  (gana el último)
 export function aplicarDosParches(base: Punto, p1: Partial<Punto>, p2: Partial<Punto>): Punto {
-  return { ...base, ...p1, ...p2 }
+  return { ...base, ...p1, ...p2 };
 }
-aplicarDosParches({ x: 0, y: 0 }, { x: 5 }, { y: 9 }) // {x:5,y:9}
-
+aplicarDosParches({ x: 0, y: 0 }, { x: 5 }, { y: 9 }); // {x:5,y:9}
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — generalizar a N parches con un bucle `for`
@@ -101,29 +99,34 @@ aplicarDosParches({ x: 0, y: 0 }, { x: 5 }, { y: 9 }) // {x:5,y:9}
 //      fusionarConFor({x:1,y:1}, [])            → {x:1,y:1}
 //      fusionarConFor({x:0,y:0}, [{x:1},{x:2}]) → {x:2,y:0}  (gana el último)
 export function fusionarConFor(base: Punto, parches: Partial<Punto>[]): Punto {
-  let resultado = base
+  let resultado = base;
   for (const parche of parches) {
-    resultado = { ...resultado, ...parche }
+    resultado = { ...resultado, ...parche };
   }
-  return resultado
+  return resultado;
 }
-fusionarConFor({ x: 0, y: 0 }, [{ x: 5 }, { y: 9 }, { x: 1 }, { x: 2 }, { x: 3 }]) // {x:3,y:9} Gana el último X y el último Y en ser definidos.
+fusionarConFor({ x: 0, y: 0 }, [{ x: 5 }, { y: 9 }, { x: 1 }, { x: 2 }, { x: 3 }]); // {x:3,y:9} Gana el último X y el último Y en ser definidos.
 
-type Caja = { ancho: number; alto: number; color: string }
+type Caja = { ancho: number; alto: number; color: string };
 
 // 3) `fusionarCajasConFor` — el MISMO patrón, otro tipo (refuerzo). Fíjate en
 //    el caso de dos parches que tocan `color`: gana el segundo.
 //      fusionarCajasConFor({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}]) → {ancho:10,alto:8,color:"azul"}
 //      fusionarCajasConFor(caja, [{color:"rojo"},{color:"azul"}]) → color "azul"
 export function fusionarCajasConFor(base: Caja, parches: Partial<Caja>[]): Caja {
-  let resultado = base
+  let resultado = base;
   for (const parche of parches) {
-    resultado = { ...resultado, ...parche }
+    resultado = { ...resultado, ...parche };
   }
-  return resultado
+  return resultado;
 }
 // Resultado: {ancho: 20, alto: 20, color: "Verde"}
-fusionarCajasConFor({ ancho: 10, alto: 10, color: "Azul" }, [{ ancho: 20 }, { alto: 20 }, { color: "Rojo" }, { color: "Verde" }])
+fusionarCajasConFor({ ancho: 10, alto: 10, color: "Azul" }, [
+  { ancho: 20 },
+  { alto: 20 },
+  { color: "Rojo" },
+  { color: "Verde" },
+]);
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — el MISMO problema con `reduce`
@@ -150,19 +153,19 @@ fusionarCajasConFor({ ancho: 10, alto: 10, color: "Azul" }, [{ ancho: 20 }, { al
 //      fusionarConReduce({x:0,y:0}, [{x:5},{y:9}]) → {x:5,y:9}
 //      fusionarConReduce({x:1,y:1}, [])            → {x:1,y:1}
 export function fusionarConReduce(base: Punto, parches: Partial<Punto>[]): Punto {
-  return parches.reduce<Punto>((acum, parche) => ({ ...acum, ...parche }), base)
+  return parches.reduce<Punto>((acum, parche) => ({ ...acum, ...parche }), base);
 }
 // Resultado: {x:69,y:9}
-fusionarConReduce({ x: 0, y: 0 }, [{ x: 5 }, { x: 9 }, { x: 69 }, { y: 9 }])
+fusionarConReduce({ x: 0, y: 0 }, [{ x: 5 }, { x: 9 }, { x: 69 }, { y: 9 }]);
 
 // 5) `fusionarCajasConReduce` — el gemelo del drill 3, ahora con `reduce`.
 //      fusionarCajasConReduce({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}])
 //        → {ancho:10,alto:8,color:"azul"}
 export function fusionarCajasConReduce(base: Caja, parches: Partial<Caja>[]): Caja {
-  return parches.reduce<Caja>((acum, parche) => ({ ...acum, ...parche }), base)
+  return parches.reduce<Caja>((acum, parche) => ({ ...acum, ...parche }), base);
 }
 // Resultado: {ancho: 10, alto: 8, color: "azul"}
-fusionarCajasConReduce({ ancho: 10, alto: 5, color: "rojo" }, [{ alto: 8 }, { color: "azul" }])
+fusionarCajasConReduce({ ancho: 10, alto: 5, color: "rojo" }, [{ alto: 8 }, { color: "azul" }]);
 
 /* ---------------------------------------------------------------------------
  * BLOQUE D — CAPSTONE: el gemelo EXACTO del drill 5 de exercise-04
@@ -171,7 +174,7 @@ fusionarCajasConReduce({ ancho: 10, alto: 5, color: "rojo" }, [{ alto: 8 }, { co
  * exercise-04 ya lo entiendes (es palabra por palabra lo mismo).
  * -------------------------------------------------------------------------- */
 
-type Usuario = { id: number; nombre: string; email: string }
+type Usuario = { id: number; nombre: string; email: string };
 
 // 6) `aplicarParches` — parte de un usuario y aplica EN ORDEN una lista de
 //    parches parciales, cada uno encima del resultado anterior.
@@ -179,7 +182,10 @@ type Usuario = { id: number; nombre: string; email: string }
 //        → {id:1,nombre:"Ani",email:"x@x.com"}
 //      aplicarParches(u, []) → u (sin cambios)
 export function aplicarParches(usuario: Usuario, parches: Partial<Usuario>[]): Usuario {
-  return parches.reduce<Usuario>((acum, parche) => ({ ...acum, ...parche }), usuario)
+  return parches.reduce<Usuario>((acum, parche) => ({ ...acum, ...parche }), usuario);
 }
 // Resultado: {id:1,nombre:"Ani",email:"x@x.com"}
-aplicarParches({ id: 1, nombre: 'Ana', email: 'a@a.com' }, [{ nombre: 'Ani' }, { email: 'x@x.com' }])
+aplicarParches({ id: 1, nombre: "Ana", email: "a@a.com" }, [
+  { nombre: "Ani" },
+  { email: "x@x.com" },
+]);

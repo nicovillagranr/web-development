@@ -71,47 +71,45 @@
  *   nuevos), ✅ usa SIEMPRE `.reduce` (aunque haya un atajo, aquí practicamos esto).
  * ═══════════════════════════════════════════════════════════════════════════*/
 
-
 /* ── Bloque: reduce que devuelve un número ─────────────────────────────────── */
 
 // 1) 🐷 SUMA. `sumar` devuelve la suma de todos los números. Inicial: 0.
 //      sumar([1, 2, 3, 4]) → 10 ; sumar([]) → 0
 export function sumar(nums: number[]): number {
-  return nums.reduce((acum, valor) => acum + valor, 0)
+  return nums.reduce((acum, valor) => acum + valor, 0);
 }
-sumar([1, 2, 3, 4.5]) // resultado: 15
+sumar([1, 2, 3, 4.5]); // resultado: 15
 
 // 2) ✖️ PRODUCTO. `multiplicarTodos` devuelve el producto de todos. OJO con el
 //    inicial: para multiplicar NO es 0 (daría 0 siempre), es 1.
 //      multiplicarTodos([1, 2, 3, 4]) → 24 ; multiplicarTodos([]) → 1
 export function multiplicarTodos(nums: number[]): number {
-  return nums.reduce((acum, valor) => acum * valor, 1)
+  return nums.reduce((acum, valor) => acum * valor, 1);
 }
-multiplicarTodos([1, 2, 3, 4]) // resultado: 24
+multiplicarTodos([1, 2, 3, 4]); // resultado: 24
 
 // 3) 🔢 CONTAR. `contar` devuelve CUÁNTOS elementos hay, usando reduce (suma 1
 //    por cada elemento). Nota: aquí el `valor` ni se mira; solo cuentas vueltas.
 //      contar([10, 20, 30]) → 3 ; contar([]) → 0
 export function contar(nums: number[]): number {
-  return nums.reduce((acum) => acum + 1, 0)
+  return nums.reduce((acum) => acum + 1, 0);
 }
-contar([10, 20, 30]) // resultado: 3
+contar([10, 20, 30]); // resultado: 3
 
 // 4) ⬆️ MÁXIMO. `maximo` devuelve el número más grande. Inicial: -Infinity (así
 //    cualquier número real lo supera). (Pista: Math.max(acum, valor).)
 //      maximo([3, 9, 2, 7]) → 9 ; maximo([-5, -1]) → -1
 export function maximo(nums: number[]): number {
-  return nums.reduce((acum, valor) => Math.max(acum, valor), -Infinity)
+  return nums.reduce((acum, valor) => Math.max(acum, valor), -Infinity);
 }
-maximo([3, 9, 2, 7]) // resultado: 9
-
+maximo([3, 9, 2, 7]); // resultado: 9
 
 /* ── Bloque: reduce que cambia de tipo (acum ≠ tipo del elemento) ──────────── */
 
 // 5) 🔗 CONCATENAR. `concatenar` une todos los textos en uno solo. Inicial: "".
 //      concatenar(["a", "b", "c"]) → "abc" ; concatenar([]) → ""
 export function concatenar(textos: string[]): string {
-  return textos.reduce((acum, valor) => acum + valor, "")
+  return textos.reduce((acum, valor) => acum + valor, "");
 }
 
 // 6) 📏 LONGITUD TOTAL. `longitudTotal` recibe textos y devuelve la suma de sus
@@ -119,10 +117,9 @@ export function concatenar(textos: string[]): string {
 //    string). (Pista: acum + valor.length.)
 //      longitudTotal(["hola", "ab"]) → 6 ; longitudTotal([]) → 0
 export function longitudTotal(textos: string[]): number {
-  return textos.reduce((acum, valor) => acum + valor.length, 0)
+  return textos.reduce((acum, valor) => acum + valor.length, 0);
 }
-longitudTotal(["hola", "ab"]) // resultado: 6
-
+longitudTotal(["hola", "ab"]); // resultado: 6
 
 /* ── Bloque: reduce que devuelve un booleano ───────────────────────────────── */
 
@@ -130,7 +127,7 @@ longitudTotal(["hola", "ab"]) // resultado: 6
 //    son `true`. (boolean[] → number.)
 //      contarVerdaderos([true, false, true, true]) → 3 ; contarVerdaderos([]) → 0
 export function contarVerdaderos(valores: boolean[]): number {
-  return valores.reduce((acum, valor) => acum + (valor ? 1 : 0), 0)
+  return valores.reduce((acum, valor) => acum + (valor ? 1 : 0), 0);
 }
 
 // 8) 🟢 TODOS POSITIVOS. `todosPositivos` devuelve true si TODOS los números son
@@ -138,12 +135,11 @@ export function contarVerdaderos(valores: boolean[]): number {
 //    Pista: en cada vuelta, acum && valor > 0.
 //      todosPositivos([1, 2, 3]) → true ; todosPositivos([1, -2, 3]) → false
 export function todosPositivos(nums: number[]): boolean {
-  return nums.reduce((acum, valor) => acum && valor > 0, true)
+  return nums.reduce((acum, valor) => acum && valor > 0, true);
 }
-todosPositivos([1, 2, 3]) // resultado: true
-todosPositivos([1, -2, 3]) // resultado: false
-todosPositivos([]) // resultado: true (vacío cuenta como "todos cumplen")
-
+todosPositivos([1, 2, 3]); // resultado: true
+todosPositivos([1, -2, 3]); // resultado: false
+todosPositivos([]); // resultado: true (vacío cuenta como "todos cumplen")
 
 /* ── Bloque: transformar dentro del reduce / acumulador objeto ─────────────── */
 
@@ -151,11 +147,11 @@ todosPositivos([]) // resultado: true (vacío cuenta como "todos cumplen")
 //    cuadrado, SIN usar map antes (haz el cuadrado dentro del propio reduce).
 //      sumaDeCuadrados([1, 2, 3]) → 14    (1 + 4 + 9)
 export function sumaDeCuadrados(nums: number[]): number {
-  return nums.reduce((acum, valor) => acum + valor * valor, 0)
+  return nums.reduce((acum, valor) => acum + valor * valor, 0);
 }
-sumaDeCuadrados([1, 2, 3]) // resultado: 14 (1 + 4 + 9)
-sumaDeCuadrados([]) // resultado: 0 (no hay nada que sumar, así que da 0)
-sumaDeCuadrados([-1, -2]) // resultado: 5 (1 + 4)
+sumaDeCuadrados([1, 2, 3]); // resultado: 14 (1 + 4 + 9)
+sumaDeCuadrados([]); // resultado: 0 (no hay nada que sumar, así que da 0)
+sumaDeCuadrados([-1, -2]); // resultado: 5 (1 + 4)
 
 // 10) 🐷🐷 CAPSTONE — DOS ALCANCÍAS. `contarParesImpares` recorre los números y
 //     devuelve un objeto { pares, impares } con cuántos hay de cada uno. El
@@ -164,11 +160,14 @@ sumaDeCuadrados([-1, -2]) // resultado: 5 (1 + 4)
 //       contarParesImpares([1, 2, 3, 4]) → { pares: 2, impares: 2 }
 //       contarParesImpares([])           → { pares: 0, impares: 0 }
 export function contarParesImpares(nums: number[]): { pares: number; impares: number } {
-  return nums.reduce((acum, valor) => {
-    if (valor % 2 === 0) {
-      return { ...acum, pares: acum.pares + 1 }
-    } else {
-      return { ...acum, impares: acum.impares + 1 }
-    }
-  }, { pares: 0, impares: 0 })
+  return nums.reduce(
+    (acum, valor) => {
+      if (valor % 2 === 0) {
+        return { ...acum, pares: acum.pares + 1 };
+      } else {
+        return { ...acum, impares: acum.impares + 1 };
+      }
+    },
+    { pares: 0, impares: 0 },
+  );
 }

@@ -42,7 +42,6 @@
  *   referencia: tradúcelo. El starter va MAL (nunca corona) → test ROJO.
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE A — con BUCLE `for` (terreno conocido: una variable que pisas)
  * -------------------------------------------------------------------------- */
@@ -59,29 +58,28 @@
 // Se saca cada valor del array y se compara con el mayor. Si el valor es mayor que el mayor, se reemplaza el mayor por el valor actual.
 // Cuando se termina de recorrer todo el array de numbers, se devuelve el mayor.
 export function mayorBucle(nums: number[]): number {
-  let mayor = -Infinity
+  let mayor = -Infinity;
   for (const valor of nums) {
     if (valor > mayor) {
-      mayor = valor
+      mayor = valor;
     }
   }
-  return mayor
+  return mayor;
 }
-mayorBucle([3, 1, 2]) // El mayor del bucle es 3
-
+mayorBucle([3, 1, 2]); // El mayor del bucle es 3
 
 // 2) `menorBucle` — el número más pequeño, con for. Ahora TÚ pones las tres
 //    piezas: el inicial (el starter está MAL: 0 no es el tope de un mínimo),
 //    y la coronación dentro del bucle.
 //      menorBucle([3, 1, 2]) → 1 ; menorBucle([5]) → 5
 export function menorBucle(nums: number[]): number {
-  let menor = Infinity
+  let menor = Infinity;
   for (const valor of nums) {
     if (valor < menor) {
-      menor = valor
+      menor = valor;
     }
   }
-  return menor
+  return menor;
 }
 
 // 3) `masLargaBucle` — la palabra MÁS LARGA, con for. El campeón se compara por
@@ -89,15 +87,14 @@ export function menorBucle(nums: number[]): number {
 //    entera. Inicial: "" (length 0, cualquier palabra la supera).
 //      masLargaBucle(["sol", "luna", "mar"]) → "luna" ; masLargaBucle([]) → ""
 export function masLargaBucle(palabras: string[]): string {
-  let masLarga = ""
+  let masLarga = "";
   for (const palabra of palabras) {
     if (palabra.length > masLarga.length) {
-      masLarga = palabra
+      masLarga = palabra;
     }
   }
-  return masLarga
+  return masLarga;
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — el MISMO problema con `reduce` (el bucle de arriba, plegado)
@@ -111,18 +108,18 @@ export function masLargaBucle(palabras: string[]): string {
 //      bucle:   if (valor > mayor) mayor = valor
 //      reduce:  if (valor > acum) return valor ;  return acum
 export function mayorReduce(nums: number[]): number {
-  return nums.reduce((acum, valor) => (valor > acum ? valor : acum), -Infinity)
+  return nums.reduce((acum, valor) => (valor > acum ? valor : acum), -Infinity);
 }
 
 // 5) `menorReduce` — igual que el drill 2, con reduce. Mismo molde, invertido.
 //      menorReduce([3, 1, 2]) → 1 ; menorReduce([5]) → 5
 export function menorReduce(nums: number[]): number {
-  return nums.reduce((acum, valor) => (valor < acum ? valor : acum), Infinity)
+  return nums.reduce((acum, valor) => (valor < acum ? valor : acum), Infinity);
 }
 
 // 6) `masLargaReduce` — igual que el drill 3, con reduce. Compara por `.length`,
 //    devuelve la palabra entera. Inicial "".
 //      masLargaReduce(["sol", "luna", "mar"]) → "luna"
 export function masLargaReduce(palabras: string[]): string {
-  return palabras.reduce((acum, palabra) => (palabra.length > acum.length ? palabra : acum), "")
+  return palabras.reduce((acum, palabra) => (palabra.length > acum.length ? palabra : acum), "");
 }

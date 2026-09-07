@@ -51,7 +51,6 @@
  *   ¿Atascado? Las pistas están en `exercise-02.pistas.md`, de una en una.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — los dos trabajos del `:`
  * ─────────────────────────────────────────────────────────────────────────────
@@ -86,21 +85,20 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) En `interface Tarea { id: number }`, ¿qué es `number`?
-export const r1: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER"
+export const r1: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 2) En `const tarea: Tarea = { id: 1, titulo: "Regar" }`, ¿qué es el `1`?
-export const r2: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER"
+export const r2: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 3) En ese mismo objeto, ¿cómo se llama `id: 1` entero, las dos piezas juntas?
-export const r3: "un par clave-valor" | "una anotación" | "una unión" = "SIN_RESPONDER"
+export const r3: "un par clave-valor" | "una anotación" | "una unión" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 4) En `const tarea: Tarea = …`, ese `: Tarea` que va pegado al nombre, ¿qué es?
-export const r4: "una anotación de tipo" | "una asignación" | "una llamada" = "SIN_RESPONDER"
+export const r4: "una anotación de tipo" | "una asignación" | "una llamada" = "SIN_RESPONDER";
 // ¿Por qué? →
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cómo se llama cada tipo
@@ -138,21 +136,20 @@ export const r4: "una anotación de tipo" | "una asignación" | "una llamada" = 
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 5) En `type Prioridad = "baja" | "alta"`, ¿qué es `Prioridad`?
-export const r5: "un alias de tipo" | "una interface" | "una constante" = "SIN_RESPONDER"
+export const r5: "un alias de tipo" | "una interface" | "una constante" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 6) En esa misma línea, ¿qué es `"baja" | "alta"` entero?
-export const r6: "una unión" | "un objeto" | "un array" = "SIN_RESPONDER"
+export const r6: "una unión" | "un objeto" | "un array" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 7) Y `"baja"` suelto, dentro de esa declaración, ¿qué es?
-export const r7: "un tipo literal" | "un valor" | "una clave" = "SIN_RESPONDER"
+export const r7: "un tipo literal" | "un valor" | "una clave" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 8) `interface Tarea { … }` — la palabra `Tarea`, ¿qué nombra?
-export const r8: "una interface" | "un alias de tipo" | "un objeto" = "SIN_RESPONDER"
+export const r8: "una interface" | "un alias de tipo" | "un objeto" = "SIN_RESPONDER";
 // ¿Por qué? →
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — el tipo no es el dato
@@ -188,20 +185,20 @@ export const r8: "una interface" | "un alias de tipo" | "un objeto" = "SIN_RESPO
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 9) En `const tarea: Tarea = { … }`, ¿qué es `Tarea` (con mayúscula)?
-export const r9: "un tipo" | "un objeto" | "una constante" = "SIN_RESPONDER"
+export const r9: "un tipo" | "un objeto" | "una constante" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 10) Y `{ id: 1, titulo: "Regar" }`, ¿qué es?
-export const r10: "un objeto" | "un tipo" | "una interface" = "SIN_RESPONDER"
+export const r10: "un objeto" | "un tipo" | "una interface" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 11) En `etiqueta?: string`, ¿qué hace ahí el `?`?
-export const r11: "la hace opcional" | "la hace nula" | "la hace de solo lectura" = "SIN_RESPONDER"
+export const r11: "la hace opcional" | "la hace nula" | "la hace de solo lectura" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 // 12) En `const b = "hola"`, sin escribir ningún tipo, TS sabe que `b` es `string`.
 //     ¿Cómo se llama eso que acaba de hacer TS?
-export const r12: "inferencia" | "anotación" | "conversión" = "SIN_RESPONDER"
+export const r12: "inferencia" | "anotación" | "conversión" = "SIN_RESPONDER";
 // ¿Por qué? →
 
 /* ─────────────────────────────────────────────────────────────────────────────

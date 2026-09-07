@@ -50,9 +50,8 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
-
+import { useState } from "react";
+import type { ChangeEvent } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el evento que trae el texto
@@ -95,9 +94,7 @@ import type { ChangeEvent } from 'react'
 //    dice "hola", no "a".
 //    El starter se queda a un piso de distancia de lo que hay que entregar.
 export function CampoAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
-  return (
-    <input onChange={(e) => avisar(e.target.value)} />
-  )
+  return <input onChange={(e) => avisar(e.target.value)} />;
 }
 // <CampoAvisaTexto avisar={(t) => console.log(t)} />   // "h", "ho", "hol", "hola"
 
@@ -110,7 +107,7 @@ export function CampoNumeroAvisaDoble({ avisar }: { avisar: (n: number) => void 
   return (
     // <input type="number" onChange={(e) => avisar(e.target.value * 2)} /> // Solución intuitiva -> No sirve porque e.target.value siempre es string
     <input type="number" onChange={(e) => avisar(Number(e.target.value) * 2)} />
-  )
+  );
 }
 // <CampoNumeroAvisaDoble avisar={(n) => console.log(n)} />   // 42
 
@@ -121,13 +118,10 @@ export function CampoNumeroAvisaDoble({ avisar }: { avisar: (n: number) => void 
 //    Restricción: el tipo del evento se importa de 'react' y ya está arriba; el
 //    nombre del elemento tendrás que buscarlo tú.
 export function AreaAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: ChangeEvent<HTMLTextAreaElement>) => avisar(e.target.value)
-  return (
-    <textarea onChange={manejar} />
-  )
+  const manejar = (e: ChangeEvent<HTMLTextAreaElement>) => avisar(e.target.value);
+  return <textarea onChange={manejar} />;
 }
 //<AreaAvisaTexto avisar={(t) => console.log(t)} />   // "hey"
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — y ahora hay que guardarlo
@@ -172,14 +166,14 @@ export function AreaAvisaTexto({ avisar }: { avisar: (t: string) => void }) {
 //    que escribes acabe guardado. Tecleas "sol" y el `<p>` dice "sol".
 //    El starter llama a `setTexto`, pero le mete la caja entera.
 export function CampoGuardaTexto() {
-  const [texto, setTexto] = useState("")
+  const [texto, setTexto] = useState("");
   return (
     <div>
       {/* Cuando el usuario escribe algo dentro del input, el texto dentro del párrafo cambiará */}
       <input onChange={(e) => setTexto(e.target.value)} />
       <p>{texto}</p>
     </div>
-  )
+  );
 }
 // <CampoGuardaTexto />
 
@@ -189,7 +183,7 @@ export function CampoGuardaTexto() {
 //    demuestra. Aun así, dentro del campo siguen saliendo minúsculas: el estado va
 //    por un lado y lo que ves por otro. Falta que mande el estado.
 export function CampoEnMayusculas() {
-  const [texto, setTexto] = useState("")
+  const [texto, setTexto] = useState("");
 
   return (
     <div>
@@ -208,7 +202,7 @@ export function CampoEnMayusculas() {
       />
       <p>{texto}</p>
     </div>
-  )
+  );
 }
 
 // <CampoEnMayusculas />
@@ -219,14 +213,14 @@ export function CampoEnMayusculas() {
 //    Ahora mismo el campo no se deja escribir: se queda vacío por mucho que
 //    teclees. La mitad rota es la contraria a la del drill 5.
 export function FormularioNombre() {
-  const [nombre, setNombre] = useState("")
+  const [nombre, setNombre] = useState("");
   return (
     <div>
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
       {/* Si no hay nombre, renderizamos "Escribe tu nombre". Si hay nombre renderizamos "Hola, ${nombre}" */}
       <p>{nombre ? `Hola, ${nombre}` : "Escribe tu nombre"}</p>
     </div>
-  )
+  );
 }
 // <FormularioNombre />
 

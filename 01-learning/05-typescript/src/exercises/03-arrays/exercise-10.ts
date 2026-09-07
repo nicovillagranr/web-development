@@ -19,18 +19,18 @@
  *     pnpm test:run src/exercises/03-arrays/exercise-10.test.ts
  * ===========================================================================*/
 
-export type Producto = { id: number; nombre: string; precio: number; stock: number }
+export type Producto = { id: number; nombre: string; precio: number; stock: number };
 
 /* --- BLOQUE A — seleccionar y transformar --- */
 
 // 1) `enStock` — solo los productos con stock > 0.
 export function enStock(productos: Producto[]): Producto[] {
-  return productos.filter((p) => p.stock > 0)
+  return productos.filter((p) => p.stock > 0);
 }
 
 // 2) `nombresPorPrecio` — los nombres, ordenados de más barato a más caro (sin mutar).
 export function nombresPorPrecio(productos: Producto[]): string[] {
-  return [...productos].sort((a, b) => a.precio - b.precio).map((p) => p.nombre)
+  return [...productos].sort((a, b) => a.precio - b.precio).map((p) => p.nombre);
 }
 /* nombresPorPrecio([
   { id: 1, nombre: "Coca Cola", precio: 1000, stock: 100 },
@@ -44,12 +44,15 @@ export function nombresPorPrecio(productos: Producto[]): string[] {
 // 3) `masCaro` — el producto más caro, o undefined si la lista está vacía.
 //    (reduce-campeón: acumulador = "el mejor hasta ahora", inicial undefined)
 export function masCaro(productos: Producto[]): Producto | undefined {
-  return productos.reduce<Producto | undefined>((mejor, actual) => (!mejor || actual.precio > mejor.precio ? actual : mejor), undefined)
+  return productos.reduce<Producto | undefined>(
+    (mejor, actual) => (!mejor || actual.precio > mejor.precio ? actual : mejor),
+    undefined,
+  );
 }
 
 // 4) `valorInventario` — suma de precio * stock de todos los productos.
 export function valorInventario(productos: Producto[]): number {
-  return productos.reduce((acum, actual) => acum + actual.precio * actual.stock, 0)
+  return productos.reduce((acum, actual) => acum + actual.precio * actual.stock, 0);
 }
 
 /* --- BLOQUE C — CAPSTONE: filter + sort + map + join --- */
@@ -58,7 +61,10 @@ export function valorInventario(productos: Producto[]): number {
 //    "nombre ($precio)" unidos por ", ".
 //    → "Pan ($2), Leche ($3)"
 export function catalogoDisponible(productos: Producto[]): string {
-  return enStock(productos).sort((a, b) => a.precio - b.precio).map((p) => `${p.nombre} ($${p.precio})`).join(', ')
+  return enStock(productos)
+    .sort((a, b) => a.precio - b.precio)
+    .map((p) => `${p.nombre} ($${p.precio})`)
+    .join(", ");
 }
 /* catalogoDisponible([
   { id: 1, nombre: "Pan", precio: 2, stock: 5 },
@@ -93,7 +99,7 @@ export function catalogoDisponible(productos: Producto[]): string {
  * `elMayor` — devuelve el mayor de dos números, usando SOLO un ternario.
  *     elMayor(3, 8) → 8 ; elMayor(10, 2) → 10                                    */
 export function elMayor(a: number, b: number): number {
-  return a > b ? a : b
+  return a > b ? a : b;
 }
 // elMayor(3, 8) // 8
 // elMayor(10, 2) // 10
@@ -105,7 +111,7 @@ export function elMayor(a: number, b: number): number {
  * `sinCampeon` — ¿el campeón está vacío (undefined)? → boolean, usando SOLO `!`.
  *     sinCampeon(undefined) → true ; sinCampeon({id,nombre,precio,stock}) → false */
 export function sinCampeon(campeon: Producto | undefined): boolean {
-  return !campeon
+  return !campeon;
 }
 // sinCampeon(undefined) // true
 // sinCampeon({ id: 1, nombre: 'Pan', precio: 2, stock: 5 }) // false
@@ -117,7 +123,7 @@ export function sinCampeon(campeon: Producto | undefined): boolean {
  * `sumarDesde` — suma los números empezando desde `base` (no desde 0).
  *     sumarDesde([1, 2, 3], 0) → 6 ; sumarDesde([1, 2, 3], 10) → 16              */
 export function sumarDesde(nums: number[], base: number): number {
-  return nums.reduce((acum, actual) => acum + actual, base)
+  return nums.reduce((acum, actual) => acum + actual, base);
 }
 
 /* --- R4 — juntar `!` + ternario: el JUEZ del campeón -------------------------
@@ -129,7 +135,7 @@ export function sumarDesde(nums: number[], base: number): number {
  * `elegirCampeon` — devuelve el Producto ganador. (Pista: `!mejor || ...` ? _ : _)
  *     elegirCampeon(undefined, pan) → pan                                        */
 export function elegirCampeon(mejor: Producto | undefined, actual: Producto): Producto {
-  return !mejor || actual.precio > mejor.precio ? actual : mejor
+  return !mejor || actual.precio > mejor.precio ? actual : mejor;
 }
 // return: { id: 1, nombre: 'Pan', precio: 3000, stock: 5 } Gana porque es el más caro
 // elegirCampeon({ id: 1, nombre: 'Pan', precio: 3000, stock: 5 }, { id: 2, nombre: 'Queso', precio: 2000, stock: 5 })
@@ -152,8 +158,6 @@ export function elegirCampeon(mejor: Producto | undefined, actual: Producto): Pr
 // return: { id: 3, nombre: 'Huevos', precio: 4, stock: 2 } — !mejor=true, entra sin comparar
 // elegirCampeon(undefined, { id: 3, nombre: 'Huevos', precio: 4, stock: 2 })
 
-
-
 /* --- R5 — REENSAMBLAR: el juez DENTRO de `reduce` ----------------------------
  * Último peldaño. Metes `elegirCampeon` (R4) como callback de `reduce`, con
  * inicial `undefined` (R3) y el genérico `<Producto | undefined>` que le dice a
@@ -161,7 +165,7 @@ export function elegirCampeon(mejor: Producto | undefined, actual: Producto): Pr
  * `masCaroDesarmado` — igual que `masCaro`, pero apoyándote en `elegirCampeon`.
  *     masCaroDesarmado([]) → undefined                                          */
 export function masCaroDesarmado(productos: Producto[]): Producto | undefined {
-  return productos.reduce(elegirCampeon, undefined)
+  return productos.reduce(elegirCampeon, undefined);
 }
 // masCaroDesarmado([]) // undefined
 /* masCaroDesarmado([
@@ -170,4 +174,3 @@ export function masCaroDesarmado(productos: Producto[]): Producto | undefined {
   { id: 3, nombre: 'Huevos', precio: 4, stock: 2 },
   { id: 4, nombre: 'Queso', precio: 3000, stock: 5 },
 ]) // → Queso (precio 3000, el más caro) */
-

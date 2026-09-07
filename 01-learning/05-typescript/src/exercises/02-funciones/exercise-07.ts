@@ -38,7 +38,6 @@
  *     pnpm test:run src/exercises/02-funciones/exercise-07.test.ts
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * BLOQUE 0 — la cafetera: devolver una función que RECUERDA un valor fijo
  * -------------------------------------------------------------------------- */
@@ -47,30 +46,30 @@
 //    👉 El starter devuelve `(n) => n` (ignora el factor). Úsalo: `(n) => n * factor`.
 //      const triple = multiplicador(3); triple(5) → 15
 export function multiplicador(factor: number): (n: number) => number {
-  return (n) => n * factor
+  return (n) => n * factor;
 }
-const triple = multiplicador(3)
-triple(5) // 15
-triple(0) // 0
+const triple = multiplicador(3);
+triple(5); // 15
+triple(0); // 0
 
 // 2) `sumador` — devuelve una función que suma `base` a lo que reciba.
 //    👉 El starter devuelve `(n) => n`. Captura `base` en la función devuelta.
 //      const mas10 = sumador(10); mas10(5) → 15; mas10(0) → 10
 export function sumador(base: number): (n: number) => number {
-  return (n) => n + base
+  return (n) => n + base;
 }
-const mas10 = sumador(10)
-mas10(5) // 15
-mas10(0) // 10
+const mas10 = sumador(10);
+mas10(5); // 15
+mas10(0); // 10
 
 // 3) `saludador` — devuelve una función que saluda con el `saludo` capturado.
 //    👉 El starter devuelve `(nombre) => nombre`. Arma `${saludo}, ${nombre}`.
 //      const hola = saludador("Hola"); hola("Nico") → "Hola, Nico"
 export function saludador(saludo: string): (nombre: string) => string {
-  return (nombre) => `${saludo}, ${nombre}`
+  return (nombre) => `${saludo}, ${nombre}`;
 }
-const saludarANico = saludador("Hola")
-saludarANico("Nico") // "Hola, Nico"
+const saludarANico = saludador("Hola");
+saludarANico("Nico"); // "Hola, Nico"
 
 /* ---------------------------------------------------------------------------
  * ▸ EXPLICACIÓN 2 — y ahora el valor recordado CAMBIA (estado mutable)
@@ -104,31 +103,30 @@ saludarANico("Nico") // "Hola, Nico"
 // 4) `crearContador` — devuelve una función que da 1, 2, 3... en llamadas sucesivas.
 //      const c = crearContador(); c() → 1; c() → 2; c() → 3
 export function crearContador(): () => number {
-  let n = 0
+  let n = 0;
   return () => {
-    n = n + 1
-    return n
-  }
+    n = n + 1;
+    return n;
+  };
 }
-crearContador() // 0
-crearContador() // 0
-crearContador() // 0
-const c = crearContador()
-c() // 1
-c() // 2
-c() // 3
+crearContador(); // 0
+crearContador(); // 0
+crearContador(); // 0
+const c = crearContador();
+c(); // 1
+c(); // 2
+c(); // 3
 
 // 5) `crearAcumulador` — devuelve una función que SUMA lo que reciba a un total y
 //    devuelve el total actualizado.
 //      const acum = crearAcumulador(); acum(5) → 5; acum(3) → 8; acum(10) → 18
 export function crearAcumulador(): (n: number) => number {
-  let total = 0
+  let total = 0;
   return (n: number) => {
-    total = total + n
-    return total
-  }
+    total = total + n;
+    return total;
+  };
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — estado booleano
@@ -138,23 +136,23 @@ export function crearAcumulador(): (n: number) => number {
 //    llamada (empieza en true).
 //      const tic = crearAlternador(); tic() → true; tic() → false; tic() → true
 export function crearAlternador(): () => boolean {
-  let comienzo = false
+  let comienzo = false;
   return () => {
-    comienzo = !comienzo
-    return comienzo
-  }
+    comienzo = !comienzo;
+    return comienzo;
+  };
 }
 
 // 7) `crearLimitado` — devuelve una función que da true las primeras `max` veces y
 //    false a partir de ahí.
 //      const ok = crearLimitado(2); ok() → true; ok() → true; ok() → false
 export function crearLimitado(max: number): () => boolean {
-  let base = 0
+  let base = 0;
   return () => {
-    base = base + 1
+    base = base + 1;
 
-    return base <= max
-  }
+    return base <= max;
+  };
 }
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: contador configurable
@@ -164,10 +162,10 @@ export function crearLimitado(max: number): () => boolean {
 //    `paso` en `paso` (devuelve el valor ANTES de sumar, como un "coja turno").
 //      const c = crearContadorDesde(10, 5); c() → 10; c() → 15; c() → 20
 export function crearContadorDesde(inicio: number, paso: number): () => number {
-  let base = inicio
+  let base = inicio;
   return () => {
-    const actual = base
-    base = base + paso
-    return actual
-  }
+    const actual = base;
+    base = base + paso;
+    return actual;
+  };
 }

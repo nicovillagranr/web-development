@@ -44,14 +44,13 @@
  *     pnpm test:run src/exercises/01-tipos-basicos/exercise-08.test.ts
  * ===========================================================================*/
 
-
 // 🧹 LINT: la lista es SOLO fuente del tipo — nadie lee su valor, solo se deriva
 //    la unión con `(typeof ROLES)[number]`. ESLint no cuenta los usos en posición
 //    de TIPO como uso del valor, así que la marca como "sin usar". No es un bug:
 //    ese valor es justo lo que hace que lista y unión no puedan desincronizarse.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- se consume como tipo con `typeof ROLES`
-const ROLES = ["admin", "editor", "lector"] as const
-type Rol = (typeof ROLES)[number]
+const ROLES = ["admin", "editor", "lector"] as const;
+type Rol = (typeof ROLES)[number];
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — sacar la unión y usarla de parámetro
@@ -66,16 +65,15 @@ type Rol = (typeof ROLES)[number]
 //       los tres literales y deje de aceptar basura como "jefe"; y escribe el cuerpo.
 //      esAdmin("admin") → true     esAdmin("lector") → false
 export function esAdmin(r: Rol): boolean {
-  return r === "admin"
+  return r === "admin";
 }
-esAdmin("admin") // retorna true
-esAdmin("lector") // retorna false
+esAdmin("admin"); // retorna true
+esAdmin("lector"); // retorna false
 // esAdmin("Nico") // no compila, porque "Nico" no está en ROLES
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- misma arruga que ROLES: se consume como tipo con `typeof TALLAS`
-const TALLAS = ["S", "M", "L", "XL"] as const
-type Talla = (typeof TALLAS)[number]
+const TALLAS = ["S", "M", "L", "XL"] as const;
+type Talla = (typeof TALLAS)[number];
 
 // 2) `recargoTalla` — la XL cuesta 500 más; el resto, 0.
 //    👉 Dos arreglos: el tipo del parámetro (ahora `string`: traga cualquier cosa)
@@ -83,13 +81,11 @@ type Talla = (typeof TALLAS)[number]
 //      recargoTalla("XL") → 500     recargoTalla("M") → 0
 export function recargoTalla(t: Talla): number {
   if (t === "XL") {
-    return 500
-  }
-  else {
-    return 0
+    return 500;
+  } else {
+    return 0;
   }
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — la unión como menú para mapear
@@ -103,20 +99,19 @@ export function recargoTalla(t: Talla): number {
 export function etiquetaRol(r: Rol): string {
   switch (r) {
     case "admin":
-      return "Administrador"
+      return "Administrador";
     case "editor":
-      return "Editor"
+      return "Editor";
     case "lector":
-      return "Lector"
+      return "Lector";
   }
 }
 
 // 4) `esTallaGrande` — true para L y XL.
 //      esTallaGrande("L") → true    esTallaGrande("S") → false
 export function esTallaGrande(t: Talla): boolean {
-  return t === "L" || t === "XL"
+  return t === "L" || t === "XL";
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: filtrar una lista por uno de los valores de la unión
@@ -129,6 +124,6 @@ export function esTallaGrande(t: Talla): boolean {
 //    👉 Dos arreglos: el tipo de retorno (ahora devuelve la lista entera) y el
 //       cuerpo (no filtra ni se queda con el nombre).
 //      nombresPorRol([{ nombre: "Ana", rol: "admin" },{ nombre: "Leo", rol: "lector" }], "admin") → ["Ana"]
-export function nombresPorRol(usuarios: { nombre: string; rol: Rol }[], rol: Rol,): string[] {
-  return usuarios.filter((usuario) => usuario.rol === rol).map((u) => u.nombre)
+export function nombresPorRol(usuarios: { nombre: string; rol: Rol }[], rol: Rol): string[] {
+  return usuarios.filter((usuario) => usuario.rol === rol).map((u) => u.nombre);
 }

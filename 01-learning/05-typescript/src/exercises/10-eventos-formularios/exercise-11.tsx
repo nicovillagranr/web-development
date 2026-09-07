@@ -111,11 +111,7 @@ export function conCampoCambiado(
 //    `Perfil`. Si resulta ser una de las tres claves, pisa esa; si no lo es,
 //    devuelve el perfil que te dieron sin fabricar nada.
 //    Comprobarlo es lo que convierte ese `string` en una clave a ojos de TypeScript.
-export function conCampoSiEsValido(
-  perfil: Perfil,
-  campo: string,
-  valor: string,
-): Perfil {
+export function conCampoSiEsValido(perfil: Perfil, campo: string, valor: string): Perfil {
   switch (campo) {
     case "alias":
       return { ...perfil, alias: valor };
@@ -182,9 +178,7 @@ export function longitudDe(valor: string | string[]): number {
 //    `{ name, value }`.
 //    Es el drill 4 otra vez, con la unión hecha de dos elementos en vez de dos
 //    formas de texto.
-export function nombreYValor(
-  elemento: HTMLInputElement | HTMLTextAreaElement,
-): {
+export function nombreYValor(elemento: HTMLInputElement | HTMLTextAreaElement): {
   name: string;
   value: string;
 } {
@@ -198,9 +192,7 @@ export function nombreYValor(
 //    `{ name, value }`. Este es el que van a usar los manejadores de abajo, así que
 //    tiene que valer para los `<input>` Y para el `<textarea>`.
 //    El hueco de `ChangeEvent<...>` admite lo mismo que admitía el parámetro del 5.
-export function datosDelCampo(
-  evento: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-): {
+export function datosDelCampo(evento: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): {
   name: string;
   value: string;
 } {
@@ -258,12 +250,7 @@ export function PerfilQueEscribe() {
 
   return (
     <div>
-      <input
-        placeholder="Alias"
-        aria-label="Alias"
-        value={perfil.alias}
-        onChange={alEscribir}
-      />
+      <input placeholder="Alias" aria-label="Alias" value={perfil.alias} onChange={alEscribir} />
       <p>{perfil.alias}</p>
     </div>
   );
@@ -321,9 +308,7 @@ export function PerfilConBio() {
     bio: "",
   });
 
-  const alEscribir = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const alEscribir = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setPerfil(conCampoSiEsValido(perfil, e.target.name, e.target.value));
   };
 
@@ -370,9 +355,7 @@ export function PerfilCompacto() {
     bio: "",
   });
 
-  const alEscribir = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const alEscribir = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name: nombre, value: valor } = datosDelCampo(e);
     setPerfil(conCampoSiEsValido(perfil, nombre, valor));
   };

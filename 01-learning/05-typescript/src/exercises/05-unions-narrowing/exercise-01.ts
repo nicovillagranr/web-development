@@ -94,14 +94,13 @@
 export type Direction = "up" | "down" | "left" | "right";
 export const start: Direction = "up";
 
-
 // 2) Una función `move` que reciba una dirección (de tipo Direction) y un
 //    número de pasos, y devuelva un string descriptivo: "moviendo 3 pasos up".
 //    Si alguien llama move("diagonal", 2), TS debe quejarse.
 export function move(direction: Direction, steps: number) {
   return `moviendo ${steps} pasos ${direction}`;
 }
-move("up", 3) // "moviendo 3 pasos up"
+move("up", 3); // "moviendo 3 pasos up"
 
 // 3) Tienes esta lista fija de roles. Derívale un tipo `Role` SIN escribir
 //    a mano el union "admin" | "editor" | "viewer". Usa el truco del
@@ -109,4 +108,4 @@ move("up", 3) // "moviendo 3 pasos up"
 //
 //    Pista: la constante necesita `as const` para que el truco funcione.
 export const ROLES = ["admin", "editor", "viewer"] as const;
-export type Role = typeof ROLES[number]; // <- cámbialo
+export type Role = (typeof ROLES)[number]; // <- cámbialo

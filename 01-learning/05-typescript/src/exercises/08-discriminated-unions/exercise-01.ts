@@ -122,10 +122,9 @@ export function area(figura: Figura): number {
   if (figura.tipo === "circulo") {
     return Math.PI * figura.radio ** 2;
   } else {
-    return figura.lado ** 2
+    return figura.lado ** 2;
   }
 }
-
 
 // 3) `describir(figura: Figura): string`
 //    - "circulo"  → `Círculo de radio ${radio}`
@@ -134,8 +133,7 @@ export function area(figura: Figura): number {
 export function describir(figura: Figura): string {
   if (figura.tipo === "circulo") {
     return `Círculo de radio ${figura.radio}`;
-  }
-  else {
-    return `Cuadrado de lado ${figura.lado}`
+  } else {
+    return `Cuadrado de lado ${figura.lado}`;
   }
 }

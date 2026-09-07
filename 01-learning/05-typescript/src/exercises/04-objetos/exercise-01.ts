@@ -131,7 +131,6 @@ export const juan: User = {
   // Al ser una propiedad opcional, en este caso lo dejamos sin phone
 };
 
-
 // 2) Define un tipo `Article` con estas propiedades:
 //      - readonly slug: string
 //      - title: string
@@ -149,9 +148,8 @@ export type Article = {
 };
 
 export function publicar(article: Article, fechaIso: string) {
-  return { ...article, publishedAt: fechaIso }
+  return { ...article, publishedAt: fechaIso };
 }
-
 
 // 3) Define un tipo `Settings` para configuración de UI con:
 //      - theme: "light" o "dark" (literal union)
@@ -161,12 +159,12 @@ export function publicar(article: Article, fechaIso: string) {
 //    Y exporta una constante `defaultSettings: Settings` con theme="light",
 //    sin language, version=1.
 export type Settings = {
-  theme: "light" | "dark",
-  language?: string,
-  readonly version: number
+  theme: "light" | "dark";
+  language?: string;
+  readonly version: number;
 };
 
 export const defaultSettings: Settings = {
   theme: "light",
-  version: 1
+  version: 1,
 };

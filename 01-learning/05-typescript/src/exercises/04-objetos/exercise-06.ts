@@ -35,7 +35,6 @@
  *     pnpm test:run src/exercises/04-objetos/exercise-06.test.ts
  * ===========================================================================*/
 
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — COPIAR y PISAR (spread `{ ...obj }`, sin reduce, sin flechas)
  * ════════════════════════════════════════════════════════════════════════════
@@ -46,7 +45,7 @@
 // 1) `copiar` — una copia NUEVA del objeto (no el mismo objeto: una copia).
 //    copiar({ a: 1 }) → { a: 1 }   (pero es otra referencia, no muta el original)
 export function copiar(obj: Record<string, number>): Record<string, number> {
-  return { ...obj }
+  return { ...obj };
 }
 // copiar({ a: 10 }) // return: { a: 10 }
 
@@ -54,7 +53,7 @@ export function copiar(obj: Record<string, number>): Record<string, number> {
 //    Clave FIJA, escrita a mano. (Aquí todavía no hay llaves calculadas.)
 //    conTotal({ a: 1 }) → { a: 1, total: 10 }
 export function conTotal(obj: Record<string, number>): Record<string, number> {
-  return { ...obj, total: 10 }
+  return { ...obj, total: 10 };
 }
 // conTotal({ a: 1 }) // ->
 
@@ -62,11 +61,10 @@ export function conTotal(obj: Record<string, number>): Record<string, number> {
 //    El spread va primero, así que lo que escribas DESPUÉS lo pisa.
 //    pisarA({ a: 1, b: 2 }) → { a: 99, b: 2 } ; pisarA({ b: 2 }) → { b: 2, a: 99 }
 export function pisarA(obj: Record<string, number>): Record<string, number> {
-  return { ...obj, a: 99 }
+  return { ...obj, a: 99 };
 }
 // pisarA({ a: 1, b: 2 }) // -> return: { a: 99, b: 2 }
 // pisarA({ b: 2 }) // -> return: { b: 2, a: 99 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — LLAVE CALCULADA `[algo]:`
@@ -81,7 +79,7 @@ export function pisarA(obj: Record<string, number>): Record<string, number> {
 // 4) `unaClave` — un objeto con UNA propiedad, cuyo NOMBRE viene en la variable.
 //    unaClave("hola", 3) → { hola: 3 }   (NO { clave: 3 })
 export function unaClave(clave: string, valor: number): Record<string, number> {
-  return { [clave]: valor }
+  return { [clave]: valor };
 }
 // unaClave("hola", 3) // -> return: { hola: 3 } (La clave es a la vez el nombre de la propiedad)
 // unaClave("x", 0) // -> return: { x: 0 }
@@ -90,8 +88,12 @@ export function unaClave(clave: string, valor: number): Record<string, number> {
 //    Ahora sí: spread (1) + llave calculada (4), juntos.
 //    ponerClave({ a: 1 }, "b", 2) → { a: 1, b: 2 }
 //    ponerClave({ a: 1 }, "a", 9) → { a: 9 }        ← pisa, como en (3)
-export function ponerClave(obj: Record<string, number>, clave: string, valor: number): Record<string, number> {
-  return { ...obj, [clave]: valor }
+export function ponerClave(
+  obj: Record<string, number>,
+  clave: string,
+  valor: number,
+): Record<string, number> {
+  return { ...obj, [clave]: valor };
 }
 // ponerClave({ a: 1 }, "b", 2) // -> { a: 1, b: 2 }
 // ponerClave({ a: 1 }, "a", 9) // -> { a: 9 }
@@ -107,7 +109,7 @@ export function ponerClave(obj: Record<string, number>, clave: string, valor: nu
 // 6) `leerOCero` — el valor de la clave, o 0 si no existe.
 //    leerOCero({ a: 5 }, "a") → 5 ; leerOCero({}, "x") → 0 ; leerOCero({ a: 0 }, "a") → 0
 export function leerOCero(obj: Record<string, number>, clave: string): number {
-  return obj[clave] ?? 0 // El valor de clave está dentro de obj? Si si, devuelve ese valor. Si no, devuelve 0
+  return obj[clave] ?? 0; // El valor de clave está dentro de obj? Si si, devuelve ese valor. Si no, devuelve 0
 }
 // leerOCero({ a: 5 }, "a") // -> 5
 // leerOCero({}, "x") // -> 0
@@ -117,7 +119,7 @@ export function leerOCero(obj: Record<string, number>, clave: string): number {
 //    refuerzo, para que el `?? 0` se te haga automático.)
 //    cuantasVeces({ a: 2 }, "a") → 2 ; cuantasVeces({}, "x") → 0
 export function cuantasVeces(obj: Record<string, number>, clave: string): number {
-  return obj[clave] ?? 0
+  return obj[clave] ?? 0;
 }
 // cuantasVeces({ a: 2 }, "a") // -> 2
 // cuantasVeces({}, "x") // -> 0
@@ -125,7 +127,7 @@ export function cuantasVeces(obj: Record<string, number>, clave: string): number
 // 8) `tieneClave` — ¿existe esa clave en el diccionario? (usa el operador `in`)
 //    tieneClave({ a: 1 }, "a") → true ; tieneClave({ a: 1 }, "b") → false
 export function tieneClave(obj: Record<string, number>, clave: string): boolean {
-  return clave in obj
+  return clave in obj;
 }
 // tieneClave({ a: 1 }, "a") // -> true
 // tieneClave({ a: 1 }, "b") // -> false
@@ -135,10 +137,9 @@ export function tieneClave(obj: Record<string, number>, clave: string): boolean 
 //    clavesConValorMayorQue({ a: 1, b: 5, c: 3 }, 2) → ["b", "c"]
 export function clavesConValorMayorQue(obj: Record<string, number>, limite: number): string[] {
   return Object.keys(obj) // Recibe: { a: 1, b: 5, c: 3 } y devuelve: ["a", "b", "c"]
-    .filter(clave => (obj[clave] ?? 0) > limite) // Recibe todas las claves y devuelve solo las que cumplen la condicion de que valor > limite -> ["b", "c"]
+    .filter((clave) => (obj[clave] ?? 0) > limite); // Recibe todas las claves y devuelve solo las que cumplen la condicion de que valor > limite -> ["b", "c"]
 }
 // clavesConValorMayorQue({ a: 1, b: 5, c: 3 }, 2) // ->
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — UNA VUELTA del reduce, a mano
@@ -153,12 +154,11 @@ export function clavesConValorMayorQue(obj: Record<string, number>, limite: numb
 //     sumarUno({ a: 1 }, "b") → { a: 1, b: 1 } (la fila NO existía: 0 + 1)
 //     sumarUno({}, "z") → { z: 1 }
 export function sumarUno(obj: Record<string, number>, clave: string): Record<string, number> {
-  return { ...obj, [clave]: (obj[clave] ?? 0) + 1 } // Retorno un objeto nuevo con spread. Si la clave no existe, está en 0 y le sumo 1, si existe, le sumo 1
+  return { ...obj, [clave]: (obj[clave] ?? 0) + 1 }; // Retorno un objeto nuevo con spread. Si la clave no existe, está en 0 y le sumo 1, si existe, le sumo 1
 }
 // sumarUno({ a: 1 }, "a") // -> { a: 2 } -> Ya existía, le sumo 1
 // sumarUno({ a: 1 }, "b") // -> { a: 1, b: 1 } -> No existia, le sumo 1 y se crea
 // sumarUno({}, "z") // -> { z: 1 } -> No existia, le sumo 1 y se crea
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — EL PARÉNTESIS de la flecha (la trampa más fea de JS)
@@ -176,12 +176,11 @@ export function sumarUno(obj: Record<string, number>, clave: string): Record<str
 //     y MIRA el fallo con tus ojos. Luego añade los paréntesis.
 //     envolverTodos([1, 2]) → [{ valor: 1 }, { valor: 2 }] ; envolverTodos([]) → []
 export function envolverTodos(ns: number[]): { valor: number }[] {
-  return ns.map((n) => ({ valor: n }))
+  return ns.map((n) => ({ valor: n }));
 }
 // envolverTodos([1, 2]) // -> [{ valor: 1 }, { valor: 2 }]
 // envolverTodos([]) // -> []
 // envolverTodos([1, 2, 3]) // -> [{ valor: 1 }, { valor: 2 }, { valor: 3 }]
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 6 — YA CON REDUCE (juntar las 5 piezas)
@@ -196,7 +195,10 @@ export function envolverTodos(ns: number[]): { valor: number }[] {
 //     reduce (la vuelta de sumarUno, pero como flecha con paréntesis).
 //     contar(["a", "b", "a"]) → { a: 2, b: 1 } ; contar([]) → {}
 export function contar(palabras: string[]): Record<string, number> {
-  return palabras.reduce<Record<string, number>>((acumulador, palabra) => ({ ...acumulador, [palabra]: (acumulador[palabra] ?? 0) + 1 }), {})
+  return palabras.reduce<Record<string, number>>(
+    (acumulador, palabra) => ({ ...acumulador, [palabra]: (acumulador[palabra] ?? 0) + 1 }),
+    {},
+  );
 }
 // contar(["a", "b", "a"]) // ->
 
@@ -205,7 +207,7 @@ export function contar(palabras: string[]): Record<string, number> {
 //     es más que aplicar sumarUno en cada vuelta.)
 //     contarBis(["a", "b", "a"]) → { a: 2, b: 1 } ; contarBis([]) → {}
 export function contarBis(palabras: string[]): Record<string, number> {
-  return palabras.reduce((acumulador, palabra) => sumarUno(acumulador, palabra), {})
+  return palabras.reduce((acumulador, palabra) => sumarUno(acumulador, palabra), {});
 }
 // contarBis(["a", "b", "a"]) // ->
 
@@ -215,11 +217,13 @@ export function contarBis(palabras: string[]): Record<string, number> {
 //     sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) → { a: 11, b: 2 }
 //     sumarPorClave([]) → {}
 export function sumarPorClave(pares: [string, number][]): Record<string, number> {
-  return pares.reduce<Record<string, number>>((acumulador, [clave, valor]) => ({ ...acumulador, [clave]: (acumulador[clave] ?? 0) + valor }), {})
+  return pares.reduce<Record<string, number>>(
+    (acumulador, [clave, valor]) => ({ ...acumulador, [clave]: (acumulador[clave] ?? 0) + valor }),
+    {},
+  );
 }
 // sumarPorClave([["a", 1], ["b", 2], ["a", 10]]) // -> { a: 11, b: 2 }
 // sumarPorClave([]) // -> {}
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 7 — CAPSTONE: el campeón
@@ -235,7 +239,11 @@ export function sumarPorClave(pares: [string, number][]): Record<string, number>
 //     Al final devuelves solo su CLAVE.
 //     campeon({ a: 1, b: 9, c: 5 }) → "b" ; campeon({ solo: 3 }) → "solo" ; campeon({}) → undefined
 export function campeon(obj: Record<string, number>): string | undefined {
-  return Object.entries(obj).reduce<[string, number] | undefined>((campeon, [clave, valor]) => (campeon === undefined || valor > campeon[1] ? [clave, valor] : campeon), undefined)?.[0]
+  return Object.entries(obj).reduce<[string, number] | undefined>(
+    (campeon, [clave, valor]) =>
+      campeon === undefined || valor > campeon[1] ? [clave, valor] : campeon,
+    undefined,
+  )?.[0];
 }
 // campeon({ a: 1, b: 9, c: 5 }) // -> "b"
 // campeon({ solo: 3 }) // -> "solo"
@@ -246,6 +254,6 @@ export function campeon(obj: Record<string, number>): string | undefined {
 //     diccionario + `campeon` (15) para sacar la clave ganadora. Reúsalos.
 //     masFrecuente(["a", "b", "a", "a"]) → "a" ; masFrecuente([]) → undefined
 export function masFrecuente(palabras: string[]): string | undefined {
-  return campeon(contar(palabras))
+  return campeon(contar(palabras));
 }
 // masFrecuente(["a", "b", "a", "a"]) // -> "a"

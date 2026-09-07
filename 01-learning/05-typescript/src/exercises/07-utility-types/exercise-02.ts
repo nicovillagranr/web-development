@@ -62,7 +62,6 @@
  *   El typecheck queda ROJO hasta que la aprietes.
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * CALENTAMIENTO — fundamentos de `reduce` (acumulador number, string, boolean)
  * ---------------------------------------------------------------------------
@@ -74,53 +73,51 @@
 //    acumulador sin tocarlo). Arregla la operación.
 //      sumar([1, 2, 3]) → 6 ; sumar([]) → 0
 export function sumar(nums: number[]): number {
-  return nums.reduce((acum, actual) => acum + actual, 0)
+  return nums.reduce((acum, actual) => acum + actual, 0);
 }
-sumar([2, 4, 6, 8, 10]) // resultado: 30
+sumar([2, 4, 6, 8, 10]); // resultado: 30
 
 // 2) `producto` — multiplica todos los números. La operación YA está bien...
 //    pero el resultado siempre da 0. Arregla el INICIAL (¿cuál es el neutro de
 //    multiplicar?).
 //      producto([2, 3, 4]) → 24 ; producto([5]) → 5 ; producto([]) → 1
 export function producto(nums: number[]): number {
-  return nums.reduce((acum, actual) => acum * actual, 1)
+  return nums.reduce((acum, actual) => acum * actual, 1);
 }
-producto([2, 4, 6]) // resultado: 48
+producto([2, 4, 6]); // resultado: 48
 
 // 3) `contarPares` — cuántos números pares hay. Acumulador number, inicial 0,
 //    pero sumas 1 SOLO cuando el valor es par (un ternario dentro del reduce).
 //      contarPares([1, 2, 3, 4]) → 2 ; contarPares([1, 3, 5]) → 0
 export function contarPares(nums: number[]): number {
-  return nums.reduce((acum, actual) => acum + (actual % 2 === 0 ? 1 : 0), 0)
+  return nums.reduce((acum, actual) => acum + (actual % 2 === 0 ? 1 : 0), 0);
 }
-contarPares([2, 4, 6, 8, 10]) // resultado: 5 pares
+contarPares([2, 4, 6, 8, 10]); // resultado: 5 pares
 
 // 4) `concatenar` — pega todas las palabras en un solo string. Acumulador
 //    string, inicial "". Arregla la operación.
 //      concatenar(["a", "b", "c"]) → "abc" ; concatenar([]) → ""
 export function concatenar(palabras: string[]): string {
-  return palabras.reduce((acum, valor) => acum + valor, "")
+  return palabras.reduce((acum, valor) => acum + valor, "");
 }
-concatenar(["Nicolás", "Villagrán"]) // resultado: "NicolásVillagrán"
+concatenar(["Nicolás", "Villagrán"]); // resultado: "NicolásVillagrán"
 
 // 5) `longitudTotal` — suma de las longitudes de todas las palabras. OJO:
 //    recorres un `string[]` pero acumulas un `number` (cambio de tipo). El
 //    valor aporta su `.length`.
 //      longitudTotal(["ab", "cde"]) → 5 ; longitudTotal([]) → 0
 export function longitudTotal(palabras: string[]): number {
-  return palabras.reduce((acum, valor) => acum + valor.length, 0)
+  return palabras.reduce((acum, valor) => acum + valor.length, 0);
 }
-longitudTotal(["ab", "cde", "efg"]) // resultado: 8
+longitudTotal(["ab", "cde", "efg"]); // resultado: 8
 
 // 6) `todosPositivos` — ¿son TODOS los números mayores que 0? Acumulador
 //    boolean, inicial el neutro del AND (`true`), y en cada paso lo "apagas"
 //    con `&&` si el valor no es positivo.
 //      todosPositivos([1, 2, 3]) → true ; todosPositivos([1, -2, 3]) → false
 export function todosPositivos(nums: number[]): boolean {
-  return nums.reduce((acum, valor) => acum && valor > 0, true)
+  return nums.reduce((acum, valor) => acum && valor > 0, true);
 }
-
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — el campeón es un NÚMERO (el patrón "compara y quédate con uno")
@@ -132,29 +129,28 @@ export function todosPositivos(nums: number[]): boolean {
 //      menorNumero([3, 1, 2]) → 1 ; menorNumero([5]) → 5
 export function menorNumero(nums: number[]): number {
   return nums.reduce((acum, valor) => {
-    if (valor < acum) return valor
-    return acum
-  }, Infinity)
+    if (valor < acum) return valor;
+    return acum;
+  }, Infinity);
 }
-menorNumero([1, 2, 3, 9, 16]) // resultado: 1
+menorNumero([1, 2, 3, 9, 16]); // resultado: 1
 
 // 8) `mayorNumero` — el número más grande. Mismo patrón que el 7, con la
 //    condición y el tope inicial invertidos.
 //      mayorNumero([3, 1, 2]) → 3 ; mayorNumero([5]) → 5
 export function mayorNumero(nums: number[]): number {
   return nums.reduce((acum, valor) => {
-    if (valor > acum) return valor
-    return acum
-  }, -Infinity)
+    if (valor > acum) return valor;
+    return acum;
+  }, -Infinity);
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — el campeón es un OBJETO concreto (lo nuevo de verdad:
  * inicial `undefined`, portero del primer turno, y `reduce<... | undefined>`)
  * -------------------------------------------------------------------------- */
 
-type Producto = { nombre: string; precio: number }
+type Producto = { nombre: string; precio: number };
 
 // 9) `masBarato` — el producto de MENOR precio, o `undefined` si no hay ninguno.
 //    El starter devuelve el PRIMERO (mal: el primero no tiene por qué ser el
@@ -167,16 +163,20 @@ type Producto = { nombre: string; precio: number }
 export function masBarato(productos: Producto[]): Producto | undefined {
   return productos.reduce<Producto | undefined>((acum, valor) => {
     if (acum === undefined) {
-      return valor
+      return valor;
     }
-    return valor.precio < acum.precio ? valor : acum
-  }, undefined)
+    return valor.precio < acum.precio ? valor : acum;
+  }, undefined);
 }
-masBarato([{ nombre: "Coca Cola", precio: 100 }, { nombre: "Pepsi", precio: 30 }]) // resultado: { nombre: "Pepsi", precio: 30 }
+masBarato([
+  { nombre: "Coca Cola", precio: 100 },
+  { nombre: "Pepsi", precio: 30 },
+]); // resultado: { nombre: "Pepsi", precio: 30 }
 masBarato([
   { nombre: "Papas Lays", precio: 50 },
   { nombre: "Pepsi", precio: 30 },
-  { nombre: "Coca Cola", precio: 100 }])
+  { nombre: "Coca Cola", precio: 100 },
+]);
 // resultado: { nombre: "Pepsi", precio: 30}
 
 // 10) `masCaro` — el producto de MAYOR precio, o undefined. Espejo del 9:
@@ -185,25 +185,28 @@ masBarato([
 export function masCaro(productos: Producto[]): Producto | undefined {
   return productos.reduce<Producto | undefined>((acum, valor) => {
     if (acum === undefined) {
-      return valor
+      return valor;
     }
-    return valor.precio > acum.precio ? valor : acum
-  }, undefined)
+    return valor.precio > acum.precio ? valor : acum;
+  }, undefined);
 }
 
-type Jugador = { nombre: string; vidas: number }
+type Jugador = { nombre: string; vidas: number };
 // 11) `conMenosVidas` — el jugador con MENOS vidas, o undefined. Mismo patrón
 //     que el 9, otro contexto: ahora la propiedad numérica se llama `vidas`.
 //      conMenosVidas([{nombre:"ana",vidas:3},{nombre:"leo",vidas:1}]) → {nombre:"leo",vidas:1}
 export function conMenosVidas(jugadores: Jugador[]): Jugador | undefined {
   return jugadores.reduce<Jugador | undefined>((acum, valor) => {
     if (acum === undefined) {
-      return valor
+      return valor;
     }
-    return valor.vidas < acum.vidas ? valor : acum
-  }, undefined)
+    return valor.vidas < acum.vidas ? valor : acum;
+  }, undefined);
 }
-conMenosVidas([{ nombre: "Joel", vidas: 3 }, { nombre: "Ellie", vidas: 1 }]) // resultado: { nombre: "Ellie", vidas: 1 }
+conMenosVidas([
+  { nombre: "Joel", vidas: 3 },
+  { nombre: "Ellie", vidas: 1 },
+]); // resultado: { nombre: "Ellie", vidas: 1 }
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — la clave VARIABLE: el dúo genérico (esto YA es el drill 8 de ex-01)
@@ -218,26 +221,44 @@ conMenosVidas([{ nombre: "Joel", vidas: 3 }, { nombre: "Ellie", vidas: 1 }]) // 
 // 12) `menorPor` — el objeto con el MENOR valor en la columna `clave`. Es el
 //     GEMELO exacto de exercise-01 drill 8 (`minimoPor`). Aprieta la firma.
 //      menorPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"b",v:1}
-export function menorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function menorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(
+  arr: Objeto[],
+  clave: Clave,
+): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
     if (mejor === undefined) {
-      return actual
+      return actual;
     }
-    return actual[clave] < mejor[clave] ? actual : mejor
-  }, undefined)
+    return actual[clave] < mejor[clave] ? actual : mejor;
+  }, undefined);
 }
-menorPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "b", v: 1 }
-menorPor([], "v") // undefined
+menorPor(
+  [
+    { n: "a", v: 3 },
+    { n: "b", v: 1 },
+  ],
+  "v",
+); // { n: "b", v: 1 }
+menorPor([], "v"); // undefined
 
 // 13) `mayorPor` — el objeto con el MAYOR valor en `clave`. Es el ESPEJO: el
 //     mismísimo `maximoPor` del E1 del parcial. Mismo dúo, cuerpo con `>`.
 //      mayorPor([{n:"a",v:3},{n:"b",v:1}], "v") → {n:"a",v:3}
-export function mayorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(arr: Objeto[], clave: Clave): Objeto | undefined {
+export function mayorPor<Objeto extends Record<Clave, number>, Clave extends keyof Objeto>(
+  arr: Objeto[],
+  clave: Clave,
+): Objeto | undefined {
   return arr.reduce<Objeto | undefined>((mejor, actual) => {
     if (mejor === undefined) {
-      return actual
+      return actual;
     }
-    return actual[clave] > mejor[clave] ? actual : mejor
-  }, undefined)
+    return actual[clave] > mejor[clave] ? actual : mejor;
+  }, undefined);
 }
-mayorPor([{ n: "a", v: 3 }, { n: "b", v: 1 }], "v") // { n: "a", v: 3 }
+mayorPor(
+  [
+    { n: "a", v: 3 },
+    { n: "b", v: 1 },
+  ],
+  "v",
+); // { n: "a", v: 3 }

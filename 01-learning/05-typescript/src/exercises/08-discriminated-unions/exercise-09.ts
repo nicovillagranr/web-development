@@ -44,8 +44,7 @@
 export type Notificacion =
   | { canal: "email"; para: string; asunto: string }
   | { canal: "sms"; telefono: string; texto: string }
-  | { canal: "push"; deviceId: string; titulo: string }
-
+  | { canal: "push"; deviceId: string; titulo: string };
 
 /* ── BLOQUE A — leer el campo propio de cada canal ─────────────────────────── */
 
@@ -54,9 +53,12 @@ export type Notificacion =
 //    destinatario({ canal: "sms", telefono: "600", texto: "hola" }) → "600"
 export function destinatario(n: Notificacion): string {
   switch (n.canal) {
-    case "email": return n.para
-    case "sms": return n.telefono
-    case "push": return n.deviceId
+    case "email":
+      return n.para;
+    case "sms":
+      return n.telefono;
+    case "push":
+      return n.deviceId;
   }
 }
 
@@ -65,18 +67,20 @@ export function destinatario(n: Notificacion): string {
 //    vistaPrevia({ canal: "email", para: "a@b.com", asunto: "Hola" }) → "Hola"
 export function vistaPrevia(n: Notificacion): string {
   switch (n.canal) {
-    case "email": return n.asunto
-    case "sms": return n.texto
-    case "push": return n.titulo
+    case "email":
+      return n.asunto;
+    case "sms":
+      return n.texto;
+    case "push":
+      return n.titulo;
   }
 }
 
 // 3) `esInstantanea` — true para "sms" y "push", false para "email".
 //    esInstantanea({ canal: "push", deviceId: "d1", titulo: "T" }) → true
 export function esInstantanea(n: Notificacion): boolean {
-  return n.canal === "sms" || n.canal === "push"
+  return n.canal === "sms" || n.canal === "push";
 }
-
 
 /* ── BLOQUE B — enrutar (con never) y agregar ──────────────────────────────── */
 
@@ -87,10 +91,16 @@ export function esInstantanea(n: Notificacion): boolean {
 //      push  → `PUSH a ${deviceId}: ${titulo}`
 export function enrutar(n: Notificacion): string {
   switch (n.canal) {
-    case "email": return `EMAIL a ${n.para}: ${n.asunto}`
-    case "sms": return `SMS a ${n.telefono}: ${n.texto}`
-    case "push": return `PUSH a ${n.deviceId}: ${n.titulo}`
-    default: { const _exhaustivo: never = n; return _exhaustivo }
+    case "email":
+      return `EMAIL a ${n.para}: ${n.asunto}`;
+    case "sms":
+      return `SMS a ${n.telefono}: ${n.texto}`;
+    case "push":
+      return `PUSH a ${n.deviceId}: ${n.titulo}`;
+    default: {
+      const _exhaustivo: never = n;
+      return _exhaustivo;
+    }
   }
 }
 
@@ -107,14 +117,22 @@ export function enrutar(n: Notificacion): string {
 // | { canal: "sms"; telefono: string; texto: string }
 // | { canal: "push"; deviceId: string; titulo: string }
 
-
 export function resumenEnvios(ns: Notificacion[]): { email: number; sms: number; push: number } {
-  return ns.reduce((acumulador, noti) => {
-    switch (noti.canal) {
-      case "email": return { ...acumulador, email: acumulador.email + 1 }
-      case "sms": return { ...acumulador, sms: acumulador.sms + 1 }
-      case "push": return { ...acumulador, push: acumulador.push + 1 }
-      default: { const _exhaustivo: never = noti; return _exhaustivo }
-    }
-  }, { email: 0, sms: 0, push: 0 })
+  return ns.reduce(
+    (acumulador, noti) => {
+      switch (noti.canal) {
+        case "email":
+          return { ...acumulador, email: acumulador.email + 1 };
+        case "sms":
+          return { ...acumulador, sms: acumulador.sms + 1 };
+        case "push":
+          return { ...acumulador, push: acumulador.push + 1 };
+        default: {
+          const _exhaustivo: never = noti;
+          return _exhaustivo;
+        }
+      }
+    },
+    { email: 0, sms: 0, push: 0 },
+  );
 }

@@ -83,15 +83,12 @@
 //    pones defecto tú, solo pasas lo que haya (aunque sea undefined).
 //    <Etiqueta texto="Hola" />               →  <span>Hola</span>
 //    <Etiqueta texto="Hola" color="red" />   →  <span style="color: red">Hola</span>
-export function Etiqueta({ texto, color }: { texto: string, color?: string }) {
+export function Etiqueta({ texto, color }: { texto: string; color?: string }) {
   return (
     // el color es opcional. Puede decir blue o undefined y no dará error
-    <span style={{ color }}>
-      {texto}
-    </span>
-  )
+    <span style={{ color }}>{texto}</span>
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — VALOR POR DEFECTO con `??` (en el cuerpo)
@@ -105,7 +102,7 @@ export function Etiqueta({ texto, color }: { texto: string, color?: string }) {
 //    <Saludo />                →  <p>Hola, invitado</p>
 //    <Saludo nombre="Nico" />  →  <p>Hola, Nico</p>
 export function Saludo({ nombre }: { nombre?: string }) {
-  return <p>Hola, {nombre ?? "invitado"}</p>
+  return <p>Hola, {nombre ?? "invitado"}</p>;
 }
 
 // 3) `Precio` — recibe `moneda` (string, OPCIONAL, defecto "€") y `cantidad`
@@ -113,12 +110,12 @@ export function Saludo({ nombre }: { nombre?: string }) {
 //    detrás con un espacio: `cantidad + " " + moneda`.
 //    <Precio cantidad={10} />               →  <b>10 €</b>
 //    <Precio cantidad={10} moneda="$" />    →  <b>10 $</b>
-export function Precio({ moneda = "€", cantidad }: { moneda?: string, cantidad: number }) {
+export function Precio({ moneda = "€", cantidad }: { moneda?: string; cantidad: number }) {
   return (
     <b>
       {cantidad} {moneda}
     </b>
-  )
+  );
 }
 //<Precio moneda="$" cantidad={10} />
 //<Precio cantidad={10}></Precio>
@@ -142,12 +139,8 @@ export function Precio({ moneda = "€", cantidad }: { moneda?: string, cantidad
 //    el texto dentro y `className` igual a `tamano`.
 //    <Boton texto="Ok" />                  →  <button class="medio">Ok</button>
 //    <Boton texto="Ok" tamano="grande" />  →  <button class="grande">Ok</button>
-export function Boton({ texto, tamano = "medio" }: { texto: string, tamano?: string }) {
-  return (
-    <button className={tamano}>
-      {texto}
-    </ button>
-  )
+export function Boton({ texto, tamano = "medio" }: { texto: string; tamano?: string }) {
+  return <button className={tamano}>{texto}</button>;
 }
 
 // 5) `Avatar` — recibe `nombre` (string) y `tamanoPx` (number, OPCIONAL,
@@ -155,12 +148,9 @@ export function Boton({ texto, tamano = "medio" }: { texto: string, tamano?: str
 //    Defecto en la firma otra vez, pero ahora el defecto es un NÚMERO.
 //    <Avatar nombre="Ana" />               →  <img alt="Ana" width="40">
 //    <Avatar nombre="Ana" tamanoPx={80} /> →  <img alt="Ana" width="80">
-export function Avatar({ nombre, tamanoPx = 40 }: { nombre: string, tamanoPx?: number }) {
-  return (
-    <img alt={nombre} width={tamanoPx} />
-  )
+export function Avatar({ nombre, tamanoPx = 40 }: { nombre: string; tamanoPx?: number }) {
+  return <img alt={nombre} width={tamanoPx} />;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — ⚠️ `??` vs `||`: el bug del `0` y el `""`
@@ -178,10 +168,8 @@ export function Avatar({ nombre, tamanoPx = 40 }: { nombre: string, tamanoPx?: n
 export function Contador({ valor }: { valor?: number }) {
   return (
     // el 0 es el defecto
-    <span>
-      {valor ?? 0}
-    </span>
-  )
+    <span>{valor ?? 0}</span>
+  );
 }
 
 // 7) `CampoTexto` — recibe `valor` (string, OPCIONAL). Retorna un <input> con
@@ -193,9 +181,7 @@ export function Contador({ valor }: { valor?: number }) {
 //    <CampoTexto />              →  <input value="">
 //    <CampoTexto valor="hola" /> →  <input value="hola">
 export function CampoTexto({ valor }: { valor?: string }) {
-  return (
-    <input value={valor ?? ""} readOnly />
-  )
+  return <input value={valor ?? ""} readOnly />;
 }
 
 // 8) 🐛 `PrecioRoto` vs 🩹 `PrecioBien` — el bug lado a lado, para VERLO.
@@ -210,7 +196,7 @@ export function PrecioRoto({ descuento }: { descuento?: number }) {
     // Así que cuando llega descuento={0}, `0 || 100` da 100 — el `||` confunde
     // "el usuario puso un 0 de verdad" con "no hay valor". Ahí está lo roto.
     <b>{descuento || 100}</b>
-  )
+  );
 }
 export function PrecioBien({ descuento }: { descuento?: number }) {
   return (
@@ -218,9 +204,8 @@ export function PrecioBien({ descuento }: { descuento?: number }) {
     // null ni undefined, así que `0 ?? 100` da 0 — respeta el descuento real.
     // Solo saltaría al 100 si descuento no viniera (undefined).
     <b>{descuento ?? 100}</b>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — CAPSTONE: varias opcionales con defaults coherentes
@@ -235,11 +220,11 @@ export function PrecioBien({ descuento }: { descuento?: number }) {
 //      · `destacada`  boolean, opcional
 //      · `margen`     number, opcional
 export type TarjetaProps = {
-  titulo: string,
-  subtitulo?: string,
-  destacada?: boolean,
-  margen?: number
-}
+  titulo: string;
+  subtitulo?: string;
+  destacada?: boolean;
+  margen?: number;
+};
 
 // 10) `Tarjeta` — usa `TarjetaProps` con estos DEFECTOS EN LA FIRMA:
 //       · `subtitulo` → '' (vacío)     · `destacada` → false     · `margen` → 0
@@ -254,11 +239,11 @@ export type TarjetaProps = {
 //       →  <article class="" style="margin: 0px"><h3>Hola</h3><p></p></article>
 //     <Tarjeta titulo="Hola" subtitulo="Mundo" destacada margen={8} />
 //       →  <article class="destacada" style="margin: 8px"><h3>Hola</h3><p>Mundo</p></article>
-export function Tarjeta({ titulo, subtitulo = '', destacada = false, margen = 0 }: TarjetaProps) {
+export function Tarjeta({ titulo, subtitulo = "", destacada = false, margen = 0 }: TarjetaProps) {
   return (
-    <article className={destacada ? 'destacada' : ''} style={{ margin: margen }}>
+    <article className={destacada ? "destacada" : ""} style={{ margin: margen }}>
       <h3>{titulo}</h3>
       <p>{subtitulo}</p>
     </article>
-  )
+  );
 }

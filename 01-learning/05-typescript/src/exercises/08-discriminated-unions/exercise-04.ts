@@ -58,8 +58,7 @@ export type Peticion =
   | { fase: "inactivo" }
   | { fase: "cargando" }
   | { fase: "ok"; datos: string[] }
-  | { fase: "fallo"; codigo: number }
-
+  | { fase: "fallo"; codigo: number };
 
 /* ── BLOQUE A — leer el estado seguro ──────────────────────────────────────── */
 
@@ -68,16 +67,16 @@ export type Peticion =
 //    puedeReintentar({ fase: "fallo", codigo: 500 }) → true
 //    puedeReintentar({ fase: "cargando" }) → false
 export function puedeReintentar(p: Peticion): boolean {
-  if (p.fase === "inactivo" || p.fase === "fallo") return true
-  return false
+  if (p.fase === "inactivo" || p.fase === "fallo") return true;
+  return false;
 }
 
 // 2) `cantidadDatos` — el length de `datos` si la fase es "ok"; si no, 0.
 //    cantidadDatos({ fase: "ok", datos: ["a", "b"] }) → 2
 //    cantidadDatos({ fase: "inactivo" }) → 0
 export function cantidadDatos(p: Peticion): number {
-  if (p.fase === "ok") return p.datos.length
-  return 0
+  if (p.fase === "ok") return p.datos.length;
+  return 0;
 }
 
 // 3) `descripcion` — un texto por fase, con `switch (p.fase)` + `default` con el
@@ -89,20 +88,19 @@ export function cantidadDatos(p: Peticion): number {
 export function descripcion(p: Peticion): string {
   switch (p.fase) {
     case "inactivo":
-      return "Sin empezar"
+      return "Sin empezar";
     case "cargando":
-      return "Cargando…"
+      return "Cargando…";
     case "ok":
-      return `${p.datos.length} datos`
+      return `${p.datos.length} datos`;
     case "fallo":
-      return `Error ${p.codigo}`
+      return `Error ${p.codigo}`;
     default: {
-      const _exhaustivo: never = p
-      return _exhaustivo
+      const _exhaustivo: never = p;
+      return _exhaustivo;
     }
   }
 }
-
 
 /* ── BLOQUE B — construir SOLO estados válidos ─────────────────────────────── */
 
@@ -113,11 +111,15 @@ export function descripcion(p: Peticion): string {
 //      desdeBanderas(false, ["a"], null) → { fase: "ok", datos: ["a"] }
 //      desdeBanderas(true, null, null)   → { fase: "cargando" }
 //      desdeBanderas(false, null, 404)   → { fase: "fallo", codigo: 404 }
-export function desdeBanderas(cargando: boolean, datos: string[] | null, codigo: number | null,): Peticion {
-  if (codigo) return { fase: "fallo", codigo }
-  if (cargando) return { fase: "cargando" }
-  if (datos) return { fase: "ok", datos }
-  return { fase: "inactivo" }
+export function desdeBanderas(
+  cargando: boolean,
+  datos: string[] | null,
+  codigo: number | null,
+): Peticion {
+  if (codigo) return { fase: "fallo", codigo };
+  if (cargando) return { fase: "cargando" };
+  if (datos) return { fase: "ok", datos };
+  return { fase: "inactivo" };
 }
 
 // 5) CAPSTONE `reintentar` — una TRANSICIÓN: si la petición está en "inactivo" o
@@ -126,10 +128,9 @@ export function desdeBanderas(cargando: boolean, datos: string[] | null, codigo:
 //      reintentar({ fase: "fallo", codigo: 500 }) → { fase: "cargando" }
 //      reintentar({ fase: "ok", datos: [] })      → { fase: "ok", datos: [] }
 export function reintentar(p: Peticion): Peticion {
-  if (p.fase === "inactivo" || p.fase === "fallo") return { fase: "cargando" }
-  return p
+  if (p.fase === "inactivo" || p.fase === "fallo") return { fase: "cargando" };
+  return p;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE C — ENTENDER `desdeBanderas` DESDE EL SUELO (escalera de refuerzo)
@@ -146,7 +147,6 @@ export function reintentar(p: Peticion): Peticion {
  * Reglas de siempre: ❌ nada de `any` ni `as`. Resuelve EN ORDEN.
  * ==========================================================================*/
 
-
 /* ── C1 — PRIORIDAD PURA, sin objetos ─────────────────────────────────────────
  * Antes de mezclar objetos, quédate solo con la idea de "el primero que se
  * cumple gana". Recibes tres booleanos y devuelves la ETIQUETA del primero que
@@ -161,15 +161,14 @@ export function reintentar(p: Peticion): Peticion {
  *   primeraActiva(false, false, true) → "c"
  *   primeraActiva(false, false, false)→ "ninguna"
  */
-export function primeraActiva(a: boolean, b: boolean, c: boolean,): "a" | "b" | "c" | "ninguna" {
-  if (a === true) return "a"
-  if (b === true) return "b"
-  if (c === true) return "c"
-  return "ninguna"
+export function primeraActiva(a: boolean, b: boolean, c: boolean): "a" | "b" | "c" | "ninguna" {
+  if (a === true) return "a";
+  if (b === true) return "b";
+  if (c === true) return "c";
+  return "ninguna";
 }
 // primeraActiva(false, true, true)   // → "b"
 // primeraActiva(false, false, false) // → "ninguna"
-
 
 /* ── C2 — UNA señal `null`able → elegir entre DOS variantes ────────────────────
  * Ahora sí objetos, pero con UNA sola señal. Recibes `codigo: number | null`.
@@ -184,13 +183,12 @@ export function primeraActiva(a: boolean, b: boolean, c: boolean,): "a" | "b" | 
  */
 export function desdeCodigo(codigo: number | null): Peticion {
   if (codigo) {
-    return { fase: "fallo", codigo }
+    return { fase: "fallo", codigo };
   }
-  return { fase: "inactivo" }
+  return { fase: "inactivo" };
 }
 // desdeCodigo(404)  // → { fase: "fallo", codigo: 404 }
 // desdeCodigo(null) // → { fase: "inactivo" }
-
 
 /* ── C3 — DOS señales con prioridad ────────────────────────────────────────────
  * Subimos a dos señales. Prioridad: si `cargando` → "cargando"; si no, si hay
@@ -201,18 +199,17 @@ export function desdeCodigo(codigo: number | null): Peticion {
  *   desdeCargaODatos(false, ["a"]) → { fase: "ok", datos: ["a"] }
  *   desdeCargaODatos(false, null)  → { fase: "inactivo" }
  */
-export function desdeCargaODatos(cargando: boolean, datos: string[] | null,): Peticion {
+export function desdeCargaODatos(cargando: boolean, datos: string[] | null): Peticion {
   if (cargando) {
-    return { fase: "cargando" }
+    return { fase: "cargando" };
   }
   if (datos) {
-    return { fase: "ok", datos }
+    return { fase: "ok", datos };
   }
-  return { fase: "inactivo" }
+  return { fase: "inactivo" };
 }
 // desdeCargaODatos(true, ["a"])  // → { fase: "cargando" }
 // desdeCargaODatos(false, null)  // → { fase: "inactivo" }
-
 
 /* ── C4 — EL ORDEN IMPORTA (la trampa exacta del drill 4) ──────────────────────
  * Este es el corazón del asunto. Recibes DOS señales que pueden estar activas a
@@ -228,14 +225,14 @@ export function desdeCargaODatos(cargando: boolean, datos: string[] | null,): Pe
  *   ganaPrimero(true,  null) → "cargando"
  *   ganaPrimero(false, null) → "cargando"   (no hay código → cae a cargando)
  */
-export function ganaPrimero(cargando: boolean, codigo: number | null,): "cargando" | "fallo" {
+export function ganaPrimero(cargando: boolean, codigo: number | null): "cargando" | "fallo" {
   if (codigo) {
-    return "fallo"
+    return "fallo";
   }
   if (cargando) {
-    return "cargando"
+    return "cargando";
   }
-  return "cargando"
+  return "cargando";
 }
 // ganaPrimero(true, 500)  // → "fallo"
 // ganaPrimero(true, null) // → "cargando"

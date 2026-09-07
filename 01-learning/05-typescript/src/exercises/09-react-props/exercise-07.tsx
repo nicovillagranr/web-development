@@ -79,8 +79,7 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-import type { ComponentProps, ReactNode } from 'react'
-
+import type { ComponentProps, ReactNode } from "react";
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: el rest en objetos, sin React de por medio
@@ -99,12 +98,14 @@ import type { ComponentProps, ReactNode } from 'react'
 //       componente: partir las props en "lo mío" y "lo que reenvío".
 //    partirUsuario({ id: 1, nombre: 'Ana', activo: true })
 //      →  { id: 1, resto: { nombre: 'Ana', activo: true } }
-export function partirUsuario(obj: { id: number, nombre: string, activo: boolean }): { id: number; resto: { nombre: string; activo: boolean } } {
-  const { id, ...resto } = obj
-  return { id, resto }
+export function partirUsuario(obj: { id: number; nombre: string; activo: boolean }): {
+  id: number;
+  resto: { nombre: string; activo: boolean };
+} {
+  const { id, ...resto } = obj;
+  return { id, resto };
 }
-partirUsuario({ id: 1, nombre: 'Ana', activo: true }) // →  { id: 1, resto: { nombre: 'Ana', activo: true } }
-
+partirUsuario({ id: 1, nombre: "Ana", activo: true }); // →  { id: 1, resto: { nombre: 'Ana', activo: true } }
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — DERRAMAR el rest sobre una etiqueta JSX
@@ -123,7 +124,7 @@ partirUsuario({ id: 1, nombre: 'Ana', activo: true }) // →  { id: 1, resto: { 
 //      →  <div id="c1" class="caja"><h3>Hola</h3></div>
 // ✍️ EJEMPLO GUIADO — resuelto por el coach a petición tuya ("resuélvelo tú, para entender").
 //    El gesto se practica solo, a partir del drill 3.
-export function Caja({ titulo, ...resto }: { titulo: string, id: string, className: string }) {
+export function Caja({ titulo, ...resto }: { titulo: string; id: string; className: string }) {
   return (
     // Dentro de esta etiqueta div, derrama el rest. Significa que puedes poner:
     // className="caja"
@@ -133,7 +134,7 @@ export function Caja({ titulo, ...resto }: { titulo: string, id: string, classNa
     <div {...resto}>
       <h3>{titulo}</h3>
     </div>
-  )
+  );
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -153,7 +154,7 @@ export function Caja({ titulo, ...resto }: { titulo: string, id: string, classNa
 
 // 3) Define el tipo `PropsDeBoton` como las props nativas de `<button>` y
 //    expórtalo. Una línea.
-export type PropsDeBoton = ComponentProps<'button'>
+export type PropsDeBoton = ComponentProps<"button">;
 
 /* ════════════════════════════════════════════════════════════════════════════
  * ESCALERA P — REFUERZO DEL CUERPO DEL DRILL 3 (montada 23 jul 2026)
@@ -177,11 +178,7 @@ export type PropsDeBoton = ComponentProps<'button'>
 //        cualquier objeto de FASE 1. Un objeto de props no tiene nada especial.
 //     <TituloSimple texto="Hola" />  →  <h1>Hola</h1>
 export function TituloSimple(p: { texto: string }) {
-  return (
-    <h1>
-      {p.texto}
-    </h1>
-  )
+  return <h1>{p.texto}</h1>;
 }
 
 // P2) EL DERRAME — sobre un objeto que YA existe, sin parámetros de por medio.
@@ -192,14 +189,10 @@ export function TituloSimple(p: { texto: string }) {
 //        Si el objeto está vacío, no escribe ningún atributo (eso fue lo que te
 //        pasó con `const props: PropsDeBoton = {}`).
 //     <CajaConAtributos />  →  <div id="x1" class="fija">fija</div>
-const ATRIBUTOS = { id: 'x1', className: 'fija' }
+const ATRIBUTOS = { id: "x1", className: "fija" };
 
 export function CajaConAtributos() {
-  return (
-    <div {...ATRIBUTOS}>
-      fija
-    </div>
-  )
+  return <div {...ATRIBUTOS}>fija</div>;
 }
 
 // P3) LOS DOS JUNTOS — el gesto completo, sobre otro elemento.
@@ -210,10 +203,9 @@ export function CajaConAtributos() {
 //     ⚠️ Un <input> no lleva contenido: se escribe autocerrado, `<input ... />`.
 //     <EntradaPasarela type="email" placeholder="Correo" disabled />
 //       →  <input type="email" placeholder="Correo" disabled>
-export function EntradaPasarela(entradas: ComponentProps<'input'>) {
-  return <input {...entradas} />
+export function EntradaPasarela(entradas: ComponentProps<"input">) {
+  return <input {...entradas} />;
 }
-
 
 //    `BotonPasarela` — usa `PropsDeBoton`. No añade NADA: recibe las props
 //    enteras y las derrama tal cual sobre un <button>. Es la funda transparente.
@@ -221,19 +213,15 @@ export function EntradaPasarela(entradas: ComponentProps<'input'>) {
 //    <BotonPasarela type="submit" disabled aria-label="Enviar">Ok</BotonPasarela>
 //      →  <button type="submit" disabled aria-label="Enviar">Ok</button>
 export function BotonPasarela(entradas: PropsDeBoton) {
-  return (
-    <button {...entradas}></button>
-  )
+  return <button {...entradas}></button>;
 }
-
-
 
 // 4) Define la `interface BotonProps` que EXTIENDA las props nativas de
 //    `<button>` y añada:
 //      · `variante` con el tipo `'primario' | 'secundario'`
 //    Expórtala. (Es el `extends` del 06, con otra base.)
-export interface BotonProps extends ComponentProps<'button'> {
-  variante: 'primario' | 'secundario'
+export interface BotonProps extends ComponentProps<"button"> {
+  variante: "primario" | "secundario";
 }
 
 //    `Boton` — usa `BotonProps`. Saca `variante` y deja el resto en `...resto`.
@@ -243,11 +231,8 @@ export interface BotonProps extends ComponentProps<'button'> {
 //    <Boton variante="primario" disabled>Ok</Boton>
 //      →  <button class="primario" disabled>Ok</button>
 export function Boton({ variante, ...resto }: BotonProps) {
-  return (
-    <button className={variante} {...resto}></button>
-  )
+  return <button className={variante} {...resto}></button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — ⚠️ EL ORDEN DEL DERRAME DECIDE QUIÉN GANA
@@ -275,20 +260,15 @@ export function Boton({ variante, ...resto }: BotonProps) {
 //    <CajaAbierta className="ajena" />  →  <div class="ajena">
 
 // export type PropsDeBoton = ComponentProps<'button'>
-export type PropsDeDiv = ComponentProps<'div'>
+export type PropsDeDiv = ComponentProps<"div">;
 
 export function CajaFija(atributos: PropsDeDiv) {
-  return (
-    <div {...atributos} className="mio"></div>
-  )
+  return <div {...atributos} className="mio"></div>;
 }
 
 export function CajaAbierta(atributos: PropsDeDiv) {
-  return (
-    <div className="mio" {...atributos}></div>
-  )
+  return <div className="mio" {...atributos}></div>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — `Omit` sobre props NATIVAS: prohibir y estrechar
@@ -310,8 +290,8 @@ export function CajaAbierta(atributos: PropsDeDiv) {
 //    `<input>` PERO SIN `'type'`, y añada:
 //      · `etiqueta` string
 //    Expórtala.
-export interface EntradaProps extends Omit<ComponentProps<'input'>, 'type'> {
-  etiqueta: string
+export interface EntradaProps extends Omit<ComponentProps<"input">, "type"> {
+  etiqueta: string;
 }
 
 //    `Entrada` — usa `EntradaProps`. Saca `etiqueta`, deja el resto. Retorna un
@@ -325,7 +305,7 @@ export function Entrada({ etiqueta, ...resto }: EntradaProps) {
       {etiqueta}
       <input type="text" {...resto} />
     </label>
-  )
+  );
 }
 
 // 7) Define la `interface BotonAccionProps` que extienda las props nativas de
@@ -339,19 +319,16 @@ export function Entrada({ etiqueta, ...resto }: EntradaProps) {
 // Se extienden las propiedades de la etiqueta HTML Button, y luego se omite la propiedad "onClick"
 // Dentro de este interface se vuelve a declarar a mano la propiedad "onClick" que es una función que no devuelve nada
 
-export interface BotonAccionProps extends Omit<ComponentProps<'button'>, 'onClick'> {
-  onClick: () => void
+export interface BotonAccionProps extends Omit<ComponentProps<"button">, "onClick"> {
+  onClick: () => void;
 }
 
 //    `BotonAccion` — usa `BotonAccionProps`. Derrama TODO sobre un <button>.
 //    ⚠️ Cafetera (01/drill 9): se entrega, no se ejecuta.
 //    <BotonAccion onClick={guardar}>Guardar</BotonAccion>
 export function BotonAccion({ onClick, ...resto }: BotonAccionProps) {
-  return (
-    <button onClick={onClick} {...resto}></button>
-  )
+  return <button onClick={onClick} {...resto}></button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — CAPSTONE: la funda completa
@@ -366,8 +343,8 @@ export function BotonAccion({ onClick, ...resto }: BotonAccionProps) {
 //      · `href` string, OBLIGATORIA
 //    Expórtala. (En un `<a>` nativo las cuatro son opcionales; aquí `href` deja
 //    de serlo, y `target`/`rel` desaparecen porque los fija el componente.)
-export interface EnlaceSeguroProps extends Omit<ComponentProps<'a'>, 'href' | 'target' | 'rel'> {
-  href: string
+export interface EnlaceSeguroProps extends Omit<ComponentProps<"a">, "href" | "target" | "rel"> {
+  href: string;
 }
 
 // 9) `EnlaceSeguro` — usa `EnlaceSeguroProps`. Retorna un <a> con el resto
@@ -377,9 +354,7 @@ export interface EnlaceSeguroProps extends Omit<ComponentProps<'a'>, 'href' | 't
 //    <EnlaceSeguro href="/a" className="link">Ir</EnlaceSeguro>
 //      →  <a href="/a" class="link" target="_blank" rel="noopener noreferrer">Ir</a>
 export function EnlaceSeguro({ href, ...resto }: EnlaceSeguroProps) {
-  return (
-    <a target="_blank" rel="noopener noreferrer" href={href} {...resto}></a>
-  )
+  return <a target="_blank" rel="noopener noreferrer" href={href} {...resto}></a>;
 }
 
 // 10) Define la `interface BotonIconoProps` que extienda las props nativas de
@@ -387,9 +362,9 @@ export function EnlaceSeguro({ href, ...resto }: EnlaceSeguroProps) {
 //       · `icono`    ReactNode, obligatoria  ← el slot del 05
 //       · `variante` `'primario' | 'secundario'`, OPCIONAL
 //     Expórtala.
-export interface BotonIconoProps extends ComponentProps<'button'> {
-  icono: ReactNode,
-  variante?: 'primario' | 'secundario'
+export interface BotonIconoProps extends ComponentProps<"button"> {
+  icono: ReactNode;
+  variante?: "primario" | "secundario";
 }
 
 //     `BotonIcono` — usa `BotonIconoProps`. Saca `icono`, `variante`, `children`
@@ -403,9 +378,9 @@ export interface BotonIconoProps extends ComponentProps<'button'> {
 //       →  <button class="primario" disabled><span class="icono"><b>★</b></span>Guardar</button>
 export function BotonIcono({ icono, variante, children, ...resto }: BotonIconoProps) {
   return (
-    <button {...resto} className={variante ?? 'primario'}>
+    <button {...resto} className={variante ?? "primario"}>
       <span className="icono">{icono}</span>
       {children}
     </button>
-  )
+  );
 }

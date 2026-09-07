@@ -44,8 +44,7 @@
  *     pnpm test:run src/exercises/01-tipos-basicos/exercise-05.test.ts
  * ===========================================================================*/
 
-
-type Producto = { nombre: string; precio: number }
+type Producto = { nombre: string; precio: number };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — alias de un OBJETO, reusado en varias funciones
@@ -59,26 +58,24 @@ type Producto = { nombre: string; precio: number }
 //       solo `{ nombre }`) y el cuerpo (se deja el precio).
 //      crearProducto("Té", 1000) → { nombre: "Té", precio: 1000 }
 export function crearProducto(nombre: string, precio: number): Producto {
-  return { nombre, precio }
+  return { nombre, precio };
 }
 // Retorno: { nombre: "Té", precio: 1000 }
-crearProducto("Té", 1000)
-
+crearProducto("Té", 1000);
 
 // 2) `etiqueta` — recibe un Producto y arma un texto de tienda.
 //    👉 Dos arreglos: el tipo del parámetro (ahora solo exige `{ nombre }`, así
 //       que dentro no podrías leer `p.precio`) y el cuerpo (devuelve "").
 //      etiqueta({ nombre: "Té", precio: 1000 }) → "Té cuesta $1000"
-export function etiqueta(p: { nombre: string, precio: number }): string {
-  return `${p.nombre} cuesta $${p.precio}`
+export function etiqueta(p: { nombre: string; precio: number }): string {
+  return `${p.nombre} cuesta $${p.precio}`;
 }
 // Llamados (invocaciones)
-etiqueta({ nombre: "Té", precio: 1000 }) // → "Té cuesta $1000"
-etiqueta({ nombre: "Café", precio: 500 }) // → "Café cuesta $500"
-etiqueta({ nombre: "Pan", precio: 2000 }) // → "Pan cuesta $2000"
+etiqueta({ nombre: "Té", precio: 1000 }); // → "Té cuesta $1000"
+etiqueta({ nombre: "Café", precio: 500 }); // → "Café cuesta $500"
+etiqueta({ nombre: "Pan", precio: 2000 }); // → "Pan cuesta $2000"
 
-
-type Estado = "activo" | "inactivo" | "baneado"
+type Estado = "activo" | "inactivo" | "baneado";
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — alias de una UNIÓN DE LITERALES (el menú cerrado)
@@ -94,11 +91,11 @@ type Estado = "activo" | "inactivo" | "baneado"
 //      puedeEntrar("activo") → true     puedeEntrar("baneado") → false
 export function puedeEntrar(estado: Estado): boolean {
   // Todo lo que sea diferente a "baneado" dará true. Y si es diferente a los 3 argumentos de Estado el compilador de TypeScript no lo pasa
-  return estado !== "baneado"
+  return estado !== "baneado";
 }
-puedeEntrar("activo") // return: true
-puedeEntrar("inactivo") // return: true
-puedeEntrar("baneado") // return: false
+puedeEntrar("activo"); // return: true
+puedeEntrar("inactivo"); // return: true
+puedeEntrar("baneado"); // return: false
 // puedeEntrar("active") el compilador de TypeScript no lo pasa
 
 // 4) `colorDe` — color según el estado (activo→verde, inactivo→gris, baneado→rojo).
@@ -107,14 +104,13 @@ puedeEntrar("baneado") // return: false
 export function colorDe(estado: Estado): string {
   switch (estado) {
     case "activo":
-      return "verde"
+      return "verde";
     case "inactivo":
-      return "gris"
+      return "gris";
     case "baneado":
-      return "rojo"
+      return "rojo";
   }
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: los dos alias juntos en una lista (filter + map)
@@ -123,7 +119,7 @@ export function colorDe(estado: Estado): string {
  * repites la unión de tres literales, la nombras.
  * -------------------------------------------------------------------------- */
 
-type Usuario = { nombre: string; estado: Estado }
+type Usuario = { nombre: string; estado: Estado };
 
 // 5) `nombresActivos` — de una lista de usuarios, los nombres de los que están
 //    "activo".
@@ -133,7 +129,10 @@ type Usuario = { nombre: string; estado: Estado }
 //                      { nombre: "Leo", estado: "baneado" }]) → ["Ana"]
 export function nombresActivos(usuarios: Usuario[]): string[] {
   // Se filtran los usuarios activos
-  return usuarios.filter((usuario) => usuario.estado === "activo").map((u) => u.nombre)
+  return usuarios.filter((usuario) => usuario.estado === "activo").map((u) => u.nombre);
 }
 // Return: ["Ana"]
-nombresActivos([{ nombre: "Ana", estado: "activo" }, { nombre: "Leo", estado: "baneado" }])
+nombresActivos([
+  { nombre: "Ana", estado: "activo" },
+  { nombre: "Leo", estado: "baneado" },
+]);

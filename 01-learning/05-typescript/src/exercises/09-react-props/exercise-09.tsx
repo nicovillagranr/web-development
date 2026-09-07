@@ -76,7 +76,6 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: la prop-función SIN argumentos
  * ════════════════════════════════════════════════════════════════════════════
@@ -88,12 +87,9 @@
 //    argumentos que no devuelve nada). Retorna un <button> con el texto dentro
 //    que, al hacer clic, ejecute `onAccion`.
 //    <BotonSimple texto="Ok" onAccion={avisar} />  →  <button>Ok</button>
-export function BotonSimple({ texto, onAccion }: { texto: string, onAccion: () => void }) {
-  return (
-    <button onClick={onAccion}>{texto}</button>
-  )
+export function BotonSimple({ texto, onAccion }: { texto: string; onAccion: () => void }) {
+  return <button onClick={onAccion}>{texto}</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — EL ENVOLTORIO, sin React de por medio
@@ -114,10 +110,9 @@ export function BotonSimple({ texto, onAccion }: { texto: string, onAccion: () =
 //    const manejar = hacerManejador(7, elegir)   ← aquí no se llamó a `elegir`
 //    manejar()                                   ← aquí sí: elegir(7)
 export function hacerManejador(id: number, onSeleccionar: (id: number) => void) {
-  return () => onSeleccionar(id)
+  return () => onSeleccionar(id);
 }
 // hacerManejador(7, () => { })
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — EL MISMO ENVOLTORIO, ahora dentro del JSX
@@ -131,10 +126,16 @@ export function hacerManejador(id: number, onSeleccionar: (id: number) => void) 
 //    el texto dentro que, al hacer clic, llame a `onSeleccionar` con el `id`.
 //    <BotonId id={7} texto="Elegir" onSeleccionar={elegir} />
 //      →  clic  →  elegir(7)
-export function BotonId({ id, texto, onSeleccionar }: { id: number, texto: string, onSeleccionar: (id: number) => void }) {
-  return (
-    <button onClick={() => onSeleccionar(id)}>{texto}</button>
-  )
+export function BotonId({
+  id,
+  texto,
+  onSeleccionar,
+}: {
+  id: number;
+  texto: string;
+  onSeleccionar: (id: number) => void;
+}) {
+  return <button onClick={() => onSeleccionar(id)}>{texto}</button>;
 }
 
 // 4) `BotonRenombrar` — recibe `id` (number), `nombre` (string) y `onRenombrar`
@@ -146,12 +147,17 @@ export function BotonId({ id, texto, onSeleccionar }: { id: number, texto: strin
 //       compilador: `number` y `string` no se parecen.
 //    <BotonRenombrar id={7} nombre="Ana" onRenombrar={renombrar} />
 //      →  clic  →  renombrar(7, 'Ana')
-export function BotonRenombrar({ id, nombre, onRenombrar }: { id: number, nombre: string, onRenombrar: (id: number, nombre: string) => void }) {
-  return (
-    <button onClick={() => onRenombrar(id, nombre)}>{nombre}</button>
-  )
+export function BotonRenombrar({
+  id,
+  nombre,
+  onRenombrar,
+}: {
+  id: number;
+  nombre: string;
+  onRenombrar: (id: number, nombre: string) => void;
+}) {
+  return <button onClick={() => onRenombrar(id, nombre)}>{nombre}</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — PASAR EL OBJETO ENTERO, y hacerlo dentro de un `.map`
@@ -165,7 +171,7 @@ export function BotonRenombrar({ id, nombre, onRenombrar }: { id: number, nombre
  * nombre para usarlo, pero ya lo has usado.)
  */
 
-export type Usuario = { id: number; nombre: string }
+export type Usuario = { id: number; nombre: string };
 
 // 5) `FilaUsuario` — recibe `usuario` (Usuario) y `onElegir` (una función que
 //    recibe un `Usuario` ENTERO y no devuelve nada). Retorna un <li> con un
@@ -173,12 +179,18 @@ export type Usuario = { id: number; nombre: string }
 //    con el usuario completo.
 //    <FilaUsuario usuario={{ id: 7, nombre: 'Ana' }} onElegir={elegir} />
 //      →  clic  →  elegir({ id: 7, nombre: 'Ana' })
-export function FilaUsuario({ usuario, onElegir }: { usuario: Usuario, onElegir: (usuario: Usuario) => void }) {
+export function FilaUsuario({
+  usuario,
+  onElegir,
+}: {
+  usuario: Usuario;
+  onElegir: (usuario: Usuario) => void;
+}) {
   return (
     <li>
       <button onClick={() => onElegir(usuario)}>{usuario.nombre}</button>
     </li>
-  )
+  );
 }
 
 // 6) `ListaUsuarios` — recibe `usuarios` (Usuario[]) y `onElegir` (misma función
@@ -188,14 +200,21 @@ export function FilaUsuario({ usuario, onElegir }: { usuario: Usuario, onElegir:
 //    ⚠️ La `key` va en `FilaUsuario`, que es lo que devuelve el `.map` (drill 4
 //       del exercise-04: la key la intercepta React, no llega a las props).
 //    <ListaUsuarios usuarios={[{ id: 7, nombre: 'Ana' }]} onElegir={elegir} />
-export function ListaUsuarios({ usuarios, onElegir }: { usuarios: Usuario[], onElegir: (usuario: Usuario) => void }) {
+export function ListaUsuarios({
+  usuarios,
+  onElegir,
+}: {
+  usuarios: Usuario[];
+  onElegir: (usuario: Usuario) => void;
+}) {
   return (
     <ul>
-      {usuarios.map((usuario) => <FilaUsuario key={usuario.id} usuario={usuario} onElegir={onElegir} />)}
+      {usuarios.map((usuario) => (
+        <FilaUsuario key={usuario.id} usuario={usuario} onElegir={onElegir} />
+      ))}
     </ul>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — EL CALLBACK OPCIONAL: `?.()`
@@ -219,12 +238,9 @@ export function ListaUsuarios({ usuarios, onElegir }: { usuarios: Usuario[], onE
 //    "Borrar" que, al clic, llame a `onBorrar` con el id SOLO si llegó.
 //    <BotonBorrar id={7} />              →  clic  →  no pasa nada, no explota
 //    <BotonBorrar id={7} onBorrar={f} /> →  clic  →  f(7)
-export function BotonBorrar({ id, onBorrar }: { id: number, onBorrar?: (id: number) => void }) {
-  return (
-    <button onClick={() => onBorrar?.(id)}>Borrar</button>
-  )
+export function BotonBorrar({ id, onBorrar }: { id: number; onBorrar?: (id: number) => void }) {
+  return <button onClick={() => onBorrar?.(id)}>Borrar</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — ⚠️ NO TODA PROP-FUNCIÓN ES UN EVENTO
@@ -249,12 +265,9 @@ export function BotonBorrar({ id, onBorrar }: { id: number, onBorrar?: (id: numb
 //    ⚠️ Aquí el retorno SÍ importa: si `formatear` devolviera `void`, no habría
 //       nada que pintar. Fíjate en que la firma lo dice.
 //    <Precio valor={12} formatear={(n) => `${n} €`} />  →  <span>12 €</span>
-export function Precio({ valor, formatear }: { valor: number, formatear: (n: number) => string }) {
-  return (
-    <span>{formatear(valor)}</span>
-  )
+export function Precio({ valor, formatear }: { valor: number; formatear: (n: number) => string }) {
+  return <span>{formatear(valor)}</span>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 6 — CAPSTONE: una lista con tres acciones distintas
@@ -264,7 +277,7 @@ export function Precio({ valor, formatear }: { valor: number, formatear: (n: num
  * que solo le falta el estado (carpeta 11) para estar viva.
  */
 
-export type Tarea = { id: number; titulo: string; hecha: boolean }
+export type Tarea = { id: number; titulo: string; hecha: boolean };
 
 // 9) Define el tipo `ListaTareasProps` y expórtalo. Debe tener:
 //      · `tareas`      Tarea[]
@@ -272,11 +285,11 @@ export type Tarea = { id: number; titulo: string; hecha: boolean }
 //      · `onBorrar`    igual que la anterior, pero OPCIONAL
 //      · `etiquetaDe`  función que recibe una `Tarea` y devuelve un string
 export type ListaTareasProps = {
-  tareas: Tarea[],
-  onAlternar: (id: number) => void,
-  onBorrar?: (id: number) => void,
-  etiquetaDe: (tarea: Tarea) => string
-}
+  tareas: Tarea[];
+  onAlternar: (id: number) => void;
+  onBorrar?: (id: number) => void;
+  etiquetaDe: (tarea: Tarea) => string;
+};
 
 // 10) `ListaTareas` — usa `ListaTareasProps`. Si no hay tareas, early return de
 //     un <p>Sin tareas</p> (el estado vacío del exercise-03).
@@ -290,17 +303,17 @@ export type ListaTareasProps = {
 //     <ListaTareas tareas={[]} … />  →  <p>Sin tareas</p>
 export function ListaTareas(props: ListaTareasProps) {
   if (props.tareas.length === 0) {
-    return <p>Sin tareas</p>
+    return <p>Sin tareas</p>;
   }
   return (
     <ul>
-      {props.tareas.map(tarea => (
+      {props.tareas.map((tarea) => (
         <li key={tarea.id}>
-          <span className={tarea.hecha ? 'hecha' : 'pendiente'}>{props.etiquetaDe(tarea)}</span>
+          <span className={tarea.hecha ? "hecha" : "pendiente"}>{props.etiquetaDe(tarea)}</span>
           <button onClick={() => props.onAlternar(tarea.id)}>Alternar</button>
           <button onClick={() => props.onBorrar?.(tarea.id)}>Borrar</button>
         </li>
       ))}
     </ul>
-  )
+  );
 }

@@ -31,37 +31,37 @@
  *     pnpm test:run src/exercises/03-arrays/exercise-06.test.ts
  * ===========================================================================*/
 
-export type Producto = { nombre: string; precio: number }
-export type Jugador = { nombre: string; puntos: number }
+export type Producto = { nombre: string; precio: number };
+export type Jugador = { nombre: string; puntos: number };
 
 /* --- BLOQUE A — números: comparador + copia --- */
 
 // 1) `ordenarAscendente` — de menor a mayor, SIN mutar el original.
 //    ordenarAscendente([10, 2, 1]) → [1, 2, 10]
 export function ordenarAscendente(nums: number[]): number[] {
-  return [...nums].sort((a, b) => a - b)
+  return [...nums].sort((a, b) => a - b);
 }
-ordenarAscendente([10, 2, 1]) // return: [1, 2, 10]
+ordenarAscendente([10, 2, 1]); // return: [1, 2, 10]
 
 // 2) `ordenarDescendente` — de mayor a menor, sin mutar.
 //    ordenarDescendente([1, 3, 2]) → [3, 2, 1]
 export function ordenarDescendente(nums: number[]): number[] {
-  return [...nums].sort((a, b) => b - a)
+  return [...nums].sort((a, b) => b - a);
 }
-ordenarDescendente([1, 3, 2]) // return: [3, 2, 1]
+ordenarDescendente([1, 3, 2]); // return: [3, 2, 1]
 
 /* --- BLOQUE B — por un campo del objeto --- */
 
 // 3) `ordenarPorPrecio` — productos de más barato a más caro, sin mutar.
 //    ordenarPorPrecio([{nombre:"a",precio:9},{nombre:"b",precio:3}]) → [b, a]
 export function ordenarPorPrecio(productos: Producto[]): Producto[] {
-  return [...productos].sort((a, b) => a.precio - b.precio)
+  return [...productos].sort((a, b) => a.precio - b.precio);
 }
 
 // 4) `ordenarPorNombre` — alfabéticamente por nombre (usa `localeCompare`).
 //    ordenarPorNombre([{nombre:"b",precio:1},{nombre:"a",precio:1}]) → [a, b]
 export function ordenarPorNombre(productos: Producto[]): Producto[] {
-  return [...productos].sort((a, b) => a.nombre.localeCompare(b.nombre))
+  return [...productos].sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
 /* --- BLOQUE C — CAPSTONE: ordenar + recortar --- */
@@ -69,6 +69,10 @@ export function ordenarPorNombre(productos: Producto[]): Producto[] {
 // 5) `topDosPorPuntos` — los 2 jugadores con más puntos (ordena desc + slice).
 //    topDosPorPuntos([{n:..,puntos:5},{..,10},{..,1}]) → los de 10 y 5
 export function topDosPorPuntos(jugadores: Jugador[]): Jugador[] {
-  return [...jugadores].sort((a, b) => b.puntos - a.puntos).slice(0, 2)
+  return [...jugadores].sort((a, b) => b.puntos - a.puntos).slice(0, 2);
 }
-topDosPorPuntos([{ nombre: 'a', puntos: 5 }, { nombre: 'b', puntos: 10 }, { nombre: 'c', puntos: 1 }]) // return: [{nombre:"b",puntos:10},{nombre:"a",puntos:5}]
+topDosPorPuntos([
+  { nombre: "a", puntos: 5 },
+  { nombre: "b", puntos: 10 },
+  { nombre: "c", puntos: 1 },
+]); // return: [{nombre:"b",puntos:10},{nombre:"a",puntos:5}]

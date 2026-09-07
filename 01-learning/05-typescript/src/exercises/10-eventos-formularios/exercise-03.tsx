@@ -57,8 +57,7 @@
  *    Lo único que ejecuta de verdad estos componentes es el test.
  * ===========================================================================*/
 
-import type { MouseEvent, KeyboardEvent } from 'react'
-
+import type { MouseEvent, KeyboardEvent } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — fuera del hueco no hay contexto
@@ -105,12 +104,8 @@ import type { MouseEvent, KeyboardEvent } from 'react'
 //    le dice a TypeScript qué recibe, y eso es lo que tienes que arreglar.
 //    Al pulsar, `avisar` recibe el tipo del evento.
 export function BotonFuera({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.type)
-  return (
-    <button onClick={manejar}>
-      Avisar
-    </button>
-  )
+  const manejar = (e: MouseEvent<HTMLButtonElement>) => avisar(e.type);
+  return <button onClick={manejar}>Avisar</button>;
 }
 // <BotonFuera avisar={(t) => console.log(t)} />   // "click"
 
@@ -119,12 +114,12 @@ export function BotonFuera({ avisar }: { avisar: (t: string) => void }) {
 //    ejecutarlo, y aun así hay algo que ya no es verdad: un `<a>` no es un
 //    `<button>`. Al pulsar, `avisar` recibe el tipo del evento.
 export function EnlaceFuera({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLAnchorElement>) => avisar(e.type)
+  const manejar = (e: MouseEvent<HTMLAnchorElement>) => avisar(e.type);
   return (
     <a href="/inicio" onClick={manejar}>
       Ir
     </a>
-  )
+  );
 }
 // <EnlaceFuera avisar={(t) => console.log(t)} />   // "click"
 
@@ -135,13 +130,10 @@ export function EnlaceFuera({ avisar }: { avisar: (t: string) => void }) {
 //    Restricción: el evento de teclado no es el mismo tipo que el del ratón, y
 //    también viene de 'react' — puede que tengas que tocar el import de arriba.
 export function CampoFuera({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.key)
-  return (
-    <input onKeyDown={manejar} />
-  )
+  const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.key);
+  return <input onKeyDown={manejar} />;
 }
 // <CampoFuera avisar={(t) => console.log(t)} />   // "a"
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el argumento de tipo dice sobre QUÉ elemento
@@ -178,12 +170,13 @@ export function CampoFuera({ avisar }: { avisar: (t: string) => void }) {
 //    Apáñatelas para que al manejador le lleguen las dos.
 //    (El `id={id}` del `<button>` ya está puesto y no es parte del ejercicio.)
 export function BotonFueraConId({ id, avisar }: { id: string; avisar: (t: string) => void }) {
-  const manejar = (e: MouseEvent<HTMLButtonElement>, idBoton: string) => avisar(`${idBoton}:${e.type}`)
+  const manejar = (e: MouseEvent<HTMLButtonElement>, idBoton: string) =>
+    avisar(`${idBoton}:${e.type}`);
   return (
     <button id={id} onClick={(e) => manejar(e, id)}>
       Avisar
     </button>
-  )
+  );
 }
 // <BotonFueraConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
 
@@ -196,10 +189,8 @@ export function BotonFueraConId({ id, avisar }: { id: string; avisar: (t: string
 //    Restricción: el hueco es `onKeyUp`, no `onKeyDown`, y no es capricho — al
 //    bajar la tecla todavía no ha entrado en el campo y el valor iría por detrás.
 export function CampoLeeValor({ avisar }: { avisar: (t: string) => void }) {
-  const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.currentTarget.value)
-  return (
-    <input onKeyUp={manejar} />
-  )
+  const manejar = (e: KeyboardEvent<HTMLInputElement>) => avisar(e.currentTarget.value);
+  return <input onKeyUp={manejar} />;
 }
 // <CampoLeeValor avisar={(t) => console.log(t)} />   // "hola"
 
@@ -208,14 +199,16 @@ export function CampoLeeValor({ avisar }: { avisar: (t: string) => void }) {
 //    avisar de quién fue el clic — "boton:click" y "enlace:click" respectivamente.
 //    El starter intenta salir del paso con un manejador para los dos. No cuela.
 export function BarraFuera({ avisar }: { avisar: (t: string) => void }) {
-  const alBoton = (e: MouseEvent<HTMLButtonElement>) => avisar(`boton:${e.type}`)
-  const alEnlace = (e: MouseEvent<HTMLAnchorElement>) => avisar(`enlace:${e.type}`)
+  const alBoton = (e: MouseEvent<HTMLButtonElement>) => avisar(`boton:${e.type}`);
+  const alEnlace = (e: MouseEvent<HTMLAnchorElement>) => avisar(`enlace:${e.type}`);
   return (
     <>
       <button onClick={alBoton}>Guardar</button>
-      <a href="/salir" onClick={alEnlace}>Salir</a>
+      <a href="/salir" onClick={alEnlace}>
+        Salir
+      </a>
     </>
-  )
+  );
 }
 // <BarraFuera avisar={(t) => console.log(t)} />   // ← te falta la traza: ¿qué dos strings salen?
 

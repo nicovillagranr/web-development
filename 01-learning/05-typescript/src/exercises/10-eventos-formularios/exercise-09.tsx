@@ -47,7 +47,6 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el manejador que traduce
  * ─────────────────────────────────────────────────────────────────────────────
@@ -84,9 +83,7 @@
 //    el evento. Tecleas "hola" y quien lo monta recibe "hola".
 //    El starter entrega el manejador sin traducir.
 export function CampoTexto({ alEscribir }: { alEscribir: (valor: string) => void }) {
-  return (
-    <input onChange={(e) => alEscribir(e.target.value)} />
-  )
+  return <input onChange={(e) => alEscribir(e.target.value)} />;
 }
 // <CampoTexto alEscribir={(v) => console.log(v)} />   // "hola"
 
@@ -94,9 +91,7 @@ export function CampoTexto({ alEscribir }: { alEscribir: (valor: string) => void
 //    pide si ha quedado marcada o no. La marcas y recibe `true`.
 //    Una casilla también tiene `value`, pero eso no es lo que te están pidiendo.
 export function Interruptor({ alCambiar }: { alCambiar: (activo: boolean) => void }) {
-  return (
-    <input type="checkbox" onChange={(e) => alCambiar(e.target.checked)} />
-  )
+  return <input type="checkbox" onChange={(e) => alCambiar(e.target.checked)} />;
 }
 // <Interruptor alCambiar={(a) => console.log(a)} />   // true
 
@@ -104,14 +99,17 @@ export function Interruptor({ alCambiar }: { alCambiar: (activo: boolean) => voi
 //    cosas: primero de qué campo se trata y después lo que hay escrito. Tecleas
 //    "a" y recibe ("email", "a").
 //    Los dos datos salen del mismo sitio, y el starter los tiene.
-export function CampoConNombre({ alCambiar }: { alCambiar: (campo: string, valor: string) => void }) {
+export function CampoConNombre({
+  alCambiar,
+}: {
+  alCambiar: (campo: string, valor: string) => void;
+}) {
   return (
     // e.target.name recoge "email", e.target.value recoge lo que el usuario ha escrito
     <input name="email" onChange={(e) => alCambiar(e.target.name, e.target.value)} />
-  )
+  );
 }
 // <CampoConNombre alCambiar={(c, v) => console.log(c, v)} />   // "email" "a"
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — de dónde sale cada dato
@@ -154,7 +152,7 @@ export function BotonBorrar({ id, alBorrar }: { id: string; alBorrar: (id: strin
     <button aria-label={`Borrar ${id}`} onClick={() => alBorrar(id)}>
       Borrar
     </button>
-  )
+  );
 }
 // <BotonBorrar id="t-7" alBorrar={(id) => console.log(id)} />   // "t-7"
 
@@ -163,16 +161,14 @@ export function BotonBorrar({ id, alBorrar }: { id: string; alBorrar: (id: strin
 //    Ya te pasó en el 06: lo que trae el campo no cambia porque el campo sea
 //    numérico.
 export function CampoCantidad({ alCambiar }: { alCambiar: (cantidad: number) => void }) {
-  return (
-    <input type="number" onChange={(e) => alCambiar(Number(e.target.value))} />
-  )
+  return <input type="number" onChange={(e) => alCambiar(Number(e.target.value))} />;
 }
 // <CampoCantidad alCambiar={(n) => console.log(n)} />   // 21
 
 /* 📌 El type de aquí abajo, a mano para el drill 6:
  *      type Color = 'rojo' | 'verde' | 'azul'
  *    Tres textos concretos, no "cualquier texto". */
-type Color = 'rojo' | 'verde' | 'azul'
+type Color = "rojo" | "verde" | "azul";
 
 // 6) `SelectorDeColor` — un `<select>` con las tres opciones de `Color` y una prop
 //    `alElegir` que pide un `Color`, no un texto cualquiera. Eliges "verde" y
@@ -181,18 +177,26 @@ type Color = 'rojo' | 'verde' | 'azul'
 //    Restricción: sin `as`, como en todo el archivo.
 export function SelectorDeColor({ alElegir }: { alElegir: (color: Color) => void }) {
   return (
-    <select onChange={(e) => {
-      switch (e.target.value) {
-        case 'rojo': alElegir('rojo'); break
-        case 'verde': alElegir('verde'); break
-        case 'azul': alElegir('azul'); break
-      }
-    }}>
+    <select
+      onChange={(e) => {
+        switch (e.target.value) {
+          case "rojo":
+            alElegir("rojo");
+            break;
+          case "verde":
+            alElegir("verde");
+            break;
+          case "azul":
+            alElegir("azul");
+            break;
+        }
+      }}
+    >
       <option value="rojo">Rojo</option>
       <option value="verde">Verde</option>
       <option value="azul">Azul</option>
     </select>
-  )
+  );
 }
 // <SelectorDeColor alElegir={(c) => console.log(c)} />   // "verde"
 

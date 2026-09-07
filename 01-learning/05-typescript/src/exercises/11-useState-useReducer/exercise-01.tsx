@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * 📌 RECORDATORIO — `useState` devuelve SIEMPRE un par, y nunca cambia de forma:
@@ -48,7 +48,6 @@ import { useState } from "react"
  *    vivos te va a decir más que el test.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el valor inicial DECIDE el tipo del estado
  * ─────────────────────────────────────────────────────────────────────────────
@@ -86,14 +85,14 @@ import { useState } from "react"
 //    Mira lo que le pasa el starter a `useState`: con ese inicial, el `+ 1` de
 //    abajo deja de sumar y pasa a hacer otra cosa que también es válida en JS.
 export function Contador() {
-  const [n, setN] = useState("0")
+  const [n, setN] = useState("0");
 
   return (
     <div>
       <p>{n}</p>
       <button onClick={() => setN(n + 1)}>Sumar</button>
     </div>
-  )
+  );
 }
 
 // 2) `Interruptor` — un botón que alterna entre encendido y apagado. Muestra el
@@ -102,15 +101,14 @@ export function Contador() {
 //    medias. El cuerpo sigue hablando en textos, y ahora los dos lados de cada
 //    comparación ya no se pueden ni encontrar.
 export function Interruptor() {
-  const [encendido, setEncendido] = useState(false)
+  const [encendido, setEncendido] = useState(false);
 
   return (
     <button onClick={() => setEncendido(encendido === "no" ? "si" : "no")}>
       {encendido === "si" ? "ON" : "OFF"}
     </button>
-  )
+  );
 }
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cuando el valor inicial NO basta
@@ -149,15 +147,15 @@ export function Interruptor() {
  * ───────────────────────────────────────────────────────────────────────────── */
 
 export interface Tarea {
-  id: number
-  titulo: string
-  hecha: boolean
+  id: number;
+  titulo: string;
+  hecha: boolean;
 }
 
 // 📌 Los errores del formulario: puede no haber ninguno, o haber solo uno.
 export interface ErroresForm {
-  nombre?: string
-  email?: string
+  nombre?: string;
+  email?: string;
 }
 
 // 3) `SelectorColor` — tres botones ("rojo", "verde", "azul") y un <p> que dice
@@ -166,7 +164,7 @@ export interface ErroresForm {
 //    El starter tiene el inicial correcto — es el sitio donde no cabe otra cosa
 //    lo que hay que arreglar.
 export function SelectorColor() {
-  const [elegido, setElegido] = useState(null)
+  const [elegido, setElegido] = useState(null);
 
   return (
     <div>
@@ -177,7 +175,7 @@ export function SelectorColor() {
         </button>
       ))}
     </div>
-  )
+  );
 }
 
 // 4) `AvisoErrores` — recibe por props un `ErroresForm` y pinta un <li> por cada
@@ -185,8 +183,8 @@ export function SelectorColor() {
 //    Este es el drill que te está bloqueando 03-projex ahora mismo, aislado.
 //    Fíjate en que aquí el problema no está en un `useState`: está en la firma.
 export function AvisoErrores({ errores }: { errores: {} }) {
-  const mensajes = [errores.nombre, errores.email].filter(Boolean)
-  if (mensajes.length === 0) return null
+  const mensajes = [errores.nombre, errores.email].filter(Boolean);
+  if (mensajes.length === 0) return null;
 
   return (
     <ul>
@@ -194,7 +192,7 @@ export function AvisoErrores({ errores }: { errores: {} }) {
         <li key={m}>{m}</li>
       ))}
     </ul>
-  )
+  );
 }
 
 // 5) `ListaTareas` — un botón "Añadir" que mete una `Tarea` nueva al final de la
@@ -204,12 +202,12 @@ export function AvisoErrores({ errores }: { errores: {} }) {
 //    no repinta. Ese fallo es el mismo del capstone del bloque 10: si te suena,
 //    es que ya lo has visto.
 export function ListaTareas() {
-  const [tareas, setTareas] = useState([])
+  const [tareas, setTareas] = useState([]);
 
   const anadir = () => {
-    tareas.push({ id: tareas.length + 1, titulo: `Tarea ${tareas.length + 1}`, hecha: false })
-    setTareas(tareas)
-  }
+    tareas.push({ id: tareas.length + 1, titulo: `Tarea ${tareas.length + 1}`, hecha: false });
+    setTareas(tareas);
+  };
 
   return (
     <div>
@@ -220,7 +218,7 @@ export function ListaTareas() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

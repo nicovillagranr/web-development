@@ -50,8 +50,7 @@
  * Corre el test tras cada uno.
  * ===========================================================================*/
 
-
-type Usuario = { id: number; nombre: string; email: string }
+type Usuario = { id: number; nombre: string; email: string };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — `Partial` en el parámetro: el patrón ACTUALIZAR (merge con spread)
@@ -66,34 +65,32 @@ type Usuario = { id: number; nombre: string; email: string }
 //      actualizarUsuario({id:1,nombre:"Ana",email:"a@a.com"}, {email:"b@b.com"})
 //        → {id:1,nombre:"Ana",email:"b@b.com"}
 export function actualizarUsuario(usuario: Usuario, cambios: Partial<Usuario>): Usuario {
-  return { ...usuario, ...cambios }
+  return { ...usuario, ...cambios };
 }
-actualizarUsuario({ id: 1, nombre: "Ana", email: "a@a.com" }, { email: "b@b.com" }) // {id:1,nombre:"Ana",email:"b@b.com"}
+actualizarUsuario({ id: 1, nombre: "Ana", email: "a@a.com" }, { email: "b@b.com" }); // {id:1,nombre:"Ana",email:"b@b.com"}
 
-
-type Producto = { nombre: string; precio: number; stock: number }
+type Producto = { nombre: string; precio: number; stock: number };
 
 // 2) `editarProducto` — el MISMO patrón, otro tipo (refuerzo). Aplica los
 //    `cambios` parciales sobre el producto y devuelve uno nuevo.
 //      editarProducto({nombre:"Té",precio:1000,stock:5}, {precio:800})
 //        → {nombre:"Té",precio:800,stock:5}
 export function editarProducto(producto: Producto, cambios: Partial<Producto>): Producto {
-  return { ...producto, ...cambios }
+  return { ...producto, ...cambios };
 }
-editarProducto({ nombre: "Té", precio: 1000, stock: 5 }, { precio: 800 }) // {nombre:"Té",precio:800,stock:5}
-
+editarProducto({ nombre: "Té", precio: 1000, stock: 5 }, { precio: 800 }); // {nombre:"Té",precio:800,stock:5}
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — `Partial` + valores por DEFECTO (config con base)
  * -------------------------------------------------------------------------- */
 
-type Ajustes = { tema: string; idioma: string; notificaciones: boolean }
+type Ajustes = { tema: string; idioma: string; notificaciones: boolean };
 
 const ajustesPorDefecto: Ajustes = {
   tema: "claro",
   idioma: "es",
   notificaciones: true,
-}
+};
 
 // 3) `crearAjustes` — recibe `opciones` PARCIALES y las pone encima de los
 //    valores por defecto. Lo que el usuario no especifique, se queda con el
@@ -103,19 +100,17 @@ const ajustesPorDefecto: Ajustes = {
 //      crearAjustes({tema:"oscuro"}) → {tema:"oscuro",idioma:"es",notificaciones:true}
 //      crearAjustes({})              → {tema:"claro",idioma:"es",notificaciones:true}
 export function crearAjustesCompletos(opciones: Ajustes): Ajustes {
-  return { ...ajustesPorDefecto, ...opciones }
+  return { ...ajustesPorDefecto, ...opciones };
 }
 // Al no tener un partial, se deben especificar todos los campos
-crearAjustesCompletos({ tema: "oscuro", idioma: "en", notificaciones: false })
-
+crearAjustesCompletos({ tema: "oscuro", idioma: "en", notificaciones: false });
 
 // 4) `crearAjustes` — ahora con `Partial` en el parámetro.
 export function crearAjustesParciales(opciones: Partial<Ajustes>): Ajustes {
-  return { ...ajustesPorDefecto, ...opciones }
+  return { ...ajustesPorDefecto, ...opciones };
 }
 // Ahora como los cambios pueden ser parciales, puede seleccionar los ajustes que yo quiera, o los que el usuario quiera
-crearAjustesParciales({ tema: "oscuro" })
-
+crearAjustesParciales({ tema: "oscuro" });
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: una LISTA de cambios parciales (reduce + Partial)
@@ -141,8 +136,11 @@ export function aplicarCambios(usuario: Usuario, lista: Partial<Usuario>[]): Usu
   //              ┌─ recorremos la LISTA (el array), no el usuario
   //              │             ┌─ acum = el usuario tal como va quedando
   //              │             │      ┌─ parche = el Partial de esta vuelta
-  return lista.reduce<Usuario>((acum, parche) => ({ ...acum, ...parche }), usuario)
+  return lista.reduce<Usuario>((acum, parche) => ({ ...acum, ...parche }), usuario);
   //                  ▲                  el callback DEVUELVE el acum del turno siguiente ─┘   └─ inicial: el usuario original
   //                  └─ <Usuario>: forzamos el tipo del acumulador (el array es Partial<Usuario>, distinto)
 }
-aplicarCambios({ id: 1, nombre: "Ana", email: "a@a.com" }, [{ nombre: "Ani" }, { email: "x@x.com" }]) // {id:1,nombre:"Ani",email:"x@x.com"}
+aplicarCambios({ id: 1, nombre: "Ana", email: "a@a.com" }, [
+  { nombre: "Ani" },
+  { email: "x@x.com" },
+]); // {id:1,nombre:"Ani",email:"x@x.com"}

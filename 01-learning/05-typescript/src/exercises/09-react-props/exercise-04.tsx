@@ -62,12 +62,11 @@
  * ===========================================================================*/
 
 export type Producto = {
-  id: number,
-  nombre: string,
-  precio: number,
-  enStock: boolean
-}
-
+  id: number;
+  nombre: string;
+  precio: number;
+  enStock: boolean;
+};
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: map de strings a <li>
@@ -82,11 +81,12 @@ export type Producto = {
 export function ListaSimple({ nombres }: { nombres: string[] }) {
   return (
     <ul>
-      {nombres.map((nombre) => <li key={nombre}>{nombre}</li>)}
+      {nombres.map((nombre) => (
+        <li key={nombre}>{nombre}</li>
+      ))}
     </ul>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — map de OBJETOS, key = id
@@ -101,9 +101,11 @@ export function ListaSimple({ nombres }: { nombres: string[] }) {
 export function ListaProductos({ productos }: { productos: Producto[] }) {
   return (
     <ul>
-      {productos.map((producto) => <li key={producto.id}>{producto.nombre}</li>)}
+      {productos.map((producto) => (
+        <li key={producto.id}>{producto.nombre}</li>
+      ))}
     </ul>
-  )
+  );
 }
 
 // 3) `TablaPrecios` — recibe `productos` (Producto[]). Retorna un <ul> con un
@@ -113,11 +115,14 @@ export function ListaProductos({ productos }: { productos: Producto[] }) {
 export function TablaPrecios({ productos }: { productos: Producto[] }) {
   return (
     <ul>
-      {productos.map((producto) => <li key={producto.id}>{producto.nombre}: {producto.precio}€</li>)}
+      {productos.map((producto) => (
+        <li key={producto.id}>
+          {producto.nombre}: {producto.precio}€
+        </li>
+      ))}
     </ul>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — `key` correcto: por qué NO va en las props, y por qué id > índice
@@ -133,9 +138,11 @@ export function TablaPrecios({ productos }: { productos: Producto[] }) {
 export function Etiquetas({ tags }: { tags: string[] }) {
   return (
     <div>
-      {tags.map((tag) => <span key={tag}>{tag}</span>)}
+      {tags.map((tag) => (
+        <span key={tag}>{tag}</span>
+      ))}
     </div>
-  )
+  );
 }
 
 // 5) `Pasos` — recibe `pasos` (string[]) que PUEDEN REPETIRSE (p.ej. dos "amasar").
@@ -148,11 +155,12 @@ export function Etiquetas({ tags }: { tags: string[] }) {
 export function Pasos({ pasos }: { pasos: string[] }) {
   return (
     <ol>
-      {pasos.map((paso, i) => <li key={i}>{paso}</li>)}
+      {pasos.map((paso, i) => (
+        <li key={i}>{paso}</li>
+      ))}
     </ol>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — LISTA VACÍA y estado vacío (enlaza con el 03)
@@ -166,13 +174,15 @@ export function Pasos({ pasos }: { pasos: string[] }) {
 //    <Bandeja correos={["a@b.com"]} />       →  <ul><li>a@b.com</li></ul>
 export function Bandeja({ correos }: { correos: string[] }) {
   if (correos.length === 0) {
-    return <p>Bandeja vacía</p>
+    return <p>Bandeja vacía</p>;
   }
   return (
     <ul>
-      {correos.map((correo) => <li key={correo}>{correo}</li>)}
+      {correos.map((correo) => (
+        <li key={correo}>{correo}</li>
+      ))}
     </ul>
-  )
+  );
 }
 
 // 7) `Contador` — recibe `items` (string[]). Retorna un <p> con el texto
@@ -182,9 +192,8 @@ export function Bandeja({ correos }: { correos: string[] }) {
 export function Contador({ items }: { items: string[] }) {
   // Sin condición: si el array está vacío, `items.length` YA vale 0 y se pinta
   // "Total: 0". Un ternario cuyas dos ramas dan lo mismo es un ternario de más.
-  return <p>Total: {items.length}</p>
+  return <p>Total: {items.length}</p>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — CAPSTONE: FILTRAR + MAPEAR + pintar
@@ -205,9 +214,9 @@ export function Contador({ items }: { items: string[] }) {
 //      · `productos`   Producto[]
 //      · `soloEnStock` boolean
 export type EscaparateProps = {
-  productos: Producto[],
-  soloEnStock: boolean
-}
+  productos: Producto[];
+  soloEnStock: boolean;
+};
 
 // 9) `Escaparate` — usa `EscaparateProps`. Si `soloEnStock` es true, muestra solo
 //    los productos con `enStock === true`; si es false, muestra todos. Retorna un
@@ -219,14 +228,16 @@ export type EscaparateProps = {
 export function Escaparate({ productos, soloEnStock }: EscaparateProps) {
   // Primero decido QUÉ lista se pinta (lo único que cambia entre los dos casos),
   // y después la pinto UNA vez: el <ul>/<li>/key ya no está duplicado.
-  let visibles = productos
-  if (soloEnStock) visibles = productos.filter((p) => p.enStock)
+  let visibles = productos;
+  if (soloEnStock) visibles = productos.filter((p) => p.enStock);
 
   return (
     <ul>
-      {visibles.map((p) => <li key={p.id}>{p.nombre}</li>)}
+      {visibles.map((p) => (
+        <li key={p.id}>{p.nombre}</li>
+      ))}
     </ul>
-  )
+  );
 }
 
 // 10) `NombresEnStock` — recibe `productos` (Producto[]) y retorna un <ul> con
@@ -247,7 +258,11 @@ export function Escaparate({ productos, soloEnStock }: EscaparateProps) {
 export function NombresEnStock({ productos }: { productos: Producto[] }) {
   return (
     <ul>
-      {productos.filter((producto) => producto.enStock).map((producto) => <li key={producto.id}>{producto.nombre}</li>)}
+      {productos
+        .filter((producto) => producto.enStock)
+        .map((producto) => (
+          <li key={producto.id}>{producto.nombre}</li>
+        ))}
     </ul>
-  )
+  );
 }

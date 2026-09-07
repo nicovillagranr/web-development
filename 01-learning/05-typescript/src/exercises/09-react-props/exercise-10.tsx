@@ -70,20 +70,18 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-import type { ComponentProps, ReactNode } from 'react'
-
+import type { ComponentProps, ReactNode } from "react";
 
 /* ════════════════════════════════════════════════════════════════════════════
  * EL DOMINIO — la fuente de la verdad. NO se copia: se deriva de aquí.
  * ════════════════════════════════════════════════════════════════════════════ */
 
 export type Pedido = {
-  id: number
-  cliente: string
-  total: number
-  estado: 'pendiente' | 'enviado' | 'entregado'
-}
-
+  id: number;
+  cliente: string;
+  total: number;
+  estado: "pendiente" | "enviado" | "entregado";
+};
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: derivar el tipo de UNA propiedad
@@ -91,7 +89,7 @@ export type Pedido = {
 
 // 1) Define y exporta el tipo `EstadoPedido` como el tipo de la propiedad
 //    `estado` de `Pedido`. Una línea, con acceso indexado. ❌ No lo copies a mano.
-export type EstadoPedido = Pedido['estado']
+export type EstadoPedido = Pedido["estado"];
 
 // 2) `EtiquetaEstado` (hoja) — recibe `estado` (EstadoPedido). Retorna un <span>
 //    con `className` = el estado y, dentro, el texto en castellano:
@@ -101,16 +99,18 @@ export type EstadoPedido = Pedido['estado']
 //    <EtiquetaEstado estado="enviado" />  →  <span class="enviado">Enviado</span>
 export function EtiquetaEstado({ estado }: { estado: EstadoPedido }) {
   switch (estado) {
-    case 'pendiente': return <span className="pendiente">Pendiente</span>
-    case 'enviado': return <span className="enviado">Enviado</span>
-    case 'entregado': return <span className="entregado">Entregado</span>
+    case "pendiente":
+      return <span className="pendiente">Pendiente</span>;
+    case "enviado":
+      return <span className="enviado">Enviado</span>;
+    case "entregado":
+      return <span className="entregado">Entregado</span>;
     default: {
-      const _exhaustive: never = estado
-      return _exhaustive
+      const _exhaustive: never = estado;
+      return _exhaustive;
     }
   }
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — LA OTRA HOJA: props nativas + rest (exercise-07)
@@ -119,8 +119,8 @@ export function EtiquetaEstado({ estado }: { estado: EstadoPedido }) {
 // 3) Define y exporta la `interface DineroProps` que extienda las props nativas
 //    de `<span>` y añada:
 //      · `cantidad` number
-export interface DineroProps extends ComponentProps<'span'> {
-  cantidad: number
+export interface DineroProps extends ComponentProps<"span"> {
+  cantidad: number;
 }
 
 //    `Dinero` — usa `DineroProps`. Saca `cantidad`, deja el resto. Retorna un
@@ -129,14 +129,8 @@ export interface DineroProps extends ComponentProps<'span'> {
 //    ⚠️ El derrame va de forma que quien llame PUEDA ponerle su className.
 //    <Dinero cantidad={12} className="precio" />  →  <span class="precio">12.00 €</span>
 export function Dinero({ cantidad, ...props }: DineroProps) {
-  return (
-    <span {...props}>
-      {cantidad.toFixed(2)} €
-    </span>
-  )
+  return <span {...props}>{cantidad.toFixed(2)} €</span>;
 }
-
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — LA FILA: props DERIVADAS del dominio + callback con argumento
@@ -151,8 +145,8 @@ export function Dinero({ cantidad, ...props }: DineroProps) {
 //    `extends`), y añada:
 //      · `onVer` función que recibe un number (el id) y no devuelve nada
 
-export interface FilaPedidoProps extends Pick<Pedido, 'id' | 'cliente' | 'total' | 'estado'> {
-  onVer: (id: number) => void
+export interface FilaPedidoProps extends Pick<Pedido, "id" | "cliente" | "total" | "estado"> {
+  onVer: (id: number) => void;
 }
 
 //    `FilaPedido` — usa `FilaPedidoProps`. Retorna un <tr> con TRES <td>, en
@@ -166,14 +160,16 @@ export function FilaPedido(props: FilaPedidoProps) {
   return (
     <tr>
       <td>{props.cliente}</td>
-      <td><Dinero cantidad={props.total} className="total" /></td>
-      <td><EtiquetaEstado estado={props.estado} />
+      <td>
+        <Dinero cantidad={props.total} className="total" />
+      </td>
+      <td>
+        <EtiquetaEstado estado={props.estado} />
         <button onClick={() => props.onVer(props.id)}>Ver</button>
       </td>
     </tr>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — LA LISTA: map + key + estado vacío (exercises 03 y 04)
@@ -185,19 +181,26 @@ export function FilaPedido(props: FilaPedidoProps) {
 //    contenga un `FilaPedido` por pedido (`key` = el id), pasándole sus campos.
 //    💡 Aquí `onVer` se entrega PELADO: el id lo mete cada fila, no la tabla.
 //    <TablaPedidos pedidos={[]} onVer={ver} />  →  <p>No hay pedidos</p>
-export function TablaPedidos({ pedidos, onVer }: { pedidos: Pedido[], onVer: (id: number) => void }) {
+export function TablaPedidos({
+  pedidos,
+  onVer,
+}: {
+  pedidos: Pedido[];
+  onVer: (id: number) => void;
+}) {
   if (pedidos.length === 0) {
-    return <p>No hay pedidos</p>
+    return <p>No hay pedidos</p>;
   }
   return (
     <table>
       <tbody>
-        {pedidos.map(p => <FilaPedido key={p.id} {...p} onVer={onVer} />)}
+        {pedidos.map((p) => (
+          <FilaPedido key={p.id} {...p} onVer={onVer} />
+        ))}
       </tbody>
     </table>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — EL MARCO: slots (exercise-05)
@@ -211,10 +214,10 @@ export function TablaPedidos({ pedidos, onVer }: { pedidos: Pedido[], onVer: (id
 //      · `acciones` ReactNode, OPCIONAL     ← slot con nombre
 //      · `children` ReactNode, obligatoria  ← slot por posición
 export type PanelProps = {
-  titulo: string
-  acciones?: ReactNode
-  children: ReactNode
-}
+  titulo: string;
+  acciones?: ReactNode;
+  children: ReactNode;
+};
 
 // 7) `Panel` — usa `PanelProps`. Retorna una <section> que contenga:
 //      · un <header> con un <h2> con el `titulo` dentro y, SOLO si hay
@@ -232,9 +235,8 @@ export function Panel({ titulo, acciones, children }: PanelProps) {
       </header>
       <div className="cuerpo">{children}</div>
     </section>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — EL ESTADO DE LA PETICIÓN: unión discriminada (exercise-08)
@@ -250,9 +252,7 @@ export function Panel({ titulo, acciones, children }: PanelProps) {
 //      · { fase: 'error';  mensaje: string }
 //      · { fase: 'listo';  pedidos: Pedido[] }
 export type EstadoCarga =
-  | { fase: 'cargando' }
-  | { fase: 'error'; mensaje: string }
-  | { fase: 'listo'; pedidos: Pedido[] }
+  { fase: "cargando" } | { fase: "error"; mensaje: string } | { fase: "listo"; pedidos: Pedido[] };
 
 //    `Contenido` — recibe `estado` (EstadoCarga) y `onVer` (función que recibe
 //    un number y no devuelve nada). `switch` sobre `estado.fase`, con guardia
@@ -262,18 +262,20 @@ export type EstadoCarga =
 //      · 'listo'    → un `TablaPedidos` con los pedidos y el `onVer`
 //    ⚠️ Recibe `estado` como UN objeto para poder interrogarlo: no desestructures
 //       la unión en la firma (la trampa nº1 del exercise-08).
-export function Contenido({ estado, onVer }: { estado: EstadoCarga, onVer: (id: number) => void }) {
+export function Contenido({ estado, onVer }: { estado: EstadoCarga; onVer: (id: number) => void }) {
   switch (estado.fase) {
-    case 'cargando': return <p>Cargando…</p>
-    case 'error': return <p className="error">{estado.mensaje}</p>
-    case 'listo': return <TablaPedidos pedidos={estado.pedidos} onVer={onVer} />
+    case "cargando":
+      return <p>Cargando…</p>;
+    case "error":
+      return <p className="error">{estado.mensaje}</p>;
+    case "listo":
+      return <TablaPedidos pedidos={estado.pedidos} onVer={onVer} />;
     default: {
-      const _exhaustiveCheck: never = estado
-      return _exhaustiveCheck
+      const _exhaustiveCheck: never = estado;
+      return _exhaustiveCheck;
     }
   }
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 6 — LA RAÍZ
@@ -288,9 +290,9 @@ export function Contenido({ estado, onVer }: { estado: EstadoCarga, onVer: (id: 
 //    resumen([{…total:10}, {…total:5}])  →  '2 pedidos · 15€'
 export function resumen(pedidos: Pedido[]): string {
   if (pedidos.length === 0) {
-    return 'Sin pedidos'
+    return "Sin pedidos";
   }
-  return `${pedidos.length} pedidos · ${pedidos.reduce((total, pedido) => total + pedido.total, 0)}€`
+  return `${pedidos.length} pedidos · ${pedidos.reduce((total, pedido) => total + pedido.total, 0)}€`;
 }
 
 // 10) Define y exporta el tipo `PaginaPedidosProps` con:
@@ -299,11 +301,11 @@ export function resumen(pedidos: Pedido[]): string {
 //       · `onVer`    función que recibe un number y no devuelve nada
 //       · `acciones` ReactNode, OPCIONAL
 export type PaginaPedidosProps = {
-  titulo: string
-  estado: EstadoCarga
-  onVer: (id: number) => void
-  acciones?: ReactNode
-}
+  titulo: string;
+  estado: EstadoCarga;
+  onVer: (id: number) => void;
+  acciones?: ReactNode;
+};
 
 //     `PaginaPedidos` — usa `PaginaPedidosProps`. Retorna un `Panel` con el
 //     `titulo` y las `acciones` que le llegaron y, como children, EN ESTE ORDEN:
@@ -316,17 +318,17 @@ export type PaginaPedidosProps = {
 //        es lo correcto: `acciones={acciones}`.
 //     <PaginaPedidos titulo="Pedidos" estado={{ fase: 'cargando' }} onVer={ver} />
 export function PaginaPedidos({ titulo, estado, onVer, acciones }: PaginaPedidosProps) {
-  if (estado.fase === 'listo') {
+  if (estado.fase === "listo") {
     return (
       <Panel titulo={titulo} acciones={acciones}>
         <Contenido estado={estado} onVer={onVer} />
         <footer>{resumen(estado.pedidos)}</footer>
       </Panel>
-    )
+    );
   }
   return (
     <Panel titulo={titulo} acciones={acciones}>
       <Contenido estado={estado} onVer={onVer} />
     </Panel>
-  )
+  );
 }

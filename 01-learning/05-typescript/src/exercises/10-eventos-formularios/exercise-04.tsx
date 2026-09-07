@@ -49,8 +49,7 @@
  *    un objeto que lo describe, no lo ejecuta.
  * ===========================================================================*/
 
-import type { MouseEvent, KeyboardEvent, MouseEventHandler, KeyboardEventHandler } from 'react'
-
+import type { MouseEvent, KeyboardEvent, MouseEventHandler, KeyboardEventHandler } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el ALIAS DE TIPO
@@ -99,50 +98,43 @@ import type { MouseEvent, KeyboardEvent, MouseEventHandler, KeyboardEventHandler
 //    una historia, y los cura un solo cambio.
 //    💡 De propina, fíjate en que los mensajes de error ahora dicen
 //       `ManejadorDeClic`. Ponerle nombre a un tipo también se lo pone a sus fallos.
-export type ManejadorDeClic = (evento: MouseEvent<HTMLButtonElement>) => void
+export type ManejadorDeClic = (evento: MouseEvent<HTMLButtonElement>) => void;
 
 export function BotonConSello({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: ManejadorDeClic = (evento) => avisar(evento.type)
-  return (
-    <button onClick={manejar}>
-      Avisar
-    </button>
-  )
+  const manejar: ManejadorDeClic = (evento) => avisar(evento.type);
+  return <button onClick={manejar}>Avisar</button>;
 }
-<BotonConSello avisar={(t) => console.log(t)} />   // "click"
+<BotonConSello avisar={(t) => console.log(t)} />; // "click"
 
 // 2) `ManejadorDeEnlace` + `EnlaceConSello` — el segundo alias, ahora para un
 //    `<a href="/inicio">Ir</a>`, montado igual que el anterior y avisando igual.
 //    Alguien talló este sello copiando el de los botones y cambiándole el nombre.
 //    Se llama "DeEnlace" y compila tan feliz — el nombre de un alias no comprueba
 //    nada, lo que cuenta es lo que hay a la derecha del `=`.
-export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void
+export type ManejadorDeEnlace = (e: MouseEvent<HTMLAnchorElement>) => void;
 
 export function EnlaceConSello({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: ManejadorDeEnlace = (e) => avisar(e.type)
+  const manejar: ManejadorDeEnlace = (e) => avisar(e.type);
   return (
     <a href="/inicio" onClick={manejar}>
       Ir
     </a>
-  )
+  );
 }
-<EnlaceConSello avisar={(t) => console.log(t)} />   // "click"
+<EnlaceConSello avisar={(t) => console.log(t)} />; // "click"
 
 // 3) `ManejadorDeTecla` + `CampoConSello` — el tercer alias, el del teclado sobre
 //    un `<input>`, montado igual que los dos anteriores: al teclear, `avisar`
 //    recibe la tecla pulsada.
 //    Este alias está tallado con una pieza de más, así que ya no encaja donde lo
 //    vas a estampar. Cuenta lo que pide el alias y lo que da el sitio.
-export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void
+export type ManejadorDeTecla = (e: KeyboardEvent<HTMLInputElement>) => void;
 
 export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: ManejadorDeTecla = (e) => avisar(e.key)
-  return (
-    <input onKeyDown={manejar} />
-  )
+  const manejar: ManejadorDeTecla = (e) => avisar(e.key);
+  return <input onKeyDown={manejar} />;
 }
-<CampoConSello avisar={(t) => console.log(t)} />   // "a"
-
+<CampoConSello avisar={(t) => console.log(t)} />; // "a"
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — los alias que React ya trae tallados
@@ -183,14 +175,10 @@ export function CampoConSello({ avisar }: { avisar: (t: string) => void }) {
 //    dos errores: te está diciendo qué cree TypeScript que es `e`, y con eso solo
 //    ya sabes dónde está la etiqueta mal colocada.
 export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
-  const manejar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type)
-  return (
-    <button onClick={manejar}>
-      Avisar
-    </button>
-  )
+  const manejar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type);
+  return <button onClick={manejar}>Avisar</button>;
 }
-<BotonConSelloDeReact avisar={(t) => console.log(t)} />   // "click"
+<BotonConSelloDeReact avisar={(t) => console.log(t)} />; // "click"
 
 // 5) `CampoConSelloDeReact` — lo mismo sobre el `<input>` que avisa con la tecla,
 //    también con el sello de fábrica. Aquí es donde la regla del nombre que acabas
@@ -202,12 +190,10 @@ export function BotonConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 //     cascada que el drill 1: tener etiqueta no basta si no es la que toca.)
 export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }) {
   // Importé el manejador de React: `KeyboardEventHandler<HTMLInputElement>` y lo apliqué al drill
-  const manejar: KeyboardEventHandler<HTMLInputElement> = (e) => avisar(e.key)
-  return (
-    <input onKeyDown={manejar} />
-  )
+  const manejar: KeyboardEventHandler<HTMLInputElement> = (e) => avisar(e.key);
+  return <input onKeyDown={manejar} />;
 }
-<CampoConSelloDeReact avisar={(t) => console.log(t)} />   // "a"
+<CampoConSelloDeReact avisar={(t) => console.log(t)} />; // "a"
 
 // 6) `BarraConSellos` — el cierre. Un `<button>` "Guardar" que avisa "boton:click"
 //    y un `<a href="/salir">Salir</a>` que avisa "enlace:click", cada uno con su
@@ -218,14 +204,16 @@ export function CampoConSelloDeReact({ avisar }: { avisar: (t: string) => void }
 
 // Combiné ambos handlers en un solo que proporciona React y los apliqué a ambas etiquetas HTML
 export function BarraConSellos({ avisar }: { avisar: (t: string) => void }) {
-  const alBoton: MouseEventHandler<HTMLButtonElement> = (e) => avisar(`boton:${e.type}`)
-  const alEnlace: MouseEventHandler<HTMLAnchorElement> = (e) => avisar(`enlace:${e.type}`)
+  const alBoton: MouseEventHandler<HTMLButtonElement> = (e) => avisar(`boton:${e.type}`);
+  const alEnlace: MouseEventHandler<HTMLAnchorElement> = (e) => avisar(`enlace:${e.type}`);
   return (
     <>
       <button onClick={alBoton}>Guardar</button>
-      <a href="/salir" onClick={alEnlace}>Salir</a>
+      <a href="/salir" onClick={alEnlace}>
+        Salir
+      </a>
     </>
-  )
+  );
 }
 // <BarraConSellos avisar={(t) => console.log(t)} />
 
@@ -251,11 +239,10 @@ export function BarraConSellos({ avisar }: { avisar: (t: string) => void }) {
 //       salió su tipo — la respuesta es el título de la escalera.
 //    🔧 El cuerpo devuelve la entrada tal cual, sin doblarla.
 //    → doblar(4)   →   8
-type Duplicador = (n: number) => number
+type Duplicador = (n: number) => number;
 
-export const doblar: Duplicador = (n) => n * 2
+export const doblar: Duplicador = (n) => n * 2;
 // console.log(doblar(4))   // 8
-
 
 // T2) `triplicar` — lo mismo, por tres. Pero aquí NO HAY ETIQUETA:
 //    el `const` va desnudo y el tipo se escribe en el parámetro.
@@ -264,9 +251,8 @@ export const doblar: Duplicador = (n) => n * 2
 //       en la etiqueta del `const` (T1) o en el parámetro (T2). Una de las dos.
 //    🔧 El cuerpo devuelve la entrada tal cual.
 //    → triplicar(4)   →   12
-export const triplicar = (n: number) => n * 3
+export const triplicar = (n: number) => n * 3;
 // console.log(triplicar(4))   // 12
-
 
 // T3) `gritar` — recibe un texto y lo devuelve en MAYÚSCULAS.
 //    Etiqueta puesta, como en T1.
@@ -276,11 +262,10 @@ export const triplicar = (n: number) => n * 3
 //       string. ¿Quién se lo dijo, si tú no lo escribiste?
 //    🔧 El cuerpo devuelve el texto sin tocar.
 //    → gritar("hola")   →   "HOLA"
-type Transformador = (t: string) => string
+type Transformador = (t: string) => string;
 
-export const gritar: Transformador = (t) => t.toUpperCase()
+export const gritar: Transformador = (t) => t.toUpperCase();
 // console.log(gritar("hola"))   // "HOLA"
-
 
 // T4) `repetir` — repite un texto tantas veces como diga el número.
 //    Dos parámetros, los dos desnudos.
@@ -293,12 +278,11 @@ export const gritar: Transformador = (t) => t.toUpperCase()
 //    → repetir("ab", 3)   →   "ababab"
 
 // El type Repetidor es una función. Esta recibe un string y un número y retorna un string
-type Repetidor = (t: string, veces: number) => string
+type Repetidor = (t: string, veces: number) => string;
 
 // Repetir es una variable que llama a la Función Repetidor
-export const repetir: Repetidor = (t, veces) => t.repeat(veces)
+export const repetir: Repetidor = (t, veces) => t.repeat(veces);
 // console.log(repetir("ab", 3))   // "ababab"
-
 
 // T5) `BotonEscalera` — vuelve el evento. Un `<button>` "Pulsa"
 //    cuyo manejador avisa con el TIPO del suceso.
@@ -311,18 +295,13 @@ export const repetir: Repetidor = (t, veces) => t.repeat(veces)
 //    → click   →   avisar recibe "click"
 
 // AlPulsar es un alias de tipo
-type AlPulsar = (e: MouseEvent<HTMLButtonElement>) => void
+type AlPulsar = (e: MouseEvent<HTMLButtonElement>) => void;
 
 export function BotonEscalera({ avisar }: { avisar: (t: string) => void }) {
-  const alPulsar: AlPulsar = (e) => avisar(`${e.type}`)
-  return (
-    <button onClick={alPulsar}>
-      Pulsa
-    </button>
-  )
+  const alPulsar: AlPulsar = (e) => avisar(`${e.type}`);
+  return <button onClick={alPulsar}>Pulsa</button>;
 }
 // <BotonEscalera avisar={(t) => console.log(t)} />   // "click"
-
 
 // T6) `BotonEscaleraDeReact` — el mismo botón, pero sin alias
 //    tuyo: con el que trae React, que ya está en el import de arriba.
@@ -335,14 +314,10 @@ export function BotonEscalera({ avisar }: { avisar: (t: string) => void }) {
 //    → click   →   avisar recibe "click"
 
 export function BotonEscaleraDeReact({ avisar }: { avisar: (t: string) => void }) {
-  const alPulsar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type)
-  return (
-    <button onClick={alPulsar}>
-      Pulsa
-    </button>
-  )
+  const alPulsar: MouseEventHandler<HTMLButtonElement> = (e) => avisar(e.type);
+  return <button onClick={alPulsar}>Pulsa</button>;
 }
-<BotonEscaleraDeReact avisar={(t) => console.log(t)} />   // "click"
+<BotonEscaleraDeReact avisar={(t) => console.log(t)} />; // "click"
 /* ─────────────────────────────────────────────────────────────────────────────
  * 🗣️ DILO EN VOZ ALTA antes de pasar al 05 — sin mirar arriba:
  *   · En `const f: Alias = (x) => …`, ¿qué describe `Alias`?

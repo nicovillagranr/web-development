@@ -57,7 +57,6 @@
  *    Lo único que ejecuta de verdad estos componentes es el test.
  * ===========================================================================*/
 
-
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el tipo lo pone el HUECO: tipado contextual
  * ─────────────────────────────────────────────────────────────────────────────
@@ -93,11 +92,7 @@
 //    lo pulse. Una vez por clic, y ni una sola vez antes: al pintarse el
 //    componente no tiene que pasar nada todavía.
 export function BotonPelado({ alPulsar }: { alPulsar: () => void }) {
-  return (
-    <button onClick={alPulsar}>
-      Avisar
-    </button>
-  )
+  return <button onClick={alPulsar}>Avisar</button>;
 }
 // <BotonPelado alPulsar={() => console.log("pulsado")} />
 
@@ -107,11 +102,7 @@ export function BotonPelado({ alPulsar }: { alPulsar: () => void }) {
 //    No anotes `e`. Aquí es exactamente donde se ve el tipado contextual, y
 //    escribir el tipo a mano te lo taparía.
 export function BotonAvisaTipo({ avisar }: { avisar: (t: string) => void }) {
-  return (
-    <button onClick={(e) => avisar(e.type)}>
-      Avisar
-    </button>
-  )
+  return <button onClick={(e) => avisar(e.type)}>Avisar</button>;
 }
 // <BotonAvisaTipo avisar={(t) => console.log(t)} />   // "click"
 
@@ -122,14 +113,9 @@ export function BotonAvisaTipo({ avisar }: { avisar: (t: string) => void }) {
 //    Aviso: typecheck no te va a ayudar en este. Los dos huecos aceptan la misma
 //    función, así que el fallo no es de tipos y solo lo caza el test.
 export function BotonAvisaDobleClic({ avisar }: { avisar: (t: string) => void }) {
-  return (
-    <button onDoubleClick={(e) => avisar(e.type)}>
-      Avisar
-    </button>
-  )
+  return <button onDoubleClick={(e) => avisar(e.type)}>Avisar</button>;
 }
 // <BotonAvisaDobleClic avisar={(t) => console.log(t)} />   // "dblclick"
-
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cada hueco trae SU evento
@@ -162,9 +148,7 @@ export function BotonAvisaDobleClic({ avisar }: { avisar: (t: string) => void })
 //    teclear, le pase a `avisar` la tecla que se ha pulsado. Otro elemento y otro
 //    hueco significan otro evento, con otros campos dentro.
 export function CampoAvisaTecla({ avisar }: { avisar: (t: string) => void }) {
-  return (
-    <input onKeyDown={(e) => avisar(e.key)} />
-  )
+  return <input onKeyDown={(e) => avisar(e.key)} />;
 }
 // <CampoAvisaTecla avisar={(t) => console.log(t)} />   // "a"
 
@@ -174,11 +158,7 @@ export function CampoAvisaTecla({ avisar }: { avisar: (t: string) => void }) {
 //    así que ese nombre se refiere al global del DOM. El que React te pasa lo
 //    lleva guardado dentro: sácalo de ahí y entrégaselo.
 export function BotonAvisaNativo({ avisar }: { avisar: (nativo: MouseEvent) => void }) {
-  return (
-    <button onClick={(e) => avisar(e.nativeEvent)}>
-      Avisar
-    </button>
-  )
+  return <button onClick={(e) => avisar(e.nativeEvent)}>Avisar</button>;
 }
 // <BotonAvisaNativo avisar={(n) => console.log(n.type)} />   // "click"
 
@@ -193,7 +173,7 @@ export function BotonAvisaConId({ id, avisar }: { id: string; avisar: (texto: st
     <button id={id} onClick={(evento) => avisar(`${id}:${evento.type}`)}>
       Avisar
     </button>
-  )
+  );
 }
 // <BotonAvisaConId id="guardar" avisar={(t) => console.log(t)} />   // "guardar:click"
 

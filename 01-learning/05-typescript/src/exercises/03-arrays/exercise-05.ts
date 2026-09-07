@@ -29,45 +29,45 @@
  *     pnpm test:run src/exercises/03-arrays/exercise-05.test.ts
  * ===========================================================================*/
 
-export type Producto = { nombre: string; stock: number }
-export type Persona = { nombre: string; edad: number }
-export type ItemCarrito = { nombre: string; cantidad: number }
+export type Producto = { nombre: string; stock: number };
+export type Persona = { nombre: string; edad: number };
+export type ItemCarrito = { nombre: string; cantidad: number };
 
 /* --- BLOQUE A — some: ¿hay AL MENOS UNO? --- */
 
 // 1) `hayAlgunNegativo` — ¿hay al menos un número negativo?
 //    hayAlgunNegativo([1, -2, 3]) → true ; hayAlgunNegativo([1, 2]) → false
 export function hayAlgunNegativo(nums: number[]): boolean {
-  return nums.some((n) => n < 0) // el método some devuelve true si al menos UNO cumple
+  return nums.some((n) => n < 0); // el método some devuelve true si al menos UNO cumple
 }
-hayAlgunNegativo([1, -2, 3]) // true
+hayAlgunNegativo([1, -2, 3]); // true
 
 // 2) `algunoSinStock` — ¿hay algún producto con stock 0?
 //    algunoSinStock([{nombre:"a",stock:0}]) → true
 export function algunoSinStock(productos: Producto[]): boolean {
-  return productos.some((p) => p.stock === 0)
+  return productos.some((p) => p.stock === 0);
 }
-algunoSinStock([{ nombre: 'a', stock: 0 }])
+algunoSinStock([{ nombre: "a", stock: 0 }]);
 
 /* --- BLOQUE B — every: ¿TODOS cumplen? --- */
 
 // 3) `todosPositivos` — ¿son todos los números > 0?
 //    todosPositivos([1, 2, 3]) → true ; todosPositivos([1, -2]) → false
 export function todosPositivos(nums: number[]): boolean {
-  return nums.every((n) => n > 0)
+  return nums.every((n) => n > 0);
 }
 
 // 4) `todosMayoresDeEdad` — ¿todas las personas tienen 18 o más?
 //    todosMayoresDeEdad([{nombre:"a",edad:20},{nombre:"b",edad:17}]) → false
 export function todosMayoresDeEdad(personas: Persona[]): boolean {
-  return personas.every((p) => p.edad >= 18)
+  return personas.every((p) => p.edad >= 18);
 }
 todosMayoresDeEdad([
-  { nombre: 'Javier', edad: 20 },
-  { nombre: 'Nico', edad: 17 },
-  { nombre: 'Natalia', edad: 17 },
-  { nombre: 'Emilio', edad: 17 },
-])
+  { nombre: "Javier", edad: 20 },
+  { nombre: "Nico", edad: 17 },
+  { nombre: "Natalia", edad: 17 },
+  { nombre: "Emilio", edad: 17 },
+]);
 // return: false. Hay menos de 18
 
 /* --- BLOQUE C — CAPSTONE: combinar y cuidar el caso vacío --- */
@@ -76,12 +76,12 @@ todosMayoresDeEdad([
 //    tienen cantidad > 0. (Ojo: [].every(...) es true → hay que pedir length > 0.)
 //    carritoValido([{nombre:"a",cantidad:2}]) → true ; carritoValido([]) → false
 export function carritoValido(items: ItemCarrito[]): boolean {
-  return items.length > 0 && items.every((item) => item.cantidad > 0)
+  return items.length > 0 && items.every((item) => item.cantidad > 0);
 }
 carritoValido([
   { nombre: "Coca Cola", cantidad: 2 },
   { nombre: "Pepsi", cantidad: 0 },
   { nombre: "Agua", cantidad: 1 },
   { nombre: "Cerveza", cantidad: 3 },
-])
+]);
 // return: false. Hay un item con cantidad 0

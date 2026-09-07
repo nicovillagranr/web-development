@@ -118,7 +118,6 @@
  *
  * ===========================================================================*/
 
-
 /* ----------------------------------------------------------------------------
  * BLOQUE A — Guardar una función en una constante (tipo a la IZQUIERDA)
  * Aquí solo escribes el cuerpo; el TIPO ya te lo doy para que lo leas.
@@ -130,19 +129,16 @@
 export const obtenerSaludo: () => string = () => `hola`;
 obtenerSaludo();
 
-
 // 2) `doblar` recibe un number y devuelve ese number multiplicado por 2.
 //    Tipo: `(n: number) => number`.
 //      doblar(5) → 10
 export const doblar: (n: number) => number = (n) => n * 2;
-doblar(6) // 12
-
+doblar(6); // 12
 
 // 3) `enMayusculas` recibe un string y lo devuelve en MAYÚSCULAS.
 //    Tipo: `(texto: string) => string`. (Pista: los string tienen .toUpperCase())
 //      enMayusculas("hola") → "HOLA"
 export const enMayusculas: (texto: string) => string = (texto) => texto.toUpperCase();
-
 
 /* ----------------------------------------------------------------------------
  * BLOQUE B — Ahora TÚ escribes el tipo a la izquierda (no solo el cuerpo)
@@ -156,14 +152,12 @@ export const enMayusculas: (texto: string) => string = (texto) => texto.toUpperC
 export const sumar = (a: number, b: number): number => a + b;
 sumar(10, 20);
 
-
 // 5) `esMayorDeEdad` recibe una edad (number) y devuelve un boolean: true si es
 //    18 o más. Reescríbelo con el tipo a la izquierda. Tipo: (edad: number) => boolean
 //      esMayorDeEdad(20) → true ; esMayorDeEdad(15) → false
 export const esMayorDeEdad = (edad: number): boolean => edad >= 18;
 esMayorDeEdad(20); // true
 esMayorDeEdad(15); // false
-
 
 /* ----------------------------------------------------------------------------
  * BLOQUE C — Recibir una función como ingrediente (callbacks / higher-order)
@@ -192,7 +186,7 @@ describir(5, (n) => `número ${n}`);
 //      aplicarDosVeces(3, (n) => n + 1) → 5     (3 → 4 → 5)
 //      aplicarDosVeces(2, (n) => n * 2) → 8     (2 → 4 → 8)
 export function aplicarDosVeces(n: number, fn: (n: number) => number): number {
-  return fn(fn(n))
+  return fn(fn(n));
 }
 aplicarDosVeces(3, (n) => n + 1); // 5
 
@@ -213,7 +207,6 @@ export function crearMultiplicador(factor: number): (n: number) => number {
 const billeteDeMil = crearMultiplicador(1000);
 billeteDeMil(1); // 1000
 
-
 // 10) `crearRepetidor(veces)` DEVUELVE una función que recibe un string y lo
 //     repite `veces` veces. Anota el retorno `(texto: string) => string`.
 //     (Pista: los string tienen .repeat(veces).)
@@ -223,4 +216,4 @@ export function crearRepetidor(veces: number): (texto: string) => string {
   return (texto: string) => texto.repeat(veces);
 }
 const triple = crearRepetidor(3);
-triple("ab") // "ababab"
+triple("ab"); // "ababab"

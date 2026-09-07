@@ -95,7 +95,6 @@
  * 📝 Trazado en .tsx = ejemplo de uso comentado con `//`.
  * ===========================================================================*/
 
-
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 0 — CALENTAMIENTO: una unión de literales en UNA prop
  * ════════════════════════════════════════════════════════════════════════════
@@ -108,12 +107,9 @@
 //    un <span> con `className` = el estado, y dentro el texto "Activo" o
 //    "Inactivo" según cuál sea.
 //    <Insignia estado="activo" />  →  <span class="activo">Activo</span>
-export function Insignia({ estado }: { estado: 'activo' | 'inactivo' }) {
-  return (
-    <span className={estado}>{estado === 'activo' ? 'Activo' : 'Inactivo'}</span>
-  )
+export function Insignia({ estado }: { estado: "activo" | "inactivo" }) {
+  return <span className={estado}>{estado === "activo" ? "Activo" : "Inactivo"}</span>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 1 — EL PROBLEMA, para que lo veas con tus ojos antes de arreglarlo
@@ -130,12 +126,17 @@ export function Insignia({ estado }: { estado: 'activo' | 'inactivo' }) {
 //       QUÉ deja pasar este tipo que nunca deberías haber podido escribir.
 //    <BotonRoto texto="Ir" href="/a" />       →  <a href="/a">Ir</a>
 //    <BotonRoto texto="Ok" onClick={f} />     →  <button>Ok</button>
-export function BotonRoto({ texto, href, onClick }: { texto: string, href?: string, onClick?: () => void }) {
-  return (
-    href ? <a href={href}>{texto}</a> : <button onClick={onClick}>{texto}</button>
-  )
+export function BotonRoto({
+  texto,
+  href,
+  onClick,
+}: {
+  texto: string;
+  href?: string;
+  onClick?: () => void;
+}) {
+  return href ? <a href={href}>{texto}</a> : <button onClick={onClick}>{texto}</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 2 — LA UNIÓN DISCRIMINADA
@@ -153,16 +154,16 @@ export function BotonRoto({ texto, href, onClick }: { texto: string, href?: stri
 //      · `BotonProps`  = la unión de los dos anteriores
 //    (Los dos primeros escríbelos tal cual; el tercero es una línea con `|`.)
 export type EnlaceProps = {
-  como: 'enlace'
-  texto: string
-  href: string
-}
+  como: "enlace";
+  texto: string;
+  href: string;
+};
 export type AccionProps = {
-  como: 'accion'
-  texto: string
-  onClick: () => void
-}
-export type BotonProps = EnlaceProps | AccionProps
+  como: "accion";
+  texto: string;
+  onClick: () => void;
+};
+export type BotonProps = EnlaceProps | AccionProps;
 
 // 4) `Boton` — usa `BotonProps`. Recibe `props` ENTERO (no desestructures en la
 //    firma: es la trampa nº1 de la cabecera). Pregunta por `props.como`:
@@ -171,12 +172,11 @@ export type BotonProps = EnlaceProps | AccionProps
 //    <Boton como="enlace" texto="Ir" href="/a" />    →  <a href="/a">Ir</a>
 //    <Boton como="accion" texto="Ok" onClick={f} />  →  <button>Ok</button>
 export function Boton(props: BotonProps) {
-  if (props.como === 'enlace') {
-    return <a href={props.href}>{props.texto}</a>
+  if (props.como === "enlace") {
+    return <a href={props.href}>{props.texto}</a>;
   }
-  return <button onClick={props.onClick}>{props.texto}</button>
+  return <button onClick={props.onClick}>{props.texto}</button>;
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 3 — MÁS DE DOS MIEMBROS: el `switch`
@@ -194,9 +194,7 @@ export function Boton(props: BotonProps) {
 //      · { tipo: 'error';    codigo: number }
 //      · { tipo: 'cargando' }                    ← sí: un miembro sin datos
 export type MensajeProps =
-  | { tipo: 'exito'; detalle: string }
-  | { tipo: 'error'; codigo: number }
-  | { tipo: 'cargando' }
+  { tipo: "exito"; detalle: string } | { tipo: "error"; codigo: number } | { tipo: "cargando" };
 
 //    `Mensaje` — usa `MensajeProps`. `switch` sobre `props.tipo`. Retorna un <p>
 //    con `className` = el tipo y dentro:
@@ -206,15 +204,14 @@ export type MensajeProps =
 //    <Mensaje tipo="error" codigo={404} />  →  <p class="error">Error 404</p>
 export function Mensaje(props: MensajeProps) {
   switch (props.tipo) {
-    case 'exito':
-      return <p className="exito">{props.detalle}</p>
-    case 'error':
-      return <p className="error">Error {props.codigo}</p>
-    case 'cargando':
-      return <p className="cargando">Cargando…</p>
+    case "exito":
+      return <p className="exito">{props.detalle}</p>;
+    case "error":
+      return <p className="error">Error {props.codigo}</p>;
+    case "cargando":
+      return <p className="cargando">Cargando…</p>;
   }
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 4 — SIN DISCRIMINANTE: el operador `in`
@@ -250,8 +247,7 @@ export function Mensaje(props: MensajeProps) {
 //      · { texto: string; onCerrar: () => void }   ← aviso que se cierra a mano
 //      · { texto: string; segundos: number }       ← aviso que se va solo
 export type AvisoProps =
-  | { texto: string; onCerrar: () => void }
-  | { texto: string; segundos: number }
+  { texto: string; onCerrar: () => void } | { texto: string; segundos: number };
 
 //    `Aviso` — usa `AvisoProps`. Retorna un <div> con el `texto` y, según el
 //    miembro (pregunta con `in`):
@@ -260,22 +256,21 @@ export type AvisoProps =
 //    <Aviso texto="Guardado" onCerrar={f} />  →  <div>Guardado<button>Cerrar</button></div>
 //    <Aviso texto="Guardado" segundos={3} />  →  <div>Guardado<small>3s</small></div>
 export function Aviso(props: AvisoProps) {
-  if ('onCerrar' in props) {
+  if ("onCerrar" in props) {
     return (
       <div>
         {props.texto}
         <button onClick={props.onCerrar}>Cerrar</button>
       </div>
-    )
+    );
   }
   return (
     <div>
       {props.texto}
       <small>{props.segundos}s</small>
     </div>
-  )
+  );
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 5 — NARROWING SIN JSX, y la GUARDIA `never`
@@ -308,13 +303,13 @@ export function Aviso(props: AvisoProps) {
 //    describirBoton({ como: 'enlace', texto: 'Ir', href: '/a' })  →  'Enlace a /a'
 export function describirBoton(props: BotonProps) {
   switch (props.como) {
-    case 'enlace':
-      return `Enlace a ${props.href}`
-    case 'accion':
-      return `Acción: ${props.texto}`
+    case "enlace":
+      return `Enlace a ${props.href}`;
+    case "accion":
+      return `Acción: ${props.texto}`;
     default: {
-      const imposible: never = props
-      return imposible
+      const imposible: never = props;
+      return imposible;
     }
   }
 }
@@ -326,19 +321,18 @@ export function describirBoton(props: BotonProps) {
 //    etiquetaDe({ tipo: 'cargando' })  →  'Esperando'
 export function etiquetaDe(props: MensajeProps) {
   switch (props.tipo) {
-    case 'exito':
-      return 'Todo bien'
-    case 'error':
-      return 'Falló'
-    case 'cargando':
-      return 'Esperando'
+    case "exito":
+      return "Todo bien";
+    case "error":
+      return "Falló";
+    case "cargando":
+      return "Esperando";
     default: {
-      const imposible: never = props
-      return imposible
+      const imposible: never = props;
+      return imposible;
     }
   }
 }
-
 
 /* ════════════════════════════════════════════════════════════════════════════
  * BLOQUE 6 — CAPSTONE: un campo de formulario con tres formas
@@ -354,9 +348,9 @@ export function etiquetaDe(props: MensajeProps) {
 //      · { clase: 'numero';    etiqueta: string; valor: number; maximo: number }
 //      · { clase: 'seleccion'; etiqueta: string; opciones: string[] }
 export type CampoProps =
-  | { clase: 'texto'; etiqueta: string; valor: string }
-  | { clase: 'numero'; etiqueta: string; valor: number; maximo: number }
-  | { clase: 'seleccion'; etiqueta: string; opciones: string[] }
+  | { clase: "texto"; etiqueta: string; valor: string }
+  | { clase: "numero"; etiqueta: string; valor: number; maximo: number }
+  | { clase: "seleccion"; etiqueta: string; opciones: string[] };
 
 // 10) `Campo` — usa `CampoProps`. Retorna un <label> que contenga SIEMPRE la
 //     `etiqueta` primero y, después, según la clase (usa `switch` + guardia
@@ -373,18 +367,21 @@ export type CampoProps =
 //       →  <label>Color<select><option value="rojo">rojo</option>…</select></label>
 export function Campo(props: CampoProps) {
   switch (props.clase) {
-    case 'texto':
+    case "texto":
       return (
-        <label>{props.etiqueta}<input type="text" defaultValue={props.valor} /></label>
-      )
-    case 'numero':
+        <label>
+          {props.etiqueta}
+          <input type="text" defaultValue={props.valor} />
+        </label>
+      );
+    case "numero":
       return (
         <label>
           {props.etiqueta}
           <input type="number" defaultValue={props.valor} max={props.maximo} />
         </label>
-      )
-    case 'seleccion':
+      );
+    case "seleccion":
       return (
         <label>
           {props.etiqueta}
@@ -396,10 +393,10 @@ export function Campo(props: CampoProps) {
             ))}
           </select>
         </label>
-      )
+      );
     default: {
-      const imposible: never = props
-      return imposible
+      const imposible: never = props;
+      return imposible;
     }
   }
 }

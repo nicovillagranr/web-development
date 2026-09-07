@@ -43,49 +43,55 @@
 //  const o = { a: 1, b: 2 }
 //  Object.entries(o)  // [["a", 1], ["b", 2]]
 
-
 // 1) `duplicarValores` — cada valor por 2.
 //    duplicarValores({ a: 2, b: 3 }) → { a: 4, b: 6 }
 export function duplicarValores(obj: Record<string, number>): Record<string, number> {
-  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor * 2]))
+  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor * 2]));
 }
-duplicarValores({ a: 2, b: 3 }) // -> { a: 4, b: 6 }
+duplicarValores({ a: 2, b: 3 }); // -> { a: 4, b: 6 }
 
 // 2) `incrementar` — suma `n` a cada valor.
 //    incrementar({ a: 1 }, 10) → { a: 11 }
 export function incrementar(obj: Record<string, number>, n: number): Record<string, number> {
-  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor + n]))
+  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor + n]));
 }
-incrementar({ a: 1 }, 10) // -> { a: 11 }
-
+incrementar({ a: 1 }, 10); // -> { a: 11 }
 
 /* --- BLOQUE B — filtrar pares, y cambiar el tipo del valor --- */
 
 // 3) `soloPositivos` — quita los pares cuyo valor no sea > 0.
 //    soloPositivos({ a: 1, b: -2, c: 3 }) → { a: 1, c: 3 }
 export function soloPositivos(obj: Record<string, number>): Record<string, number> {
-  return Object.fromEntries( // Recibe: [["a", 1], ["c", 3]] (ya filtradas) y devuelve: { a: 1, c: 3 }
+  return Object.fromEntries(
+    // Recibe: [["a", 1], ["c", 3]] (ya filtradas) y devuelve: { a: 1, c: 3 }
     Object.entries(obj) // Recibe: { a: 1, b: -2, c: 3 } y devuelve: [["a", 1],["b", -2], ["c", 3]]
-      .filter(([, valor]) => valor > 0) // Recibe todas las tuplas y devuelve solo las que cumplen la condicion de que valor > 0 -> [["a", 1], ["c", 3]]
-  )
+      .filter(([, valor]) => valor > 0), // Recibe todas las tuplas y devuelve solo las que cumplen la condicion de que valor > 0 -> [["a", 1], ["c", 3]]
+  );
 }
 
 // 4) `valoresATexto` — convierte cada valor number a "$valor" (string).
 //    valoresATexto({ a: 5 }) → { a: "$5" }
 export function valoresATexto(obj: Record<string, number>): Record<string, string> {
-  return Object.fromEntries( // Recibe: [["a", "$5"], ["b", "$6"]] y devuelve: { a: "$5", b: "$6" }
+  return Object.fromEntries(
+    // Recibe: [["a", "$5"], ["b", "$6"]] y devuelve: { a: "$5", b: "$6" }
     Object.entries(obj) // Recibe: { a: 5, b: 6 } y devuelve: [["a", 5], ["b", 6]]
-      .map(([clave, valor]) => [clave, "$" + valor])) // Mapea todas las tuplas y devuelve valor a modo de string y con $ -> [["a", "$5"], ["b", "$6"]]
+      .map(([clave, valor]) => [clave, "$" + valor]),
+  ); // Mapea todas las tuplas y devuelve valor a modo de string y con $ -> [["a", "$5"], ["b", "$6"]]
 }
 
 /* --- BLOQUE C — CAPSTONE: aplicar un porcentaje a cada valor --- */
 
 // 5) `aplicarDescuento` — baja cada precio un `pct` por ciento.
 //    aplicarDescuento({ a: 100 }, 10) → { a: 90 }
-export function aplicarDescuento(precios: Record<string, number>, pct: number): Record<string, number> {
-  return Object.fromEntries( // Recibe: [["Coca Cola", 90], ["Pepsi Zero", 108]] (ya con descuento) y devuelve: { "Coca Cola": 90, "Pepsi Zero": 108 }
+export function aplicarDescuento(
+  precios: Record<string, number>,
+  pct: number,
+): Record<string, number> {
+  return Object.fromEntries(
+    // Recibe: [["Coca Cola", 90], ["Pepsi Zero", 108]] (ya con descuento) y devuelve: { "Coca Cola": 90, "Pepsi Zero": 108 }
     Object.entries(precios) // Recibe: { "Coca Cola": 100, "Pepsi Zero": 120 } y devuelve: [["Coca Cola", 100], ["Pepsi Zero", 120]]
-      .map(([clave, valor]) => [clave, valor * (100 - pct) / 100])) // Aplica el descuento a cada valor (pct=10 → *0.9) -> [["Coca Cola", 90], ["Pepsi Zero", 108]]
+      .map(([clave, valor]) => [clave, (valor * (100 - pct)) / 100]),
+  ); // Aplica el descuento a cada valor (pct=10 → *0.9) -> [["Coca Cola", 90], ["Pepsi Zero", 108]]
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -136,51 +142,51 @@ export function aplicarDescuento(precios: Record<string, number>, pct: number): 
 //     Devuélvelo tal cual te lo da `Object.entries`. Solo quiero que lo veas.
 //     pares({ a: 2, b: 3 }) → [["a", 2], ["b", 3]]
 export function pares(obj: Record<string, number>): [string, number][] {
-  return Object.entries(obj) // Recibe: { a: 2, b: 3 } Devuelve: [["a", 2], ["b", 3]]
+  return Object.entries(obj); // Recibe: { a: 2, b: 3 } Devuelve: [["a", 2], ["b", 3]]
 }
-pares({ a: 2, b: 3 }) // -> [["a", 2], ["b", 3]]
+pares({ a: 2, b: 3 }); // -> [["a", 2], ["b", 3]]
 
 // E2) `cuantosPares` — cuántos pares tiene. (Es una LISTA: tiene `.length`.)
 //     La pregunta que responde este drill: ¿de verdad es un array? Sí.
 //     cuantosPares({ a: 2, b: 3 }) → 2 ; cuantosPares({}) → 0
 export function cuantosPares(obj: Record<string, number>): number {
-  return Object.entries(obj).length
+  return Object.entries(obj).length;
 }
-cuantosPares({ a: 2, b: 3 }) // -> 2
+cuantosPares({ a: 2, b: 3 }); // -> 2
 
 // E3) `primerPar` — el primer par de la lista, o `undefined` si el objeto va vacío.
 //     Recuerda `noUncheckedIndexedAccess`: leer `lista[0]` te da `T | undefined`,
 //     porque la lista podría estar vacía. El tipo de retorno ya lo contempla.
 //     primerPar({ a: 2, b: 3 }) → ["a", 2] ; primerPar({}) → undefined
 export function primerPar(obj: Record<string, number>): [string, number] | undefined {
-  return Object.entries(obj)[0]
+  return Object.entries(obj)[0];
 }
-primerPar({ a: 2, b: 3 }) // -> ["a", 2]
-primerPar({ a: 5, b: 10 }) // -> ["a", 5]
+primerPar({ a: 2, b: 3 }); // -> ["a", 2]
+primerPar({ a: 5, b: 10 }); // -> ["a", 5]
 
 /* ── E-B — ABRIR UN PAR: la casilla [0] y la casilla [1] ── */
 
 // E4) `claveDe` — la clave de un par. (Casilla 0. Acceso por índice, a pelo.)
 //     claveDe(["a", 2]) → "a"
 export function claveDe(par: [string, number]): string {
-  return par[0]
+  return par[0];
 }
-claveDe(["a", 2]) // -> "a"
-claveDe(["b", 3]) // -> "b"
+claveDe(["a", 2]); // -> "a"
+claveDe(["b", 3]); // -> "b"
 
 // E5) `valorDe` — el valor de un par. (Casilla 1.)
 //     valorDe(["a", 2]) → 2
 export function valorDe(par: [string, number]): number {
-  return par[1]
+  return par[1];
 }
-valorDe(["a", 2]) // -> 2
-valorDe(["b", 3]) // -> 3
+valorDe(["a", 2]); // -> 2
+valorDe(["b", 3]); // -> 3
 
 // E6) `describirPar` — el par, como texto "clave=valor".
 //     Escríbelo usando `par[0]` y `par[1]`, sin desempaquetar. A pelo.
 //     describirPar(["a", 2]) → "a=2"
 export function describirPar(par: [string, number]): string {
-  return `${par[0]}=${par[1]}`
+  return `${par[0]}=${par[1]}`;
 }
 
 // E7) ⭐ `describirParBis` — EXACTAMENTE lo mismo que E6, mismo resultado, pero
@@ -200,9 +206,9 @@ export function describirPar(par: [string, number]): string {
 //     Compara E6 y E7 cuando los tengas: son la misma función con distinta puerta.
 //     describirParBis(["a", 2]) → "a=2"
 export function describirParBis([clave, valor]: [string, number]): string {
-  return `${clave}=${valor}`
+  return `${clave}=${valor}`;
 }
-describirParBis(["a", 2])
+describirParBis(["a", 2]);
 
 /* ── E-C — RECORRER los pares con `.map` (todavía SIN volver a montar) ── */
 
@@ -210,22 +216,22 @@ describirParBis(["a", 2])
 //     Ya puedes usar `.map` porque `entries` te ha dado una lista.
 //     soloClaves({ a: 2, b: 3 }) → ["a", "b"]
 export function soloClaves(obj: Record<string, number>): string[] {
-  return Object.entries(obj).map(([clave]) => clave)
+  return Object.entries(obj).map(([clave]) => clave);
 }
-soloClaves({ a: 2, b: 3 }) // -> ["a", "b"]
+soloClaves({ a: 2, b: 3 }); // -> ["a", "b"]
 
 // E9) `soloValores` — la lista de valores.
 //     soloValores({ a: 2, b: 3 }) → [2, 3]
 export function soloValores(obj: Record<string, number>): number[] {
-  return Object.entries(obj).map(([, valor]) => valor)
+  return Object.entries(obj).map(([, valor]) => valor);
 }
 
 // E10) `descripciones` — cada par como texto. (Es E7, ahora aplicado a la lista.)
 //      descripciones({ a: 2, b: 3 }) → ["a=2", "b=3"]
 export function descripciones(obj: Record<string, number>): string[] {
-  return Object.entries(obj).map(describirParBis)
+  return Object.entries(obj).map(describirParBis);
 }
-descripciones({ a: 2, b: 3 }) // -> ["a=2", "b=3"]
+descripciones({ a: 2, b: 3 }); // -> ["a=2", "b=3"]
 
 /* ── E-D — MONTAR: `fromEntries` solo, sin `entries` delante ── */
 
@@ -233,9 +239,12 @@ descripciones({ a: 2, b: 3 }) // -> ["a=2", "b=3"]
 //      Aquí no hay entries ni map: solo el botón DESHACER.
 //      montar([["a", 1], ["b", 2]]) → { a: 1, b: 2 }
 export function montar(lista: [string, number][]): Record<string, number> {
-  return Object.fromEntries(lista)
+  return Object.fromEntries(lista);
 }
-montar([["a", 1], ["b", 2]]) // -> { a: 1, b: 2 }
+montar([
+  ["a", 1],
+  ["b", 2],
+]); // -> { a: 1, b: 2 }
 
 /* ── E-E — EL VIAJE COMPLETO ── */
 
@@ -248,7 +257,7 @@ export function clonarViaEntries(obj: Record<string, number>): Record<string, nu
   // Object.fromEntries([["a", 2], ["b", 3]])
   // Flujo Completo:
   // [["a", 2], ["b", 3]] -> { a: 2, b: 3 }
-  return Object.fromEntries(Object.entries(obj))
+  return Object.fromEntries(Object.entries(obj));
 }
 
 // E13) ⭐ `duplicarPasoAPaso` — el drill 1, pero escrito en TRES LÍNEAS con una
@@ -268,11 +277,11 @@ export function clonarViaEntries(obj: Record<string, number>): Record<string, nu
 //
 //      duplicarPasoAPaso({ a: 2, b: 3 }) → { a: 4, b: 6 }
 export function duplicarPasoAPaso(obj: Record<string, number>): Record<string, number> {
-  const lista = Object.entries(obj) // -> Recibe: { a: 2, b: 3 } y devuelve: [["a", 2], ["b", 3]]
-  const pintados: [string, number][] = lista.map(([clave, valor]) => [clave, valor * 2]) // -> Recibe: [["a", 2], ["b", 3]] y devuelve: [["a", 4], ["b", 6]]
-  return Object.fromEntries(pintados) // -> Recibe: [["a", 4], ["b", 6]] y devuelve: { a: 4, b: 6 }
+  const lista = Object.entries(obj); // -> Recibe: { a: 2, b: 3 } y devuelve: [["a", 2], ["b", 3]]
+  const pintados: [string, number][] = lista.map(([clave, valor]) => [clave, valor * 2]); // -> Recibe: [["a", 2], ["b", 3]] y devuelve: [["a", 4], ["b", 6]]
+  return Object.fromEntries(pintados); // -> Recibe: [["a", 4], ["b", 6]] y devuelve: { a: 4, b: 6 }
 }
-duplicarPasoAPaso({ a: 2, b: 3 }) // -> { a: 4, b: 6 }
+duplicarPasoAPaso({ a: 2, b: 3 }); // -> { a: 4, b: 6 }
 
 // E14) `duplicarEnCadena` — lo MISMO que E13, pero encadenado en una sola expresión,
 //      sin variables intermedias. Es decir: tu drill 1, otra vez, desde cero.
@@ -280,6 +289,6 @@ duplicarPasoAPaso({ a: 2, b: 3 }) // -> { a: 4, b: 6 }
 //      `.map` metido en medio, y el `.map` es E7.
 //      duplicarEnCadena({ a: 2, b: 3 }) → { a: 4, b: 6 }
 export function duplicarEnCadena(obj: Record<string, number>): Record<string, number> {
-  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor * 2]))
+  return Object.fromEntries(Object.entries(obj).map(([clave, valor]) => [clave, valor * 2]));
 }
-duplicarEnCadena({ a: 2, b: 3 }) // -> { a: 4, b: 6 }
+duplicarEnCadena({ a: 2, b: 3 }); // -> { a: 4, b: 6 }

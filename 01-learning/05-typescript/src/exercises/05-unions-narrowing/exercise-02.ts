@@ -116,7 +116,6 @@ export function formatearPrecio(valor: string | number): string {
   return `${valor.trim()}`;
 }
 
-
 // 2) `saludarUsuario(nombre: string | undefined): string`
 //    - Si NO hay nombre (undefined) → devuelve "Hola, invitado".
 //    - Si hay nombre               → devuelve `Hola, ${nombre}`.
@@ -127,7 +126,6 @@ export function saludarUsuario(nombre: string | undefined): string {
   }
   return `Hola, ${nombre}`;
 }
-
 
 // 3) `longitudMensaje(texto: string, extra?: string): number`
 //    Devuelve la cantidad total de caracteres sumando `texto` y, SOLO si

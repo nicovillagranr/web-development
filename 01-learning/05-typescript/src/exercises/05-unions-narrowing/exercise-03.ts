@@ -60,27 +60,25 @@
  *    A: separar null (truthiness)   B: la trampa typeof null   C: el operador `in`
  * ===========================================================================*/
 
-
 /* ── BLOQUE A — descartar `null` con truthiness ────────────────────────────── */
 
 // A1) Devuelve la longitud del texto, o 0 si es null. (Estrecha el null primero.)
 //       largo("hola") → 4 ; largo(null) → 0
 export function largo(x: string | null): number {
   if (x === null) {
-    return 0
+    return 0;
   }
-  return x.length
+  return x.length;
 }
 
 // A2) Devuelve el doble del número, o 0 si es null.
 //       doble(5) → 10 ; doble(null) → 0
 export function doble(x: number | null): number {
   if (x === null) {
-    return 0
+    return 0;
   }
-  return x * 2
+  return x * 2;
 }
-
 
 /* ── BLOQUE B — la trampa de `typeof null` ─────────────────────────────────── */
 
@@ -89,9 +87,9 @@ export function doble(x: number | null): number {
 //       saludar({ nombre: "Ana" }) → "Ana" ; saludar(null) → "anónimo"
 export function saludar(x: { nombre: string } | null): string {
   if (x === null) {
-    return "anónimo"
+    return "anónimo";
   }
-  return x.nombre
+  return x.nombre;
 }
 
 // B2) `x` puede ser un número, un texto, o null. Devuelve:
@@ -103,41 +101,38 @@ export function saludar(x: { nombre: string } | null): string {
 export function describir(x: string | number | null): string {
   switch (typeof x) {
     case "number":
-      return String(x)
+      return String(x);
     case "string":
-      return x.toUpperCase()
+      return x.toUpperCase();
     default: {
-      return "vacío" // aquí caen null y cualquier otro tipo raro
+      return "vacío"; // aquí caen null y cualquier otro tipo raro
     }
   }
 }
-
 
 /* ── BLOQUE C — el operador `in` ───────────────────────────────────────────── */
 
 // C1) `Contacto` es una unión de objetos SIN tag común. Devuelve el email si la
 //     variante lo tiene, o el teléfono si no. Distíngue con `in`.
 //       contactar({ email: "a@b.c" }) → "a@b.c" ; contactar({ telefono: "123" }) → "123"
-type Contacto = { email: string } | { telefono: string }
+type Contacto = { email: string } | { telefono: string };
 export function contactar(c: Contacto): string {
   if ("email" in c) {
-    return c.email
+    return c.email;
   }
-  return c.telefono
+  return c.telefono;
 }
 
 // C2) `Mascota` puede ladrar o maullar (campos distintos, sin tag). Devuelve el
 //     sonido correcto. Distíngue con `in` la propiedad que solo una tiene.
 //       sonido({ ladrido: "Guau" }) → "Guau" ; sonido({ maullido: "Miau" }) → "Miau"
-type Mascota = { ladrido: string } | { maullido: string }
+type Mascota = { ladrido: string } | { maullido: string };
 export function sonido(m: Mascota): string {
   if ("maullido" in m) {
-    return m.maullido
+    return m.maullido;
   }
-  return m.ladrido
-
+  return m.ladrido;
 }
-
 
 /* ── BLOQUE D — más práctica con `in` (escalera) ───────────────────────────────
  *
@@ -151,12 +146,12 @@ export function sonido(m: Mascota): string {
 //     Devuelve el ÁREA. No basta con devolver un campo: hay que operar con él.
 //     Distíngue con `in` y luego haz la cuenta.
 //       area({ lado: 3 }) → 9 ; area({ ancho: 2, alto: 5 }) → 10
-type Caja = { lado: number } | { ancho: number; alto: number }
+type Caja = { lado: number } | { ancho: number; alto: number };
 export function area(c: Caja): number {
   if ("lado" in c) {
-    return c.lado * c.lado
+    return c.lado * c.lado;
   }
-  return c.ancho * c.alto
+  return c.ancho * c.alto;
 }
 
 // D2) `Notificacion` tiene TRES variantes sin tag común. Devuelve el contenido
@@ -164,16 +159,14 @@ export function area(c: Caja): number {
 //       canal({ email: "a@b.c" }) → "a@b.c"
 //       canal({ sms: "hola" })    → "hola"
 //       canal({ push: "ping" })   → "ping"
-type Notificacion = { email: string } | { sms: string } | { push: string }
+type Notificacion = { email: string } | { sms: string } | { push: string };
 export function canal(n: Notificacion): string {
   if ("email" in n) {
-    return n.email
-  }
-  else if ("sms" in n) {
-    return n.sms
-  }
-  else {
-    return n.push
+    return n.email;
+  } else if ("sms" in n) {
+    return n.sms;
+  } else {
+    return n.push;
   }
 }
 
@@ -182,14 +175,12 @@ export function canal(n: Notificacion): string {
 //     haya un campo en común (lo que importa es el campo que NO comparten).
 //       quien({ nombre: "Ana", rolAdmin: "root" })      → "Ana: root"
 //       quien({ nombre: "Leo", rolCliente: "premium" }) → "Leo: premium"
-type Cuenta =
-  | { nombre: string; rolAdmin: string }
-  | { nombre: string; rolCliente: string }
+type Cuenta = { nombre: string; rolAdmin: string } | { nombre: string; rolCliente: string };
 export function quien(c: Cuenta): string {
   if ("rolAdmin" in c) {
-    return `${c.nombre}: ${c.rolAdmin}`
+    return `${c.nombre}: ${c.rolAdmin}`;
   }
-  return `${c.nombre}: ${c.rolCliente}`
+  return `${c.nombre}: ${c.rolCliente}`;
 }
 
 // D4) CAPSTONE — junta todo el ejercicio: el valor puede ser `null` O una de dos
@@ -201,21 +192,19 @@ export function quien(c: Cuenta): string {
 //       procesar(null)              → "sin respuesta"
 //       procesar({ ok: "listo" })   → "OK: listo"
 //       procesar({ error: "boom" }) → "ERR: boom"
-type Respuesta = { ok: string } | { error: string } | null
+type Respuesta = { ok: string } | { error: string } | null;
 export function procesar(r: Respuesta): string {
   if (r === null) {
-    return "sin respuesta"
-  }
-  else if ("ok" in r) {
-    return "OK: " + r.ok
-  }
-  else {
-    return "ERR: " + r.error
+    return "sin respuesta";
+  } else if ("ok" in r) {
+    return "OK: " + r.ok;
+  } else {
+    return "ERR: " + r.error;
   }
 }
-procesar(null) // sin respuesta
-procesar({ ok: "listo" }) // OK: listo
-procesar({ error: "boom" }) // ERR: boom
+procesar(null); // sin respuesta
+procesar({ ok: "listo" }); // OK: listo
+procesar({ error: "boom" }); // ERR: boom
 
 /* =============================================================================
  * BLOQUE E — el `null` en la vida real: el borde de una API (escalera)
@@ -260,11 +249,10 @@ procesar({ error: "boom" }) // ERR: boom
  *    E4–E6: introduce `?.` y `??` y los combina.
  * ===========================================================================*/
 
-
 /* ── Proyecto 1: PORTFOLIO (info personal + proyectos web) ──────────────────── */
 
 // Un proyecto de tu portfolio. `repoUrl` puede venir null (proyecto privado).
-type Proyecto = { nombre: string; repoUrl: string | null }
+type Proyecto = { nombre: string; repoUrl: string | null };
 
 // E1) La API puede devolver `null` cuando el proyecto NO existe (GET /proyectos/999).
 //     Devuelve el nombre, o "Proyecto no encontrado" si es null.
@@ -273,9 +261,9 @@ type Proyecto = { nombre: string; repoUrl: string | null }
 //       tituloProyecto(null)                                 → "Proyecto no encontrado"
 export function tituloProyecto(p: Proyecto | null): string {
   if (p === null) {
-    return "Proyecto no encontrado"
+    return "Proyecto no encontrado";
   }
-  return p.nombre
+  return p.nombre;
 }
 
 // E2) Aquí el proyecto SÍ existe, pero el campo `repoUrl` puede ser null.
@@ -284,15 +272,15 @@ export function tituloProyecto(p: Proyecto | null): string {
 //       enlaceRepo({ nombre: "Privado", repoUrl: null })          → "Sin repositorio"
 export function enlaceRepo(p: Proyecto): string {
   if (p.repoUrl === null) {
-    return "Sin repositorio"
+    return "Sin repositorio";
   }
-  return p.repoUrl
+  return p.repoUrl;
 }
 
 /* ── Proyecto 2: E-COMMERCE junior ─────────────────────────────────────────── */
 
 // Un producto. `descuento` es null en la mayoría (no todos tienen oferta).
-type Producto = { nombre: string; precio: number; descuento: { porcentaje: number } | null }
+type Producto = { nombre: string; precio: number; descuento: { porcentaje: number } | null };
 
 // E3) Devuelve el PRECIO FINAL. Si hay descuento, aplícalo; si es null, el precio
 //     tal cual. Descarta el null del descuento antes de leer `.porcentaje`.
@@ -300,31 +288,31 @@ type Producto = { nombre: string; precio: number; descuento: { porcentaje: numbe
 //       precioFinal({ nombre: "X", precio: 100, descuento: { porcentaje: 20 } }) → 80
 //       precioFinal({ nombre: "Y", precio: 100, descuento: null })               → 100
 export function precioFinal(p: Producto): number {
-  const descuento = p.descuento?.porcentaje ?? 0 // si p.descuento es null, descuento será 0
-  return p.precio * (1 - descuento / 100)
+  const descuento = p.descuento?.porcentaje ?? 0; // si p.descuento es null, descuento será 0
+  return p.precio * (1 - descuento / 100);
 }
 
 // E4) Sesión del usuario. `usuario` es null si nadie inició sesión.
 //     Devuelve el nombre, o "invitado". Aquí SÍ usa `?.` + `??` (una sola línea).
 //       saludoSesion({ usuario: { nombre: "Nico" } }) → "Nico"
 //       saludoSesion({ usuario: null })                → "invitado"
-type Sesion = { usuario: { nombre: string } | null }
+type Sesion = { usuario: { nombre: string } | null };
 export function saludoSesion(s: Sesion): string {
-  const nombre = s.usuario?.nombre ?? "invitado"
-  return nombre
+  const nombre = s.usuario?.nombre ?? "invitado";
+  return nombre;
 }
 
 // E5) El carrito completo puede venir null (sesión nueva sin carrito creado).
 //     Devuelve CUÁNTOS items hay. Si el carrito es null → 0. Usa `?.` + `??`.
 //       cantidadItems({ items: [{ precio: 10 }, { precio: 5 }] }) → 2
 //       cantidadItems(null)                                       → 0
-type Carrito = { items: { precio: number }[] }
+type Carrito = { items: { precio: number }[] };
 export function cantidadItems(c: Carrito | null): number {
-  const items = c?.items ?? []
-  return items.length
+  const items = c?.items ?? [];
+  return items.length;
 }
-cantidadItems({ items: [{ precio: 10 }, { precio: 5 }] }) // 2
-cantidadItems(null) // 0
+cantidadItems({ items: [{ precio: 10 }, { precio: 5 }] }); // 2
+cantidadItems(null); // 0
 
 // E6) CAPSTONE — junta todo el bloque. El producto puede ser null (no encontrado),
 //     y si existe puede o no tener descuento. Devuelve la etiqueta de precio:
@@ -338,14 +326,14 @@ cantidadItems(null) // 0
 //       etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }) → "$75.00"
 export function etiquetaPrecio(p: Producto | null): string {
   if (p === null) {
-    return "No disponible"
+    return "No disponible";
   }
-  const precio = precioFinal(p)
-  return `$${precio.toFixed(2)}`
+  const precio = precioFinal(p);
+  return `$${precio.toFixed(2)}`;
 }
-etiquetaPrecio(null) // "No disponible"
-etiquetaPrecio({ nombre: "X", precio: 100, descuento: null }) // "$100.00"
-etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }) // "$75.00"
+etiquetaPrecio(null); // "No disponible"
+etiquetaPrecio({ nombre: "X", precio: 100, descuento: null }); // "$100.00"
+etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }); // "$75.00"
 
 /* =============================================================================
  * BLOQUE F — sintaxis fina de `?.` y `??` (escalera de mecánica)
@@ -391,16 +379,15 @@ etiquetaPrecio({ nombre: "Y", precio: 100, descuento: { porcentaje: 25 } }) // "
  *    Borra el `throw` de cada función y complétala. Apóyate en las 3 formas.
  * ===========================================================================*/
 
-
 // F1) ENCADENAR `?.` dos niveles. `cliente` puede ser null, y su `direccion`
 //     también. Devuelve la ciudad de envío, o "sin ciudad" si falta algún eslabón.
 //       ciudadEnvio({ cliente: { direccion: { ciudad: "Lima" } } }) → "Lima"
 //       ciudadEnvio({ cliente: { direccion: null } })               → "sin ciudad"
 //       ciudadEnvio({ cliente: null })                              → "sin ciudad"
-type Pedido = { cliente: { direccion: { ciudad: string } | null } | null }
+type Pedido = { cliente: { direccion: { ciudad: string } | null } | null };
 export function ciudadEnvio(p: Pedido): string {
-  const ciudad = p.cliente?.direccion?.ciudad ?? "sin ciudad"
-  return ciudad
+  const ciudad = p.cliente?.direccion?.ciudad ?? "sin ciudad";
+  return ciudad;
 }
 
 // F2) LA TRAMPA DEL 0. `stock` puede ser un número (incluido 0) o null. Devuelve
@@ -409,14 +396,14 @@ export function ciudadEnvio(p: Pedido): string {
 //       stockMostrado({ stock: 7 })    → 7
 //       stockMostrado({ stock: 0 })    → 0    ← ¡no -1!
 //       stockMostrado({ stock: null }) → -1
-type Inventario = { stock: number | null }
+type Inventario = { stock: number | null };
 export function stockMostrado(i: Inventario): number {
-  const stock = i.stock ?? -1
-  return stock
+  const stock = i.stock ?? -1;
+  return stock;
 }
-stockMostrado({ stock: 7 })    // 7 En un proyecto real puede ser mostrado con  estilos para resaltar que hay pocas unidades
-stockMostrado({ stock: 0 })    // 0 En un proyecto real puede ser mostrado como "Agotado"
-stockMostrado({ stock: null }) // -1 En un proyecto real puede ser mostrado como "No disponible" o algo así, para diferenciarlo del "Agotado"
+stockMostrado({ stock: 7 }); // 7 En un proyecto real puede ser mostrado con  estilos para resaltar que hay pocas unidades
+stockMostrado({ stock: 0 }); // 0 En un proyecto real puede ser mostrado como "Agotado"
+stockMostrado({ stock: null }); // -1 En un proyecto real puede ser mostrado como "No disponible" o algo así, para diferenciarlo del "Agotado"
 
 // F3) FORMA `?.[]`. `fotos` puede ser null (producto sin imágenes). Devuelve la
 //     primera foto (índice 0), o "placeholder.webp" si no hay galería o está vacía.
@@ -424,20 +411,20 @@ stockMostrado({ stock: null }) // -1 En un proyecto real puede ser mostrado como
 //       portada({ fotos: ["a.png", "b.png"] }) → "a.png"
 //       portada({ fotos: [] })                 → "placeholder.webp"
 //       portada({ fotos: null })               → "placeholder.webp"
-type Galeria = { fotos: string[] | null }
+type Galeria = { fotos: string[] | null };
 export function portada(g: Galeria): string {
-  const foto = g.fotos?.[0] ?? "placeholder.webp"
-  return foto
+  const foto = g.fotos?.[0] ?? "placeholder.webp";
+  return foto;
 }
 
 // F4) FORMA `?.()`. `onClick` es un callback que puede ser null (botón deshabilitado).
 //     Si existe, llámalo y devuelve lo que retorne; si es null, devuelve "sin acción".
 //       activar({ onClick: () => "guardado" }) → "guardado"
 //       activar({ onClick: null })             → "sin acción"
-type Boton = { onClick: (() => string) | null }
+type Boton = { onClick: (() => string) | null };
 export function activar(b: Boton): string {
-  const accion = b.onClick?.() ?? "sin acción"
-  return accion
+  const accion = b.onClick?.() ?? "sin acción";
+  return accion;
 }
 
 // F5) ENCADENAR + ÍNDICE. `carrito` puede ser null; si existe, su `items` puede
@@ -446,9 +433,9 @@ export function activar(b: Boton): string {
 //       primerProducto({ carrito: { items: [{ nombre: "Té" }] } }) → "Té"
 //       primerProducto({ carrito: { items: [] } })                 → "vacío"
 //       primerProducto({ carrito: null })                          → "vacío"
-type Cuenta2 = { carrito: { items: { nombre: string }[] } | null }
+type Cuenta2 = { carrito: { items: { nombre: string }[] } | null };
 export function primerProducto(u: Cuenta2): string {
-  return u.carrito?.items[0]?.nombre ?? "vacío"
+  return u.carrito?.items[0]?.nombre ?? "vacío";
 }
 
 // F6) CAPSTONE — junta las tres formas. La config puede tener `tema` null y un
@@ -460,17 +447,17 @@ export function primerProducto(u: Cuenta2): string {
 //       resumenConfig({ tema: null, obtenerDescuento: () => 0 })               → "default / 0%"
 //       resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     → "azul / 0%"
 type Configuracion = {
-  tema: { color: string } | null
-  obtenerDescuento: (() => number) | null
-}
+  tema: { color: string } | null;
+  obtenerDescuento: (() => number) | null;
+};
 export function resumenConfig(c: Configuracion): string {
-  const color = c.tema?.color ?? "default"
-  const descuento = c.obtenerDescuento?.() ?? 0
-  return `${color} / ${descuento}%`
+  const color = c.tema?.color ?? "default";
+  const descuento = c.obtenerDescuento?.() ?? 0;
+  return `${color} / ${descuento}%`;
 }
-resumenConfig({ tema: { color: "rojo" }, obtenerDescuento: () => 15 }) // "rojo / 15%"
-resumenConfig({ tema: null, obtenerDescuento: () => 0 })               // "default / 0%"
-resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     // "azul / 0%"
+resumenConfig({ tema: { color: "rojo" }, obtenerDescuento: () => 15 }); // "rojo / 15%"
+resumenConfig({ tema: null, obtenerDescuento: () => 0 }); // "default / 0%"
+resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null }); // "azul / 0%"
 
 /* =============================================================================
  * BLOQUE G — los DOS trabajos de `?.` y `??`, POR SEPARADO y luego juntos
@@ -502,7 +489,6 @@ resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     // "azul 
  *   ❌ Prohibido `any`, `as` y `if`. ❌ En G·1 NO uses `?.`. ❌ En G·2 NO uses `??`.
  * ===========================================================================*/
 
-
 /* ---------------------------------------------------------------------------
  * G·1 — SOLO `??` (el respaldo). El valor YA puede ser null por sí mismo, no hay
  * nada anidado que proteger → aquí `?.` no pinta nada. Usa únicamente `??`.
@@ -513,7 +499,7 @@ resumenConfig({ tema: { color: "azul" }, obtenerDescuento: null })     // "azul 
 //       saludoG("Nico") → "Nico" ; saludoG(null) → "invitado"
 export function saludoG(nombre: string | null): string {
   // Nombre es un string o es un null? Para eso usa `??`.
-  return nombre ?? "invitado"
+  return nombre ?? "invitado";
 }
 
 // G2) `cantidadG` — una cantidad que puede ser null. Devuélvela, o 0 si es null.
@@ -522,7 +508,7 @@ export function saludoG(nombre: string | null): string {
 //     rompería: 0 es falsy y lo pisaría.)
 //       cantidadG(7) → 7 ; cantidadG(0) → 0 ; cantidadG(null) → 0
 export function cantidadG(n: number | null): number {
-  return n ?? 0
+  return n ?? 0;
 }
 
 // G3) `textoG` — ahora lo que puede faltar viene como `undefined` (no null).
@@ -530,9 +516,8 @@ export function cantidadG(n: number | null): number {
 //     que null: son los dos únicos casos que dispara.
 //       textoG("hola") → "hola" ; textoG(undefined) → "(sin texto)"
 export function textoG(t: string | undefined): string {
-  return t ?? "(sin texto)"
+  return t ?? "(sin texto)";
 }
-
 
 /* ---------------------------------------------------------------------------
  * G·2 — SOLO `?.` (el acceso protegido), SIN `??`. Mira el tipo de RETORNO:
@@ -540,7 +525,7 @@ export function textoG(t: string | undefined): string {
  * `?.` corta, lo que sale de la función es, literalmente, `undefined`.
  * -------------------------------------------------------------------------- */
 
-type UsuarioG = { nombre: string }
+type UsuarioG = { nombre: string };
 
 // G4) `inicialG` — el usuario puede ser null. Devuelve su `nombre`... pero SIN
 //     respaldo. Si el usuario es null, `?.` corta y la función devuelve `undefined`
@@ -548,10 +533,10 @@ type UsuarioG = { nombre: string }
 //     el acceso y no rellena nada.
 //       inicialG({ nombre: "Ana" }) → "Ana" ; inicialG(null) → undefined
 export function inicialG(u: UsuarioG | null): string | undefined {
-  return u?.nombre
+  return u?.nombre;
 }
 
-type EnvioG = { envio: { ciudad: string } | null }
+type EnvioG = { envio: { ciudad: string } | null };
 // G5) `ciudadG` — dos eslabones que pueden ser null: el objeto entero y su `envio`.
 //     Encadena dos `?.` (uno por salto peligroso), todavía SIN `??`. Si cualquier
 //     eslabón corta → `undefined`.
@@ -559,9 +544,8 @@ type EnvioG = { envio: { ciudad: string } | null }
 //       ciudadG({ envio: null })               → undefined
 //       ciudadG(null)                          → undefined
 export function ciudadG(p: EnvioG | null): string | undefined {
-  return p?.envio?.ciudad
+  return p?.envio?.ciudad;
 }
-
 
 /* ---------------------------------------------------------------------------
  * G·3 — JUNTOS (el relevo). Son los GEMELOS de G4 y G5, pero ahora sí pones el
@@ -574,7 +558,7 @@ export function ciudadG(p: EnvioG | null): string | undefined {
 //     secas (ya nunca sale undefined).
 //       inicialODefaultG({ nombre: "Ana" }) → "Ana" ; inicialODefaultG(null) → "anónimo"
 export function inicialODefaultG(u: UsuarioG | null): string {
-  return u?.nombre ?? "anónimo"
+  return u?.nombre ?? "anónimo";
 }
 
 // G7) `ciudadODefaultG` — gemelo de G5 + respaldo. La cadena de `?.` puede cortar
@@ -584,5 +568,5 @@ export function inicialODefaultG(u: UsuarioG | null): string {
 //       ciudadODefaultG({ envio: null })               → "sin ciudad"
 //       ciudadODefaultG(null)                          → "sin ciudad"
 export function ciudadODefaultG(p: EnvioG | null): string {
-  return p?.envio?.ciudad ?? "sin ciudad"
+  return p?.envio?.ciudad ?? "sin ciudad";
 }

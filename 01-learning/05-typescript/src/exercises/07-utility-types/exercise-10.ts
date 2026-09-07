@@ -43,8 +43,7 @@
  *     pnpm test:run src/exercises/07-utility-types/exercise-10.test.ts
  * ===========================================================================*/
 
-
-type Borrador = { titulo?: string; cuerpo?: string; autor?: string }
+type Borrador = { titulo?: string; cuerpo?: string; autor?: string };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — `Required` en el PARÁMETRO: exigir el objeto COMPLETO
@@ -59,19 +58,18 @@ type Borrador = { titulo?: string; cuerpo?: string; autor?: string }
 //       que el test podría colar un borrador a medias) y el cuerpo (devuelve "").
 //      publicar({ titulo: "Hola", cuerpo: "texto", autor: "Ana" }) → "Hola por Ana"
 export function publicar(b: Required<Borrador>): string {
-  return `${b.titulo} por ${b.autor}`
+  return `${b.titulo} por ${b.autor}`;
 }
-publicar({ titulo: 'Hola', cuerpo: 'texto', autor: 'Ana' }) // return: "Hola por Ana"
+publicar({ titulo: "Hola", cuerpo: "texto", autor: "Ana" }); // return: "Hola por Ana"
 
-type Pedido = { producto?: string; cantidad?: number }
+type Pedido = { producto?: string; cantidad?: number };
 
 // 2) `confirmar` — refuerzo: recibe un pedido COMPLETO y devuelve el resumen.
 //      confirmar({ producto: "Té", cantidad: 3 }) → "3x Té"
 export function confirmar(p: Required<Pedido>): string {
-  return `${p.cantidad}x ${p.producto}`
+  return `${p.cantidad}x ${p.producto}`;
 }
-confirmar({ producto: 'Té', cantidad: 3 }) // return: "3x Té"
-
+confirmar({ producto: "Té", cantidad: 3 }); // return: "3x Té"
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — `Required` en el RETORNO: prometer que sale COMPLETO
@@ -87,15 +85,14 @@ confirmar({ producto: 'Té', cantidad: 3 }) // return: "3x Té"
 //      crearBorrador("Hola", "texto", "Ana")
 //        → { titulo: "Hola", cuerpo: "texto", autor: "Ana" }
 export function crearBorrador(titulo: string, cuerpo: string, autor: string): Required<Borrador> {
-  return { titulo, cuerpo, autor }
+  return { titulo, cuerpo, autor };
 }
 
 // 4) `crearPedido` — refuerzo: devuelve un pedido COMPLETO.
 //      crearPedido("Té", 3) → { producto: "Té", cantidad: 3 }
 export function crearPedido(producto: string, cantidad: number): Required<Pedido> {
-  return { producto, cantidad }
+  return { producto, cantidad };
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: de borrador a medias → completo (Partial-ish + defaults)
@@ -114,5 +111,9 @@ export function crearPedido(producto: string, cantidad: number): Required<Pedido
 //      completar({ titulo: "Mío" }, { titulo: "X", cuerpo: "C", autor: "A" })
 //        → { titulo: "Mío", cuerpo: "C", autor: "A" }
 export function completar(borrador: Borrador, defaults: Required<Borrador>): Required<Borrador> {
-  return { titulo: borrador.titulo ?? defaults.titulo, cuerpo: borrador.cuerpo ?? defaults.cuerpo, autor: borrador.autor ?? defaults.autor }
+  return {
+    titulo: borrador.titulo ?? defaults.titulo,
+    cuerpo: borrador.cuerpo ?? defaults.cuerpo,
+    autor: borrador.autor ?? defaults.autor,
+  };
 }

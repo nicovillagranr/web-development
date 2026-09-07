@@ -41,33 +41,33 @@
 // 1) `clavesDe` — las claves del objeto.
 //    clavesDe({ a: 1, b: 2 }) → ["a", "b"]
 export function clavesDe(obj: Record<string, number>): string[] {
-  return Object.keys(obj)
+  return Object.keys(obj);
 }
 // return: ["a", "b"]
-clavesDe({ a: 1, b: 2 })
+clavesDe({ a: 1, b: 2 });
 
 // 2) `valoresDe` — los valores del objeto.
 //    valoresDe({ a: 1, b: 2 }) → [1, 2]
 export function valoresDe(obj: Record<string, number>): number[] {
-  return Object.values(obj)
+  return Object.values(obj);
 }
 // return: [1, 2]
-valoresDe({ a: 1, b: 2 })
+valoresDe({ a: 1, b: 2 });
 
 /* --- BLOQUE B — values + reduce, y entries --- */
 
 // 3) `sumaDeValores` — la suma de todos los valores.
 //    sumaDeValores({ a: 1, b: 2, c: 3 }) → 6
 export function sumaDeValores(obj: Record<string, number>): number {
-  return Object.values(obj).reduce((acumulador, valor) => acumulador + valor, 0)
+  return Object.values(obj).reduce((acumulador, valor) => acumulador + valor, 0);
 }
 // return: 6
-sumaDeValores({ a: 1, b: 2, c: 3 })
+sumaDeValores({ a: 1, b: 2, c: 3 });
 
 // 4) `paresClaveValor` — los pares [clave, valor].
 //    paresClaveValor({ a: 1 }) → [["a", 1]]
 export function paresClaveValor(obj: Record<string, number>): [string, number][] {
-  return Object.entries(obj)
+  return Object.entries(obj);
 }
 
 /* --- BLOQUE C — CAPSTONE: entries + map + join --- */
@@ -75,7 +75,9 @@ export function paresClaveValor(obj: Record<string, number>): [string, number][]
 // 5) `describir` — "clave=valor" de cada par, unidos por ", ".
 //    describir({ a: 1, b: 2 }) → "a=1, b=2"
 export function describir(obj: Record<string, number>): string {
-  return Object.entries(obj).map(([clave, valor]) => `${clave}=${valor}`).join(", ")
+  return Object.entries(obj)
+    .map(([clave, valor]) => `${clave}=${valor}`)
+    .join(", ");
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -119,21 +121,21 @@ export function describir(obj: Record<string, number>): string {
 // R1) `laClave` — la clave de UNA entrada. Accede por POSICIÓN: la clave es la 0.
 //     laClave(["a", 1]) → "a"
 export function laClave(entrada: [string, number]): string {
-  return entrada[0]
+  return entrada[0];
 }
-laClave(["a", 1]) // "a"
+laClave(["a", 1]); // "a"
 
 // R2) `elValor` — el valor de UNA entrada. El valor es la posición 1.
 //     elValor(["a", 1]) → 1
 export function elValor(entrada: [string, number]): number {
-  return entrada[1]
+  return entrada[1];
 }
 
 // R3) `formatearConIndices` — "clave=valor", usando SOLO índices (nada de corchetes
 //     en el parámetro todavía). Es el cuerpo del drill 5, pero sin desempaquetar.
 //     formatearConIndices(["a", 1]) → "a=1"
 export function formatearConIndices(entrada: [string, number]): string {
-  return `${entrada[0]}=${entrada[1]}`
+  return `${entrada[0]}=${entrada[1]}`;
 }
 
 /* ── R2 — EL SALTO: desempaquetar EN EL PARÁMETRO ── */
@@ -144,9 +146,9 @@ export function formatearConIndices(entrada: [string, number]): string {
 //     En el cuerpo ya no hay índices: usas `clave` y `valor` por su nombre.
 //     formatearDesestructurando(["a", 1]) → "a=1"
 export function formatearDesestructurando([clave, valor]: [string, number]): string {
-  return `${clave}=${valor}`
+  return `${clave}=${valor}`;
 }
-formatearDesestructurando(["a", 1]) // "a=1"
+formatearDesestructurando(["a", 1]); // "a=1"
 
 /* ── R3 — ahora sí, dentro de map ── */
 
@@ -160,7 +162,9 @@ formatearDesestructurando(["a", 1]) // "a=1"
 //     (Pista: Object.entries → .map(...) → .join(", "))
 //     describirConIndices({ a: 1, b: 2 }) → "a=1, b=2"
 export function describirConIndices(obj: Record<string, number>): string {
-  return Object.entries(obj).map((entrada) => `${entrada[0]}=${entrada[1]}`).join(", ")
+  return Object.entries(obj)
+    .map((entrada) => `${entrada[0]}=${entrada[1]}`)
+    .join(", ");
 }
 
 // R6) `clavesConValorMinimo` — solo las CLAVES cuyo valor llega al mínimo.
@@ -170,7 +174,9 @@ export function describirConIndices(obj: Record<string, number>): string {
 //     Sí: puedes desempaquetar SOLO la primera pieza y olvidarte del resto.
 //     clavesConValorMinimo({ a: 1, b: 5, c: 9 }, 5) → ["b", "c"]
 export function clavesConValorMinimo(obj: Record<string, number>, minimo: number): string[] {
-  return Object.entries(obj).filter((entrada) => entrada[1] >= minimo).map(([clave]) => clave)
+  return Object.entries(obj)
+    .filter((entrada) => entrada[1] >= minimo)
+    .map(([clave]) => clave);
 }
 
 /* ── R4 — CAPSTONE: el drill 5, pero ordenado ── */
@@ -182,6 +188,9 @@ export function clavesConValorMinimo(obj: Record<string, number>, minimo: number
 //     dos a la vez. Empieza con índices si te enreda; lo importante es que salga.
 //     describirOrdenado({ a: 1, b: 9, c: 5 }) → "b=9, c=5, a=1"
 export function describirOrdenado(obj: Record<string, number>): string {
-  return Object.entries(obj).sort((a, b) => b[1] - a[1]).map(formatearConIndices).join(", ")
+  return Object.entries(obj)
+    .sort((a, b) => b[1] - a[1])
+    .map(formatearConIndices)
+    .join(", ");
 }
-describirOrdenado({ a: 1, b: 9, c: 5 }) // -> "b=9, c=5, a=1"
+describirOrdenado({ a: 1, b: 9, c: 5 }); // -> "b=9, c=5, a=1"

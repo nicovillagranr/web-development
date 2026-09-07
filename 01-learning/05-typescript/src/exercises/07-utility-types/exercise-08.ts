@@ -44,8 +44,7 @@
  *     pnpm test:run src/exercises/07-utility-types/exercise-08.test.ts
  * ===========================================================================*/
 
-
-type Usuario = { id: number; nombre: string; email: string; password: string }
+type Usuario = { id: number; nombre: string; email: string; password: string };
 
 /* ---------------------------------------------------------------------------
  * BLOQUE A — `Omit` en el PARÁMETRO: datos de ALTA (el servidor pone el id)
@@ -60,23 +59,22 @@ type Usuario = { id: number; nombre: string; email: string; password: string }
 //      crearUsuario({ nombre: "Ana", email: "a@a.com", password: "123" }, 1)
 //        → { id: 1, nombre: "Ana", email: "a@a.com", password: "123" }
 export function crearUsuario(datos: Omit<Usuario, "id">, id: number): Usuario {
-  return { id, ...datos }
+  return { id, ...datos };
 }
 // Al omitir id. Creamos un usuario con el id del parámetro de la función y los demás datos.
 // return: { id: 1, nombre: "Ana", email: "a@a.com", password: "123" }
-crearUsuario({ nombre: "Ana", email: "a@a.com", password: "123" }, 1)
+crearUsuario({ nombre: "Ana", email: "a@a.com", password: "123" }, 1);
 
-type Producto = { sku: string; nombre: string; precio: number; stock: number }
+type Producto = { sku: string; nombre: string; precio: number; stock: number };
 
 // 2) `crearProducto` — refuerzo: recibe los datos SIN sku, más el `sku` aparte.
 //      crearProducto({ nombre: "Té", precio: 1000, stock: 5 }, "TE-01")
 //        → { sku: "TE-01", nombre: "Té", precio: 1000, stock: 5 }
 export function crearProducto(datos: Omit<Producto, "sku">, sku: string): Producto {
-  return { sku, ...datos }
+  return { sku, ...datos };
 }
-crearProducto({ nombre: "Té", precio: 1000, stock: 5 }, "TE-01")
-crearProducto({ nombre: "Coca Cola", precio: 100, stock: 5 }, "CC-01")
-
+crearProducto({ nombre: "Té", precio: 1000, stock: 5 }, "TE-01");
+crearProducto({ nombre: "Coca Cola", precio: 100, stock: 5 }, "CC-01");
 
 /* ---------------------------------------------------------------------------
  * BLOQUE B — `Omit` en el RETORNO: devolver el objeto CENSURADO
@@ -93,18 +91,17 @@ crearProducto({ nombre: "Coca Cola", precio: 100, stock: 5 }, "CC-01")
 //      sinPassword({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
 //        → { id: 1, nombre: "Ana", email: "a@a.com" }
 export function sinPassword(u: Usuario): Omit<Usuario, "password"> {
-  return { id: u.id, nombre: u.nombre, email: u.email }
+  return { id: u.id, nombre: u.nombre, email: u.email };
 }
 // return: { id: 1, nombre: "Ana", email: "a@a.com" }
-sinPassword({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" })
+sinPassword({ id: 1, nombre: "Ana", email: "a@a.com", password: "123" });
 
 // 4) `productoVisible` — refuerzo: devuelve el Producto SIN `sku` (interno).
 //      productoVisible({ sku: "TE-01", nombre: "Té", precio: 1000, stock: 5 })
 //        → { nombre: "Té", precio: 1000, stock: 5 }
 export function productoVisible(p: Producto): Omit<Producto, "sku"> {
-  return { nombre: p.nombre, precio: p.precio, stock: p.stock }
+  return { nombre: p.nombre, precio: p.precio, stock: p.stock };
 }
-
 
 /* ---------------------------------------------------------------------------
  * BLOQUE C — CAPSTONE: registrar una LISTA de altas (Omit + map)
@@ -118,8 +115,11 @@ export function productoVisible(p: Producto): Omit<Producto, "sku"> {
 //      registrarUsuarios([{ nombre: "Ana", email: "a@a.com", password: "x" }])
 //        → [{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }]
 export function registrarUsuarios(altas: Omit<Usuario, "id">[]): Usuario[] {
-  return altas.map((usuario, i) => crearUsuario(usuario, i + 1))
+  return altas.map((usuario, i) => crearUsuario(usuario, i + 1));
 }
 // return: [{ id: 1, nombre: "Ana", email: "a@a.com", password: "x" }]
 // return: [{ id: 2, nombre: "Leo", email: "l@l.com", password: "y" }]
-registrarUsuarios([{ nombre: "Ana", email: "a@a.com", password: "x" }, { nombre: "Leo", email: "l@l.com", password: "y" },])
+registrarUsuarios([
+  { nombre: "Ana", email: "a@a.com", password: "x" },
+  { nombre: "Leo", email: "l@l.com", password: "y" },
+]);
