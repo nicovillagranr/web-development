@@ -1,0 +1,7 @@
+# Prettier se ocupa solo del código. El material escrito de este cuaderno
+# (la bitácora, la spec de autoría, las pistas) lleva formato deliberado.
+**/*.md
+
+dist
+node_modules
+pnpm-lock.yaml

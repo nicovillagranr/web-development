@@ -1,0 +1,10 @@
+{
+  // El repo manda sobre la config personal del editor: mismo formateador,
+  // misma versión y mismo printWidth en VS Code y en Cursor.
+  "editor.formatOnSave": true,
+  "prettier.prettierPath": "./node_modules/prettier",
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+}
