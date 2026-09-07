@@ -741,3 +741,138 @@ añadir un botón "Descartar", así que su concepto —el valor inicial comparti
 `useState` y el botón de limpiar— se va al capstone, donde limpiar el formulario después
 de enviar forma parte del componente real. Quedan 249 líneas: 19 por encima del techo
 nominal, dentro del rango que ya tiene el bloque (203-363).
+
+---
+
+## Sesión 6-7 sep 2026 — el `11` se resuelve hasta el drill 9
+
+El archivo llegó a la sesión **reescrito de 5 a 10 drills y sin commitear**, con el drill 1
+ya resuelto. La escalera nueva reparte: TEORÍA 1 → drills 1-3, TEORÍA 2 → 4-6 (funciones
+sueltas, sin React), TEORÍA 3 → 7-10. Se cerraron los drills 1 a 9. **El 10 se deja
+abierto a propósito** (ver abajo).
+
+### El mecanismo del `@ts-expect-error` funcionó como se diseñó
+
+El drill 2 se comportó exactamente como preveía la sesión anterior: con `campo: string`
+el test pasaba y la única señal era `TS2578` en el `.test.tsx`. Al poner `keyof Perfil`,
+la directiva pasó a tener trabajo y el error desapareció solo. Primera validación en
+vivo del mecanismo.
+
+Lo mismo con el encadenado 5 → 6 → 10: arreglar el hueco de `ChangeEvent<...>` en el
+drill 6 apagó **dos** errores, el suyo y el del 10, que llamaba a `datosDelCampo` y se
+comía el fallo de rebote.
+
+### Dos conceptos que el archivo no enseña y hubo que dar en el chat
+
+Ambos salieron de preguntas suyas, y los dos son huecos reales del material:
+
+- **Estrechamiento.** El drill 3 lo exige (el `switch` que convierte un `string` en
+  `keyof Perfil`) y no aparece en ninguna de las tres TEORÍAS. Se le preguntó por él tres
+  turnos seguidos antes de caer en que **nunca se lo habían explicado**; su respuesta fue
+  literal: *"No entiendo tus preguntas, las expresas mal"*. Tenía razón por partida doble.
+- **La forma funcional del setter** (`setPerfil((prev) => ...)`) y `e.target`. Es
+  material del bloque `11-useState-useReducer`, que aquí aparece de rebote.
+
+Se le ofreció dejarlos escritos como 📌 cortos en el archivo —no como TEORÍA 4, que
+reventaría el techo de densidad— y **prefirió dejarlo en el chat**. Queda anotado como
+deuda: quien monte el `12` decide si el estrechamiento entra allí.
+
+### Incidente: el drill 3 se borró y no había commit
+
+Editando las trace lines del drill 2 se llevó por delante la función entera del drill 3.
+`typecheck` lo cantó cinco veces (`TS2305` + 4× `TS2304`, uno por cada componente que la
+llamaba). **No era recuperable desde git** —se escribió después del último commit— y se
+repuso literal desde el contexto de la conversación. Recordatorio de que en este cuaderno
+el trabajo de una sesión vive sin red hasta que se commitea.
+
+### El patrón "cambia el molde", dos veces más
+
+| Drill | La pieza que no encajaba | Lo que hizo | Qué quedó sin usar |
+|---|---|---|---|
+| 3 | `campo` era `string` y `conCampoCambiado` pedía `keyof Perfil` | el `switch` con tres spreads a mano | `conCampoCambiado` |
+| 10 | los argumentos cambiados de orden: `(prev, value, name)` | reemplazar el manejador entero por el del 9 | `datosDelCampo` |
+
+Las dos versiones funcionan y las dos esquivan el mecanismo del drill. **El chivato nuevo,
+y es generalizable: una función propia que de pronto no la llama nadie.** En el 10 el
+arreglo real era intercambiar dos palabras.
+
+Por eso el **drill 10 no se da por cerrado pese a estar en verde**: su enunciado exige
+dos líneas y ambas llamadas a drills previos, y la versión actual lee `e.target` por su
+cuenta, con lo que es una copia literal del 9 y deja el drill 6 muerto.
+
+### Estado al cerrar
+
+**12/12 tests verdes y 0 errores de tipos en `exercise-11`** — pero con el drill 10 sin
+cumplir su restricción. Es, en sí mismo, el mejor ejemplo de la advertencia del propio
+`CLAUDE.md`: un test verde no basta, y aquí ni siquiera basta un typecheck limpio.
+
+También se rehízo el banco de pruebas de `src/App.tsx`: los campos van en blanco y las
+cajas de estado en negro con texto verde, para que se distinga de un vistazo lo que
+escribe él de lo que guarda el componente. Se sacó la leyenda fuera de las tarjetas, lo
+que eliminó los seis `!important` que hacían falta para que el `<p>` explicativo no se
+comiera los estilos de los `<p>` del ejercicio.
+
+## Sesión 7 sep 2026 — se cierra el `11` con el drill 10
+
+### El drill 10, al tercer intento
+
+Venía de la sesión anterior en verde pero sin cumplir su restricción: leía `e.target` por
+su cuenta y dejaba `datosDelCampo` sin una sola llamada. Hicieron falta tres pasadas:
+
+1. **Copia literal del 9.** El manejador entero repetido.
+2. **Tres líneas en vez de una.** Extrajo `e.target.name` y `e.target.value` a dos
+   constantes antes de llamar al drill 3. El defecto no se movió: seguía abriendo el
+   evento él. Aquí dijo *"No entiendo lo que quieres con el drill 10"* — y el enunciado
+   era mejorable, sí, pero lo que faltaba de verdad era el **para qué** del drill.
+3. **Delegando.** `const { name: nombre, value: valor } = datosDelCampo(e)`.
+
+Lo que lo desatascó no fue una pista del `.pistas.md`: fue **una regla comprobable a
+ojo** —"la `e` aparece una sola vez en el cuerpo, y como argumento de otra función"— y
+descubrir que el atasco real era mecánico y no conceptual: no sabía desarmar un objeto
+devuelto por una función y había chocado con `Property 'nombre' does not exist`. Se le
+enseñó con un ejemplo ajeno al drill (`medidasDe`) y lo escribió solo.
+
+**Eligió la variante de renombrar** (`name: nombre`), que es más larga que
+`const { name, value }`. Decisión suya y defendible: el resto del manejador está en
+castellano.
+
+### Sobre `prev`: decisión suya, registrada
+
+Quitó la forma funcional del setter en los drills 8, 9 y 10 —*"por un tema de
+entendimiento del código"*— y se quedó con `setPerfil(conCampoSiEsValido(perfil, ...))`.
+Es correcto para este archivo: campo controlado, una actualización por evento. Se le
+nombró el borde en lugar de discutirlo, y **el borde quedó escrito en el `.pistas.md`**
+(📌 al final del drill 10) en vez de morir en el chat, que fue el error de la sesión
+anterior con el estrechamiento:
+
+- dos `setPerfil` en el mismo evento → el segundo pisa al primero
+- actualizar tras un `await` o dentro de un `setTimeout`
+
+El drill 7 se quedó con `prev` y no se tocó: su estilo se ofrece, no se aplica.
+
+### La unión, explicada al revés
+
+Al preguntarle por qué un solo manejador sirve al `<textarea>` y a los dos `<input>`,
+contestó *"porque esas etiquetas HTML usan las mismas propiedades, value y name"*.
+Correcto. Se le dio la vuelta a la regla para que prediga en vez de describir: ante
+`A | B`, TypeScript solo deja tocar lo que existe **en los dos a la vez** — de ahí que
+`el.rows` y `el.checked` estén prohibidos, y de ahí que la unión deje de servir en cuanto
+necesites uno de ésos.
+
+### Pistas del drill 10, reescritas
+
+Describían el fallo del starter original (argumentos en orden cambiado) y él lo resolvió
+por otro camino, así que apuntaban a un código inexistente. **Segunda vez que pasa lo
+mismo**: cuando el alumno reemplaza el molde en vez de la pieza, las pistas de ese drill
+quedan huérfanas y hay que rehacerlas contra lo que acabó escribiendo. Su `Pista 3` ahora
+dice **por qué typecheck calla** y da el `grep` como señal, que es lo que realmente
+delata el fallo.
+
+### Estado al cerrar
+
+`exercise-11` **cerrado: 10/10**, 12/12 tests, 0 errores de tipos, lint limpio, sin `any`
+ni `as`. Con esto queda escrito el `handleChange` completo de su `ContactForm.jsx`, que
+es el destino declarado del archivo.
+
+**Deuda de autoría:** el archivo mide 415 líneas contra un techo de ~230, por meter tres
+TEORÍAS en uno solo. El `12` va partido en dos.
