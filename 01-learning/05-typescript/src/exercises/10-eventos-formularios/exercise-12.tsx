@@ -85,8 +85,10 @@ type Errores = { alias?: string; ciudad?: string; bio?: string };
 //    El starter arranca de un objeto vacío y le mete la clave después. Es
 //    literalmente lo que hace tu `07-Contact`.
 export function errorDeAlias(alias: string): Errores {
-  const errores = {};
-  if (alias === "") errores.alias = "El alias es obligatorio";
+  const errores: Errores = {};
+  if (alias === "") {
+    errores.alias = "El alias es obligatorio";
+  }
   return errores;
 }
 // errorDeAlias("") -> { alias: "El alias es obligatorio" }
@@ -97,11 +99,14 @@ export function errorDeAlias(alias: string): Errores {
 //    Tal como está, nadie le comprueba nada, así que el fallo que lleva dentro lo
 //    canta el test y no el compilador. Arréglalo de manera que la próxima errata
 //    se cante sola.
-export function errorDeCiudad(ciudad: string) {
-  return ciudad === "" ? { ciduad: "La ciudad es obligatoria" } : {};
+export function errorDeCiudad(ciudad: string): Errores {
+  if (ciudad === "") {
+    return { ciudad: "La ciudad es obligatoria" };
+  }
+  return {};
 }
-// errorDeCiudad("") -> { ciudad: "La ciudad es obligatoria" }
-// errorDeCiudad("Santiago") -> {}
+// errorDeCiudad("") -> { ciudad: "La ciudad es obligatoria" } -> Objeto con una clave, con error
+// errorDeCiudad("Santiago") -> {} -> Objeto vacío, sin claves, sin errores
 
 // 3) `errorDeBio` — la bio es opcional, pero si pasa de 60 caracteres devuelve
 //    `{ bio: "La bio no puede pasar de 60 caracteres" }`, y si no, un objeto sin
@@ -109,7 +114,10 @@ export function errorDeCiudad(ciudad: string) {
 //    Mira qué guarda la clave `bio` según el type. El starter mete ahí otra cosa
 //    que también responde a la pregunta, pero que no es lo que se pinta.
 export function errorDeBio(bio: string): Errores {
-  return { bio: bio.length > 60 };
+  if (bio.length > 60) {
+    return { bio: "La bio no puede pasar de 60 caracteres" };
+  }
+  return {};
 }
 // errorDeBio("hola") -> {}
 // errorDeBio("x".repeat(61)) -> { bio: "La bio no puede pasar de 60 caracteres" }
@@ -149,10 +157,11 @@ export function errorDeBio(bio: string): Errores {
 // 4) `hayErrores` — recibe un objeto de errores y responde si tiene alguno. Con
 //    `{}` es `false`; en cuanto haya una sola clave, `true`.
 export function hayErrores(errores: Errores): boolean {
-  return errores !== {};
+  return Object.keys(errores).length > 0;
 }
 // hayErrores({}) -> false
 // hayErrores({ alias: "x" }) -> true
+// hayErrores({ alias: "x", ciudad: "y" }) -> true -> Hay 2 errores ?
 
 // 5) `mensajeDe` — saca el mensaje de un campo concreto. Si ese campo no tiene
 //    error, devuelve texto vacío: quien la llama va a pintar eso en pantalla y no
@@ -160,18 +169,17 @@ export function hayErrores(errores: Errores): boolean {
 //    Lee el tipo de retorno y compáralo con lo que sale de leer una clave
 //    opcional. No son lo mismo, y el starter los trata como si lo fueran.
 export function mensajeDe(errores: Errores, campo: keyof Errores): string {
-  return errores[campo];
+  return errores[campo] || "";
 }
-// mensajeDe({ alias: "x" }, "alias") -> "x"
-// mensajeDe({}, "alias") -> ""
+// mensajeDe({ alias: "x" }, "alias") -> "x" -> La llave "alias" existe y tiene un mensaje
+// mensajeDe({}, "alias") -> "" -> La llave "alias" no existe, y devuelve texto vacío en vez de undefined
 
 // 6) `conError` — devuelve OTRO objeto de errores igual al que le das más la clave
 //    que le pidas. El que te pasan tiene que quedarse exactamente como estaba.
 //    Es la escalera del `11` otra vez; si el starter te suena, es porque ya
 //    arreglaste este mismo fallo allí.
 export function conError(errores: Errores, campo: keyof Errores, mensaje: string): Errores {
-  errores[campo] = mensaje;
-  return errores;
+  return { ...errores, [campo]: mensaje };
 }
 // conError({}, "bio", "muy larga") -> { bio: "muy larga" }
 // conError({ alias: "a" }, "bio", "muy larga") -> { alias: "a", bio: "muy larga" }
@@ -212,7 +220,10 @@ export function conError(errores: Errores, campo: keyof Errores, mensaje: string
 // 7) `enMayusculas` — recibe el mensaje de un campo, que puede no existir, y lo
 //    devuelve en mayúsculas. Si no hay mensaje, texto vacío.
 export function enMayusculas(mensaje: string | undefined): string {
-  return mensaje.toUpperCase();
+  if (mensaje !== undefined) {
+    return mensaje.toUpperCase();
+  }
+  return "";
 }
 // enMayusculas("uy") -> "UY"
 // enMayusculas(undefined) -> ""
@@ -221,33 +232,44 @@ export function enMayusculas(mensaje: string | undefined): string {
 //    objeto: `{}` si está bien, y una clave por cada campo que falle.
 //    Restricción: aquí no se vuelve a escribir ninguna de las tres reglas. Ya están
 //    escritas más arriba, una por drill, y esta función solo las junta.
+
 export function validar(perfil: Perfil): Errores {
-  return { ...errorDeAlias(perfil.alias) };
+  return {
+    ...errorDeAlias(perfil.alias),
+    ...errorDeCiudad(perfil.ciudad),
+    ...errorDeBio(perfil.bio),
+  };
 }
-// validar({ alias: "", ciudad: "", bio: "" }) -> { alias: "…", ciudad: "…" }
+// validar({ alias: "", ciudad: "", bio: "" }) -> { alias: "El alias es obligatorio", ciudad: "La ciudad es obligatoria" }
 // validar({ alias: "nico", ciudad: "Santiago", bio: "" }) -> {}
 
 // 9) `AliasConError` — un `<input>` con `aria-label="Alias"` y debajo el aviso de
 //    su error en un `<p role="alert">`, que solo existe cuando hay error. El estado
 //    son DOS cosas, cada una en su `useState`: el perfil y los errores. Al escribir
 //    se guarda el alias y se vuelve a validar ese campo con el drill 1.
-//    Arranca con alias "", ciudad "Santiago", bio "", y sin ningún error.
+//    Arranca con alias "", ciudad "", bio "", y sin ningún error.
 export function AliasConError() {
+  // Seteamos los valores iniciales del perfil
   const [perfil, setPerfil] = useState<Perfil>({
     alias: "",
-    ciudad: "Santiago",
+    ciudad: "",
     bio: "",
   });
-  const [errores, setErrores] = useState({});
+
+  // Seteamos los valores iniciales de los errores. Por ahora objeto vacío
+  const [errores, setErrores] = useState<Errores>({});
 
   const alEscribir = (e: ChangeEvent<HTMLInputElement>) => {
+    // Cuando el usuario escribe, actualizamos el perfil con el nuevo alias y validamos el alias
     setPerfil({ ...perfil, alias: e.target.value });
+    // En el mismo evento de escritura, validamos si el alias contiene texto o no y seteamos el error correspondiente
     setErrores(errorDeAlias(e.target.value));
   };
 
   return (
     <div>
-      <input aria-label="Alias" value={perfil.alias} onChange={alEscribir} />
+      <input placeholder="Alias" aria-label="Alias" value={perfil.alias} onChange={alEscribir} />
+      {/* Si lo que está a la izquierda de && se cumple, se renderiza lo de la derecha */}
       {errores.alias !== undefined && <p role="alert">{errores.alias}</p>}
     </div>
   );
@@ -260,6 +282,13 @@ export function AliasConError() {
 //     aviso solo existe si ese campo tiene error.
 //     Restricción: el envío son dos líneas —cortar el refresco del navegador y
 //     guardar lo que devuelva el drill 8— y los avisos se pintan con el drill 5.
+
+// export function mensajeDe(errores: Errores, campo: keyof Errores): string {
+// return errores[campo] || "";
+// }
+// mensajeDe({ alias: "x" }, "alias") -> "x"
+// mensajeDe({}, "alias") -> ""
+
 export function PerfilValidado() {
   const [perfil, setPerfil] = useState<Perfil>({
     alias: "",
@@ -279,12 +308,33 @@ export function PerfilValidado() {
 
   return (
     <form onSubmit={alEnviar}>
-      <input name="alias" aria-label="Alias" value={perfil.alias} onChange={alEscribir} />
-      <p role="alert">{mensajeDe(errores, "alias")}</p>
-      <input name="ciudad" aria-label="Ciudad" value={perfil.ciudad} onChange={alEscribir} />
-      <p role="alert">{mensajeDe(errores, "ciudad")}</p>
-      <textarea name="bio" aria-label="Bio" value={perfil.bio} onChange={alEscribir} />
-      <p role="alert">{mensajeDe(errores, "bio")}</p>
+      <input
+        placeholder="Alias"
+        name="alias"
+        aria-label="Alias"
+        value={perfil.alias}
+        onChange={alEscribir}
+      />
+      {/* Si lo que está a la izquierda de && se cumple, se renderiza lo de la derecha */}
+      {mensajeDe(errores, "alias") && <p role="alert">{mensajeDe(errores, "alias")}</p>}
+      <input
+        placeholder="Ciudad"
+        name="ciudad"
+        aria-label="Ciudad"
+        value={perfil.ciudad}
+        onChange={alEscribir}
+      />
+      {/* Si lo que está a la izquierda de && se cumple, se renderiza lo de la derecha */}
+      {mensajeDe(errores, "ciudad") && <p role="alert">{mensajeDe(errores, "ciudad")}</p>}
+      <textarea
+        placeholder="Bio"
+        name="bio"
+        aria-label="Bio"
+        value={perfil.bio}
+        onChange={alEscribir}
+      />
+      {/* Si lo que está a la izquierda de && se cumple, se renderiza lo de la derecha */}
+      {mensajeDe(errores, "bio") && <p role="alert">{mensajeDe(errores, "bio")}</p>}
       <button type="submit">Guardar</button>
     </form>
   );
