@@ -73,6 +73,28 @@
     background-color: var(--color-white);
   }
 
+  /* Las flechitas de `<input type="number">` las pinta el navegador, no tú: son un
+   * pseudo-elemento suyo, y por eso no hay forma de tocarlas desde el JSX sin
+   * ensuciar el ejercicio con clases que no enseñan nada. Se apagan aquí, para todo
+   * el cuaderno.
+   *
+   * Hacen falta las dos mitades porque cada motor las dibuja a su manera:
+   *   · `appearance: textfield` → Firefox, que trata el campo como uno de texto
+   *   · los dos `::-webkit-…-spin-button` → Chrome, Edge y Safari, donde las
+   *     flechitas son un pseudo-elemento aparte al que hay que apagarle el suyo
+   *
+   * Ojo con lo que esto NO cambia: el campo sigue siendo `type="number"` y sigue
+   * entregándote lo tecleado como texto en `e.target.value`. Se le quita la pinta
+   * de numérico, no la naturaleza. */
+  input[type="number"] {
+    appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
   /* El foco visible es lo primero que se lleva por delante un reset, y es justo
    * lo que necesita quien navega con teclado. */
   button:focus-visible,

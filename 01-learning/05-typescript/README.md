@@ -902,3 +902,68 @@ Dos cosas que el protocolo §8 cazó y conviene no repetir:
 **Deuda declarada, no disimulada:** 298 líneas contra el techo de ~230. Se recortaron
 las teorías hasta el mínimo; lo que no cabe son 10 drills con dos componentes React
 dentro. Las salidas son bajar a 8 o partirlo en 12+13, y la decisión es suya.
+
+## Sesión 8-9 sep 2026 — se cierra el `12` y se monta y se cierra el `12b`
+
+El `12` estaba escrito entero y sin registrar. Se verificó antes de tocar nada: **10/10
+drills, 12/12 tests, 0 errores de tipos, lint limpio, sin `any` ni `as`**. Con eso queda
+desactivado el `const errors = {}` de `07-Contact`, que era el destino declarado.
+
+### El `12b` — los mismos formularios, sin esqueleto
+
+La deuda del `12` era su tamaño, y la salida elegida fue partir: el `12b` son 3 drills
+con **cero teoría nueva** y los cuerpos EN BLANCO, no rotos. Cada drill son dos piezas,
+la función que decide y el componente que pinta, y se escriben las dos.
+
+Cerrado también: **12/12 tests y 0 errores de tipos en la carpeta**.
+
+### `value` en una casilla sí se lee; lo que pasa es que no cambia
+
+Al preguntarle por su ternario contestó *"no se puede acceder al valor de un checkbox"*.
+Es falso, y el fallo importa: `e.target.value` de una casilla existe, TypeScript no
+protesta y devuelve `"on"`, que sale de un atributo que el navegador rellena solo. El
+motivo real es otro: **dice siempre lo mismo, marcada o no**.
+
+Se corrigió con un `console.log` de una línea en su propio manejador y dos clics en el
+banco de pruebas. Lo vio él: `value` quieto en `"on"`, `checked` alternando.
+
+La segunda mitad de la pregunta cerró el arco del `11`. Allí el compilador le prohibía
+`checked` porque el hueco decía `HTMLInputElement | HTMLTextAreaElement`, y aquí lo deja
+porque dice `HTMLInputElement` a secas. Su respuesta, textual: *"0 errores, porque
+HTMLInputElement tiene checked siempre"*. De ahí salió la conclusión que da valor al
+drill: **el `type` es un atributo de tiempo de ejecución, no forma parte del tipo**, así
+que el compilador no estrecha con él y ese ternario es una comprobación para el
+navegador. `pnpm typecheck` da 0 errores si se la quita.
+
+### Tercera vez que aparece "cambia el molde"
+
+Pidió **"no ajustes el drill, ajusta los test"** por un mensaje que decía "contraseña"
+donde el test pedía "clave". Se le enseñó la cuenta en una tabla: 6 sitios decían clave
+—el `aria-label`, la clave del type, el enunciado, el recordatorio, las pistas y 5
+asertos— y 1 decía contraseña. Con la tabla delante eligió cambiar su palabra.
+
+Es el mismo patrón de las dos veces anteriores y la tabla volvió a ser lo que lo
+desactivó. La razón de fondo quedó dicha: aquí **el test es el enunciado escrito en
+código**, y ajustarlo al código lo convierte en un espejo que siempre estará verde.
+
+### Las flechitas del `type="number"`, fuera del ejercicio
+
+Había metido tres utilidades de Tailwind en el archivo de estudio para apagar las flechas
+del campo numérico. Se movieron a `App.css`, dentro de `@layer base`, para todo el
+cuaderno: son un pseudo-elemento del navegador y hacen falta las dos mitades, la de
+Firefox y la de los `::-webkit-…-spin-button`. La tarjeta del banco de pruebas decía
+"fíjate en las flechitas" y hubo que reescribirla, porque ya no las hay.
+
+### Estado al cerrar
+
+`exercise-12` y `exercise-12b` cerrados, 24 tests verdes entre los dos y 0 errores de
+tipos en toda la carpeta `10-eventos-formularios`.
+
+**Deuda declarada:**
+
+- La regla del arroba que añadió de más en el drill 1 **no tiene test**. Se le ofreció
+  fijarla y quedó pendiente de su palabra.
+- Sigue sin contestar qué tendría que teclear el usuario para que su `isNaN` del drill 2
+  se dispare.
+- Los tres componentes envuelven un solo `<form>` en `<>…</>`. Es estilo suyo y se ofreció
+  quitarlo, no se tocó.
