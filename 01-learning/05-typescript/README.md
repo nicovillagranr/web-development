@@ -967,3 +967,252 @@ tipos en toda la carpeta `10-eventos-formularios`.
   se dispare.
 - Los tres componentes envuelven un solo `<form>` en `<>…</>`. Es estilo suyo y se ofreció
   quitarlo, no se tocó.
+
+## Sesión 9 sep 2026 — se monta el `13`, el estado del envío
+
+Tercer archivo de la ampliación. **5 drills, montado y sin resolver**, con los dos
+bloques de teoría escritos después de fijar los starters, que es la regla que salió del
+`12`.
+
+El concepto es uno: **el estado del envío es una lista cerrada de tres textos**
+(`"idle" | "submitting" | "success"`, los mismos nombres que usa Projex). De ahí cuelgan
+el `async` en el manejador y las tres cosas que se pintan a partir del estado — el texto
+del botón, el aviso de éxito y el botón apagado.
+
+Reparto: `textoDelBoton` (función pura) · `PanelDeEstado` (el estado suelto, sin
+formulario) · `FormularioAviso` (el `async`/`await`) · `FormularioSinDobleEnvio` (el
+`disabled`) · `FormularioQueVuelveAIdle` (el aviso que caduca al teclear).
+
+### Los dos drills que salen de bugs abiertos de Projex
+
+No son ejemplos inventados. El `07-Contact` tiene hoy `useState("idle")` sin anotar, así
+que un `setStatus("sucess")` compila, se guarda y el mensaje de éxito no aparece nunca —
+ese es el drill 2. Y el botón "Enviar mensaje" vive en `ContactInfo`, atado por
+`form="contact-form"`, sin recibir el estado: sigue pulsable durante el segundo y medio
+del envío. Ese es el drill 4, y ahí es peor que aquí, porque desde donde está el botón no
+puede saber que hay un envío en marcha.
+
+### El `@ts-expect-error` en el test, segunda vez
+
+El drill 1 entrega la función con el parámetro en `string` y una errata dentro
+(`"submiting"`). Con el tipo ancho la errata es invisible: la comparación es legal y
+simplemente da `false` siempre. La única señal posible de un parámetro demasiado ancho es
+la del `11`: un `@ts-expect-error` en el `.test.tsx` sobre una llamada con un estado
+inventado. Si el parámetro sigue aceptando cualquier texto, la directiva sobra y
+`typecheck` canta `TS2578`.
+
+**Los drills 1 y 2 están encadenados a propósito:** el error de tipos del 2 solo aparece
+cuando el 1 está resuelto, porque hasta entonces `textoDelBoton` acepta cualquier cosa.
+Comprobado en las dos direcciones antes de dar el archivo por montado.
+
+### El paso 6 cazó una restricción sin señal
+
+El enunciado del drill 5 pedía que escribir **sin** haber enviado no cambiara nada, y eso
+no lo cazaba ningún test: un `setEstado("idle")` incondicional pasaba igual. Mismo defecto
+que el drill 2 del `12b`, donde la deuda se declaró en vez de arreglarse.
+
+Aquí sí se arregló, y el arreglo salió mejor que la restricción: se añadió un test que
+escribe **con el envío en marcha**. Un `setEstado("idle")` sin condición saca al
+formulario de `submitting` y el botón deja de decir "Enviando...". La restricción pasó de
+ser una promesa del enunciado a un comportamiento observable.
+
+### El banco de pruebas cambió de vestuario
+
+En el `12b` todos los `<p>` eran avisos de error y salían en rojo. En el `13` no hay ni un
+error de validación: hay un `<p role="status">` (verde, el aviso de éxito) y `<p>` grises
+que vuelcan el estado a pantalla. Se añadió también el estilo del `<button:disabled>`,
+que es el drill 4 entero — si no se ve apagarse, no se ve nada.
+
+Lo que hay que mirar aquí es el TIEMPO, no el texto, así que el envío finge tardar 200 ms
+en vez de los 1500 de Projex: suficiente para verlo, poco para no aburrir al test.
+
+### Estado al cerrar
+
+`exercise-13` montado, 11 tests, **7 en rojo cubriendo los 5 drills**. Typecheck limpio en
+la carpeta salvo el `TS2578` del drill 1, que es la señal esperada. Lint 0.
+
+**Deuda declarada:** 268 líneas contra el techo de ~230. Es el cuarto archivo seguido que
+lo revienta y aquí no es prosa, son los cuatro componentes React. Toca el `14`.
+
+---
+
+## Sesión 10-11 sep 2026 — se cierra el `13` entero y se le añade la escalera del 5
+
+Los cinco drills cerrados por él en una sesión, sin pedir ni una pista. Al final pidió
+reforzar el 5 con una escalera, y esa escalera queda montada y sin resolver.
+
+### Creía tenerlo resuelto porque el typecheck "no decía nada"
+
+Abrió la sesión afirmando que los drills estaban listos porque no le salía error de tipos.
+Salía uno, el `TS2578` del test del drill 1, y se le pasó por dos razones: vive en el
+archivo de test y no en el ejercicio, y llega sepultado entre los 35 errores de
+`00-vocabulario`, `09-react-props` y `11-useState-useReducer`, que son de otros archivos.
+Se le dio el filtro `pnpm typecheck 2>&1 | grep exercise-13` y con eso se desatascó solo el
+resto de la sesión.
+
+Debajo del despiste había el concepto de verdad: **un tipo demasiado ancho no puede dar
+error**, así que la única señal posible es del revés — una directiva `@ts-expect-error` que
+sobra. La ausencia de error no es prueba de nada cuando el tipo acepta cualquier cosa.
+
+### Defecto propio: el test del drill 1 se contradecía a sí mismo
+
+Su comentario decía "este test no comprueba nada al ejecutar, comprueba TIPOS" y la línea
+de abajo afirmaba `toBe("Enviar mensaje")`. Él resolvió el drill con un `switch` cuyo
+`default` devuelve cadena vacía, perfectamente válido, y el test se puso rojo por exigir un
+valor de runtime que el enunciado nunca pidió. Arreglado a
+`expect(typeof textoDelBoton("enviando")).toBe("string")`: se comprueba que compila mal y
+nada más. **Qué devuelve la función para un estado imposible es decisión suya.**
+
+De paso se comprobó aparte que con la unión de tres literales un `switch` exhaustivo no
+necesita `default` ni con `noImplicitReturns` puesto, y que el `default` es justo lo que
+haría callar al compilador el día que `EstadoEnvio` gane un cuarto estado. Se le dijo; no
+se le tocó el código.
+
+### Renombró un botón que el test buscaba por nombre accesible
+
+Cambió "Empezar" por "Enviar" en el `PanelDeEstado` y rompió el drill 2 ya cerrado. Quiso
+conservarlo, así que **se movió el molde y no la pieza**: el rename se propagó a los cuatro
+sitios que nombraban ese botón (test, enunciado, pista 3 y las dos líneas del banco de
+pruebas). Queda dicho que "Enviar" ahí promete un envío que ese panel no hace.
+
+### Mezcló las dos formas de esperar
+
+En el drill 3 resolvió con `.then()` en vez de `async`/`await`. Funciona y se le aprobó,
+pero en el 4 reescribió el manejador que ya venía hecho y le salió `await X.then(...)`, que
+es esperar dos veces lo mismo. Lo deshizo él. El archivo se queda con el 3 en `.then()` y
+el 4 y el 5 en `await`, sobre el mismo envío: la comparación vive dentro del archivo.
+
+Dos vocabularios corregidos: **el estado no es "del botón", es del componente** (en el 4 lo
+leen tres cosas a la vez), y **`enviarAlServidor()` no "finaliza" tarde** — la llamada
+termina al instante y lo que tarda es la promesa.
+
+### Su comentario del drill 4 vale más que el drill
+
+Escribió que si la promesa falla, la ejecución se corta en el `await`, la etapa 4 no ocurre
+y el botón se queda bloqueado para siempre. Es correcto y es el agujero real de Projex, que
+aquí no se ve porque el envío finge no fallar nunca. Se le corrigió solo que marcó esa
+etapa como síncrona: el repintado no ocurre en la línea del `setEstado`, ocurre cuando el
+manejador suelta el control, y quien lo suelta es el `await`.
+
+### Segundo defecto propio, y probablemente la causa de que el 5 le costara
+
+La `Solución` del drill 5 justificaba la guardia diciendo que estaba "para no repintar de
+más". **Eso es falso y además vacía el drill de sentido.** El `if` está para que el reset
+alcance solo al estado que tiene algo que caducar: sin él, teclear en mitad de un envío
+devuelve el formulario a `"idle"` y el botón deja de decir "Enviando...". Reescrito.
+
+### La escalera del 5 — montada, sin resolver
+
+A petición suya y dentro del mismo archivo, como manda su preferencia. Cuatro pasos que
+separan lo que el drill 5 hacía todo junto, diseñados para que **el escalón donde se
+tropiece sea el diagnóstico** — no hace falta que sepa nombrar su confusión antes de
+empezar:
+
+| Drill | Lo que aísla | Starter roto |
+|---|---|---|
+| `5a` `CampoQueSeMarca` | dos setters en un mismo evento | el marcado cuelga de `onBlur` |
+| `5b` `AvisoQueSeVa` | dónde vive el reset | no se apaga en ningún sitio |
+| `5c` `AvisoConEnvioLento` | por qué hace falta la guardia | el reset, suelto |
+| `5d` `BotonLimpiarProtegido` | la guardia desde otro evento | `alLimpiar` sin preguntar |
+
+El `5a` se rediseñó en el sitio: borrar la línea del `setTocado` dejaba la variable
+huérfana y salían `TS6133` y `no-unused-vars`, o sea el dedo señalando el fallo. Colgarlo
+de un `onBlur` lo mantiene usado, deja el lint en 0 y además el starter pasa a ser un error
+plausible — marcar "tocado" al salir del campo es un patrón real.
+
+El `5d` lleva una restricción que el test sí comprueba: la guardia va dentro del manejador
+y ese botón tiene que seguir pulsable, porque con un `disabled` el test pasaría por el
+motivo equivocado. La pista de la solución contrasta los dos casos: el `disabled` del 4
+está para **decirle al usuario** que no insista, la guardia del 5d para **proteger un
+estado**.
+
+### Estado al cerrar
+
+`exercise-13` con 9 drills. Drills 1-5 **resueltos por él**, escalera `5a`-`5d` montada y
+en rojo. 17 tests: 13 verdes, 4 rojos, uno por escalón. Typecheck y lint limpios en el
+archivo y en `App.tsx` — los 35 errores que quedan en el repo son de otras carpetas.
+
+Los cuatro escalones nuevos **no dan error de tipos**, y eso está dicho en el archivo y en
+las pistas: son puro comportamiento, la señal está solo en el test.
+
+**Deuda declarada:** 462 líneas contra el techo de ~230, el doble. La cabecera se mantuvo a
+44 líneas (techo 40, ya estaba en 44) trimando dos líneas para pagar las dos que se
+añadieron. El `14` **nace partido en dos**, no se discute.
+
+**Nota sobre el verificador:** `verificar.sh` solo reconoce drills con el patrón `N)`, así
+que no vio los `5a`-`5d` y contó 5 drills. Los pasos 5 y 6 y el techo de enunciados de esos
+cuatro se comprobaron a mano (5, 5, 6 y 6 líneas). Si se van a usar más sufijos de letra,
+toca tocarle el regex.
+
+---
+
+## Sesión 11 sep 2026 — la escalera del 5 se cierra y nace el `13b`
+
+### El `13`, terminado
+
+`5c` y `5d` resueltos por él, sin pistas. **17/17 verdes**, typecheck y lint limpios en el
+archivo. Los nueve drills del `13` los sacó sin pedir una sola pista en ningún escalón.
+
+En el `5c` eligió `estado !== "submitting"` en vez de `estado === "success"`; las dos pasan
+el test y la suya además deja el reset activo en `idle`, donde no hace daño. En el `5d`
+puso la guardia dentro de `alLimpiar`, que era el punto del drill.
+
+### Lo que pasó después, y que vale más que el archivo
+
+Añadió un `disabled` al botón "Limpiar" del `5d` "porque le pareció que iba con el
+enunciado", y el test se puso rojo. Al revisarlo dijo la frase que abrió la sesión:
+**"terminé el archivo más confundido que aclarado"**.
+
+Diagnóstico, y el defecto es del material:
+
+- El `13` usa `disabled` en el drill 4 y lo prohíbe en el `5d` **sin explicar el cambio en
+  ningún sitio**. El contraste estaba pensado a propósito, pero solo vivía en la pista de
+  la solución y en el README, no en el archivo.
+- Peor: en un formulario de producción se ponen **los dos**. Su instinto era correcto y el
+  material le dijo que no.
+- Y el `13` mete tres conceptos grandes —unión de literales, `async`/`await`, guardias—
+  contra el criterio de un concepto por archivo.
+
+**Regla que queda: una restricción que solo existe para forzar el aprendizaje tiene que
+decir que es eso.** Si el enunciado prohíbe algo que en el mundo real se hace, y no lo
+explica, el alumno aprende la regla equivocada aunque apruebe el test.
+
+### El `13b`, montado — repetición pura sobre un solo hilo
+
+Lo pidió él, y pidió que fuera el `14`; se renombró a `13b` porque el `14` ya es el
+capstone. Precedente del `12b`: refuerzo sin teoría nueva. **Un solo hilo: el envío que
+tarda.**
+
+| Drill | Qué aísla | Starter roto |
+|---|---|---|
+| `1` `bloqueaElBoton` | traducir el momento a un booleano | `estado !== "idle"`, bloquea también al volver |
+| `2` `puedeLimpiar` | la misma pregunta, dada la vuelta | `estado === "idle"`, deja fuera `success` |
+| `3` `ContadorQueSigueVivo` | qué corre antes del `await` y qué después | el recuento sube antes de esperar |
+| `4` `EnvioConBotonApagado` | el freno que avisa al usuario | apaga el botón en `success` |
+| `5` `LimpiarDesdeDosSitios` | el freno que protege la operación | `disabled` en el botón y nada más |
+
+**El drill 5 es el que arregla la deuda del `5d`.** La misma operación se alcanza por dos
+caminos, el botón y la tecla Escape dentro del campo, así que apagar el botón deja el
+segundo abierto. Aquí **no se prohíbe el `disabled`**: se puede dejar puesto y el test pasa
+igual. La diferencia entre los dos frenos deja de ser una regla impuesta y pasa a ser algo
+que él comprueba. La tabla de las dos columnas vive en la solución del drill 5.
+
+El `3` lleva un botón "+1" ya escrito y marcado como intocable: es la demostración de que
+`await` pausa **esa función**, no la página. Engancha con el vocabulario que hay que
+seguir vigilando — dice "la función finaliza" cuando lo que termina es la promesa.
+
+### Estado al cerrar
+
+`exercise-13b` con 5 drills, montado y sin resolver: **que empiece por el `1`**. 9 tests,
+6 en rojo cubriendo los cinco drills, 0 errores de tipos y 0 de lint en el archivo y en
+`App.tsx`. Los 36 errores que quedan en el repo son de otras carpetas.
+
+**199 líneas contra el techo de ~230:** primer archivo en cinco que no lo revienta. Lo que
+lo hizo caber fue que dos de los cinco drills son funciones puras, exactamente la salida
+que el `12` había dejado anotada.
+
+Ninguno de los cinco starters da error de tipos, y la cabecera lo dice: toda la señal está
+en el test. Las tres piezas que pintan algo están montadas en el `App.tsx`.
+
+**Pendiente:** el enunciado del `5d` del `13` sigue sin decir por qué prohíbe el
+`disabled`. Ofrecido y no confirmado todavía.

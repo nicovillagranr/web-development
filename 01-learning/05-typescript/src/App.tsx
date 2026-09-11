@@ -1,32 +1,28 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
 import {
-  Login,
-  AltaProducto,
-  AltaConTerminos,
-} from "./exercises/10-eventos-formularios/exercise-12b";
+  ContadorQueSigueVivo,
+  EnvioConBotonApagado,
+  LimpiarDesdeDosSitios,
+} from "./exercises/10-eventos-formularios/exercise-13b";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y las tarjetas de abajo al cambiar de archivo
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: `exercise-12b`, sus tres formularios. Cada drill de ese archivo son dos
- * piezas —la función que decide y el componente que pinta—; aquí solo se ve la segunda.
- * La función se comprueba con `pnpm test:run`.
+ * Ahora mismo: `exercise-13b`, el mismo envío mirado despacio. Solo salen 3 de sus 5
+ * drills: los dos primeros (`bloqueaElBoton` y `puedeLimpiar`) son funciones sueltas sin
+ * JSX, y los tres de aquí las llaman. Mientras esas dos estén mal, lo que veas abajo va a
+ * estar mal aunque el componente esté bien escrito.
  *
- * LA IDEA DE LOS ESTILOS: en este archivo cada drill pinta dos clases de cosa, y
- * aquí se visten distinto a propósito para que no se confundan.
- *   · campo OSCURO → lo escribes tú; es lo que el navegador tiene en pantalla
- *   · caja ROJA    → un `<p role="alert">`: un aviso de error que el componente
- *                    ha decidido pintar
- * Ojo con lo segundo, porque es el ejercicio entero: cuando un campo está bien, ahí
- * no debe haber NADA. Una caja roja vacía no es "un aviso apagado", es un aviso que
- * existe sin mensaje — y eso es justo lo que el test cuenta y lo que un lector de
- * pantalla anuncia. El hueco vacío ES la señal de que está bien.
- *
- * (En otros archivos el `<p>` se usa para volcar el estado y va en negro. Aquí no:
- * todos los `<p>` de este archivo son avisos.)
+ * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es el TIEMPO, no el texto. El envío
+ * finge tardar 200 ms, así que lo interesante pasa entre que sueltas el clic y vuelve la
+ * respuesta — es un parpadeo, hay que estar mirando.
+ *   · campo OSCURO  → lo escribes tú
+ *   · caja GRIS     → un `<p>` normal, aquí usado para volcar un recuento a pantalla
+ *   · botón APAGADO → un `<button disabled>`: el navegador no le pasa el clic a nadie
+ * Los `<p>` grises son un chivato para que veas los recuentos, no parte del formulario.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -40,7 +36,7 @@ const CHIP: Record<Estado, { texto: string; clase: string }> = {
 };
 
 type TarjetaProps = {
-  n: number;
+  n: number | string;
   nombre: string;
   /* qué tiene que pasar cuando el drill está bien */
   mirar: string;
@@ -81,35 +77,33 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
        *   [&_form]                 → estos drills meten todo dentro de un <form>, y un
        *                              <form> no hereda el flex-col de este div: sin
        *                              esto sus inputs fluyen en línea y se solapan
-       *   [&_input] / [&_textarea] → campos editables, lo que escribes tú
-       *   [&_input[type=checkbox]] → excepción: una casilla con w-64 sería una barra
-       *   [&_p]                    → cajas rojas; aquí todo <p> es un role="alert"
-       *   [&_button]               → el de enviar, que los ejercicios dejan sin vestir
-       * El margen negativo de los <p> los pega a SU campo, para que se vea de quién
-       * es cada aviso y no parezcan una lista suelta al final. */}
+       *   [&_input]                → campos editables, lo que escribes tú
+       *   [&_p]                    → chivato gris: el estado volcado a pantalla
+       *   [&_p[role=status]]       → el aviso de éxito, que solo existe si el envío
+       *                              terminó bien; gana al gris por ir después
+       *   [&_button:disabled]      → el botón apagado durante el envío. Es el drill 4
+       *                              entero: si no se apaga, no se nota nada */}
       <div
         className="flex scheme-dark flex-col items-start gap-3 bg-slate-950/40 px-5 py-5
           [&_form]:flex [&_form]:flex-col [&_form]:items-start [&_form]:gap-3
+          [&_div]:flex [&_div]:flex-col [&_div]:items-start [&_div]:gap-3
           [&_input]:w-64 [&_input]:rounded-md [&_input]:border [&_input]:border-slate-700
           [&_input]:bg-slate-800 [&_input]:px-3 [&_input]:py-2 [&_input]:text-sm
           [&_input]:text-slate-100 [&_input]:shadow-none [&_input]:outline-none
           [&_input::placeholder]:text-slate-500
           [&_input:focus]:border-sky-500 [&_input:focus]:ring-2 [&_input:focus]:ring-sky-500/30
-          [&_textarea]:h-16 [&_textarea]:w-64 [&_textarea]:rounded-md
-          [&_textarea]:border [&_textarea]:border-slate-700 [&_textarea]:bg-slate-800
-          [&_textarea]:px-3 [&_textarea]:py-2 [&_textarea]:text-sm
-          [&_textarea]:text-slate-100 [&_textarea]:shadow-none [&_textarea]:outline-none
-          [&_textarea::placeholder]:text-slate-500
-          [&_textarea:focus]:border-sky-500 [&_textarea:focus]:ring-2 [&_textarea:focus]:ring-sky-500/30
-          [&_input[type=checkbox]]:h-4 [&_input[type=checkbox]]:w-4
-          [&_input[type=checkbox]]:bg-transparent [&_input[type=checkbox]]:accent-sky-500
-          [&_p]:-mt-2 [&_p]:min-h-8 [&_p]:w-64 [&_p]:rounded-md [&_p]:border
-          [&_p]:border-red-900/70 [&_p]:bg-red-950/50 [&_p]:px-3 [&_p]:py-1.5
-          [&_p]:text-xs [&_p]:font-medium [&_p]:text-red-300
+          [&_p]:w-64 [&_p]:rounded-md [&_p]:border [&_p]:border-slate-700
+          [&_p]:bg-slate-800/60 [&_p]:px-3 [&_p]:py-1.5 [&_p]:font-mono [&_p]:text-xs
+          [&_p]:text-slate-300
+          [&_p[role=status]]:border-emerald-900/70 [&_p[role=status]]:bg-emerald-950/50
+          [&_p[role=status]]:font-sans [&_p[role=status]]:font-medium
+          [&_p[role=status]]:text-emerald-300
           [&_button]:mt-1 [&_button]:cursor-pointer [&_button]:rounded-md
           [&_button]:border-transparent [&_button]:bg-sky-600 [&_button]:px-4
           [&_button]:py-2 [&_button]:text-sm [&_button]:font-medium [&_button]:text-white
-          [&_button:hover]:bg-sky-500"
+          [&_button:hover]:bg-sky-500
+          [&_button:disabled]:cursor-not-allowed [&_button:disabled]:bg-slate-700
+          [&_button:disabled]:text-slate-400 [&_button:disabled]:hover:bg-slate-700"
       >
         {children}
       </div>
@@ -127,11 +121,15 @@ function Leyenda() {
         lo escribes tú
       </span>
       <span className="flex items-center gap-2">
-        <span className="h-5 w-10 rounded border border-red-900/70 bg-red-950/50" />
-        un aviso de error que el componente decidió pintar
+        <span className="h-5 w-10 rounded border border-slate-700 bg-slate-800/60" />
+        un recuento, volcado a pantalla
+      </span>
+      <span className="flex items-center gap-2">
+        <span className="h-5 w-10 rounded border border-transparent bg-slate-700" />
+        un botón apagado
       </span>
       <span className="text-slate-500">
-        · si el campo está bien, ahí no debe haber nada — ni una caja roja vacía
+        · el envío finge tardar 200 ms — lo que hay que mirar dura ese parpadeo
       </span>
     </div>
   );
@@ -145,50 +143,45 @@ function App() {
           Aprendiendo TypeScript + React + Arquitectura de Software
         </h1>
         <p className="mb-6 border-b border-slate-800 pb-6 text-sm text-slate-400">
-          <span className="font-mono text-slate-300">exercise-12b</span> · los mismos formularios,
-          sin esqueleto — drills 1, 2 y 3
+          <span className="font-mono text-slate-300">exercise-13b</span> · el mismo envío, mirado
+          despacio — los tres drills que pintan algo
         </p>
 
         <Leyenda />
 
         <Tarjeta
-          n={1}
-          nombre="Login"
-          estado="casi"
-          mirar="Escribe un email y fíjate en que no pasa nada hasta pulsar Entrar. Pruébalo con la clave en 7 caracteres y luego en 8. Y escribe 'nico' sin arroba: el aviso que sale es distinto del de campo vacío, porque son dos fallos distintos."
-          campos="Email · Clave · botón Entrar"
-        >
-          <Login />
-        </Tarjeta>
-
-        <Tarjeta
-          n={2}
-          nombre="AltaProducto"
-          estado="casi"
-          mirar="El campo Precio es type='number' y aun así te entrega lo tecleado como texto. Sus flechitas están apagadas para todo el cuaderno desde App.css, así que lo numérico ya no se ve: se comprueba tecleando. Pulsa Crear con el precio en blanco: tiene que salir el mismo aviso que si escribieras un 0."
-          campos="Nombre · Precio (numérico) · botón Crear"
-        >
-          <AltaProducto />
-        </Tarjeta>
-
-        <Tarjeta
           n={3}
-          nombre="AltaConTerminos"
-          estado="casi"
-          mirar="La casilla tiene que poder marcarse y desmarcarse al hacer clic — si al montarla se queda clavada, es que la estás atando con el atributo de los campos de texto. Pulsa Registrarme sin marcarla y sale su aviso."
-          campos="Nombre · casilla Acepto los términos · botón Registrarme"
+          nombre="ContadorQueSigueVivo"
+          mirar="Escribe algo y pulsa Enviar. Durante el parpadeo, 'Enviados' tiene que seguir en 0: si ya marca 1, está cantando un envío que todavía no ha vuelto. Y mientras esperas, dale al +1 varias veces — ese recuento sí sube, porque la página no se ha congelado."
+          campos="campo Comentario · botón de enviar · recuento de envíos · botón +1 · recuento de clics"
         >
-          <AltaConTerminos />
+          <ContadorQueSigueVivo />
+        </Tarjeta>
+
+        <Tarjeta
+          n={4}
+          nombre="EnvioConBotonApagado"
+          mirar="El botón tiene que apagarse durante el parpadeo del envío y volver a encenderse al terminar. Con el starter pasa justo lo contrario: sigue pulsable mientras esperas y se queda apagado cuando vuelve, así que no puedes mandar un segundo comentario."
+          campos="campo Comentario · botón que se apaga mientras dura el envío"
+        >
+          <EnvioConBotonApagado />
+        </Tarjeta>
+
+        <Tarjeta
+          n={5}
+          nombre="LimpiarDesdeDosSitios"
+          mirar="Hay dos maneras de vaciar el campo: el botón 'Limpiar' y la tecla Escape dentro del campo. Con el formulario quieto las dos tienen que funcionar. Ahora pulsa enviar y prueba las dos durante el parpadeo: el texto tiene que quedarse donde está por los dos caminos."
+          campos="campo Comentario, que también escucha la tecla Escape · botón de enviar · botón 'Limpiar'"
+        >
+          <LimpiarDesdeDosSitios />
         </Tarjeta>
 
         <p className="mt-8 rounded-lg border border-slate-800 bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-400">
-          De cada drill aquí solo se ve la mitad. La otra —
-          <code className="font-mono text-slate-300">validarCredenciales</code>,{" "}
-          <code className="font-mono text-slate-300">validarProducto</code> y{" "}
-          <code className="font-mono text-slate-300">validarAlta</code>— son funciones sin JSX y no
-          tienen nada que pintar: su señal está en{" "}
-          <code className="font-mono text-slate-300">pnpm test:run</code>. Empieza por ellas, que se
-          prueban sin montar nada.
+          Los drills 1 y 2 no están aquí porque no hay nada que ver:{" "}
+          <code className="font-mono text-slate-300">bloqueaElBoton</code> y{" "}
+          <code className="font-mono text-slate-300">puedeLimpiar</code> son funciones sueltas, sin
+          JSX. Empieza por ellas igualmente — los tres componentes de arriba les preguntan, así que
+          mientras estén mal ninguno se va a comportar como debe.
         </p>
       </div>
     </main>
