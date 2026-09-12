@@ -61,10 +61,12 @@ function enviarAlServidor(): Promise<void> {
 //    o no.
 export function bloqueaElBoton(estado: EstadoEnvio): boolean {
   switch (estado) {
+    // En caso de que el estado sea "submitting", bloquea el botón devolviendo true
     case "submitting":
       return true;
+
+    // En caso de que el estado sea "idle" o "success", no bloquea el botón devolviendo false
     case "idle":
-      return false;
     case "success":
       return false;
   }
@@ -77,12 +79,21 @@ export function bloqueaElBoton(estado: EstadoEnvio): boolean {
 //    deja el formulario contando dos cosas que no encajan, y con el campo ya vacío no
 //    hay nada que vaciar. Responde si en ese momento limpiar tiene sentido.
 export function puedeLimpiar(estado: EstadoEnvio, comentario: string): boolean {
-  return estado === "idle" && comentario !== "";
+  switch (estado) {
+    // En caso de que el estado sea "submitting", no puede limpiar devolviendo false
+    case "submitting":
+      return false;
+
+    // En case de que el estado sea "idle" o "success", puede limpiar si el comentario no está vacío
+    case "idle":
+    case "success":
+      return comentario !== "";
+  }
 }
 // puedeLimpiar("idle", "hola") -> true
 // puedeLimpiar("submitting", "hola") -> false
 // puedeLimpiar("idle", "") -> false
-// puedeLimpiar("success", "Hola") -> false
+// puedeLimpiar("success", "Hola") -> true
 
 // 3) `ContadorQueSigueVivo` — mientras esperas al servidor la página no se congela, y el
 //    usuario puede seguir pulsando: el botón "+1" y su recuento están ahí para que lo
@@ -100,11 +111,20 @@ export function ContadorQueSigueVivo() {
   };
 
   const alEnviar = async (e: FormEvent<HTMLFormElement>) => {
+    // Mientras ocurre el envío, e.preventDefault() evita que la página se recargue y resetee el formulario
     e.preventDefault();
+
+    // Cambia el estado a "submitting" para indicar que el envío está en curso
     setEstado("submitting");
-    setEnviados((n) => n + 1);
+
+    // Espera a que la función enviarAlServidor() termine antes de continuar
     await enviarAlServidor();
+
+    // Una vez terminada enviarAlServidor(), cambia el estado a "success" para indicar que el envío fue exitoso
     setEstado("success");
+
+    // Incrementa el contador de enviados después de que el envío haya terminado
+    setEnviados((n) => n + 1);
   };
 
   return (
@@ -143,7 +163,7 @@ export function EnvioConBotonApagado() {
   return (
     <form onSubmit={alEnviar}>
       <input type="text" aria-label="Comentario" value={comentario} onChange={alEscribir} />
-      <button type="submit" disabled={estado === "success"}>
+      <button type="submit" disabled={bloqueaElBoton(estado)}>
         {estado === "submitting" ? "Enviando..." : "Enviar"}
       </button>
     </form>
@@ -166,7 +186,9 @@ export function LimpiarDesdeDosSitios() {
   };
 
   const alLimpiar = () => {
-    setComentario("");
+    if (puedeLimpiar(estado, comentario)) {
+      setComentario("");
+    }
   };
 
   const alPulsarTecla = (e: KeyboardEvent<HTMLInputElement>) => {

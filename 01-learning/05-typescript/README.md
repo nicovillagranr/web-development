@@ -1201,11 +1201,11 @@ El `3` lleva un botón "+1" ya escrito y marcado como intocable: es la demostrac
 `await` pausa **esa función**, no la página. Engancha con el vocabulario que hay que
 seguir vigilando — dice "la función finaliza" cuando lo que termina es la promesa.
 
-### Estado al cerrar
+### El `13b` al montarlo
 
-`exercise-13b` con 5 drills, montado y sin resolver: **que empiece por el `1`**. 9 tests,
-6 en rojo cubriendo los cinco drills, 0 errores de tipos y 0 de lint en el archivo y en
-`App.tsx`. Los 36 errores que quedan en el repo son de otras carpetas.
+`exercise-13b` con 5 drills, montado y sin resolver. 9 tests, 6 en rojo cubriendo los
+cinco drills, 0 errores de tipos y 0 de lint en el archivo y en `App.tsx`. Los 36 errores
+que quedan en el repo son de otras carpetas.
 
 **199 líneas contra el techo de ~230:** primer archivo en cinco que no lo revienta. Lo que
 lo hizo caber fue que dos de los cinco drills son funciones puras, exactamente la salida
@@ -1216,3 +1216,67 @@ en el test. Las tres piezas que pintan algo están montadas en el `App.tsx`.
 
 **Pendiente:** el enunciado del `5d` del `13` sigue sin decir por qué prohíbe el
 `disabled`. Ofrecido y no confirmado todavía.
+
+### El `13b`, resuelto el mismo día
+
+**9/9, los cinco drills sin pedir una sola pista.** Typecheck y lint limpios. Van dos
+archivos seguidos que cierra sin abrir el `.pistas.md`.
+
+**Lo que sacó él solo, y es lo mejor de la sesión.** Resolvió los drills 1 y 2 con un
+`switch` sin `default`, agrupando `case "idle": case "success":`. Vino a contarlo como
+*"se pueden anidar condiciones en los switch"* — el nombre es otro (son casos agrupados,
+la caída de un `case` al siguiente), pero el hallazgo de fondo es más gordo de lo que él
+creía: **sin `default`, el compilador comprueba exhaustividad**. Lo verificó él añadiendo
+`| "error"` al tipo y viendo saltar el error en `bloqueaElBoton`.
+
+De ahí salió el concepto que se llevó de la sesión, y lo formuló él:
+
+> Cuando el sistema es 100% mío no necesito `default`. Cuando dependo de piezas externas
+> debo ponerlo porque no sé qué me va a llegar.
+
+Corregido en dos puntos: el `default` no se omite porque uno se sepa la lista, sino
+**porque no te fías de tu yo de dentro de seis meses**; y el disparador no es "datos
+externos" en general sino **el punto por donde el dato entra al sistema**. Validar en el
+borde, confiar en el interior. Es el contenido del bloque `13-fetch-tipado`, y ya tiene el
+gancho puesto.
+
+**El patrón de siempre, quinta aparición.** En el drill 4 arregló el comportamiento
+escribiendo `estado === "submitting"` a mano, cuando el enunciado pedía preguntarle a
+`bloqueaElBoton`. Test verde y la mitad mecánica sin hacer: [[feedback_responde_porque_salta_campo]]
+y [[feedback_cambia_el_molde]] a la vez. Se corrigió en un turno en cuanto se le enseñó que
+la regla quedaba escrita en dos sitios del mismo archivo.
+
+**Defecto suyo cazado leyendo, no ejecutando:** una trace line del drill 2 afirmaba
+`puedeLimpiar("success", "Hola") -> false` cuando su propia función devuelve `true`. Desliz
+al escribir el comentario, corregido por él. Queda la regla: **un comentario que miente
+hace más daño en tres meses que un test rojo hoy**, y ninguna herramienta lo caza.
+
+**Su guardia del drill 5 es el `if` positivo**, no el `return` temprano de la solución de
+referencia. Las dos valen y no se le tocó. Y dejó el `disabled` puesto junto a la guardia,
+que es exactamente lo de producción y lo que el `5d` del `13` no le dejó ver.
+
+### Dos defectos del material corregidos sobre la marcha
+
+**El test dependía de un tiempo fijo.** Subió el retardo del envío fingido a 1 s para poder
+verlo en el navegador, y eso dejaba en rojo un test que esperaba 400 ms. El arreglo no es
+subir el número: el helper ahora espera a que **cambie la pantalla**, no a que pase un
+tiempo. Regla que queda: **un test de algo asíncrono no espera relojes, espera efectos.**
+
+**`FormEvent` está obsoleto.** En `@types/react` 19.2.14 lleva `@deprecated` con el texto
+*"FormEvent doesn't actually exist"*, y `onSubmit` pide ya `SubmitEventHandler<T>`. Afecta
+a cinco archivos del bloque (`08`, `12`, `12b`, `13`, `13b`) y a sus pistas. No rompe el
+`typecheck`, pero el cuaderno está enseñando un tipo muerto y eso se arrastra a la
+migración de Projex. **Sin tocar, pendiente de su palabra.**
+
+### Estado al cerrar
+
+`exercise-13` y `exercise-13b` cerrados enteros, 26 tests entre los dos. El bloque 10 suma
+14 archivos. Lo siguiente del plan es el `14`, el capstone, que nace partido en dos.
+
+**Pendiente pedido por él:** reforzar el drill 5 del `13b`, la guardia dentro del manejador,
+**en la sesión siguiente**. Ojo con el diagnóstico: no lo pide porque falle —lo resolvió a
+la primera y sin pistas— sino para que le quede fijado. La forma que funciona es la del
+`12b`: repetición pura, sin teoría nueva, la misma operación alcanzada por varios caminos.
+
+**Los otros dos pendientes siguen abiertos:** el enunciado del `5d` del `13` y lo del
+`FormEvent`.
