@@ -1280,3 +1280,141 @@ la primera y sin pistas— sino para que le quede fijado. La forma que funciona 
 
 **Los otros dos pendientes siguen abiertos:** el enunciado del `5d` del `13` y lo del
 `FormEvent`.
+
+---
+
+## Sesión 12 sep 2026 — el `13c`, el refuerzo del drill 5 del `13b`
+
+Lo pidió él nada más abrir la sesión, y era el pendiente que la sesión anterior dejó
+anotado: fijar la guardia dentro del manejador. Se le ofrecieron tres ejes para el
+refuerzo y eligió el primero, **más caminos hasta la misma acción**.
+
+### Por qué ese eje y no otro
+
+En el `13b` la función `alLimpiar` ya venía escrita y él solo tuvo que meterle la
+condición dentro. Eso deja fuera la mitad que de verdad cuesta en código real: **darse
+cuenta de que hay un punto de encuentro, y crearlo**. El `13c` empieza justo ahí.
+
+El escenario es un panel, no un formulario: un panel tiene más puertas —el botón de
+cancelar, la ✕ de la esquina, la tecla Escape— y eso hace visible que `disabled` es un
+freno que solo alcanza al botón donde está puesto.
+
+### El `13c` al montarlo
+
+`exercise-13c` con 3 drills, montado y sin resolver. 6 tests, 3 en rojo, uno por drill.
+La escalera es el mismo panel tres veces, con una salida más cada vez:
+
+1. `PanelConDosSalidas` — las dos salidas hacen cada una lo suyo y divergen; hay que
+   juntarlas en una función. Sin regla todavía.
+2. `PanelQueEscuchaEscape` — aparece la regla (en mitad del guardado no se cierra) y una
+   salida que no se puede apagar. La guardia va donde los caminos se juntan.
+3. `PanelConTresSalidas` — la guardia está bien escrita y el panel se cierra igual:
+   una de las tres salidas no pasa por ella.
+
+Cero teoría nueva, como el `12b`. `puedeCerrar` viene dada y anotada como intocable, para
+que el archivo no repita los drills 1-2 del `13b`.
+
+### Decisiones de autoría
+
+**Se cayó un cuarto drill.** Estaba montado y verde: la guardia que además avisa en
+pantalla, con el aviso escrito una sola vez para los tres caminos. El archivo se iba a 303
+líneas y el techo de la v3 son ~230. Se retiró entero en vez de recortar prosa de los
+otros. El contenido queda disponible para el `14`.
+
+**Dos tests se reescribieron por el mensaje que daban.** Las aserciones pasaban por un
+helper que devolvía un booleano, y el rojo salía como `expected false to be true`, que no
+enseña nada. Ahora buscan el campo del panel directamente y el rojo dice *Unable to find a
+label with the text of: Nota*. Regla que queda: **un test no solo tiene que ponerse rojo,
+tiene que decir de qué color.**
+
+**`FormEvent` no aparece.** El panel no es un `<form>`, así que el archivo usa solo
+`ChangeEvent` y `KeyboardEvent` y no arrastra el tipo obsoleto. El pendiente del
+`FormEvent` en los otros cinco archivos sigue abierto.
+
+### Estado al cerrar
+
+`exercise-13c` montado, sin resolver, verificado con el script (0 problemas mecánicos,
+230 líneas, 12 bloques de pistas plegados). El bloque 10 suma 15 archivos. Los tres
+componentes están montados en `src/App.tsx` para verlos vivos.
+
+---
+
+## Sesión 12 sep 2026 (2) — el `13c` resuelto, y el `13d` para el porqué
+
+Sesión de alumno, no de autoría: el `13c` estaba montado y sin tocar. Lo cerró entero
+(6/6, typecheck y lint limpios) y al final pidió una escalera de refuerzo, que salió como
+`13d`.
+
+### Cómo fue el `13c`
+
+**Drill 1.** Lo resolvió dos veces. La primera, copiando el cuerpo del cierre en los dos
+botones: test verde, objetivo del drill sin cumplir. Se le devolvió con dos preguntas —
+cuántos sitios tocas si mañana cerrar hace una cosa más, y por qué el starter del drill 2
+ya viene con la función escrita— y lo rehízo juntando las dos salidas en `cerrarBorrar`.
+
+**Definir vs llamar.** De ahí salió el concepto que de verdad faltaba. Tenía
+`onClick={() => cerrarBorrar()}` y lo cambió a `onClick={cerrarBorrar}`, pero justificándolo
+mal: dijo que lo anterior *"llamaba a la función en el render"*. No lo hacía. Se le pasó la
+tabla de las tres formas (`f`, `() => f()`, `f()`) con lo que ocurre en el render y lo que
+recibe el `onClick` en cada una, y el dato de que la tercera aquí da bucle infinito —
+*Too many re-renders* casi siempre es un paréntesis de más en un manejador.
+
+**Drill 2.** Acertó el sitio a la primera —la guarda dentro de `cerrar`— y escribió la
+condición al revés. La señal del test lo dijo sola: se pusieron en rojo **los dos**, y el
+que ya estaba verde también. Regla que se le dio: cuando un cambio no arregla el rojo sino
+que además apaga un verde, no falta una pieza, el comportamiento se dio la vuelta. Lo
+cerró con `if (!puedeCerrar(estado)) return;`, early return, sin que nadie se lo sugiriera.
+
+**Drill 3.** Directo: la ✕ dejó de tener su cierre propio y pasó por `cerrar`.
+
+### Lo que quedó abierto
+
+Después de cerrar el drill 2 dijo, textualmente, que no lo daba por cerrado porque no lo
+entendía: no veía cómo `alGuardar` y `cerrar` se coordinan si no se llaman la una a la
+otra. Se le explicó el estado como cartel compartido —una lo escribe, la otra lo lee— más
+que `await` no congela la aplicación, con la secuencia de siete pasos del guardado. **Falta
+su confirmación**, y el `13c` no está dado por cerrado en lo conceptual aunque el código lo
+esté.
+
+### El `13d`
+
+Lo pidió él («una escalera en este mismo archivo»). No cabía: el `13c` iba por 224 líneas
+y el techo de la v3 son ~230, así que se montó aparte, como el `12b` y el `13b`. Se le
+ofrecieron cuatro ejes y eligió **dónde se pone el freno**.
+
+Seis drills sobre un pedido que tarda 1 s, subiendo el mismo escalón cada vez: el freno en
+la puerta (1), el freno duplicado en dos puertas (2), la regla sacada a `puedeEnviar` (3),
+la acción sacada a una función (4), una puerta sin interruptor (5) y un botón que el
+diseño prohíbe apagar (6). El 1 y el 2 se resuelven "mal" a propósito: son la única
+solución posible con una puerta, y el 5 y el 6 enseñan dónde se rompe.
+
+### Decisiones de autoría del `13d`
+
+**El hallazgo del drill 5.** Enter dentro de un `<form>` dispara el envío aunque el botón
+esté apagado — pero solo si ese botón no es el `submit` por defecto del formulario: si lo
+es y está `disabled`, el envío implícito no ocurre y el starter se pondría verde por la
+razón equivocada. El botón del drill 5 es `type="button"` por eso, y con el starter el
+contador llega a `Arrancados: 2`, que es justo lo que hay que ver.
+
+**Se verificó que la escalera tiene solución.** Antes de entregarla se escribió la solución
+de referencia en una copia temporal del archivo y se corrió el test contra ella: 9/9. La
+copia se borró. Merece quedarse como paso fijo: el script comprueba que los starters
+fallan, no que el ejercicio se pueda resolver.
+
+**Un test frágil, cazado por el alumno sin querer.** Resolvió el drill 1 y además cambió el
+rótulo del botón a "Enviando...", cosa que el enunciado no pide ni prohíbe. El test buscaba
+ese texto sin decir dónde y encontró dos elementos. Arreglado en el test, no en su
+componente: ahora las búsquedas de texto dicen que miran el `<p>` (`{ selector: "p" }`) y
+la del drill 2 comprueba los botones sin mirar el rótulo. Regla nueva: **un test no puede
+depender de una decisión de presentación que el enunciado deja libre.**
+
+**`FormEvent` vuelve a aparecer.** El drill 5 necesita un `<form>`, así que el `13d` usa el
+tipo obsoleto y el pendiente pasa de cinco archivos a seis.
+
+### Estado al cerrar
+
+`exercise-13c` resuelto (6/6). `exercise-13d` montado con el drill 1 ya resuelto por él
+(sus 2 tests en verde, los otros 5 drills en rojo, uno cada uno), verificado con el script:
+0 problemas mecánicos, 229 líneas, 24 bloques de pistas plegados. El bloque 10 suma 16
+archivos. Los 5 componentes del `13d` están en `src/App.tsx`; `puedeEnviar` no, porque es
+una función suelta.

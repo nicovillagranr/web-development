@@ -1,28 +1,30 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
 import {
-  ContadorQueSigueVivo,
-  EnvioConBotonApagado,
-  LimpiarDesdeDosSitios,
-} from "./exercises/10-eventos-formularios/exercise-13b";
+  BotonQueSeApaga,
+  DosBotonesUnEnvio,
+  DosBotonesMismaAccion,
+  FormularioConEnter,
+  SalidaSiempreEncendida,
+} from "./exercises/10-eventos-formularios/exercise-13d";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y las tarjetas de abajo al cambiar de archivo
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: `exercise-13b`, el mismo envío mirado despacio. Solo salen 3 de sus 5
- * drills: los dos primeros (`bloqueaElBoton` y `puedeLimpiar`) son funciones sueltas sin
- * JSX, y los tres de aquí las llaman. Mientras esas dos estén mal, lo que veas abajo va a
- * estar mal aunque el componente esté bien escrito.
+ * Ahora mismo: `exercise-13d`, dónde se pone el freno. Salen 5 de sus 6 drills — el 3
+ * (`puedeEnviar`) es una función suelta, no un componente, y solo se ve en el test.
  *
- * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es el TIEMPO, no el texto. El envío
- * finge tardar 200 ms, así que lo interesante pasa entre que sueltas el clic y vuelve la
- * respuesta — es un parpadeo, hay que estar mirando.
+ * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es SI LA ACCIÓN OCURRE O NO. Cada
+ * pedido finge tardar 1 s, y todo lo interesante pasa en ese segundo: pulsa Enviar y, sin
+ * esperar, intenta mandar otro por el sitio que tenga ese drill — el segundo botón, la
+ * tecla Enter dentro del campo, el botón de cancelar.
  *   · campo OSCURO  → lo escribes tú
- *   · caja GRIS     → un `<p>` normal, aquí usado para volcar un recuento a pantalla
  *   · botón APAGADO → un `<button disabled>`: el navegador no le pasa el clic a nadie
- * Los `<p>` grises son un chivato para que veas los recuentos, no parte del formulario.
+ * El contador "Arrancados" del drill 5 es el chivato: si sube durante el envío, es que se
+ * coló un segundo pedido. Y que un botón esté encendido no significa que su acción tenga
+ * que ocurrir: el "Cancelar pedido" del drill 6 está encendido a propósito.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -129,7 +131,7 @@ function Leyenda() {
         un botón apagado
       </span>
       <span className="text-slate-500">
-        · el envío finge tardar 200 ms — lo que hay que mirar dura ese parpadeo
+        · el guardado finge tardar 1 s — ese rato es justo donde hay que probar las salidas
       </span>
     </div>
   );
@@ -143,45 +145,62 @@ function App() {
           Aprendiendo TypeScript + React + Arquitectura de Software
         </h1>
         <p className="mb-6 border-b border-slate-800 pb-6 text-sm text-slate-400">
-          <span className="font-mono text-slate-300">exercise-13b</span> · el mismo envío, mirado
-          despacio — los tres drills que pintan algo
+          <span className="font-mono text-slate-300">exercise-13d</span> · dónde se pone el freno —
+          el mismo freno, seis sitios donde ponerlo
         </p>
 
         <Leyenda />
 
         <Tarjeta
-          n={3}
-          nombre="ContadorQueSigueVivo"
-          mirar="Escribe algo y pulsa Enviar. Durante el parpadeo, 'Enviados' tiene que seguir en 0: si ya marca 1, está cantando un envío que todavía no ha vuelto. Y mientras esperas, dale al +1 varias veces — ese recuento sí sube, porque la página no se ha congelado."
-          campos="campo Comentario · botón de enviar · recuento de envíos · botón +1 · recuento de clics"
+          n={1}
+          nombre="BotonQueSeApaga"
+          mirar="Pulsa Enviar y, durante ese segundo, vuelve a pulsarlo. Con el starter puedes machacarlo todas las veces que quieras: el rótulo se queda en 'Enviando...' y cada clic manda otro pedido. Cuando esté bien, el botón se apaga solo mientras dura y se vuelve a encender al terminar."
+          campos="rótulo del estado · botón 'Enviar'"
         >
-          <ContadorQueSigueVivo />
+          <BotonQueSeApaga />
+        </Tarjeta>
+
+        <Tarjeta
+          n={2}
+          nombre="DosBotonesUnEnvio"
+          mirar="Los dos botones mandan el mismo pedido. Pulsa el de arriba y mira los dos durante ese segundo: el de arriba se apaga y el de abajo no. Da igual cuál pulses primero — el agujero está siempre en el mismo sitio."
+          campos="rótulo del estado · botón 'Enviar' · botón 'Enviar ahora'"
+        >
+          <DosBotonesUnEnvio />
         </Tarjeta>
 
         <Tarjeta
           n={4}
-          nombre="EnvioConBotonApagado"
-          mirar="El botón tiene que apagarse durante el parpadeo del envío y volver a encenderse al terminar. Con el starter pasa justo lo contrario: sigue pulsable mientras esperas y se queda apagado cuando vuelve, así que no puedes mandar un segundo comentario."
-          campos="campo Comentario · botón que se apaga mientras dura el envío"
+          nombre="DosBotonesMismaAccion"
+          mirar="Aquí ninguno de los dos se apaga: eso viene después. Pulsa 'Enviar' y espera — acaba en 'Enviado'. Ahora recarga y pulsa 'Enviar ahora': se queda en 'Enviando...' para siempre. Los dos botones llevan su propia copia de la acción, y una de las dos se dejó un paso."
+          campos="rótulo del estado · botón 'Enviar' · botón 'Enviar ahora'"
         >
-          <EnvioConBotonApagado />
+          <DosBotonesMismaAccion />
         </Tarjeta>
 
         <Tarjeta
           n={5}
-          nombre="LimpiarDesdeDosSitios"
-          mirar="Hay dos maneras de vaciar el campo: el botón 'Limpiar' y la tecla Escape dentro del campo. Con el formulario quieto las dos tienen que funcionar. Ahora pulsa enviar y prueba las dos durante el parpadeo: el texto tiene que quedarse donde está por los dos caminos."
-          campos="campo Comentario, que también escucha la tecla Escape · botón de enviar · botón 'Limpiar'"
+          nombre="FormularioConEnter"
+          mirar="Escribe algo y pulsa Enter con el cursor dentro del campo: manda el pedido sin tocar el botón. Ahora hazlo dos veces seguidas sin esperar y mira el contador 'Arrancados'. El botón está apagado durante el envío y aun así el contador sube: la tecla no pasa por él."
+          campos="contador 'Arrancados' · rótulo del estado · campo Nota, que también manda con Enter · botón 'Enviar'"
         >
-          <LimpiarDesdeDosSitios />
+          <FormularioConEnter />
+        </Tarjeta>
+
+        <Tarjeta
+          n={6}
+          nombre="SalidaSiempreEncendida"
+          mirar="'Cancelar pedido' no se apaga nunca, y así tiene que quedarse. Con el pedido quieto, cancelar funciona. Pulsa Enviar y cancela durante ese segundo: con el starter el pedido se da por cancelado cuando ya iba de camino."
+          campos="rótulo del estado · botón 'Enviar' · botón 'Cancelar pedido', siempre encendido"
+        >
+          <SalidaSiempreEncendida />
         </Tarjeta>
 
         <p className="mt-8 rounded-lg border border-slate-800 bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-400">
-          Los drills 1 y 2 no están aquí porque no hay nada que ver:{" "}
-          <code className="font-mono text-slate-300">bloqueaElBoton</code> y{" "}
-          <code className="font-mono text-slate-300">puedeLimpiar</code> son funciones sueltas, sin
-          JSX. Empieza por ellas igualmente — los tres componentes de arriba les preguntan, así que
-          mientras estén mal ninguno se va a comportar como debe.
+          Falta el drill 3, <span className="font-mono text-slate-300">puedeEnviar</span>: es una
+          función suelta y no hay nada que ver. Del 1 al 6 se sube el mismo escalón cada vez — el
+          freno empieza pegado al botón y acaba dentro de la acción, porque a partir del 5 aparecen
+          puertas que no tienen interruptor.
         </p>
       </div>
     </main>
