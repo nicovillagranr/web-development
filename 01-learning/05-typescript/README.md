@@ -1418,3 +1418,73 @@ tipo obsoleto y el pendiente pasa de cinco archivos a seis.
 0 problemas mecánicos, 229 líneas, 24 bloques de pistas plegados. El bloque 10 suma 16
 archivos. Los 5 componentes del `13d` están en `src/App.tsx`; `puedeEnviar` no, porque es
 una función suelta.
+
+---
+
+## Sesión 14 sep 2026 — el `13d` resuelto, y el `13c` cerrado del todo
+
+Sesión de alumno. Retomó el `13d` con el drill 1 hecho y lo cerró entero: 9/9, typecheck y
+lint limpios en el archivo. Al final confirmó que el hueco del `13c` —cómo se coordinan
+`alGuardar` y `cerrar` si ninguna llama a la otra— ya le cuadra, así que **el `13c` queda
+cerrado también en lo conceptual**. El drill 6 del `13d` es exactamente esa situación:
+`cancelar` lee el `estado` que escribe `enviar`, sin llamarse.
+
+### Cómo fue
+
+**Drills 2 y 3.** Código bien a la primera; el 3 con un `switch` exhaustivo, sin `default`.
+Las dos preguntas de porqué se le hicieron juntas y en abstracto, y las contestó a medias:
+la ganancia de `puedeEnviar` se la atribuyó al `switch` (*"le puedes añadir más cases y
+seguiría compilando"*, cuando es al revés: un `case` de menos o un momento nuevo en el type
+rompe el `typecheck`) y la falta de `default` a que *"tenemos el control"*. Al repreguntar
+con tres cosas en el mismo mensaje dijo *"No entiendo tus preguntas. Háblame de otra
+forma"*. Lo que funcionó, a la primera las dos veces: **una pregunta por mensaje**, una
+analogía (tienda con un cartel en cada puerta frente a un cartel y flechas; semáforo de tres
+luces) y la tabla de casos delante.
+
+**Drill 4.** Primera pasada: arregló la copia rota y dejó las dos, más un
+`disabled={!puedeEnviar(estado)}` en cada botón que nadie le pidió. Test verde y objetivo sin
+cumplir, el mismo patrón que el drill 1 del `13c`. Entre medias preguntó si
+`onClick={async () => …}` es válido, partiendo de que *"onClick espera una función
+asíncrona"*: se le corrigió con la firma `=> void` (*"lo que devuelvas no lo voy a mirar"*)
+y el buzón. Segunda pasada: `enviar` escrita una vez y los dos botones la piden.
+
+**Drill 5, tres pasadas.** (1) Movió `setArrancados` detrás del `await`: rompió un test que
+pasaba y el contador pasó a mentir. (2) Envolvió **solo el contador** en
+`if (puedeEnviar(estado))`: test verde con el fallo dentro, porque el segundo viaje al
+servidor seguía saliendo. (3) `if (!puedeEnviar(estado)) return;` al principio de `enviar`.
+Las dos primeras son la misma idea, *tapar el velocímetro en vez de frenar el coche*:
+corregir lo que mide en lugar de lo medido. **La analogía del portero la puso él.**
+
+**Drill 6.** Directo. Se cerró con la pregunta del 🎯: *¿para qué sirve el cartel
+(`disabled`) si el portero ya frena todo?* Contestó primero el cómo (evalúa el booleano);
+partida en *"¿quién nota la diferencia?"*, llegó a **la persona**. Se le corrigió el remate,
+*"para ser más técnicos: sirve para el front"*: las dos líneas son front, y la diferencia es
+para quién trabaja cada una.
+
+### Decisiones de autoría
+
+**El drill 5 dejaba pasar un verde de mentira, y el enunciado lo invitaba.** Decía que el
+contador *"no puede subir"*, que apunta al número y no al envío. Arreglado en cuatro sitios:
+el servidor fingido apunta cada viaje (`export const servidor = { viajes: 0 }`, tres líneas
+en el bloque "Aquí no se toca", puesto a cero en un `beforeEach`); el test lo afirma con
+mensaje propio (`viajes que le llegaron al servidor: expected 2 to be 1`); el enunciado dice
+que no puede arrancar otro envío y que se comprueba en el contador y en los viajes; y la
+Pista 3 trae el mensaje nuevo. Verificado contra tres variantes en archivos temporales
+(starter, contador frenado, portero): fallan las dos primeras, cada una con su mensaje, y
+pasa la tercera. Los temporales se borraron.
+
+**Regla que queda: cuando lo observable es un indicador (un contador en pantalla), el test
+mira además la acción de verdad.** Si no, se puede frenar el indicador sin frenar la acción.
+
+**El drill 4 no admite señal.** Dos copias idénticas y una función compartida se comportan
+igual, así que ningún test las distingue. Aplicado con su visto bueno: la cabecera lo
+declara como pide la §4 (*"1 de los 6 lo pasa con el fallo dentro"*) y el enunciado lleva la
+restricción (*"sin copias que puedan volver a separarse"*).
+
+**`FormEvent` obsoleto:** sigue en el `13d`, sin tocar.
+
+### Estado al cerrar
+
+`exercise-13d` cerrado 9/9, 0 errores de tipos y 0 de lint en el archivo (el repo sigue en
+36 errores de tipos, todos de starters sin resolver de otras carpetas). `exercise-13c`
+cerrado también en lo conceptual. Toca montar el `14`, que nace partido en dos.

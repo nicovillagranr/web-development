@@ -254,6 +254,14 @@ Unable to find an element with the text: Arrancados: 1
 y en la pantalla que imprime debajo se lee `Arrancados: 2`. Es decir: con un envío ya en
 marcha, un Enter arrancó otro. El botón estaba apagado, y dio igual.
 
+Si el contador ya se queda en 1 y el test sigue fallando así:
+
+```
+AssertionError: viajes que le llegaron al servidor: expected 2 to be 1
+```
+
+has frenado el contador y no el envío: el número no sube, pero el segundo viaje sale igual.
+
 </details>
 
 <details><summary>Solución</summary>

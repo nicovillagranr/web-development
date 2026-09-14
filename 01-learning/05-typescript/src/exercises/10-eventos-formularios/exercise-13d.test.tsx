@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -8,6 +8,7 @@ import {
   DosBotonesMismaAccion,
   FormularioConEnter,
   SalidaSiempreEncendida,
+  servidor,
 } from "./exercise-13d";
 
 /* Todo se comprueba por comportamiento, y casi siempre en mitad del envío: qué se puede
@@ -29,6 +30,11 @@ const dejarQueTermine = () =>
   screen.findByText("Enviado", { selector: "p" }, { timeout: 5000 });
 
 describe("10-eventos-formularios / exercise-13d — dónde se pone el freno", () => {
+  /* el servidor fingido apunta los viajes de todos los drills: cada test empieza de cero */
+  beforeEach(() => {
+    servidor.viajes = 0;
+  });
+
   it("1) BotonQueSeApaga — durante el envío el botón no se puede pulsar", async () => {
     const user = userEvent.setup();
     render(<BotonQueSeApaga />);
@@ -95,6 +101,9 @@ describe("10-eventos-formularios / exercise-13d — dónde se pone el freno", ()
     /* la puerta sin interruptor: el botón está apagado y esto no pasa por él */
     await user.type(screen.getByLabelText("Nota"), "{Enter}");
     expect(verRotulo("Arrancados: 1")).toBeInTheDocument();
+    /* el contador solo informa: puede quedarse quieto con el segundo viaje saliendo
+     * igual. Por eso se mira también lo que le llegó al servidor */
+    expect(servidor.viajes, "viajes que le llegaron al servidor").toBe(1);
 
     await dejarQueTermine();
   });
@@ -108,6 +117,7 @@ describe("10-eventos-formularios / exercise-13d — dónde se pone el freno", ()
 
     await user.type(screen.getByLabelText("Nota"), "{Enter}");
     expect(verRotulo("Arrancados: 2")).toBeInTheDocument();
+    expect(servidor.viajes, "viajes que le llegaron al servidor").toBe(2);
 
     await dejarQueTermine();
   });

@@ -42,14 +42,19 @@ import type { ChangeEvent, FormEvent } from "react";
  *     pnpm typecheck
  *
  *   Todos los starters están rotos a propósito, y ninguno tiene un tipo mal puesto: aquí
- *   `pnpm typecheck` no va a decirte nada y toda la señal está en el test.
+ *   `pnpm typecheck` no va a decirte nada y la señal está en el test. 1 de los 6 lo pasa
+ *   con el fallo dentro: ese se comprueba leyendo tu código.
  *   ¿Atascado? Las pistas están en `exercise-13d.pistas.md`, de una en una.
  * ===========================================================================*/
 
 type EstadoEnvio = "idle" | "enviando" | "enviado";
 
-/* El viaje al servidor, fingido. Aquí no se toca. */
+/* El viaje al servidor, fingido. Aquí no se toca: el servidor apunta cada viaje que le
+ * llega, y el test mira esa cuenta. */
+export const servidor = { viajes: 0 };
+
 function mandarAlServidor(): Promise<void> {
+  servidor.viajes += 1;
   return new Promise((resolve) => setTimeout(resolve, 1000));
 }
 
@@ -64,9 +69,15 @@ const rotulo = (estado: EstadoEnvio) =>
 export function BotonQueSeApaga() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
 
+  // Cuando la función asíncrona enviar se dispara ocurren tres cosas:
   const enviar = async () => {
+    // El estado del envío pasa a "enviando". React vuelve a renderizar el componente,
+    // estado === "enviando" da true y activa el disabled
     setEstado("enviando");
+    // Se espera a que vuelva la respuesta del servidor
     await mandarAlServidor();
+    // Cuando vuelve la respuesta, el estado pasa a "enviado". React vuelve a renderizar,
+    // la misma expresión estado === "enviando" ahora da false y desactiva el disabled
     setEstado("enviado");
   };
 
@@ -99,7 +110,7 @@ export function DosBotonesUnEnvio() {
       <button type="button" onClick={enviar} disabled={estado === "enviando"}>
         Enviar
       </button>
-      <button type="button" onClick={enviar}>
+      <button type="button" onClick={enviar} disabled={estado === "enviando"}>
         Enviar ahora
       </button>
     </div>
@@ -112,7 +123,13 @@ export function DosBotonesUnEnvio() {
 //    haya un envío en marcha, y eso incluye el momento de después: quien acaba de mandar
 //    un pedido tiene derecho a mandar otro.
 export function puedeEnviar(estado: EstadoEnvio): boolean {
-  return estado === "idle";
+  switch (estado) {
+    case "idle":
+    case "enviado":
+      return true;
+    case "enviando":
+      return false;
+  }
 }
 // puedeEnviar("idle") -> true
 // puedeEnviar("enviando") -> false
@@ -121,30 +138,23 @@ export function puedeEnviar(estado: EstadoEnvio): boolean {
 // 4) `DosBotonesMismaAccion` — otra vez los dos botones, y ahora cada uno lleva su propia
 //    copia de lo que hay que hacer al enviar. Las copias ya se han desincronizado: por
 //    uno de los dos el pedido se queda enviándose para siempre. Consigue que los dos
-//    hagan exactamente lo mismo.
+//    hagan exactamente lo mismo, sin copias que puedan volver a separarse.
 export function DosBotonesMismaAccion() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
+
+  const enviar = async () => {
+    setEstado("enviando");
+    await mandarAlServidor();
+    setEstado("enviado");
+  };
 
   return (
     <div>
       <p>{rotulo(estado)}</p>
-      <button
-        type="button"
-        onClick={async () => {
-          setEstado("enviando");
-          await mandarAlServidor();
-          setEstado("enviado");
-        }}
-      >
+      <button type="button" disabled={!puedeEnviar(estado)} onClick={enviar}>
         Enviar
       </button>
-      <button
-        type="button"
-        onClick={async () => {
-          setEstado("enviando");
-          await mandarAlServidor();
-        }}
-      >
+      <button type="button" disabled={!puedeEnviar(estado)} onClick={enviar}>
         Enviar ahora
       </button>
     </div>
@@ -154,8 +164,9 @@ export function DosBotonesMismaAccion() {
 
 // 5) `FormularioConEnter` — dentro de un formulario, Enter en el campo manda el pedido
 //    sin tocar ningún botón: es una puerta que no tiene interruptor, y por eso apagar el
-//    botón no llega hasta ella. El contador dice cuántos envíos se han arrancado, y
-//    mientras hay uno en marcha no puede subir.
+//    botón no llega hasta ella. Mientras hay un envío en marcha no puede arrancar otro,
+//    y eso se comprueba en dos sitios: el contador de envíos arrancados y los viajes que
+//    apunta el servidor.
 export function FormularioConEnter() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
   const [nota, setNota] = useState("");
@@ -165,10 +176,34 @@ export function FormularioConEnter() {
     setNota(e.target.value);
   };
 
+  // Paso a paso de la función:
+
   const enviar = async () => {
-    setArrancados((n) => n + 1);
+    // ¿Puede enviar?
+    // Sí → continúa.
+    // No → la función se corta.
+    //
+    // puedeEnviar(estado) = true
+    // → estado === "idle" || estado === "enviado"
+    //
+    // puedeEnviar(estado) = false
+    // → estado === "enviando"
+
+    if (!puedeEnviar(estado)) {
+      return;
+    }
+
+    // Si puede enviar, se sube el contador
+    setArrancados((actual) => actual + 1);
+
+    // El estado pasa a "enviando"
     setEstado("enviando");
+
+    // Se espera a que vuelva la respuesta
     await mandarAlServidor();
+
+    // Cuando vuelve la respuesta,
+    // el estado pasa a "enviado"
     setEstado("enviado");
   };
 
@@ -205,6 +240,10 @@ export function SalidaSiempreEncendida() {
   };
 
   const cancelar = () => {
+    if (estado === "enviando") {
+      return;
+    }
+
     setCancelado(true);
   };
 
