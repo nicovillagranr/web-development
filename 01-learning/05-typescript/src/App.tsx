@@ -1,30 +1,21 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
-import {
-  BotonQueSeApaga,
-  DosBotonesUnEnvio,
-  DosBotonesMismaAccion,
-  FormularioConEnter,
-  SalidaSiempreEncendida,
-} from "./exercises/10-eventos-formularios/exercise-13d";
+import { FormularioContacto } from "./exercises/10-eventos-formularios/exercise-14";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y las tarjetas de abajo al cambiar de archivo
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: `exercise-13d`, dónde se pone el freno. Salen 5 de sus 6 drills — el 3
- * (`puedeEnviar`) es una función suelta, no un componente, y solo se ve en el test.
+ * Ahora mismo: `exercise-14`, el formulario de contacto desde la hoja en blanco. Sale 1 de
+ * sus 3 drills: el 1 son types y una constante, y el 2 (`validarContacto`) es una función
+ * suelta. Esos dos solo se ven en el test.
  *
- * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es SI LA ACCIÓN OCURRE O NO. Cada
- * pedido finge tardar 1 s, y todo lo interesante pasa en ese segundo: pulsa Enviar y, sin
- * esperar, intenta mandar otro por el sitio que tenga ese drill — el segundo botón, la
- * tecla Enter dentro del campo, el botón de cancelar.
- *   · campo OSCURO  → lo escribes tú
- *   · botón APAGADO → un `<button disabled>`: el navegador no le pasa el clic a nadie
- * El contador "Arrancados" del drill 5 es el chivato: si sube durante el envío, es que se
- * coló un segundo pedido. Y que un botón esté encendido no significa que su acción tenga
- * que ocurrir: el "Cancelar pedido" del drill 6 está encendido a propósito.
+ * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es QUÉ AVISOS SALEN Y CUÁNDO. Con el
+ * starter la tarjeta sale vacía, porque el componente todavía no pinta nada.
+ *   · etiqueta GRIS → el `<label>` de cada campo
+ *   · campo OSCURO  → lo escribes tú, sea `<input>` o `<textarea>`
+ *   · aviso ROJO    → un `<p role="alert">`: solo tiene que existir si su campo falla
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -42,8 +33,7 @@ type TarjetaProps = {
   nombre: string;
   /* qué tiene que pasar cuando el drill está bien */
   mirar: string;
-  /* los campos en el orden en que los pinta el componente; los `aria-label` del
-   * ejercicio no se ven en pantalla, y sin esto no sabes cuál es cuál */
+  /* los campos en el orden en que los pinta el componente */
   campos: string;
   estado?: Estado;
   children: ReactNode;
@@ -76,27 +66,32 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
       </p>
 
       {/* El componente vivo. Las reglas que importan:
-       *   [&_form]                 → estos drills meten todo dentro de un <form>, y un
-       *                              <form> no hereda el flex-col de este div: sin
-       *                              esto sus inputs fluyen en línea y se solapan
-       *   [&_input]                → campos editables, lo que escribes tú
-       *   [&_p]                    → chivato gris: el estado volcado a pantalla
-       *   [&_p[role=status]]       → el aviso de éxito, que solo existe si el envío
-       *                              terminó bien; gana al gris por ir después
-       *   [&_button:disabled]      → el botón apagado durante el envío. Es el drill 4
-       *                              entero: si no se apaga, no se nota nada */}
+       *   [&_form]                 → un <form> no hereda el flex-col de este div: sin
+       *                              esto sus campos fluyen en línea y se solapan
+       *   [&_label]                → la etiqueta, pegada encima de su campo
+       *   [&_input] [&_textarea]   → campos editables, lo que escribes tú
+       *   [&_p[role=alert]]        → el aviso de un campo que falla, en rojo
+       *   [&_p[role=status]]       → el aviso de éxito, que llega con el `14b`
+       *   [&_button:disabled]      → el botón apagado, que también llega con el `14b` */}
       <div
         className="flex scheme-dark flex-col items-start gap-3 bg-slate-950/40 px-5 py-5
           [&_form]:flex [&_form]:flex-col [&_form]:items-start [&_form]:gap-3
-          [&_div]:flex [&_div]:flex-col [&_div]:items-start [&_div]:gap-3
-          [&_input]:w-64 [&_input]:rounded-md [&_input]:border [&_input]:border-slate-700
+          [&_label]:-mb-2 [&_label]:text-xs [&_label]:font-medium [&_label]:text-slate-400
+          [&_input]:w-72 [&_input]:rounded-md [&_input]:border [&_input]:border-slate-700
           [&_input]:bg-slate-800 [&_input]:px-3 [&_input]:py-2 [&_input]:text-sm
           [&_input]:text-slate-100 [&_input]:shadow-none [&_input]:outline-none
-          [&_input::placeholder]:text-slate-500
           [&_input:focus]:border-sky-500 [&_input:focus]:ring-2 [&_input:focus]:ring-sky-500/30
-          [&_p]:w-64 [&_p]:rounded-md [&_p]:border [&_p]:border-slate-700
+          [&_textarea]:w-72 [&_textarea]:resize-none [&_textarea]:rounded-md
+          [&_textarea]:border [&_textarea]:border-slate-700 [&_textarea]:bg-slate-800
+          [&_textarea]:px-3 [&_textarea]:py-2 [&_textarea]:text-sm [&_textarea]:text-slate-100
+          [&_textarea]:shadow-none [&_textarea]:outline-none
+          [&_textarea:focus]:border-sky-500 [&_textarea:focus]:ring-2
+          [&_textarea:focus]:ring-sky-500/30
+          [&_p]:w-72 [&_p]:rounded-md [&_p]:border [&_p]:border-slate-700
           [&_p]:bg-slate-800/60 [&_p]:px-3 [&_p]:py-1.5 [&_p]:font-mono [&_p]:text-xs
           [&_p]:text-slate-300
+          [&_p[role=alert]]:border-rose-900/70 [&_p[role=alert]]:bg-rose-950/50
+          [&_p[role=alert]]:font-sans [&_p[role=alert]]:text-rose-300
           [&_p[role=status]]:border-emerald-900/70 [&_p[role=status]]:bg-emerald-950/50
           [&_p[role=status]]:font-sans [&_p[role=status]]:font-medium
           [&_p[role=status]]:text-emerald-300
@@ -123,15 +118,11 @@ function Leyenda() {
         lo escribes tú
       </span>
       <span className="flex items-center gap-2">
-        <span className="h-5 w-10 rounded border border-slate-700 bg-slate-800/60" />
-        un recuento, volcado a pantalla
-      </span>
-      <span className="flex items-center gap-2">
-        <span className="h-5 w-10 rounded border border-transparent bg-slate-700" />
-        un botón apagado
+        <span className="h-5 w-10 rounded border border-rose-900/70 bg-rose-950/50" />
+        un aviso de un campo que falla
       </span>
       <span className="text-slate-500">
-        · el guardado finge tardar 1 s — ese rato es justo donde hay que probar las salidas
+        · no valida al escribir: los avisos salen al pulsar "Enviar mensaje"
       </span>
     </div>
   );
@@ -145,62 +136,28 @@ function App() {
           Aprendiendo TypeScript + React + Arquitectura de Software
         </h1>
         <p className="mb-6 border-b border-slate-800 pb-6 text-sm text-slate-400">
-          <span className="font-mono text-slate-300">exercise-13d</span> · dónde se pone el freno —
-          el mismo freno, seis sitios donde ponerlo
+          <span className="font-mono text-slate-300">exercise-14</span> · el formulario de
+          contacto, desde la hoja en blanco — capstone, parte 1 de 2
         </p>
 
         <Leyenda />
 
         <Tarjeta
-          n={1}
-          nombre="BotonQueSeApaga"
-          mirar="Pulsa Enviar y, durante ese segundo, vuelve a pulsarlo. Con el starter puedes machacarlo todas las veces que quieras: el rótulo se queda en 'Enviando...' y cada clic manda otro pedido. Cuando esté bien, el botón se apaga solo mientras dura y se vuelve a encender al terminar."
-          campos="rótulo del estado · botón 'Enviar'"
+          n={3}
+          nombre="FormularioContacto"
+          mirar="Con el starter la tarjeta sale vacía. Cuando lo tengas: pulsa 'Enviar mensaje' con todo en blanco y salen tres avisos, uno por campo. Escribe un nombre de una letra y un correo sin dominio y vuelve a enviar: cambian los textos, pero cada campo sigue teniendo como mucho uno. Con los tres bien, el formulario se vacía y no queda ningún aviso."
+          campos="Nombre · Correo · Mensaje, que es un <textarea> · botón 'Enviar mensaje'"
         >
-          <BotonQueSeApaga />
-        </Tarjeta>
-
-        <Tarjeta
-          n={2}
-          nombre="DosBotonesUnEnvio"
-          mirar="Los dos botones mandan el mismo pedido. Pulsa el de arriba y mira los dos durante ese segundo: el de arriba se apaga y el de abajo no. Da igual cuál pulses primero — el agujero está siempre en el mismo sitio."
-          campos="rótulo del estado · botón 'Enviar' · botón 'Enviar ahora'"
-        >
-          <DosBotonesUnEnvio />
-        </Tarjeta>
-
-        <Tarjeta
-          n={4}
-          nombre="DosBotonesMismaAccion"
-          mirar="Aquí ninguno de los dos se apaga: eso viene después. Pulsa 'Enviar' y espera — acaba en 'Enviado'. Ahora recarga y pulsa 'Enviar ahora': se queda en 'Enviando...' para siempre. Los dos botones llevan su propia copia de la acción, y una de las dos se dejó un paso."
-          campos="rótulo del estado · botón 'Enviar' · botón 'Enviar ahora'"
-        >
-          <DosBotonesMismaAccion />
-        </Tarjeta>
-
-        <Tarjeta
-          n={5}
-          nombre="FormularioConEnter"
-          mirar="Escribe algo y pulsa Enter con el cursor dentro del campo: manda el pedido sin tocar el botón. Ahora hazlo dos veces seguidas sin esperar y mira el contador 'Arrancados'. El botón está apagado durante el envío y aun así el contador sube: la tecla no pasa por él."
-          campos="contador 'Arrancados' · rótulo del estado · campo Nota, que también manda con Enter · botón 'Enviar'"
-        >
-          <FormularioConEnter />
-        </Tarjeta>
-
-        <Tarjeta
-          n={6}
-          nombre="SalidaSiempreEncendida"
-          mirar="'Cancelar pedido' no se apaga nunca, y así tiene que quedarse. Con el pedido quieto, cancelar funciona. Pulsa Enviar y cancela durante ese segundo: con el starter el pedido se da por cancelado cuando ya iba de camino."
-          campos="rótulo del estado · botón 'Enviar' · botón 'Cancelar pedido', siempre encendido"
-        >
-          <SalidaSiempreEncendida />
+          <FormularioContacto />
         </Tarjeta>
 
         <p className="mt-8 rounded-lg border border-slate-800 bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-400">
-          Falta el drill 3, <span className="font-mono text-slate-300">puedeEnviar</span>: es una
-          función suelta y no hay nada que ver. Del 1 al 6 se sube el mismo escalón cada vez — el
-          freno empieza pegado al botón y acaba dentro de la acción, porque a partir del 5 aparecen
-          puertas que no tienen interruptor.
+          Faltan los drills 1 y 2: el 1 son types y una constante, y el 2 una función suelta, así
+          que no hay nada que ver. Un experimento para cuando termines, si tu correo es{" "}
+          <span className="font-mono text-slate-300">type="email"</span>: quítale el{" "}
+          <span className="font-mono text-slate-300">noValidate</span> al formulario, escribe
+          «nico@» en el correo y envía. El aviso que sale ya no es el tuyo, es el del navegador, y
+          el tuyo no llega a aparecer.
         </p>
       </div>
     </main>

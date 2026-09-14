@@ -1488,3 +1488,64 @@ restricción (*"sin copias que puedan volver a separarse"*).
 `exercise-13d` cerrado 9/9, 0 errores de tipos y 0 de lint en el archivo (el repo sigue en
 36 errores de tipos, todos de starters sin resolver de otras carpetas). `exercise-13c`
 cerrado también en lo conceptual. Toca montar el `14`, que nace partido en dos.
+
+---
+
+## Sesión 14 sep 2026 (2) — el `14` montado, parte 1 de 2
+
+Montado a petición suya justo después de cerrar el `13d`. Es el capstone de la ampliación,
+con la forma del `ContactForm` de Projex, y nace partido: el `14` es el formulario que
+valida; el `14b`, el que envía. Sin resolver: que empiece por el drill 1.
+
+### Qué lleva
+
+Tres drills: los dos types y `CONTACTO_VACIO`, que es el valor inicial compartido que se cayó
+del `11`; `validarContacto`, con las reglas de `ContactValidation` tal cual; y
+`FormularioContacto`, con dos `<input>`, un `<textarea>` y un solo manejador. Las claves van
+en inglés (`name`, `email`, `message`) y las etiquetas en español, como en el componente real.
+
+### Decisiones de autoría
+
+**Hoja en blanco de verdad, un paso más que el `12b`.** Allí venían los types y las firmas;
+aquí solo están los nombres que busca el test: `CONTACTO_VACIO = {}`,
+`validarContacto(_datos: unknown)` devolviendo `{}` y `FormularioContacto` devolviendo `null`.
+Los types los escribe él porque son justo lo que le falta a Projex: 12 de los 21 errores de
+`07-Contact` son la caja de errores sin forma. El starter no trae imports.
+
+**La señal de los types está en el test, con el mecanismo del `11`.** El test importa
+`DatosContacto` y `ErroresContacto` y lleva dos `@ts-expect-error`: unos datos sin `message` y
+unos errores con un campo inventado. Con el starter salen dos `TS2305` y dos `TS2578`. Se
+comprobó con una variante temporal de types demasiado anchos (`message?` y
+`Record<string, string>`) que salen los dos `TS2578`, y con otra que un manejador tipado solo
+para `<input>` pasa los tests y lo caza `TS2322` en el `onChange` del `<textarea>`. Las dos
+variantes se borraron.
+
+**La cabecera no da recuento de verdes de mentira**, porque con starters vacíos no hay
+ninguno: los tres drills salen en rojo (8 de 10 tests). Lo que dice es que un type mal puesto
+no rompe ningún test y que hay dos condiciones que no ve ninguna herramienta: un solo
+manejador, y `CONTACTO_VACIO` escrito una sola vez. Las dos van nombradas en la solución del
+drill 3.
+
+**`SubmitEvent` en vez de `FormEvent`, solo en la pista.** La cabecera no nombra el tipo del
+evento, y es el primer archivo del bloque que no amplía la deuda del tipo obsoleto. La pista
+dice por qué cambia.
+
+**`FORMA_DE_CORREO` va exportada** y marcada como intocable: la regex de Projex no tiene que
+inventarla él, y al exportarla el starter no deja una variable huérfana. Un 💡 avisa del
+`noValidate`: sin él, y con `type="email"`, el navegador tapa los avisos propios. El banco de
+pruebas propone ese experimento para cuando termine.
+
+**Verificado con el §8.** Solución: 10/10, typecheck y lint a 0. Starter: 8 de 10 en rojo con
+los tres drills cubiertos, lint 0 y `verificar.sh` sin problemas mecánicos (enunciados de 5, 6
+y 6 líneas, 90 líneas de archivo). La Pista 3 de cada drill está contrastada contra la salida
+real, incluidos los mensajes de las dos variantes. Deuda: cabecera y recordatorio suman 45
+líneas contra el techo de 40.
+
+### El `14b`, por montar cuando cierre el `14`
+
+El estado de envío `"idle" | "submitting" | "success"`, el envío asíncrono, el aviso de éxito
+en `role="status"` que se va al volver a escribir, el vaciado después del `await`, y el bug
+real de Projex: el botón vive fuera del `<form>` (atributo `form="contact-form"`) y no recibe
+el estado, así que la protección contra el doble envío tiene que ser el portero dentro del
+manejador. El test, con la regla del `13d`: mirar los viajes al servidor, no solo lo que se ve
+en pantalla.
