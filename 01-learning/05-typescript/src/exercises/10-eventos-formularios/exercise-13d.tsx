@@ -230,7 +230,10 @@ export function FormularioConEnter() {
 //    del envío no puede cancelar nada: lo que ya salió no se deshace desde aquí.
 //    Protégela sin apagarla.
 export function SalidaSiempreEncendida() {
+  // Seteamos el estado inicial del envío. Sólo pueden ser los valores del type EstadoEnvio. Estos son "idle" - "enviando" - "enviado"
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
+
+  // Seteamos el estado inicial de un eventual cancelamiento. Inicialmente no hay cancelamiento, por lo que el valor inicial es false.
   const [cancelado, setCancelado] = useState(false);
 
   const enviar = async () => {

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { ChangeEvent } from "react";
+import { FormEvent } from "react";
 /* ─────────────────────────────────────────────────────────────────────────────
  * 📌 RECORDATORIO — las dos cajas del formulario de contacto de Projex
  *
@@ -54,8 +57,22 @@ export const FORMA_DE_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //    tres, o ninguno. Los dos types se exportan, porque el test los importa.
 //    `CONTACTO_VACIO` son los datos con los tres campos en blanco, y es el único sitio
 //    del archivo donde se escribe ese valor.
-export const CONTACTO_VACIO = {};
-// CONTACTO_VACIO ->
+
+// Definimos los tipos de datos que recibirá el formulario de contacto
+export type DatosContacto = {
+  name: string;
+  email: string;
+  message: string;
+};
+// Definimos los posibles errores que pueden surgir en el formulario de contacto, <Partial> hace que todos los datos sean opcionales
+export type ErroresContacto = Partial<DatosContacto>;
+
+// Definimos un objeto que representa un contacto vacío, con todos los campos en blanco
+export const CONTACTO_VACIO: DatosContacto = {
+  name: "",
+  email: "",
+  message: "",
+};
 
 // 2) `validarContacto` — las reglas del `ContactForm` de Projex, tal cual. Cada campo da
 //    como mucho un aviso: el primero que falle. En blanco (los espacios no cuentan):
@@ -64,11 +81,48 @@ export const CONTACTO_VACIO = {};
 //    menos 2 caracteres"; un correo que no encaje en `FORMA_DE_CORREO`, "El correo no es
 //    válido"; un mensaje de menos de 10, "El mensaje debe tener al menos 10 caracteres".
 //    Sin fallos, un objeto sin claves.
-export function validarContacto(_datos: unknown) {
-  return {};
+
+// Para validar la data creamos una función
+export function validarContacto(contacto: DatosContacto): ErroresContacto {
+  // Iremos metiendo los errores en un objeto vacío de tipo ErroresContacto
+  const errores: ErroresContacto = {};
+
+  switch (true) {
+    case contacto.name.trim() === "":
+      errores.name = "El nombre es obligatorio"; // Llenamos el objeto
+      break;
+
+    case contacto.name.trim().length < 2:
+      errores.name = "El nombre debe tener al menos 2 caracteres"; // Llenamos el objeto
+      break;
+  }
+
+  switch (true) {
+    case contacto.email.trim() === "":
+      errores.email = "El correo es obligatorio"; // Llenamos el objeto
+      break;
+
+    case !FORMA_DE_CORREO.test(contacto.email): // Si la forma de correo que pedimos NO ES VÁLIDA, entonces llenamos el objeto con el error
+      errores.email = "El correo no es válido"; // Llenamos el objeto
+      break;
+  }
+
+  switch (true) {
+    case contacto.message.trim() === "":
+      errores.message = "El mensaje es obligatorio"; // Llenamos el objeto
+      break;
+
+    case contacto.message.trim().length < 10:
+      errores.message = "El mensaje debe tener al menos 10 caracteres"; // Llenamos el objeto
+      break;
+  }
+
+  return errores;
 }
 // validarContacto({ name: "N", email: "nico@", message: "Hola" }) ->
-// validarContacto({ name: "Nico", email: "nico@mail.cl", message: "Quiero una landing" }) ->
+// { name: "El nombre debe tener al menos 2 caracteres", email: "El correo no es válido", message: "El mensaje debe tener al menos 10 caracteres" }
+
+// validarContacto({ name: "Nico", email: "nico@mail.cl", message: "Quiero una landing" }) -> {} -> No hay errores
 
 // 3) `FormularioContacto` — el formulario entero. Tres campos con su etiqueta: "Nombre" y
 //    "Correo" son `<input>`, "Mensaje" es un `<textarea>`; arrancan con `CONTACTO_VACIO` y
@@ -79,8 +133,69 @@ export function validarContacto(_datos: unknown) {
 //    💡 Con `type="email"`, el navegador valida el correo por su cuenta y tapa tus
 //    avisos: por eso el `<form>` de Projex lleva `noValidate`.
 export function FormularioContacto() {
-  return null;
+  // Estado de los datos del formulario, inicializado con un contacto vacío
+  const [datos, setDatos] = useState(CONTACTO_VACIO); // -> {name: "", email: "", message: ""}
+
+  // Estado de los errores
+  const [errores, setErrores] = useState<ErroresContacto>({}); // -> {}
+
+  // Manejador de cambios en los campos del formulario
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target; // Obtenemos el nombre y valor del campo que cambió
+    setDatos((prevDatos) => ({
+      ...prevDatos, // Mantenemos los datos anteriores
+      [name]: value, // Actualizamos el campo que cambió
+    }));
+  };
+
+  // Manejador de envío del formulario
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Evitamos que al enviarse el formulario este recargue la página
+    const erroresValidacion = validarContacto(datos); // Validamos los datos del formulario
+    setErrores(erroresValidacion); // Actualizamos el estado de errores
+
+    if (Object.keys(erroresValidacion).length === 0) {
+      // Si no hay errores, reseteamos el formulario a su estado inicial
+      setDatos(CONTACTO_VACIO);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <label htmlFor="name">Nombre</label>
+      <input
+        id="name"
+        type="text"
+        name="name"
+        placeholder="Escriba su nombre"
+        value={datos.name}
+        onChange={handleChange}
+      />
+      {errores.name && <p role="alert">{errores.name}</p>}
+      <label htmlFor="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="Escriba su correo"
+        value={datos.email}
+        onChange={handleChange}
+      />
+      {errores.email && <p role="alert">{errores.email}</p>}
+      <label htmlFor="message">Mensaje</label>
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Escriba un mensaje"
+        value={datos.message}
+        onChange={handleChange}
+      />
+      {errores.message && <p role="alert">{errores.message}</p>}
+      <button type="submit">Enviar mensaje</button>
+    </form>
+  );
 }
+
 // <FormularioContacto />
 
 /* ─────────────────────────────────────────────────────────────────────────────

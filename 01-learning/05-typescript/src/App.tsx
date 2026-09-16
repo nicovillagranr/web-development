@@ -1,15 +1,18 @@
 import "./assets/styles/App.css";
 import type { ReactNode } from "react";
 import { FormularioContacto } from "./exercises/10-eventos-formularios/exercise-14";
+import { DosCamposUnManejador } from "./exercises/10-eventos-formularios/exercise-14a";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
  *   2. cambia el import de arriba y las tarjetas de abajo al cambiar de archivo
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: `exercise-14`, el formulario de contacto desde la hoja en blanco. Sale 1 de
- * sus 3 drills: el 1 son types y una constante, y el 2 (`validarContacto`) es una función
- * suelta. Esos dos solo se ven en el test.
+ * Ahora mismo hay DOS archivos montados a la vez, porque el `14` sigue abierto:
+ *   · `exercise-14a`, drill 6 — el refuerzo del manejador. Es el de arriba.
+ *   · `exercise-14`, drill 3 — el formulario de contacto entero.
+ * De los dos archivos solo salen aquí sus componentes: los demás drills son types y
+ * funciones sueltas, y esos solo se ven en el test.
  *
  * LA IDEA DE LOS ESTILOS: aquí lo que hay que mirar es QUÉ AVISOS SALEN Y CUÁNDO. Con el
  * starter la tarjeta sale vacía, porque el componente todavía no pinta nada.
@@ -90,6 +93,7 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
           [&_p]:w-72 [&_p]:rounded-md [&_p]:border [&_p]:border-slate-700
           [&_p]:bg-slate-800/60 [&_p]:px-3 [&_p]:py-1.5 [&_p]:font-mono [&_p]:text-xs
           [&_p]:text-slate-300
+          [&_form>p:last-child]:w-full
           [&_p[role=alert]]:border-rose-900/70 [&_p[role=alert]]:bg-rose-950/50
           [&_p[role=alert]]:font-sans [&_p[role=alert]]:text-rose-300
           [&_p[role=status]]:border-emerald-900/70 [&_p[role=status]]:bg-emerald-950/50
@@ -136,11 +140,23 @@ function App() {
           Aprendiendo TypeScript + React + Arquitectura de Software
         </h1>
         <p className="mb-6 border-b border-slate-800 pb-6 text-sm text-slate-400">
+          <span className="font-mono text-slate-300">exercise-14a</span> · una caja nueva cada
+          letra — refuerzo del manejador · y{" "}
           <span className="font-mono text-slate-300">exercise-14</span> · el formulario de
           contacto, desde la hoja en blanco — capstone, parte 1 de 2
         </p>
 
         <Leyenda />
+
+        <Tarjeta
+          n={6}
+          nombre="14a · DosCamposUnManejador"
+          mirar="Cada campo recibe lo suyo y escribir en uno no vacía a los otros: eso es el único manejador leyendo el `name` del elemento que lo llamó. El <p> de debajo enseña la caja entera, así que se ve cuál de los tres se está moviendo."
+          campos="Nombre · Correo · Mensaje, que es un <textarea> · el <p> con el contenido de la caja"
+          estado="resuelto"
+        >
+          <DosCamposUnManejador />
+        </Tarjeta>
 
         <Tarjeta
           n={3}
