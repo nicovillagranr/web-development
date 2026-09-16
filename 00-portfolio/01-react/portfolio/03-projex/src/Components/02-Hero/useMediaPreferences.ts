@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 // Detecta reduce-motion del SO y "Ahorrar datos" del dispositivo
 export function useMediaPreferences() {
-    const [shouldUseStaticHero, setShouldUseStaticHero] = useState(false)
+    const [usarHeroEstatico, setUsarHeroEstatico] = useState(false)
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -18,16 +18,18 @@ export function useMediaPreferences() {
         const updatePreferences = () => {
             // Si tiene reduce-motion O saveData activo, usar imagen estática
             // saveData = true cuando usuario tiene "Ahorrar datos" en Android/iOS/Chrome
-            setShouldUseStaticHero(mediaQuery.matches || Boolean(connection?.saveData))
+            setUsarHeroEstatico(mediaQuery.matches || Boolean(connection?.saveData))
         }
 
         updatePreferences()
+
         // Listener para cambios en tiempo real (ej: usuario activa reduce-motion mientras navega)
         if (mediaQuery.addEventListener) {
             mediaQuery.addEventListener("change", updatePreferences)
         } else {
             mediaQuery.addListener(updatePreferences)
         }
+
         connection?.addEventListener?.("change", updatePreferences)
 
         // Cleanup: remover listeners para evitar memory leaks
@@ -41,5 +43,5 @@ export function useMediaPreferences() {
         }
     }, [])
 
-    return shouldUseStaticHero
+    return usarHeroEstatico
 }

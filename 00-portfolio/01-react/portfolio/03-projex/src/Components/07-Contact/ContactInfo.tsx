@@ -1,8 +1,15 @@
 // ContactInfo.jsx
 import { FaMapMarkerAlt, FaPhone } from "react-icons/fa"
-import { CONTACT_ADDRESS } from "./contactConstants"
+import { CONTACT_ADDRESS, CONTACT_NUMBER } from "./contactConstants"
 
-function ContactInfo({ onOpenMap }) {
+
+// 1. Definimos la interfaz para las props del componente
+interface ContactInfoProps {
+    onOpenMap: () => void; // Especifica que es una función que no devuelve ningún valor
+}
+
+// 2. Aplicamos la interface al componente
+function ContactInfo({ onOpenMap }: ContactInfoProps) {
     return (
         <section className="w-full md:w-[50%] flex flex-col gap-6 md:justify-between">
             <h3 className="text-2xl">Información</h3>
@@ -19,7 +26,7 @@ function ContactInfo({ onOpenMap }) {
 
             <div className="flex items-center gap-2">
                 <FaPhone className="w-5 h-5" aria-hidden="true" />
-                <span className="text-lg">(+56) 9 1234 5678</span>
+                <span className="text-lg">(+56) {CONTACT_NUMBER}</span>
             </div>
 
             <div className="flex flex-row gap-5">
