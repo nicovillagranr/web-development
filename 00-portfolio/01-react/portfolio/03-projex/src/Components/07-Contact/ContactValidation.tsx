@@ -1,12 +1,12 @@
 // 1: Definimos la estructura de los datos del formulario
-interface ContactFormData {
+export interface ContactFormData {
     name: string,
     email: string,
     message: string
 }
 
 // 2: Definimos la estructura de un eventual error/errores del formulario
-interface ContactErrors {
+export interface ContactErrors {
     name?: string,
     email?: string,
     message?: string
