@@ -1,49 +1,71 @@
-// 1: Definimos la estructura de los datos del formulario
 export interface ContactFormData {
-    name: string,
-    email: string,
+    name: string
+    email: string
     message: string
 }
 
-// 2: Definimos la estructura de un eventual error/errores del formulario
 export interface ContactErrors {
-    name?: string,
-    email?: string,
+    name?: string
+    email?: string
     message?: string
 }
 
-export function ContactValidation(data: ContactFormData) {
-    const errors: ContactErrors = {};
+export function ContactValidation(data: ContactFormData): ContactErrors {
+    const errors: ContactErrors = {}
+
+    // Normalizamos los datos antes de validarlos
+    const name = data.name.trim()
+    const email = data.email.trim()
+    const message = data.message.trim()
 
     // Validación del Nombre
     switch (true) {
-        case !data.name.trim(): // Verifica si el nombre está vacío o solo contiene espacios
-            errors.name = "El nombre es obligatorio";
-            break;
-        case data.name.length < 2: // Verifica si el nombre tiene menos de 2 caracteres
-            errors.name = "El nombre debe tener al menos 2 caracteres";
-            break;
+        case !name:
+            errors.name = "El nombre es obligatorio"
+            break
+
+        case name.length < 2:
+            errors.name = "El nombre debe tener al menos 2 caracteres"
+            break
+
+        case name.length > 50:
+            errors.name = "El nombre no puede superar los 50 caracteres"
+            break
+
+        case !/^[\p{L}\s'-]+$/u.test(name):
+            errors.name = "El nombre contiene caracteres no válidos"
+            break
     }
 
     // Validación del Email
     switch (true) {
-        case !data.email.trim(): // Verifica si el correo está vacío
-            errors.email = "El correo es obligatorio";
-            break;
-        case !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email): // Valida el formato del correo mediante una expresión regular
-            errors.email = "El correo no es válido";
-            break;
+        case !email:
+            errors.email = "El correo es obligatorio"
+            break
+
+        case email.length > 254:
+            errors.email = "El correo es demasiado largo"
+            break
+
+        case !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email):
+            errors.email = "El correo no es válido"
+            break
     }
 
     // Validación del Mensaje
     switch (true) {
-        case !data.message.trim(): // Verifica si el mensaje está vacío
-            errors.message = "El mensaje es obligatorio";
-            break;
-        case data.message.length < 10: // Verifica si el mensaje es demasiado corto (menos de 10 caracteres)
-            errors.message = "El mensaje debe tener al menos 10 caracteres";
-            break;
+        case !message:
+            errors.message = "El mensaje es obligatorio"
+            break
+
+        case message.length < 10:
+            errors.message = "El mensaje debe tener al menos 10 caracteres"
+            break
+
+        case message.length > 1000:
+            errors.message = "El mensaje no puede superar los 1000 caracteres"
+            break
     }
 
-    return errors;
+    return errors
 }

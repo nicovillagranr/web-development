@@ -12,6 +12,14 @@
     outline-offset: 3px;
 }
 
+/* Los campos del formulario llevan el foco en oscuro: sobre fondo claro y
+   pegado a un borde gris, el coral se leia como naranja. El resto del sitio
+   (enlaces y botones) mantiene el foco de marca de la regla de arriba. */
+input:focus-visible,
+textarea:focus-visible {
+    outline-color: var(--color-dark);
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     font-size: 10px;
