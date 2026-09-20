@@ -10,6 +10,7 @@ import { FocusTrap } from "focus-trap-react";
 
 // Componente
 import NavItem from "./NavItem.tsx";
+import type { NavItemData } from "./navItems.ts";
 
 // Animaciones de entrada y salida
 const mobileMenuVariants: Variants = {
@@ -22,7 +23,7 @@ const mobileMenuVariants: Variants = {
 type MobileNavProps = {
     isOpen: boolean;
     onClose: () => void;
-    navItems: { to: string; text: string }[];
+    navItems: NavItemData[];
 };
 
 function MobileNav({ isOpen, onClose, navItems }: MobileNavProps) {

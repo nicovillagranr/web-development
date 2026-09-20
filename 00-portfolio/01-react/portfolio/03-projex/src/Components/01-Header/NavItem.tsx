@@ -1,9 +1,8 @@
 import { NavLink } from "react-router-dom"
+import type { NavItemData } from "./navItems.ts"
 
 // Definimos los types que va a recibir como argumento el componente NavItem
-type NavItemProps = {
-    to: string
-    text: string
+type NavItemProps = NavItemData & {
     onClick?: () => void
 }
 

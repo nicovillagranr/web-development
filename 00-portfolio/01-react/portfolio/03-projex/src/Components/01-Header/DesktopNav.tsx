@@ -1,9 +1,10 @@
 // Components
 import NavItem from "./NavItem.tsx";
+import type { NavItemData } from "./navItems.ts";
 
 // Types
 type DesktopNavProps = {
-    navItems: { to: string; text: string }[]
+    navItems: NavItemData[]
 }
 
 function DesktopNav({ navItems }: DesktopNavProps) {

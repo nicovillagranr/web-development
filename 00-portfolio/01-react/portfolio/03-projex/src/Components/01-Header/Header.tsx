@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 // Components
-import LogoSection from "./Logo.tsx";
+import Logo from "./Logo.tsx";
 import DesktopNav from "./DesktopNav.tsx";
 import MobileNav from "./MobileNav.tsx";
 
@@ -18,7 +18,7 @@ function Header() {
   return (
     <header className="relative z-50 w-full bg-primary flex justify-center">
       <nav className="w-[90%] min-h-[10vh] flex items-center gap-10 md:w-[80%]">
-        <LogoSection />
+        <Logo />
         <DesktopNav navItems={navItems} />
 
         <div className="flex items-center gap-4">

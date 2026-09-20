@@ -1,7 +1,8 @@
+// Importamos NavLink para crear enlaces de navegación
 import { NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 
-function LogoSection() {
+function Logo() {
     return (
         <div className="flex items-center flex-1">
             <div className="flex flex-col">
@@ -14,5 +15,4 @@ function LogoSection() {
         </div>
     );
 }
-
-export default LogoSection;
+export default Logo;
