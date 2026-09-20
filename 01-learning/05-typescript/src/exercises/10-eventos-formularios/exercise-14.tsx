@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { ChangeEvent } from "react";
-import { FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 /* ─────────────────────────────────────────────────────────────────────────────
  * 📌 RECORDATORIO — las dos cajas del formulario de contacto de Projex
  *
@@ -172,7 +170,7 @@ export function FormularioContacto() {
         onChange={handleChange}
       />
       {errores.name && <p role="alert">{errores.name}</p>}
-      <label htmlFor="email">Email</label>
+      <label htmlFor="email">Correo</label>
       <input
         id="email"
         type="email"
