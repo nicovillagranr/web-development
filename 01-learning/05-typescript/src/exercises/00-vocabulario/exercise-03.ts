@@ -81,20 +81,20 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) En `edad || 18`, ¿qué es `||`?
-export const r1: "el operador" | "el operando" | "la expresión" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r1: "el operador" | "el operando" | "la expresión" = "el operador";
+// ¿Por qué? → || es un operador típico en JavaScript. Se usa para evaluar cuál de los 2 operandos es "truthy" y devolver el primero que lo sea. En este caso, si `edad` es "falsy", devuelve 18; de lo contrario, devuelve `edad`.
 
 // 2) En esa misma línea, ¿qué es `edad`?
-export const r2: "el operador" | "un operando" | "la expresión" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r2: "el operador" | "un operando" | "la expresión" = "un operando";
+// ¿Por qué? → `edad` es un operando porque es un dato que se encuentra a la izquierda del operador `||`. Es el valor que se evalúa para determinar si es "truthy" o "falsy".
 
 // 3) `nombre.length > 2` entero, ¿qué es?
-export const r3: "una expresión" | "una declaración" | "un operador" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r3: "una expresión" | "una declaración" | "un operador" = "una expresión";
+// ¿Por qué? → `nombre.length > 2` es una expresión que compara el largo del string `nombre` con el número 2.
 
 // 4) `c ? a : b` toma tres operandos. ¿Cómo se le llama por eso?
-export const r4: "ternario" | "binario" | "unario" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r4: "ternario" | "binario" | "unario" = "ternario";
+// ¿Por qué? → `c ? a : b` es una expresión ternaria porque toma tres operandos: la condición `c`, el valor a devolver si es verdadera `a`, y el valor a devolver si es falsa `b`.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — `false` no es "falsy"
@@ -133,21 +133,21 @@ export const r4: "ternario" | "binario" | "unario" = "SIN_RESPONDER";
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 5) `0` no es `false`, pero `||` lo descarta igual. ¿Qué es `0`, entonces?
-export const r5: "falsy" | "false" | "null" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r5: "falsy" | "false" | "null" = "falsy";
+// ¿Por qué? → `0` es un valor que pertenece a la categoría de valores "falsy" en JavaScript, lo que significa que se evalúa como falso en contextos booleanos, aunque no sea el valor booleano `false` en sí mismo.
 
 // 6) Y `false` a secas, ¿qué es?
-export const r6: "un valor" | "una categoría" | "un operador" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r6: "un valor" | "una categoría" | "un operador" = "un valor";
+// ¿Por qué? → `false` es un valor de tipo boolean en JavaScript.
 
 // 7) `[]` (un array vacío) puesto a prueba en un `if`, ¿qué es?
-export const r7: "truthy" | "falsy" | "undefined" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r7: "truthy" | "falsy" | "undefined" = "truthy";
+// ¿Por qué? → `[]` es un array vacío, que es un valor truthy en JavaScript, por lo que se evalúa como verdadero en un contexto booleano.
 
 // 8) Quieres descartar solo `null` y `undefined`, y que el `0` sobreviva.
 //     ¿Qué operador usas?
-export const r8: "??" | "||" | "&&" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r8: "??" | "||" | "&&" = "??";
+// ¿Por qué? → El operador `??` (nullish coalescing) devuelve el operando de la derecha solo si el operando de la izquierda es `null` o `undefined`, permitiendo que valores como `0` sobrevivan y no sean descartados como lo haría el operador `||`.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — juntar texto tiene nombre
@@ -188,20 +188,20 @@ export const r8: "??" | "||" | "&&" = "SIN_RESPONDER";
 
 // 9) En `const saludo = `Hola, ${nombre}``, ¿cómo se llama esa forma de escribir
 //     el texto, con comillas invertidas?
-export const r9: "template literal" | "concatenación" | "interpolación" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r9: "template literal" | "concatenación" | "interpolación" = "template literal";
+// ¿Por qué? → `Hola, ${nombre}` es un template literal, que permite incluir expresiones dentro de un string usando la sintaxis `${...}`. Las comillas invertidas (backticks) delimitan el template literal y permiten la interpolación de valores dentro del texto.
 
 // 10) Y el `${nombre}` de dentro, ¿qué es?
-export const r10: "una interpolación" | "un operando" | "una propiedad" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r10: "una interpolación" | "un operando" | "una propiedad" = "una interpolación";
+// ¿Por qué? → `${nombre}` es una interpolación, que permite incluir el valor de la variable `nombre` dentro del template literal.
 
 // 11) En `"Hola, " + nombre`, ¿cómo se llama lo que hace el `+` con dos textos?
-export const r11: "concatenación" | "interpolación" | "suma" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r11: "concatenación" | "interpolación" | "suma" = "concatenación";
+// ¿Por qué? → El operador `+` en este contexto realiza una concatenación de strings.
 
 // 12) En `const largo = nombre.length > 2`, ¿qué es `length`?
-export const r12: "una propiedad" | "un método" | "un parámetro" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r12: "una propiedad" | "un método" | "un parámetro" = "una propiedad";
+// ¿Por qué? → `length` es una propiedad de los strings en JavaScript que devuelve la longitud del string.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 12 estén en verde, la prueba es leer las cinco líneas del

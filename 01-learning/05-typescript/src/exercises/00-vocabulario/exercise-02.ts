@@ -85,20 +85,21 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) En `interface Tarea { id: number }`, ¿qué es `number`?
-export const r1: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r1: "un tipo" | "un valor" | "una clave" = "un tipo";
+// ¿Por qué? → En TypeScript, 'number es un tipo numérico, y en el contexto de una interface, se utiliza para definir el tipo de la propiedad id. No es un valor concreto ni una clave, sino una descripción del tipo de datos que se espera para esa propiedad.
 
 // 2) En `const tarea: Tarea = { id: 1, titulo: "Regar" }`, ¿qué es el `1`?
-export const r2: "un tipo" | "un valor" | "una clave" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r2: "un tipo" | "un valor" | "una clave" = "un valor";
+// ¿Por qué? → El `1` es un valor concreto que se asigna a la propiedad `id` del objeto `tarea`. Su tipo es `number`.
 
 // 3) En ese mismo objeto, ¿cómo se llama `id: 1` entero, las dos piezas juntas?
-export const r3: "un par clave-valor" | "una anotación" | "una unión" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r3: "un par clave-valor" | "una anotación" | "una unión" = "un par clave-valor";
+// ¿Por qué? → `id: 1` es un par clave-valor porque combina la clave `id` con su valor correspondiente `1`.
 
 // 4) En `const tarea: Tarea = …`, ese `: Tarea` que va pegado al nombre, ¿qué es?
-export const r4: "una anotación de tipo" | "una asignación" | "una llamada" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r4: "una anotación de tipo" | "una asignación" | "una llamada" =
+  "una anotación de tipo";
+// ¿Por qué? → `: Tarea` es una anotación de tipo que indica que la variable `tarea` debe ser del tipo `Tarea`, es decir, debe tener la forma definida por la interface `Tarea`.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cómo se llama cada tipo
@@ -136,20 +137,20 @@ export const r4: "una anotación de tipo" | "una asignación" | "una llamada" = 
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 5) En `type Prioridad = "baja" | "alta"`, ¿qué es `Prioridad`?
-export const r5: "un alias de tipo" | "una interface" | "una constante" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r5: "un alias de tipo" | "una interface" | "una constante" = "un alias de tipo";
+// ¿Por qué? → 'Prioridad representa la unión literal de los tipos "baja" y "alta", estas herramientas se definen usando la palabra type al inicio, lo que indica que es un alias que representa 2 posibles tipos de valores, y no una interface ni una constante.
 
 // 6) En esa misma línea, ¿qué es `"baja" | "alta"` entero?
-export const r6: "una unión" | "un objeto" | "un array" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r6: "una unión" | "un objeto" | "un array" = "una unión";
+// ¿Por qué? → `"baja" | "alta"` representa una unión de tipos literales, es decir, un tipo que puede ser uno de los dos valores especificados.
 
 // 7) Y `"baja"` suelto, dentro de esa declaración, ¿qué es?
-export const r7: "un tipo literal" | "un valor" | "una clave" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r7: "un tipo literal" | "un valor" | "una clave" = "un tipo literal";
+// ¿Por qué? → `"baja"` es un tipo literal porque representa un tipo con un solo valor posible.
 
 // 8) `interface Tarea { … }` — la palabra `Tarea`, ¿qué nombra?
-export const r8: "una interface" | "un alias de tipo" | "un objeto" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r8: "una interface" | "un alias de tipo" | "un objeto" = "una interface";
+// ¿Por qué? → `Tarea` es el nombre de una interface que describe la forma de un objeto, no es un alias de tipo ni un objeto en sí mismo.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — el tipo no es el dato
@@ -185,21 +186,22 @@ export const r8: "una interface" | "un alias de tipo" | "un objeto" = "SIN_RESPO
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 9) En `const tarea: Tarea = { … }`, ¿qué es `Tarea` (con mayúscula)?
-export const r9: "un tipo" | "un objeto" | "una constante" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r9: "un tipo" | "un objeto" | "una constante" = "un tipo";
+// ¿Por qué? → `Tarea` es un tipo que describe la forma de un objeto. No es un objeto en sí mismo ni una constante; es una definición que se utiliza para asegurar que el objeto `tarea` cumple con la estructura especificada por la interface `Tarea`.
 
 // 10) Y `{ id: 1, titulo: "Regar" }`, ¿qué es?
-export const r10: "un objeto" | "un tipo" | "una interface" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r10: "un objeto" | "un tipo" | "una interface" = "un objeto";
+// ¿Por qué? → `{ id: 1, titulo: "Regar" }` es un objeto que cumple con la estructura definida por la interface `Tarea`.
 
 // 11) En `etiqueta?: string`, ¿qué hace ahí el `?`?
-export const r11: "la hace opcional" | "la hace nula" | "la hace de solo lectura" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r11: "la hace opcional" | "la hace nula" | "la hace de solo lectura" =
+  "la hace opcional";
+// ¿Por qué? → El `?` hace que la propiedad `etiqueta` sea opcional, lo que significa que no es obligatoria en los objetos que siguen el tipo `Tarea`.
 
 // 12) En `const b = "hola"`, sin escribir ningún tipo, TS sabe que `b` es `string`.
 //     ¿Cómo se llama eso que acaba de hacer TS?
-export const r12: "inferencia" | "anotación" | "conversión" = "SIN_RESPONDER";
-// ¿Por qué? →
+export const r12: "inferencia" | "anotación" | "conversión" = "inferencia";
+// ¿Por qué? → TypeScript utiliza la inferencia de tipos para deducir automáticamente que `b` es de tipo `string` basándose en el valor asignado `"hola"`, sin necesidad de una anotación explícita de tipo.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 12 estén en verde, la prueba es esta: coge el fragmento del
