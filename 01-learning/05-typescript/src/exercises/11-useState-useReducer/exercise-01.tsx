@@ -85,12 +85,12 @@ import { useState } from "react";
 //    Mira lo que le pasa el starter a `useState`: con ese inicial, el `+ 1` de
 //    abajo deja de sumar y pasa a hacer otra cosa que también es válida en JS.
 export function Contador() {
-  const [n, setN] = useState("0");
+  const [numero, setNumero] = useState(0); // numero parte en 0
 
   return (
     <div>
-      <p>{n}</p>
-      <button onClick={() => setN(n + 1)}>Sumar</button>
+      <p>{numero}</p>
+      <button onClick={() => setNumero(numero + 1)}>Sumar</button>
     </div>
   );
 }
@@ -101,13 +101,10 @@ export function Contador() {
 //    medias. El cuerpo sigue hablando en textos, y ahora los dos lados de cada
 //    comparación ya no se pueden ni encontrar.
 export function Interruptor() {
-  const [encendido, setEncendido] = useState(false);
+  const [encendido, setEncendido] = useState(false); // encendido parte como false
 
-  return (
-    <button onClick={() => setEncendido(encendido === "no" ? "si" : "no")}>
-      {encendido === "si" ? "ON" : "OFF"}
-    </button>
-  );
+  // Cuando se le da click, el estado de false a true y viceversa. El texto del botón cambia según el estado.
+  return <button onClick={() => setEncendido(!encendido)}>{encendido ? "ON" : "OFF"}</button>;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -164,7 +161,7 @@ export interface ErroresForm {
 //    El starter tiene el inicial correcto — es el sitio donde no cabe otra cosa
 //    lo que hay que arreglar.
 export function SelectorColor() {
-  const [elegido, setElegido] = useState(null);
+  const [elegido, setElegido] = useState<string | null>(null); // elegido parte en null y puede ser string o null
 
   return (
     <div>
@@ -182,9 +179,14 @@ export function SelectorColor() {
 //    error que traiga, con su texto. Si no trae ninguno, no pinta la <ul>.
 //    Este es el drill que te está bloqueando 03-projex ahora mismo, aislado.
 //    Fíjate en que aquí el problema no está en un `useState`: está en la firma.
-export function AvisoErrores({ errores }: { errores: {} }) {
-  const mensajes = [errores.nombre, errores.email].filter(Boolean);
-  if (mensajes.length === 0) return null;
+export function AvisoErrores({ errores }: { errores: ErroresForm }) {
+  const mensajes = [errores.nombre, errores.email].filter(
+    (error) => error !== undefined && error !== "",
+  ); // Todo mensaje que sea diferente a undefined y diferente a "" se queda
+
+  if (mensajes.length === 0) {
+    return null; // Si no hay errores, no se pinta nada
+  }
 
   return (
     <ul>
@@ -194,6 +196,9 @@ export function AvisoErrores({ errores }: { errores: {} }) {
     </ul>
   );
 }
+// AvisoErrores({ errores: { nombre: "Falta el nombre" } }) -> <ul><li>Falta el nombre</li></ul>
+// AvisoErrores({ errores: {} }) -> <ul></ul>
+// AvisoErrores({ errores: { nombre: "", email: "Falta el email" } }) -> <ul><li>Falta el email</li></ul>
 
 // 5) `ListaTareas` — un botón "Añadir" que mete una `Tarea` nueva al final de la
 //    lista, y un <li> por tarea con su título. La lista arranca vacía.
@@ -202,22 +207,30 @@ export function AvisoErrores({ errores }: { errores: {} }) {
 //    no repinta. Ese fallo es el mismo del capstone del bloque 10: si te suena,
 //    es que ya lo has visto.
 export function ListaTareas() {
-  const [tareas, setTareas] = useState([]);
+  const [tareas, setTareas] = useState<Tarea[]>([]);
 
   const anadir = () => {
-    tareas.push({ id: tareas.length + 1, titulo: `Tarea ${tareas.length + 1}`, hecha: false });
-    setTareas(tareas);
+    // 1. Creamos un objeto nuevo con id, titulo y si está hecha o no
+    const nuevaTarea: Tarea = {
+      id: Date.now(),
+      titulo: `Tarea ${tareas.length + 1}`,
+      hecha: false,
+    };
+    // 2. Pasamos un nuevo array a React para no mutar el original
+    setTareas([...tareas, nuevaTarea]);
   };
 
   return (
-    <div>
-      <button onClick={anadir}>Añadir</button>
-      <ul>
-        {tareas.map((t) => (
-          <li key={t.id}>{t.titulo}</li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div>
+        <button onClick={anadir}>Añadir</button>
+        <ul>
+          {tareas.map((tarea) => (
+            <li key={tarea.id}>{tarea.titulo}</li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
 
