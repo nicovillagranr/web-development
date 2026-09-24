@@ -114,7 +114,7 @@ export function PanelQueEscuchaEscape() {
   };
 
   const cerrar = () => {
-    if (!puedeCerrar(estado)) {
+    if (puedeCerrar(estado)) {
       setAbierto(false);
       setNota("");
       setEstado("idle");
@@ -172,7 +172,7 @@ export function PanelConTresSalidas() {
   };
 
   const cerrar = () => {
-    if (!puedeCerrar(estado)) {
+    if (puedeCerrar(estado)) {
       setAbierto(false);
       setNota("");
       setEstado("idle");
