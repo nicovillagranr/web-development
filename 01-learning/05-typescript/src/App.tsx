@@ -14,17 +14,23 @@ import {
   RegistroDoble,
   ContadorConTope,
 } from "./exercises/11-useState-useReducer/exercise-02";
+import {
+  ContadorConReducer,
+  ContadorConPaso,
+  PanelConHistorial,
+} from "./exercises/11-useState-useReducer/exercise-03";
 
-/* BANCO DE PRUEBAS — para ver vivos los componentes del archivo que estés estudiando.
+/* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
- *   2. cambia los imports de arriba y las tarjetas de abajo al cambiar de archivo
+ *   2. al cambiar de BLOQUE, se cambian los imports y las tarjetas
  * Solo entran aquí los componentes exportados (`export function ...`).
  *
- * Ahora mismo: el bloque `11-useState-useReducer`, sus dos archivos enteros.
+ * LA UNIDAD ES LA CARPETA, NO EL ARCHIVO: aquí está el bloque
+ * `11-useState-useReducer` entero, incluidos los archivos ya cerrados. Así se ve
+ * cómo quedaron y se puede volver a cualquiera sin remontar nada.
  *
- * LO QUE HAY QUE MIRAR AQUÍ NO SON AVISOS, SON NÚMEROS Y LISTAS. Casi todos estos
- * starters compilan o casi, y fallan al pulsar: el número sube de uno en uno cuando
- * debía subir de dos, el aviso va un paso por detrás, la lista no se repinta.
+ * El `exercise-01b` no aparece porque sus seis drills son funciones puras, no
+ * componentes: esos solo se ven en el test.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -37,8 +43,8 @@ const CHIP: Record<Estado, { texto: string; punto: string; color: string }> = {
   resuelto: { texto: "Resuelto", punto: "bg-[#30d158]", color: "text-[#30d158]" },
 };
 
-/* Los errores de muestra para el drill 4. Van en una constante y no escritos dentro del
- * JSX a propósito: con la firma del starter (`errores: {}`), un objeto literal pegado ahí
+/* Los errores de muestra para el drill 4 del exercise-01. Van en una constante y no
+ * escritos dentro del JSX a propósito: con una firma `{}`, un objeto literal pegado ahí
  * daría TS2353 por exceso de propiedades, y ese error sería MÍO, no del drill. */
 const erroresDeMuestra = {
   nombre: "El nombre es obligatorio",
@@ -83,7 +89,7 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
       {/* El componente vivo. Las reglas que importan en este bloque:
        *   [&_p]      → los textos que pinta el drill: el número, el aviso, el estado
        *   [&_button] → todo se dispara pulsando; varios drills tienen más de uno
-       *   [&_ul_li]  → las listas de ListaTareas, AvisoErrores y RegistroDoble
+       *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble y PanelConHistorial
        *   [&_input]  → solo lo usa GuardarNombre */}
       <div
         className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
@@ -135,17 +141,18 @@ function App() {
             Banco de pruebas
           </p>
           <h1 className="text-[56px] leading-[1.05] font-semibold tracking-[-0.03em] text-[#f5f5f7]">
-            useState y<br />
-            de dónde saca el tipo.
+            Estado local,
+            <br />
+            de principio a fin.
           </h1>
           <p className="mt-6 max-w-xl text-[21px] leading-[1.4] text-[#86868b]">
-            Diez drills en dos archivos. Aquí el fallo casi nunca es que no salga nada: es que
-            sale otra cosa.
+            El bloque 11 entero: el valor inicial y su tipo, lo que el setter no te da, y el
+            reducer para cuando los cambios tienen reglas.
           </p>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
-            Pulsa cada botón dos o tres veces antes de dar un drill por bueno. Varios de estos
-            starters aciertan el primer click y se caen en el segundo — y dos están en verde con
-            los tipos rotos.
+            Los dos primeros archivos están cerrados y siguen aquí a propósito, para ver cómo
+            quedaron. Los del <span className="font-mono">exercise-03</span> están sin
+            resolver: pulsa cada botón dos o tres veces antes de dar uno por bueno.
           </p>
         </header>
 
@@ -167,8 +174,9 @@ function App() {
         <Tarjeta
           n={2}
           nombre="Interruptor"
-          mirar="Tiene que decir OFF al arrancar y alternar a ON al pulsar. El useState ya está en booleano pero el cuerpo sigue comparando con textos, así que los dos lados de cada comparación ya no se encuentran."
+          mirar="Dice OFF al arrancar y alterna a ON al pulsar. El useState estaba en booleano y el cuerpo seguía comparando con textos: el arreglo fue terminar el cambio, no deshacerlo."
           campos="un botón que muestra ON u OFF"
+          estado="resuelto"
         >
           <Interruptor />
         </Tarjeta>
@@ -176,9 +184,9 @@ function App() {
         <Tarjeta
           n={3}
           nombre="SelectorColor"
-          mirar="Funciona al pulsar: dice Sin elegir y luego Elegido: verde. Pero el typecheck protesta en su useState. El valor inicial es correcto y no se toca — falta decirle qué más va a poder guardar."
+          mirar="Dice Sin elegir y luego Elegido: verde. El valor inicial era correcto; lo que faltaba era decirle a useState qué más iba a poder guardar además de null."
           campos="un <p> con lo elegido · tres botones: rojo, verde, azul"
-          estado="casi"
+          estado="resuelto"
         >
           <SelectorColor />
         </Tarjeta>
@@ -186,9 +194,9 @@ function App() {
         <Tarjeta
           n={4}
           nombre="AvisoErrores"
-          mirar="No tiene estado ni botones: recibe los errores por props y los pinta. Los dos de muestra se ven, y aun así el typecheck señala su firma. Es el drill que te bloquea 03-projex, aislado."
+          mirar="No tiene estado ni botones: recibe los errores por props y los pinta. Los dos de muestra se ven. El arreglo estaba en la firma, no en un useState."
           campos="una <ul> con un <li> por error"
-          estado="casi"
+          estado="resuelto"
         >
           <AvisoErrores errores={erroresDeMuestra} />
         </Tarjeta>
@@ -196,8 +204,9 @@ function App() {
         <Tarjeta
           n={5}
           nombre="ListaTareas"
-          mirar="Pulsa Añadir varias veces. Si la lista no crece, no es que no se guarde: se está mutando el array y React recibe la misma referencia, así que no repinta. El dato cambia y la pantalla no se entera."
+          mirar="Pulsa Añadir varias veces y la lista crece. Tenía dos defectos a la vez: el never[] del useState vacío y la mutación del array, que dejaba a React con la misma referencia."
           campos="botón Añadir · una <ul> con un <li> por tarea"
+          estado="resuelto"
         >
           <ListaTareas />
         </Tarjeta>
@@ -210,8 +219,9 @@ function App() {
         <Tarjeta
           n={1}
           nombre="GuardarNombre"
-          mirar="Escribe algo y pulsa Guardar: debe decir Guardado: Ana y el input quedarse vacío. El starter le pide al setter que le devuelva lo que acaba de guardar. Mira su firma antes de tocar nada."
+          mirar="Escribe algo y pulsa Guardar: dice Guardado: Ana y el input se vacía. El starter le pedía al setter que le devolviera lo guardado; la salida era no necesitar recuperarlo."
           campos="un <input> · botón Guardar · un <p> con lo guardado"
+          estado="resuelto"
         >
           <GuardarNombre />
         </Tarjeta>
@@ -219,8 +229,9 @@ function App() {
         <Tarjeta
           n={2}
           nombre="ContadorConAviso"
-          mirar="Tras el primer click el número dice 1 y el aviso debería decir Ahora vale 1. Si dice 0, va un paso por detrás: se compuso leyendo el estado justo después de llamar al setter. Compila sin una queja."
+          mirar="Tras el primer click el aviso dice Ahora vale 1, y sigue cuadrando en el segundo. El starter acertaba el primero por accidente y al segundo duplicaba el texto."
           campos="un <p> con el número · otro <p> con el aviso · botón Sumar"
+          estado="resuelto"
         >
           <ContadorConAviso />
         </Tarjeta>
@@ -228,8 +239,9 @@ function App() {
         <Tarjeta
           n={3}
           nombre="ContadorDoble"
-          mirar="Sumar 2 llama al setter dos veces y aun así sube de uno en uno. Las dos llamadas leen el mismo valor de este render, así que la segunda pisa a la primera en vez de continuarla."
+          mirar="Sube de dos en dos con DOS llamadas al setter, no con una de +2. Cada llamada continúa a la anterior en vez de pisarla: 0 a 1, y 1 a 2."
           campos="un <p> con el número · botón Sumar 2"
+          estado="resuelto"
         >
           <ContadorDoble />
         </Tarjeta>
@@ -237,8 +249,9 @@ function App() {
         <Tarjeta
           n={4}
           nombre="RegistroDoble"
-          mirar="Un click tiene que dejar Click 1 y Click 2; dos clicks, cuatro entradas. Es el drill anterior sobre un array: aquí no se pierde un número, se pierde una entrada entera."
+          mirar="Un click deja Click 1 y Click 2; dos clicks, cuatro entradas. Es el drill anterior sobre un array: aquí lo que se perdía era una entrada entera."
           campos="botón Registrar 2 · una <ul> con las entradas"
+          estado="resuelto"
         >
           <RegistroDoble />
         </Tarjeta>
@@ -246,10 +259,43 @@ function App() {
         <Tarjeta
           n={5}
           nombre="ContadorConTope"
-          mirar="Primer click 2, segundo click 3, y de ahí no se mueve. No basta con arreglar la forma de las llamadas: el tope también tiene que decidirse con el valor que llega, no con el de este render."
+          mirar="Primer click 2, segundo 3, y de ahí no se mueve. El tope se decide dentro de la función actualizadora, con el valor que llega y no con el de este render."
           campos="un <p> con el número · botón Sumar 2"
+          estado="resuelto"
         >
           <ContadorConTope />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-03"
+          titulo="El reducer que ya sabes escribir, con un cable a React."
+        />
+
+        <Tarjeta
+          n={1}
+          nombre="ContadorConReducer"
+          mirar="Sumar debe subir de uno en uno y Reiniciar volver a 0. El reducer ya está escrito y es correcto: si no pasa nada al pulsar, lo que no llega bien es la acción."
+          campos="un <p> con el número · botones Sumar y Reiniciar"
+        >
+          <ContadorConReducer />
+        </Tarjeta>
+
+        <Tarjeta
+          n={3}
+          nombre="ContadorConPaso"
+          mirar="El botón debe subir de cinco en cinco. Usa el reducer del drill 2, así que hasta que ese esté escrito aquí no se moverá nada. La acción sumar necesita algo más que su tipo."
+          campos="un <p> con el número · botón Sumar 5"
+        >
+          <ContadorConPaso />
+        </Tarjeta>
+
+        <Tarjeta
+          n={5}
+          nombre="PanelConHistorial"
+          mirar="Sumar 2 sube el contador y deja una línea en el historial; Reiniciar lo pone a 0 sin borrar la lista. Si el contador cambia pero la lista no crece, el reducer está mutando el estado que recibe."
+          campos="un <p> con el contador · botones Sumar 2 y Reiniciar · una <ul> con el historial"
+        >
+          <PanelConHistorial />
         </Tarjeta>
       </div>
     </main>

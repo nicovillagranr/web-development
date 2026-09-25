@@ -87,17 +87,22 @@ import { useState } from "react";
 //    acaba de guardar para vaciar con eso. Mira su firma antes de escribir nada.
 export function GuardarNombre() {
   const [texto, setTexto] = useState("");
+  // 1. El estado inicial es un string vacío (significa "nada guardado")
   const [guardado, setGuardado] = useState("");
 
   const guardar = () => {
-    const loGuardado = setGuardado(texto);
-    setTexto(loGuardado);
+    // 2. Guardamos el valor actual del input en el estado 'guardado'
+    setGuardado(texto);
+    // 3. Ahora sí podemos vaciar el input de forma segura
+    setTexto("");
   };
 
   return (
     <div>
       <input value={texto} onChange={(e) => setTexto(e.target.value)} />
       <button onClick={guardar}>Guardar</button>
+
+      {/* 4. Si 'guardado' está vacío, muestra "Nada guardado", si no, muestra el nombre */}
       <p>{guardado === "" ? "Nada guardado" : `Guardado: ${guardado}`}</p>
     </div>
   );
@@ -110,17 +115,17 @@ export function GuardarNombre() {
 //    Compila sin una queja, y el aviso va siempre un paso por detrás.
 //    Lo que necesitas ya lo has calculado una línea antes.
 export function ContadorConAviso() {
-  const [n, setN] = useState(0);
+  const [numero, setNumero] = useState(0);
   const [aviso, setAviso] = useState("");
 
   const sumar = () => {
-    setN(n + 1);
-    setAviso(`Ahora vale ${n}`);
+    setNumero((anterior) => anterior + 1);
+    setAviso(`Ahora vale ${numero + 1}`);
   };
 
   return (
     <div>
-      <p>{n}</p>
+      <p>{numero}</p>
       <p>{aviso}</p>
       <button onClick={sumar}>Sumar</button>
     </div>
@@ -167,16 +172,16 @@ export function ContadorConAviso() {
 //    Un <p> con el número.
 //    El starter ya llama dos veces y aun así sube de uno en uno.
 export function ContadorDoble() {
-  const [n, setN] = useState(0);
+  const [numero, setNumero] = useState(0);
 
   const sumarDos = () => {
-    setN(n + 1);
-    setN(n + 1);
+    setNumero((a) => a + 1);
+    setNumero((b) => b + 1);
   };
 
   return (
     <div>
-      <p>{n}</p>
+      <p>{numero}</p>
       <button onClick={sumarDos}>Sumar 2</button>
     </div>
   );
@@ -191,16 +196,16 @@ export function RegistroDoble() {
   const [clicks, setClicks] = useState<string[]>([]);
 
   const registrarDos = () => {
-    setClicks([...clicks, `Click ${clicks.length + 1}`]);
-    setClicks([...clicks, `Click ${clicks.length + 1}`]);
+    setClicks((anterior) => [...anterior, `Click ${anterior.length + 1}`]);
+    setClicks((anterior) => [...anterior, `Click ${anterior.length + 1}`]);
   };
 
   return (
     <div>
       <button onClick={registrarDos}>Registrar 2</button>
       <ul>
-        {clicks.map((c) => (
-          <li key={c}>{c}</li>
+        {clicks.map((click) => (
+          <li key={click}>{click}</li>
         ))}
       </ul>
     </div>
@@ -214,16 +219,17 @@ export function RegistroDoble() {
 //    que decidirse con el valor que llega, no con el de este render. Piensa dónde
 //    cabe ese `if` cuando lo que entregas ya no es un número.
 export function ContadorConTope() {
-  const [n, setN] = useState(0);
+  const [numero, setNumero] = useState(0); // Creamos un estado inicializado en 0
 
   const sumarDos = () => {
-    setN(n >= 3 ? n : n + 1);
-    setN(n >= 3 ? n : n + 1);
+    // Al ejecutarse la función
+    setNumero((anterior) => (anterior >= 3 ? anterior : anterior + 1)); // Qué es (n)? Es el valor más reciente del estado, no el de este render
+    setNumero((anterior) => (anterior >= 3 ? anterior : anterior + 1)); // (n) continúa con el valor más reciente del estado, si antes se le sumó 1, ahora es 1
   };
 
   return (
     <div>
-      <p>{n}</p>
+      <p>{numero}</p>
       <button onClick={sumarDos}>Sumar 2</button>
     </div>
   );
