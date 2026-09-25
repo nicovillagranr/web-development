@@ -133,10 +133,10 @@ describe("09-react-props / exercise-06 — interface, extends y tipos derivados"
   it("9) TarjetaProductoProps — recorte del dominio + extras de UI", () => {
     const p: TarjetaProductoProps = { nombre: "Pan", precio: 2, onComprar: () => {} };
     expect(p.destacado).toBeUndefined();
-    // @ts-expect-error — `descripcion` no entró en el Pick del extends
     const sobra: TarjetaProductoProps = {
       nombre: "Pan",
       precio: 2,
+      // @ts-expect-error — `descripcion` no entró en el Pick del extends
       descripcion: "x",
       onComprar: () => {},
     };
