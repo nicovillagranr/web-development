@@ -19,6 +19,12 @@ import {
   ContadorConPaso,
   PanelConHistorial,
 } from "./exercises/11-useState-useReducer/exercise-03";
+import { ListaCompra, PanelNotas } from "./exercises/11-useState-useReducer/exercise-03b";
+import {
+  Altavoz,
+  AltavozConPreset,
+  AltavozCompleto,
+} from "./exercises/11-useState-useReducer/exercise-03c";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -30,7 +36,8 @@ import {
  * cómo quedaron y se puede volver a cualquiera sin remontar nada.
  *
  * El `exercise-01b` no aparece porque sus seis drills son funciones puras, no
- * componentes: esos solo se ven en el test.
+ * componentes: esos solo se ven en el test. Del `exercise-03b` pasa lo mismo con los
+ * drills 1 al 8; solo el 9 y el 10 pintan algo. Y del `exercise-03c`, solo el 7, el 8 y el 9.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -72,9 +79,7 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
           <span className="text-[13px] font-medium text-[#6e6e73] tabular-nums">
             {String(n).padStart(2, "0")}
           </span>
-          <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-[#f5f5f7]">
-            {nombre}
-          </h3>
+          <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-[#f5f5f7]">{nombre}</h3>
           <span className={`ml-auto flex items-center gap-1.5 text-[12px] ${chip.color}`}>
             <span className={`h-1.5 w-1.5 rounded-full ${chip.punto}`} />
             {chip.texto}
@@ -89,7 +94,8 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
       {/* El componente vivo. Las reglas que importan en este bloque:
        *   [&_p]      → los textos que pinta el drill: el número, el aviso, el estado
        *   [&_button] → todo se dispara pulsando; varios drills tienen más de uno
-       *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble y PanelConHistorial
+       *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble, PanelConHistorial,
+       *                ListaCompra y PanelNotas
        *   [&_input]  → solo lo usa GuardarNombre */}
       <div
         className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
@@ -146,13 +152,12 @@ function App() {
             de principio a fin.
           </h1>
           <p className="mt-6 max-w-xl text-[21px] leading-[1.4] text-[#86868b]">
-            El bloque 11 entero: el valor inicial y su tipo, lo que el setter no te da, y el
-            reducer para cuando los cambios tienen reglas.
+            El bloque 11 entero: el valor inicial y su tipo, lo que el setter no te da, y el reducer
+            para cuando los cambios tienen reglas.
           </p>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
-            Los dos primeros archivos están cerrados y siguen aquí a propósito, para ver cómo
-            quedaron. Los del <span className="font-mono">exercise-03</span> están sin
-            resolver: pulsa cada botón dos o tres veces antes de dar uno por bueno.
+            Los seis archivos del bloque están cerrados y siguen aquí a propósito, para ver cómo
+            quedaron: pulsa cada botón dos o tres veces.
           </p>
         </header>
 
@@ -274,8 +279,9 @@ function App() {
         <Tarjeta
           n={1}
           nombre="ContadorConReducer"
-          mirar="Sumar debe subir de uno en uno y Reiniciar volver a 0. El reducer ya está escrito y es correcto: si no pasa nada al pulsar, lo que no llega bien es la acción."
+          mirar="Sumar sube de uno en uno y Reiniciar vuelve a 0. El reducer venía escrito y era correcto: lo que no llegaba bien era la acción, que es un objeto con su tipo y no el texto suelto."
           campos="un <p> con el número · botones Sumar y Reiniciar"
+          estado="resuelto"
         >
           <ContadorConReducer />
         </Tarjeta>
@@ -283,8 +289,9 @@ function App() {
         <Tarjeta
           n={3}
           nombre="ContadorConPaso"
-          mirar="El botón debe subir de cinco en cinco. Usa el reducer del drill 2, así que hasta que ese esté escrito aquí no se moverá nada. La acción sumar necesita algo más que su tipo."
+          mirar="Sube de cinco en cinco con el reducer del drill 2. La acción sumar lleva la cantidad consigo, y esa cantidad solo existe dentro de su case."
           campos="un <p> con el número · botón Sumar 5"
+          estado="resuelto"
         >
           <ContadorConPaso />
         </Tarjeta>
@@ -292,10 +299,71 @@ function App() {
         <Tarjeta
           n={5}
           nombre="PanelConHistorial"
-          mirar="Sumar 2 sube el contador y deja una línea en el historial; Reiniciar lo pone a 0 sin borrar la lista. Si el contador cambia pero la lista no crece, el reducer está mutando el estado que recibe."
+          mirar="Sumar 2 sube el contador y deja una línea en el historial; Reiniciar lo pone a 0 sin borrar la lista. El reducer ya no toca lo que recibe: hoja nueva y también taquilla nueva para el historial."
           campos="un <p> con el contador · botones Sumar 2 y Reiniciar · una <ul> con el historial"
+          estado="resuelto"
         >
           <PanelConHistorial />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-03b"
+          titulo="No toques lo que te llega: la hoja y la taquilla."
+        />
+
+        <Tarjeta
+          n={9}
+          estado="resuelto"
+          nombre="ListaCompra"
+          mirar="Cada click en Añadir leche suma una leche a la lista y se ve al momento. Si pulsas y no aparece nada, el array sí está creciendo: lo que pasa es que React recibe la misma llave y no repinta."
+          campos="una <ul> que empieza con pan · botón Añadir leche"
+        >
+          <ListaCompra />
+        </Tarjeta>
+
+        <Tarjeta
+          n={10}
+          estado="resuelto"
+          nombre="PanelNotas"
+          mirar="Un click en Anotar debe dejar UNA nota. Aquí la pantalla sí repinta, pero cada nota sale doble: es el StrictMode de main.tsx llamando dos veces al reducer y delatando lo que toca."
+          campos="botón Anotar · una <ul> con las notas"
+        >
+          <PanelNotas />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-03c"
+          titulo="La cadena de useReducer: el papel, el cajero y quién lo entrega."
+        />
+
+        <Tarjeta
+          n={7}
+          nombre="Altavoz"
+          estado="resuelto"
+          mirar="Subir y Bajar mueven el número de uno en uno, empezando en 5. Si en pantalla sale la palabra subir en vez de un número, el reducer recibió la etiqueta y no el papel."
+          campos="un <p> con el volumen · botones Subir y Bajar"
+        >
+          <Altavoz />
+        </Tarjeta>
+
+        <Tarjeta
+          n={8}
+          nombre="AltavozConPreset"
+          estado="resuelto"
+          mirar="Empieza en 3 y el botón lo deja en 7. Si pulsas y no pasa nada, la cuenta se hizo, pero nadie guardó el resultado."
+          campos="un <p> con el volumen · botón Al 7"
+        >
+          <AltavozConPreset />
+        </Tarjeta>
+
+        <Tarjeta
+          n={9}
+          nombre="AltavozCompleto"
+          estado="resuelto"
+          mirar="Silencio lo deja en 0 venga de donde venga, y después Bajar no baja más. Ni Subir ni Bajar pasan de 10 ni de 0. Con el starter, Silencio tumbaba la página entera: el reducer devolvía el papel y React no sabe pintar un objeto."
+          campos="un <p> con el volumen · botones Subir, Bajar y Silencio"
+        >
+          <AltavozCompleto />
         </Tarjeta>
       </div>
     </main>

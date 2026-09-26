@@ -22,7 +22,7 @@ import { useReducer } from "react";
  * 🎯 AL TERMINAR SABRÁS
  * ----------------------------------------------------------------------------
  *   · nombrar las cuatro piezas de `useReducer` y decir cuál escribe React
- *   · despachar una acción con datos y otra sin ellos
+ *   · pedir una acción con datos y otra sin ellos
  *   · decir por qué un reducer no puede tocar el estado que recibe
  *
  * 🟢 ¿POR QUÉ ESTE ARCHIVO?
@@ -53,33 +53,33 @@ import { useReducer } from "react";
  * ─────────────────────────────────────────────────────────────────────────────
  * DEFINICIÓN
  *   `useReducer` recibe DOS cosas —el reducer y el estado inicial— y devuelve un
- *   par: el estado de este render y `dispatch`. Tú nunca llamas al reducer: le
- *   entregas una acción a `dispatch` y React se encarga de llamarlo con el
+ *   par: el estado de este render y `pedir`. Tú nunca llamas al reducer: le
+ *   entregas una acción a `pedir` y React se encarga de llamarlo con el
  *   estado más reciente.
  *
  * SINTAXIS
- *     const [estado, dispatch] = useReducer(contarReducer, 0)
- *            ▲        ▲                      ▲              ▲
- *            │        │                      │              └─ estado inicial
- *            │        │                      └─ la función que TÚ escribes
- *            │        └─ con esto pides un cambio: dispatch({ tipo: "incrementar" })
+ *     const [estado, pedir] = useReducer(contarReducer, 0)
+ *            ▲        ▲                   ▲              ▲
+ *            │        │                   │              └─ estado inicial
+ *            │        │                   └─ la función que TÚ escribes
+ *            │        └─ con esto pides un cambio: pedir({ tipo: "incrementar" })
  *            └─ el estado de ESTE render, igual que con useState
  *
  * EJEMPLO — el mismo gesto que ya conoces, con otro nombre:
  *     setNumero((anterior) => anterior + 1)   // useState: entregas la regla
- *     dispatch({ tipo: "incrementar" })       // useReducer: entregas QUÉ pasó
+ *     pedir({ tipo: "incrementar" })          // useReducer: entregas QUÉ pasó
  *
  * 🧠 ANALOGÍA (de apoyo) — el cajero automático del `08`. El saldo es el estado,
- *    y tú no metes la mano: pulsas una opción del menú. `dispatch` es pulsar la
+ *    y tú no metes la mano: pulsas una opción del menú. `pedir` es pulsar la
  *    opción; el cajero (el reducer) es quien calcula el saldo nuevo.
  *
  * 🗣️ LAS PIEZAS
  *     reducer    → `(estado, accion) => estadoNuevo`. La escribes tú, la llama React
- *     dispatch   → la función que recibes. Le entregas una acción, no un valor
+ *     pedir      → la función que recibes. Le entregas una acción, no un valor (en código ajeno: `dispatch`)
  *     acción     → un objeto con su `tipo`. Es una unión discriminada del `08`
  *     estado     → el de este render. Constante, igual que en useState
  *
- * ⚠️ TRAMPA — `dispatch("incrementar")` con el texto suelto. La acción es un
+ * ⚠️ TRAMPA — `pedir("incrementar")` con el texto suelto. La acción es un
  *    OBJETO con la propiedad `tipo`; el texto solo es su etiqueta. Es la
  *    diferencia entre pulsar el botón y gritarle el nombre al cajero.
  * ───────────────────────────────────────────────────────────────────────────── */
@@ -107,14 +107,14 @@ function reducerDado(estado: number, accion: Accion): number {
 export function ContadorConReducer() {
   // 0 es el estado inicial.
   // reducerDado contiene la lógica para calcular el nuevo estado
-  // cada vez que despachamos una acción.
-  const [numero, despachar] = useReducer(reducerDado, 0);
+  // cada vez que pedimos una acción.
+  const [numero, pedir] = useReducer(reducerDado, 0);
 
   return (
     <div>
       <p>{numero}</p>
-      <button onClick={() => despachar({ tipo: "incrementar" })}>Sumar</button>
-      <button onClick={() => despachar({ tipo: "reiniciar" })}>Reiniciar</button>
+      <button onClick={() => pedir({ tipo: "incrementar" })}>Sumar</button>
+      <button onClick={() => pedir({ tipo: "reiniciar" })}>Reiniciar</button>
     </div>
   );
 }
@@ -151,7 +151,7 @@ export function contarReducer(estado: number, accion: Accion): number {
  *   NUEVO en cada transición, nunca el mismo retocado.
  *
  * SINTAXIS
- *     dispatch({ tipo: "sumar", cantidad: 3 })
+ *     pedir({ tipo: "sumar", cantidad: 3 })
  *                              └── el dato viaja CON la acción ──┘
  *
  *     case "sumar": return estado + accion.cantidad
@@ -178,21 +178,21 @@ export function contarReducer(estado: number, accion: Accion): number {
 // 3) `ContadorConPaso` — un <p> con el número y un botón "Sumar 5" que sube de
 //    cinco en cinco. Usa `contarReducer`, el del drill 2, sin tocarlo.
 export function ContadorConPaso() {
-  const [numero, despachar] = useReducer(contarReducer, 0);
+  const [numero, pedir] = useReducer(contarReducer, 0);
 
   return (
     <div>
       <p>{numero}</p>
       {/* Al onClick le pasamos la acción compuesta por: el tipo y la cantidad */}
       {/* El estado inicial que es 0 lo pone react */}
-      {/* tú escribes:   dispatch({ tipo: "sumar", cantidad: 5 })
+      {/* tú escribes:   pedir({ tipo: "sumar", cantidad: 5 })
                           └──────────── esto ────────────┘
                                                           ↓
 React hace:    contarReducer( 0 , { tipo: "sumar", cantidad: 5 })
                               ▲                  ▲
                               │                  └─ lo pusiste tú
                               └─ lo pone React: el estado más reciente */}
-      <button onClick={() => despachar({ tipo: "sumar", cantidad: 5 })}>Sumar 5</button>
+      <button onClick={() => pedir({ tipo: "sumar", cantidad: 5 })}>Sumar 5</button>
     </div>
   );
 }
@@ -240,13 +240,13 @@ export function panelReducer(estado: EstadoPanel, accion: Accion): EstadoPanel {
 // 5) `PanelConHistorial` — un <p> con el contador, un <li> por cada entrada del
 //    historial y dos botones: "Sumar 2" y "Reiniciar". Usa `panelReducer`.
 export function PanelConHistorial() {
-  const [estado, dispatch] = useReducer(panelReducer, { contador: 0, historial: [] });
+  const [estado, pedir] = useReducer(panelReducer, { contador: 0, historial: [] });
 
   return (
     <div>
       <p>{estado.contador}</p>
-      <button onClick={() => dispatch({ tipo: "sumar", cantidad: 2 })}>Sumar 2</button>
-      <button onClick={() => dispatch({ tipo: "reiniciar" })}>Reiniciar</button>
+      <button onClick={() => pedir({ tipo: "sumar", cantidad: 2 })}>Sumar 2</button>
+      <button onClick={() => pedir({ tipo: "reiniciar" })}>Reiniciar</button>
       <ul>
         {estado.historial.map((entrada, i) => (
           <li key={i}>{entrada}</li>

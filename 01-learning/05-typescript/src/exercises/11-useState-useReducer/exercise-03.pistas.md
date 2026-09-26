@@ -25,7 +25,7 @@ con lo que les estás entregando.
 Una acción es un **objeto** con una propiedad `tipo`. `"incrementar"` no es la acción: es
 el valor de esa propiedad.
 
-`dispatch` acepta exactamente lo que dice `Accion` y nada más. Es la misma unión cerrada
+`pedir` acepta exactamente lo que dice `Accion` y nada más. Es la misma unión cerrada
 del `08`: si el objeto no encaja en ninguna variante, no entra.
 
 </details>
@@ -50,8 +50,8 @@ Unable to find an element with the text: 2
 <details><summary>Solución</summary>
 
 ```tsx
-<button onClick={() => dispatch({ tipo: "incrementar" })}>Sumar</button>
-<button onClick={() => dispatch({ tipo: "reiniciar" })}>Reiniciar</button>
+<button onClick={() => pedir({ tipo: "incrementar" })}>Sumar</button>
+<button onClick={() => pedir({ tipo: "reiniciar" })}>Reiniciar</button>
 ```
 
 El texto es la **etiqueta** de la acción, no la acción. Es la trampa de la TEORÍA 1: pulsar
@@ -154,11 +154,11 @@ ninguna variante con esa forma.
 <details><summary>Solución</summary>
 
 ```tsx
-<button onClick={() => dispatch({ tipo: "sumar", cantidad: 5 })}>Sumar 5</button>
+<button onClick={() => pedir({ tipo: "sumar", cantidad: 5 })}>Sumar 5</button>
 ```
 
 Y fíjate en que `contarReducer` no se toca: el mismo reducer sirve para subir de uno en uno
-o de cinco en cinco, porque el cuánto lo decide quien despacha.
+o de cinco en cinco, porque el cuánto lo decide quien pide.
 
 </details>
 
@@ -238,7 +238,7 @@ en pantalla.
 Este depende del drill 4: mientras el reducer mute, aquí no vas a ver nada cambiar aunque
 el botón funcione.
 
-Pero además hay un botón que no despacha lo que dice su texto.
+Pero además hay un botón que no pide lo que dice su texto.
 
 </details>
 
@@ -264,11 +264,11 @@ la pantalla no se entera del primero siquiera.
 <details><summary>Solución</summary>
 
 ```tsx
-<button onClick={() => dispatch({ tipo: "sumar", cantidad: 2 })}>Sumar 2</button>
-<button onClick={() => dispatch({ tipo: "reiniciar" })}>Reiniciar</button>
+<button onClick={() => pedir({ tipo: "sumar", cantidad: 2 })}>Sumar 2</button>
+<button onClick={() => pedir({ tipo: "reiniciar" })}>Reiniciar</button>
 ```
 
-El botón "Reiniciar" despachaba `incrementar`. Ningún compilador puede cazar eso: las dos
+El botón "Reiniciar" pedía `incrementar`. Ningún compilador puede cazar eso: las dos
 acciones son válidas y el texto de un botón no es más que un texto.
 
 Con el reducer del drill 4 ya puro, el historial crece y la lista se repinta en cada
