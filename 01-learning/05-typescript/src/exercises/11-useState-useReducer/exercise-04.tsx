@@ -148,14 +148,25 @@ export function formReducer(estado: EstadoForm, accion: AccionForm): EstadoForm 
         fase: "idle",
       };
     case "empezar":
+      if (estado.fase === "enviando") {
+        return estado;
+      }
       return {
         ...estado,
         errores: {},
         fase: "enviando",
       };
 
-    case "terminar": // ← drill 5
-      return { ...estado, fase: "enviado" };
+    case "terminar":
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
+
+      return {
+        ...estado,
+        datos: vacios,
+        fase: "enviado",
+      };
     default: {
       const _exhaustivo: never = accion;
       return _exhaustivo;
@@ -163,14 +174,14 @@ export function formReducer(estado: EstadoForm, accion: AccionForm): EstadoForm 
   }
 }
 // formReducer(inicial, { tipo: "escribir", campo: "name", valor: "Ana" }) -> { datos: { name: "Ana", email: "", message: "" }, errores: {}, fase: "idle" }
-// formReducer(inicial, { tipo: "rechazar", errores: { name: "Falta" } })
-// formReducer(inicial, { tipo: "empezar" })
-// formReducer(inicial, { tipo: "terminar" })
+// formReducer(inicial, { tipo: "rechazar", errores: { name: "Falta" } }) -> { datos: { name: "", email: "", message: "" }, errores: { name: "Falta" }, fase: "idle" }
+// formReducer(inicial, { tipo: "empezar" }) -> { datos: { name: "", email: "", message: "" }, errores: {}, fase: "enviando" }
+// formReducer(inicial, { tipo: "terminar" }) -> { datos: { name: "", email: "", message: "" }, errores: {}, fase: "enviado" }
 
 // 6) Con el reducer del 2 al 5 terminado: parte de `inicial` y le llegan, en este
 //    orden, empezar · empezar · terminar · escribir. ¿En qué fase queda?
-export const respuesta6: Fase = "enviando";
-// ¿Por qué?
+export const respuesta6: Fase = "idle";
+// ¿Por qué?  Porque el primer "empezar" pasa a "enviando", el segundo "empezar" no hace nada, el "terminar" pasa a "enviado", y el "escribir" vuelve a "idle".
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — pedir en el orden en que pasan las cosas
@@ -192,15 +203,49 @@ export const respuesta6: Fase = "enviando";
  *    la nueva llega en el siguiente.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// Dados, no se tocan: la validación (tu `ContactValidation`, recortada) y la espera.
-export function validar(datos: Datos): Errores {
+// export type Errores = { name?: string; email?: string; message?: string };
+
+// Para validar la forma de correo usamos una expresión regular. No hace falta entenderla, solo copiarla.
+const FORMA_DE_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Para validar la data creamos una función
+export function validarContacto(contacto: Datos): Errores {
+  // Iremos metiendo los errores en un objeto vacío de tipo Errores
   const errores: Errores = {};
-  if (!datos.name.trim()) errores.name = "El nombre es obligatorio";
-  if (!datos.email.includes("@")) errores.email = "El correo no es válido";
-  if (!datos.message.trim()) errores.message = "El mensaje es obligatorio";
+
+  switch (true) {
+    case contacto.name.trim() === "":
+      errores.name = "El nombre es obligatorio"; // Llenamos el objeto
+      break;
+
+    case contacto.name.trim().length < 2:
+      errores.name = "El nombre debe tener al menos 2 caracteres"; // Llenamos el objeto
+      break;
+  }
+
+  switch (true) {
+    case contacto.email.trim() === "":
+      errores.email = "El correo es obligatorio"; // Llenamos el objeto
+      break;
+
+    case !FORMA_DE_CORREO.test(contacto.email): // Si la forma de correo que pedimos NO ES VÁLIDA, entonces llenamos el objeto con el error
+      errores.email = "El correo no es válido"; // Llenamos el objeto
+      break;
+  }
+
+  switch (true) {
+    case contacto.message.trim() === "":
+      errores.message = "El mensaje es obligatorio"; // Llenamos el objeto
+      break;
+
+    case contacto.message.trim().length < 10:
+      errores.message = "El mensaje debe tener al menos 10 caracteres"; // Llenamos el objeto
+      break;
+  }
+
   return errores;
 }
-
+// Simula la espera de una petición HTTP, con `await esperar(…)` en el drill 8.
 const esperar = (ms: number) => new Promise((resolver) => setTimeout(resolver, ms));
 
 // 7) y 8) `FormContacto` — tres campos, "Enviar" y un <p role="status"> con el
@@ -213,13 +258,14 @@ export function FormContacto() {
 
   const enviar = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const errores = validar(estado.datos);
+    const errores = validarContacto(estado.datos);
     if (Object.keys(errores).length > 0) {
       pedir({ tipo: "rechazar", errores });
       return;
     }
-    await esperar(300); // ← drill 8
-    pedir({ tipo: "terminar" });
+    pedir({ tipo: "empezar" }); // → fase: "enviando"
+    await esperar(300); // Simulamos la espera del servidor
+    pedir({ tipo: "terminar" }); // → fase: "enviado"
   };
 
   return (
@@ -228,7 +274,7 @@ export function FormContacto() {
         placeholder="Nombre"
         aria-label="Nombre"
         value={estado.datos.name}
-        onChange={(e) => pedir({ tipo: "escribir", campo: "nombre", valor: e.target.value })} // ← drill 7
+        onChange={(e) => pedir({ tipo: "escribir", campo: "name", valor: e.target.value })}
       />
       {estado.errores.name && <p>{estado.errores.name}</p>}
       <input
@@ -245,7 +291,9 @@ export function FormContacto() {
         onChange={(e) => pedir({ tipo: "escribir", campo: "message", valor: e.target.value })}
       />
       {estado.errores.message && <p>{estado.errores.message}</p>}
-      <button type="submit">Enviar</button>
+      <button type="submit" disabled={estado.fase === "enviando"}>
+        Enviar
+      </button>
       <p role="status">{textoDeFase(estado.fase)}</p>
     </form>
   );

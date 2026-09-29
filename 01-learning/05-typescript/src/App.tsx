@@ -162,10 +162,8 @@ function App() {
             para cuando los cambios tienen reglas.
           </p>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
-            Los seis primeros archivos están cerrados y siguen aquí a propósito, para ver cómo
-            quedaron. El <span className="font-mono">exercise-04</span> y su refuerzo, el{" "}
-            <span className="font-mono">04b</span>, están sin resolver: pulsa cada botón dos o tres
-            veces antes de dar uno por bueno.
+            Todos están cerrados, del <span className="font-mono">exercise-01</span> al{" "}
+            <span className="font-mono">04b</span>, y siguen aquí a propósito para ver cómo quedaron.
           </p>
         </header>
 
@@ -382,7 +380,8 @@ function App() {
         <Tarjeta
           n={7}
           nombre="FormContacto"
-          mirar="Enviar vacío muestra los tres errores. Con los tres campos bien, sale Enviando… y a los 300 ms Mensaje enviado, y los campos se vacían. Si escribes después de enviar, el aviso desaparece. Con el starter, Nombre no guarda lo que escribes."
+          estado="resuelto"
+          mirar="Enviar vacío muestra los tres errores; un mensaje de menos de 10 caracteres también se rechaza. Con los tres campos bien, sale Enviando… y a los 300 ms Mensaje enviado, y los campos se vacían. Si escribes después de enviar, el aviso desaparece."
           campos="inputs Nombre, Correo y Mensaje · botón Enviar · un <p> con la fase"
         >
           <FormContacto />

@@ -83,7 +83,7 @@ describe("11-useState-useReducer / exercise-04 — el formulario con reducer", (
 
     await user.type(screen.getByRole("textbox", { name: "Nombre" }), "Ana");
     await user.type(screen.getByRole("textbox", { name: "Correo" }), "ana@mail.cl");
-    await user.type(screen.getByRole("textbox", { name: "Mensaje" }), "Hola");
+    await user.type(screen.getByRole("textbox", { name: "Mensaje" }), "Hola, quiero cotizar");
     await user.click(screen.getByRole("button", { name: "Enviar" }));
 
     expect(await screen.findByText("Enviando…")).toBeInTheDocument();

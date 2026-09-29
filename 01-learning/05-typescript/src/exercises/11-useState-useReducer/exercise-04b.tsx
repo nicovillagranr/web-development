@@ -64,7 +64,7 @@ import { useReducer } from "react";
 
 // Las piezas de este archivo. No se tocan.
 
-// Un tipe que sólo puede ser uno de estos tres strings. El test lo comprueba.
+// Un type que sólo puede ser uno de estos tres strings. El test lo comprueba.
 export type EstadoNota = "editando" | "guardando" | "guardado";
 
 // Un type que es un objeto con dos claves, ambas strings. El test lo comprueba.
