@@ -27,6 +27,7 @@ import {
 } from "./exercises/11-useState-useReducer/exercise-03c";
 import { FormContacto } from "./exercises/11-useState-useReducer/exercise-04";
 import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
+import { TarjetaPerfil } from "./exercises/11-useState-useReducer/exercise-05";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -42,6 +43,8 @@ import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
  * drills 1 al 8; solo el 9 y el 10 pintan algo. Del `exercise-03c`, solo el 7, el 8 y el 9.
  * Del `exercise-04`, solo `FormContacto`, que junta los drills 7 y 8. Y del
  * `exercise-04b`, solo `EditorNota` (drill 9): los ocho primeros son funciones puras.
+ * Del `exercise-05`, solo `TarjetaPerfil` (drill 10): del 1 al 5 son predicciones y
+ * del 6 al 9, funciones puras.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -162,8 +165,9 @@ function App() {
             para cuando los cambios tienen reglas.
           </p>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
-            Todos están cerrados, del <span className="font-mono">exercise-01</span> al{" "}
-            <span className="font-mono">04b</span>, y siguen aquí a propósito para ver cómo quedaron.
+            Del <span className="font-mono">exercise-01</span> al{" "}
+            <span className="font-mono">04b</span> están cerrados y siguen aquí a propósito, para ver
+            cómo quedaron. El <span className="font-mono">05</span>, el primero de los refuerzos, también.
           </p>
         </header>
 
@@ -400,6 +404,21 @@ function App() {
           campos="input Título · botón Guardar · un <p> con Guardado o vacío"
         >
           <EditorNota />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-05"
+          titulo="Qué sale de un spread: todo, salvo lo que pisas después."
+        />
+
+        <Tarjeta
+          n={10}
+          nombre="TarjetaPerfil"
+          estado="resuelto"
+          mirar="Pulsa los cuatro en cualquier orden: cada uno cambia lo suyo sin deshacer lo de los otros. Modo oscuro e Idioma: English tocan una sola clave de preferencias; Restablecer las sustituye enteras, pero la ciudad no se mueve."
+          campos="un <p> con nombre y ciudad · otro <p> con tema e idioma · botones Mudarse de Santiago a Talca, Modo oscuro, Idioma: English y Restablecer preferencias"
+        >
+          <TarjetaPerfil />
         </Tarjeta>
       </div>
     </main>
