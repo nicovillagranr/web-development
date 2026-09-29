@@ -28,6 +28,7 @@ import {
 import { FormContacto } from "./exercises/11-useState-useReducer/exercise-04";
 import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
 import { TarjetaPerfil } from "./exercises/11-useState-useReducer/exercise-05";
+import { TiendaPedido } from "./exercises/11-useState-useReducer/exercise-06";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -44,7 +45,8 @@ import { TarjetaPerfil } from "./exercises/11-useState-useReducer/exercise-05";
  * Del `exercise-04`, solo `FormContacto`, que junta los drills 7 y 8. Y del
  * `exercise-04b`, solo `EditorNota` (drill 9): los ocho primeros son funciones puras.
  * Del `exercise-05`, solo `TarjetaPerfil` (drill 10): del 1 al 5 son predicciones y
- * del 6 al 9, funciones puras.
+ * del 6 al 9, funciones puras. Del `exercise-06`, solo `TiendaPedido`, que junta los
+ * drills 8 y 9.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -167,7 +169,8 @@ function App() {
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
             Del <span className="font-mono">exercise-01</span> al{" "}
             <span className="font-mono">04b</span> están cerrados y siguen aquí a propósito, para ver
-            cómo quedaron. El <span className="font-mono">05</span>, el primero de los refuerzos, también.
+            cómo quedaron. El <span className="font-mono">05</span>, el primero de los refuerzos, también. El{" "}
+            <span className="font-mono">06</span> está sin resolver.
           </p>
         </header>
 
@@ -419,6 +422,20 @@ function App() {
           campos="un <p> con nombre y ciudad · otro <p> con tema e idioma · botones Mudarse de Santiago a Talca, Modo oscuro, Idioma: English y Restablecer preferencias"
         >
           <TarjetaPerfil />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-06"
+          titulo="Cada cambio pregunta antes cómo venía el pedido."
+        />
+
+        <Tarjeta
+          n={8}
+          nombre="TiendaPedido"
+          mirar="Enviar sin pagar no hace nada. Paga y envía: sale enviado, y a partir de ahí ni +1 ni Cambiar a Té mueven nada. Si cambias a Té con el pedido pagado, vuelve a carrito. Con el starter la tienda deja hacerlo todo, en cualquier orden."
+          campos="un <p> con producto, cantidad y fase · botones +1, Pagar, Cambiar a Té y Enviar"
+        >
+          <TiendaPedido />
         </Tarjeta>
       </div>
     </main>
