@@ -25,6 +25,8 @@ import {
   AltavozConPreset,
   AltavozCompleto,
 } from "./exercises/11-useState-useReducer/exercise-03c";
+import { FormContacto } from "./exercises/11-useState-useReducer/exercise-04";
+import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -37,7 +39,9 @@ import {
  *
  * El `exercise-01b` no aparece porque sus seis drills son funciones puras, no
  * componentes: esos solo se ven en el test. Del `exercise-03b` pasa lo mismo con los
- * drills 1 al 8; solo el 9 y el 10 pintan algo. Y del `exercise-03c`, solo el 7, el 8 y el 9.
+ * drills 1 al 8; solo el 9 y el 10 pintan algo. Del `exercise-03c`, solo el 7, el 8 y el 9.
+ * Del `exercise-04`, solo `FormContacto`, que junta los drills 7 y 8. Y del
+ * `exercise-04b`, solo `EditorNota` (drill 9): los ocho primeros son funciones puras.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -96,7 +100,8 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
        *   [&_button] → todo se dispara pulsando; varios drills tienen más de uno
        *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble, PanelConHistorial,
        *                ListaCompra y PanelNotas
-       *   [&_input]  → solo lo usa GuardarNombre */}
+       *   [&_input]  → GuardarNombre y los tres campos de FormContacto
+       *   [&_form]   → FormContacto: apila campos, errores, botón y estado */}
       <div
         className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
           bg-black/40 px-7 py-7
@@ -106,6 +111,7 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
           [&_input]:text-[#f5f5f7] [&_input]:outline-none
           [&_input::placeholder]:text-[#6e6e73]
           [&_input:focus]:border-[#0071e3]
+          [&_form]:flex [&_form]:flex-col [&_form]:items-start [&_form]:gap-3
           [&_button]:mr-2 [&_button]:cursor-pointer [&_button]:rounded-full
           [&_button]:bg-[#0071e3] [&_button]:px-5 [&_button]:py-2 [&_button]:text-[15px]
           [&_button]:font-normal [&_button]:text-white [&_button]:transition-colors
@@ -156,8 +162,10 @@ function App() {
             para cuando los cambios tienen reglas.
           </p>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.5] text-[#6e6e73]">
-            Los seis archivos del bloque están cerrados y siguen aquí a propósito, para ver cómo
-            quedaron: pulsa cada botón dos o tres veces.
+            Los seis primeros archivos están cerrados y siguen aquí a propósito, para ver cómo
+            quedaron. El <span className="font-mono">exercise-04</span> y su refuerzo, el{" "}
+            <span className="font-mono">04b</span>, están sin resolver: pulsa cada botón dos o tres
+            veces antes de dar uno por bueno.
           </p>
         </header>
 
@@ -364,6 +372,35 @@ function App() {
           campos="un <p> con el volumen · botones Subir, Bajar y Silencio"
         >
           <AltavozCompleto />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-04"
+          titulo="Tu formulario de contacto, con todas sus reglas en un reducer."
+        />
+
+        <Tarjeta
+          n={7}
+          nombre="FormContacto"
+          mirar="Enviar vacío muestra los tres errores. Con los tres campos bien, sale Enviando… y a los 300 ms Mensaje enviado, y los campos se vacían. Si escribes después de enviar, el aviso desaparece. Con el starter, Nombre no guarda lo que escribes."
+          campos="inputs Nombre, Correo y Mensaje · botón Enviar · un <p> con la fase"
+        >
+          <FormContacto />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-04b"
+          titulo="Lo que no nombras, se copia tal cual. También el aviso que ya no toca."
+        />
+
+        <Tarjeta
+          n={9}
+          nombre="EditorNota"
+          estado="resuelto"
+          mirar="Escribe un título y pulsa Guardar: aparece Guardado. Vuelve a teclear y el aviso desaparece. El starter dejaba el aviso puesto: el título cambiaba, pero el estado salía igual que entró porque nadie lo nombraba."
+          campos="input Título · botón Guardar · un <p> con Guardado o vacío"
+        >
+          <EditorNota />
         </Tarjeta>
       </div>
     </main>

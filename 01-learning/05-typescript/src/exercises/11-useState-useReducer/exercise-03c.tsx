@@ -132,7 +132,6 @@ export function volumenReducer(estado: number, accion: AccionVolumen): number {
       }
     case "silenciar":
       return 0;
-
     case "fijar":
       return accion.valor;
     default: {
