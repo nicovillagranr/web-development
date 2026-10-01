@@ -40,8 +40,13 @@ export const pedidoInicial: Pedido = { producto: "Café", cantidad: 1, fase: "ca
  *   · la cantidad solo se cambia en "carrito"
  *   · se paga solo desde "carrito", y se envía solo desde "pagado"
  *   · el producto se cambia en "carrito" y en "pagado"; si estaba "pagado",
- *     el pedido vuelve a "carrito", porque el cobro ya no vale
- *   · en "enviado" ya no se cambia nada */
+ *     el pedido vuelve a "carrito": el cobro anterior se anula y el cliente
+ *     paga de nuevo, ya por el producto nuevo
+ *   · en "enviado" ya no se cambia nada
+ *
+ * ⚠️ SIMPLIFICACIÓN: el pedido no guarda precios ni dinero. Devolver el cobro
+ *    anulado es trabajo de la pasarela de pagos, fuera del reducer, y este
+ *    archivo no lo cubre. */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — la regla pregunta por lo que entra
@@ -65,17 +70,33 @@ export const pedidoInicial: Pedido = { producto: "Café", cantidad: 1, fase: "ca
 
 // 1) `siguienteFase` — la fase que viene después: de "carrito" a "pagado", de
 //    "pagado" a "enviado". "enviado" es la última y se queda donde está.
+
+//   1. fase === "carrito" ? "pagado"
+//      👉 ¿La fase que entra es "carrito"?
+//         • SÍ: Devuelve "pagado" y termina aquí.
+//         • NO: Pasa al siguiente caso (después de los primeros `:`).
+//
+//   2. : fase === "pagado" ? "enviado"
+//      👉 (Ya sabemos que no es "carrito") ¿Entonces la fase es "pagado"?
+//         • SÍ: Devuelve "enviado" y termina aquí.
+//         • NO: Pasa al último caso (después de los segundos `:`).
+//
+//   3. : "enviado"
+//      👉 Como no fue ni "carrito" ni "pagado", por descarte solo puede ser
+//        "enviado". Así que devuelve "enviado" (se queda donde estaba).
+
 export function siguienteFase(fase: FasePedido): FasePedido {
-  return fase;
+  return fase === "carrito" ? "pagado" : fase === "pagado" ? "enviado" : "enviado";
 }
 // siguienteFase("carrito")
 
 // 2) `puedeCambiarCantidad` — `true` si en esa fase la tienda deja cambiar la
 //    cantidad, `false` si no. Mira las reglas de arriba.
 export function puedeCambiarCantidad(fase: FasePedido): boolean {
-  return fase !== "enviado";
+  return fase === "carrito";
 }
-// puedeCambiarCantidad("pagado")
+// puedeCambiarCantidad("pagado") // false
+// puedeCambiarCantidad("carrito") // true
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — cuando la regla dice "no"
@@ -100,12 +121,21 @@ export function puedeCambiarCantidad(fase: FasePedido): boolean {
 // 3) `cambiarCantidad` — devuelve una copia con la cantidad nueva, pero solo si la
 //    tienda lo permite en la fase del pedido. Si no, no ha pasado nada.
 export function cambiarCantidad(pedido: Pedido, cantidad: number): Pedido {
-  return { ...pedido, cantidad };
+  // Si está en el carrito:
+  if (pedido.fase === "carrito") {
+    return { ...pedido, cantidad: cantidad };
+  }
+  // SI el pedido no está en el carrito:
+  return pedido;
 }
-// cambiarCantidad(pedidoInicial, 3)
+// cambiarCantidad({ ...pedidoInicial, fase: "pagado" }, 5) -> { producto: "Café", cantidad: 1, fase: "pagado" } -> No cambia
+// cambiarCantidad({ ...pedidoInicial, fase: "carrito" }, 5) -> { producto: "Café", cantidad: 5, fase: "carrito" } -> Cambia
 
 // 4) `pagar` — pasa el pedido a "pagado", si se puede pagar desde donde está.
 export function pagar(pedido: Pedido): Pedido {
+  if (pedido.fase !== "carrito") {
+    return pedido;
+  }
   return { ...pedido, fase: "pagado" };
 }
 // pagar(pedidoInicial)
@@ -114,8 +144,8 @@ export function pagar(pedido: Pedido): Pedido {
 //    `return estado` hace `return { ...estado }`. En pantalla nada cambia. ¿React
 //    vuelve a pintar el componente, o no?
 export type Repinta = "repinta" | "no repinta";
-export const respuesta5: Repinta = "no repinta";
-// ¿Por qué?
+export const respuesta5: Repinta = "repinta";
+// ¿Por qué? Porque React compara la referencia del objeto anterior con la nueva. Si son iguales (mismo objeto), no repinta. Si es un objeto nuevo (aunque tenga los mismos valores), React lo considera un cambio y repinta. En este caso, al hacer `return { ...estado }`, se crea un nuevo objeto, por lo que React repintaría el componente.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — cuando un cambio arrastra a otro campo
@@ -142,14 +172,30 @@ export const respuesta5: Repinta = "no repinta";
 //    queda el pedido después de cambiarle el producto (sin contar "enviado", que
 //    llega al 7). Si venía "pagado", vuelve a "carrito"; si no, se queda igual.
 export function faseTrasCambiarProducto(fase: FasePedido): FasePedido {
-  return fase;
+  // Si la fase está en "carrito" la dejamos igual, y si está en "pagado" la cambiamos a "carrito". En "enviado" no se puede cambiar el producto, así que no hace falta contemplarlo aquí.
+  return fase === "pagado" ? "carrito" : fase;
 }
 // faseTrasCambiarProducto("pagado")
 
 // 7) `cambiarProducto` — la regla entera del producto: el producto nuevo y la
 //    fase que arrastra, en un solo `return`. Y en "enviado", no ha pasado nada.
+
+// export type FasePedido = "carrito" | "pagado" | "enviado";
+// export type Pedido = { producto: string; cantidad: number; fase: FasePedido };
+// export const pedidoInicial: Pedido = { producto: "Café", cantidad: 1, fase: "carrito" };
+
 export function cambiarProducto(pedido: Pedido, producto: string): Pedido {
-  return { ...pedido, producto };
+  // Si el pedido está en fase "enviado", ya no hay nada que hacer. Se queda tal cual estaba, así que devolvemos el mismo objeto que recibimos.
+  if (pedido.fase === "enviado") {
+    return pedido;
+  }
+  // Si el pedido está en fase: "carrito" o "pagado", podemos cambiar el producto.
+  // Cómo lo hacemos?
+  // 1. Creamos un objeto nuevo
+  // 2. Copiamos todas las propiedades del pedido original
+  // 3. En el nuevo objeto, actualizamos la propiedad "producto" con el nuevo producto
+  // 4. En el nuevo objeto, actualizamos la propiedad "fase" con el resultado de la función faseTrasCambiarProducto, que nos dirá si debemos cambiar la fase a "carrito" o dejarla igual.
+  return { ...pedido, producto: producto, fase: faseTrasCambiarProducto(pedido.fase) };
 }
 // cambiarProducto({ ...pedidoInicial, fase: "pagado" }, "Té")
 
@@ -165,13 +211,16 @@ export type AccionPedido =
 // 9) "enviar" — pasa a "enviado", pero solo desde donde se puede enviar.
 export function pedidoReducer(estado: Pedido, accion: AccionPedido): Pedido {
   switch (accion.tipo) {
-    case "sumar": // ← drill 8
-      return { ...estado, cantidad: estado.cantidad + 1 };
+    case "sumar":
+      return cambiarCantidad(estado, estado.cantidad + 1);
     case "pagar":
       return pagar(estado);
     case "cambiarProducto":
       return cambiarProducto(estado, accion.producto);
-    case "enviar": // ← drill 9
+    case "enviar":
+      if (estado.fase !== "pagado") {
+        return estado;
+      }
       return { ...estado, fase: "enviado" };
     default: {
       const _exhaustivo: never = accion;
@@ -189,11 +238,12 @@ export function TiendaPedido() {
       <p>
         {pedido.producto} × {pedido.cantidad} · {pedido.fase}
       </p>
+      <p role="status">{pedido.fase === "carrito" ? "Paga antes de enviar" : ""}</p>
       <button onClick={() => pedir({ tipo: "sumar" })}>+1</button>
-      <button onClick={() => pedir({ tipo: "pagar" })}>Pagar</button>
       <button onClick={() => pedir({ tipo: "cambiarProducto", producto: "Té" })}>
         Cambiar a Té
       </button>
+      <button onClick={() => pedir({ tipo: "pagar" })}>Pagar</button>
       <button onClick={() => pedir({ tipo: "enviar" })}>Enviar</button>
     </div>
   );
