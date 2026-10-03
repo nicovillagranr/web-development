@@ -29,6 +29,9 @@ import { FormContacto } from "./exercises/11-useState-useReducer/exercise-04";
 import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
 import { TarjetaPerfil } from "./exercises/11-useState-useReducer/exercise-05";
 import { TiendaPedido } from "./exercises/11-useState-useReducer/exercise-06";
+import { FormReserva } from "./exercises/11-useState-useReducer/exercise-07";
+import { VotoConMeta, Transferencia } from "./exercises/11-useState-useReducer/exercise-08";
+import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -46,7 +49,9 @@ import { TiendaPedido } from "./exercises/11-useState-useReducer/exercise-06";
  * `exercise-04b`, solo `EditorNota` (drill 9): los ocho primeros son funciones puras.
  * Del `exercise-05`, solo `TarjetaPerfil` (drill 10): del 1 al 5 son predicciones y
  * del 6 al 9, funciones puras. Del `exercise-06`, solo `TiendaPedido`, que junta los
- * drills 8 y 9.
+ * drills 8 y 9. Del `exercise-07`, solo `FormReserva` (drill 8): del 1 al 7 son tipos,
+ * predicciones y reducers sueltos. Del `exercise-08`, `VotoConMeta` (drill 3) y
+ * `Transferencia` (drills 5 y 7). Del `exercise-09`, solo `FormRegistro` (drills 4 y 8).
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -105,8 +110,8 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
        *   [&_button] → todo se dispara pulsando; varios drills tienen más de uno
        *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble, PanelConHistorial,
        *                ListaCompra y PanelNotas
-       *   [&_input]  → GuardarNombre y los tres campos de FormContacto
-       *   [&_form]   → FormContacto: apila campos, errores, botón y estado */}
+       *   [&_input]  → GuardarNombre y los campos de FormContacto, FormReserva y FormRegistro
+       *   [&_form]   → FormContacto y FormRegistro: apilan campos, errores, botones y estado */}
       <div
         className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
           bg-black/40 px-7 py-7
@@ -432,10 +437,62 @@ function App() {
         <Tarjeta
           n={8}
           nombre="TiendaPedido"
-          mirar="Enviar sin pagar no hace nada. Paga y envía: sale enviado, y a partir de ahí ni +1 ni Cambiar a Té mueven nada. Si cambias a Té con el pedido pagado, vuelve a carrito. Con el starter la tienda deja hacerlo todo, en cualquier orden."
-          campos="un <p> con producto, cantidad y fase · botones +1, Pagar, Cambiar a Té y Enviar"
+          estado="resuelto"
+          mirar="Enviar sin pagar no hace nada, y mientras el pedido está en carrito sale el aviso de pagar antes de enviar. Paga y envía: sale enviado, y a partir de ahí ni +1 ni Cambiar a Té mueven nada. Si cambias a Té con el pedido pagado, vuelve a carrito. Con el starter la tienda deja hacerlo todo, en cualquier orden."
+          campos="un <p> con producto, cantidad y fase · un <p> con el aviso · botones +1, Cambiar a Té, Pagar y Enviar"
         >
           <TiendaPedido />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-07"
+          titulo="El tipo dice qué casos existen, y quién avisa cuando falta uno."
+        />
+
+        <Tarjeta
+          n={8}
+          nombre="FormReserva"
+          mirar="Escribe en los tres campos: cada uno guarda lo suyo y no toca los otros dos. Vaciar los deja todos en blanco. Con el starter, lo que escribes en Teléfono aparece en Nombre."
+          campos="tres <input>: Nombre, Teléfono y Comentario · botón Vaciar"
+        >
+          <FormReserva />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-08"
+          titulo="Pedir anota; el estado nuevo llega en el render siguiente."
+        />
+
+        <Tarjeta
+          n={3}
+          nombre="VotoConMeta"
+          mirar="Vota tres veces: el aviso tiene que salir justo con el tercer voto. Con el starter sale un clic tarde, con 4."
+          campos="un <p> con los votos · botón Votar · un <p> con el aviso"
+        >
+          <VotoConMeta />
+        </Tarjeta>
+
+        <Tarjeta
+          n={5}
+          nombre="Transferencia"
+          mirar="Transferir: sale Enviando… en el acto y, al rato, Transferencia enviada. Transfiere y cancela antes de que acabe: tiene que quedarse en cancelada. Con el starter, Enviando… no sale nunca y cancelar no sirve."
+          campos="botones Transferir y Cancelar · un <p> con el estado de la transferencia"
+        >
+          <Transferencia />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-09"
+          titulo="El formulario entero: estado anidado, inputs controlados y envío."
+        />
+
+        <Tarjeta
+          n={8}
+          nombre="FormRegistro"
+          mirar="Pulsa Crear cuenta en vacío: salen los errores y no se crea nada. Escribe en un campo con error y su error se va. Rellena bien (clave de 8 o más) y envía: Cuenta creada y el formulario vacío. Limpiar vacía los tres campos, también la clave."
+          campos="tres <input>: Usuario, Correo y Clave, cada uno con su error debajo · botones Crear cuenta y Limpiar · un <p> con el estado"
+        >
+          <FormRegistro />
         </Tarjeta>
       </div>
     </main>
