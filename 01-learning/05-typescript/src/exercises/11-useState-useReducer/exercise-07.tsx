@@ -201,10 +201,6 @@ export function etiquetaDe(campo: CampoReserva): string {
 }
 // etiquetaDe("telefono")
 
-//
-//
-//
-//
 // 📌 El papel "escribir" lleva qué campo cambia y su texto nuevo.
 // export type Reserva = { nombre: string; telefono: string; comentario: string };
 // export const reservaVacia: Reserva = { nombre: "", telefono: "", comentario: "" };
@@ -214,8 +210,14 @@ export type AccionReserva =
 // 7) "escribir" — una copia de la reserva con el campo que dice el papel cambiado
 //    por su valor. Los otros dos campos, como estaban. "vaciar" ya está bien.
 export function reservaReducer(reserva: Reserva, accion: AccionReserva): Reserva {
+  // 1. Usamos un switch para manejar los diferentes tipos de acción.
   switch (accion.tipo) {
     case "escribir":
+      // En el caso que la acción sea "escribir":
+      // 1. Creamos un objeto nuevo
+      // 2. Copiamos todas las propiedades de la reserva original
+      // 3. En el objeto nuevo, nos preparamos para pisar el valor de la propiedad que nos dice accion.campo
+      // 4. Asignamos a esa propiedad el valor que nos dice accion.valor
       return { ...reserva, [accion.campo]: accion.valor };
     case "vaciar":
       return reservaVacia;
@@ -225,12 +227,21 @@ export function reservaReducer(reserva: Reserva, accion: AccionReserva): Reserva
     }
   }
 }
-// reservaReducer(reservaVacia, { tipo: "escribir", campo: "telefono", valor: "912345678" }) -> { nombre: "", telefono: "912345678", comentario: "" }
+// reservaReducer({nombre: "Nico", telefono: "912", comentario: "Una mesa al lado de la ventana."}, {tipo: "escribir", campo: "comentario", valor: "Una mesa al pasillo por favor."})
+// -> {nombre: "Nico", telefono: "912", comentario: "Una mesa al pasillo por favor."}
+
+// reservaReducer(reservaVacia, ({tipo: "escribir", campo: "nombre", valor: "Hola, me gustaría reservar una mesa."}))
+// -> {nombre: "Hola, me gustaría reservar una mesa.", telefono: "", comentario: ""}
+
+// reservaReducer({nombre: "Nico", telefono: "912", comentario: "Una mesa al lado de la ventana."}, {tipo: "vaciar"}) -> {nombre: "", telefono: "", comentario: ""}
 
 // 8) `FormReserva` — lo que escribes en "Teléfono" acaba en "Nombre", y el campo
 //    del teléfono se queda vacío. El reducer de arriba no se toca.
 export function FormReserva() {
-  const [reserva, pedir] = useReducer(reservaReducer, reservaVacia);
+  // reserva -> el estado actual; en el primer render es reservaVacia { nombre: "", telefono: "", comentario: "" }
+  // hacerReserva -> función que recibe una acción (el papel) y se la entrega al reducer
+  // useReducer -> hook que recibe un reducer y un estado inicial, y devuelve el estado actual y la función para actualizarlo
+  const [reserva, hacerReserva] = useReducer(reservaReducer, reservaVacia);
 
   return (
     <div>
@@ -238,21 +249,25 @@ export function FormReserva() {
         aria-label="Nombre"
         placeholder="Nombre"
         value={reserva.nombre}
-        onChange={(e) => pedir({ tipo: "escribir", campo: "nombre", valor: e.target.value })}
+        onChange={(e) => hacerReserva({ tipo: "escribir", campo: "nombre", valor: e.target.value })}
       />
       <input
         aria-label="Teléfono"
         placeholder="Teléfono"
         value={reserva.telefono}
-        onChange={(e) => pedir({ tipo: "escribir", campo: "nombre", valor: e.target.value })}
+        onChange={(e) =>
+          hacerReserva({ tipo: "escribir", campo: "telefono", valor: e.target.value })
+        }
       />
       <input
         aria-label="Comentario"
         placeholder="Comentario"
         value={reserva.comentario}
-        onChange={(e) => pedir({ tipo: "escribir", campo: "comentario", valor: e.target.value })}
+        onChange={(e) =>
+          hacerReserva({ tipo: "escribir", campo: "comentario", valor: e.target.value })
+        }
       />
-      <button onClick={() => pedir({ tipo: "vaciar" })}>Vaciar</button>
+      <button onClick={() => hacerReserva({ tipo: "vaciar" })}>Vaciar</button>
     </div>
   );
 }
@@ -291,35 +306,57 @@ export const respuesta9: NombreDeClave = "edad";
 //     ¿Cómo se llama ahora la clave de `ficha`?
 export const respuesta10: NombreDeClave = "clave";
 // ¿Por qué?
+// Sin los corchetes, TypeScript interpreta `clave` como un nombre literal de propiedad, no como una variable que contiene el nombre de la propiedad.
+// Por lo tanto, la clave del objeto `ficha` es literalmente "clave", no "edad".
 
 // 11) `soloUnCampo` — un objeto con UNA sola clave: la que llega en `campo`, con el
 //     texto de `valor`. Con "telefono" y "912" sale `{ telefono: "912" }`.
 //     📌 `Partial<Reserva>` es una `Reserva` con todas sus claves opcionales.
+
+// export type Reserva = { nombre: string; telefono: string; comentario: string };
+// export type CampoReserva = keyof Reserva;
+
+// export type AccionReserva =
+// { tipo: "escribir"; campo: CampoReserva; valor: string } | { tipo: "vaciar" };
+
 export function soloUnCampo(campo: CampoReserva, valor: string): Partial<Reserva> {
+  // 1. Creamos un objeto que será parcial, osea que no tener todas las propiedades de Reserva
+  // 2. La propiedad que dice `campo` se asigna dinámicamente usando corchetes, y su valor es el valor pasado como argumento.
+  // 3. Con : valor asignamos el valor a la propiedad dinámica.
   return { [campo]: valor };
 }
-// soloUnCampo("telefono", "912")
+// soloUnCampo("telefono", "912") -> { telefono: "912" }
+// soloUnCampo("comentario", "Ventana") -> { comentario: "Ventana" }
 
 // ── B · el papel ──
 
 // 📌 El papel de "escribir", solo: es la primera variante de `AccionReserva`.
-export type PapelEscribir = { tipo: "escribir"; campo: CampoReserva; valor: string };
+export type PapelEscribir = {
+  tipo: "escribir";
+  campo: CampoReserva;
+  valor: string;
+};
+
 export const papelComentario: PapelEscribir = {
   tipo: "escribir",
   campo: "comentario",
   valor: "Ventana",
 };
 
-// 12) Predice: ¿qué valen `papelComentario.campo` y `papelComentario.valor`, en ese
-//     orden?
+// 12) Predice: ¿qué valen `papelComentario.campo` -> "comentario"
+// y `papelComentario.valor` -> "Ventana"
+// en ese orden?
 export const respuesta12: [string, string] = ["comentario", "Ventana"];
 
 // 13) `desdePapel` — lo mismo que el 11, pero las dos piezas vienen dentro de un
 //     papel. Con `papelComentario` sale `{ comentario: "Ventana" }`.
 export function desdePapel(papel: PapelEscribir): Partial<Reserva> {
+  // 1. Creamos un objeto parcial de Reserva
+  // 2. La propiedad que dice `campo` se asigna dinámicamente usando corchetes, y su valor es el valor del papel.
+  // 3. Con : papel.valor asignamos el valor a la propiedad dinámica.
   return { [papel.campo]: papel.valor };
 }
-// desdePapel(papelComentario)
+// desdePapel(papelComentario) -> { comentario: "Ventana" }
 
 // ── C · la sustitución ──
 

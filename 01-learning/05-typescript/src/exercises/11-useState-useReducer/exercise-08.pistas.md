@@ -3,7 +3,7 @@
 Cuatro niveles por drill. Ábrelas **de una en una** y vuelve al archivo entre una y la
 siguiente.
 
-Los 7 starters compilan, así que ninguna Pista 3 cita a `tsc`: en su lugar va lo que dice
+Los 10 starters compilan, así que ninguna Pista 3 cita a `tsc`: en su lugar va lo que dice
 el test.
 
 Los drills 5 y 7 viven en el mismo componente. Si el 5 no está resuelto, el test del 7
@@ -124,6 +124,137 @@ Otra opción, mejor todavía: no guardar el aviso en un estado y pintarlo direct
 
 ---
 
+## Drill 3a — `Carrito`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Es el drill 3 con otro nombre. En la quinta pulsación, ¿qué número de unidades mira
+el `if`?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+La acción ya la tienes guardada en una constante. Con ella y la foto puedes calcular
+cuántas unidades habrá después. Es la última columna de la `DemoFoto`.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+Unable to find an element with the text: Carrito lleno
+```
+
+Después de la quinta pulsación el aviso todavía no sale: el `if` miró un 4.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+pedir(accion);
+if (carritoReducer(unidades, accion) === 5) {
+  setAviso("Carrito lleno");
+}
+```
+
+</details>
+
+---
+
+## Drill 3b — `Marcador`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Si cambias el 50 por otro número para compensar el clic de retraso, ¿por cuánto lo
+cambias? Prueba con los dos botones.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Un acierto suma 10 y un bonus 25, así que no hay un único número que compense el
+retraso. Lo que sí sirve en los dos casos es calcular los puntos de después con la
+misma regla que usa React.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+Unable to find an element with the text: ¡Nivel superado!
+```
+
+Con cinco aciertos el marcador llega a 50, pero el `if` miró un 40.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const sumar = (accion: AccionPuntos) => {
+  pedir(accion);
+  if (puntosReducer(puntos, accion) >= 50) {
+    setAviso("¡Nivel superado!");
+  }
+};
+```
+
+Por esto el número mágico del drill 3 (`votos === 2`) es frágil: solo funciona
+mientras cada clic sume lo mismo. Con `puntos >= 40` pasa la ronda de aciertos y falla
+la de bonus (25 + 25 = 50, pero el `if` mira un 25).
+
+</details>
+
+---
+
+## Drill 3c — `Sala`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El aviso no es un dato nuevo: se puede saber mirando `personas`. ¿Hace falta guardarlo
+aparte?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El JSX se ejecuta en cada render, con la foto nueva. Si decides allí qué texto va en el
+`<p role="status">`, nunca vas un clic tarde, y al vaciar la sala el texto cambia solo.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+Unable to find an element with the text: Sala completa
+```
+
+Con la cuarta persona el aviso todavía no sale. Y si lo arreglas solo con el reducer,
+el test se queda rojo al final, porque "Vaciar" no borra el aviso guardado.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const entrar = () => {
+  pedir({ tipo: "entrar" });
+};
+
+// …
+<p role="status">{personas >= 4 ? "Sala completa" : ""}</p>
+```
+
+Sin `useState` para el aviso. El manejador solo pide, y el render, que siempre tiene la
+foto nueva, decide qué se ve. Un dato que se puede calcular a partir del estado no se
+guarda: se calcula al pintar.
+
+</details>
+
+---
+
 ## Drill 4 — `respuesta4`
 
 <details><summary>Pista 1 — conceptual</summary>
@@ -215,17 +346,17 @@ Pero el `transferir` que está esperando es el viejo, y ese no se entera.
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected 'cancelada' to be 'lista'
+expected 'cancelada' to be 'preparada'
 ```
 
 </details>
 
 <details><summary>Solución</summary>
 
-`"lista"`. Es la fase de la foto en que pulsaste "Transferir". Ni el "empezar" que pidió
+`"preparada"`. Es la fase de la foto en que pulsaste "Transferir". Ni el "empezar" que pidió
 el propio manejador ni el "Cancelar" de después cambian esa variable: cambian el estado,
 que llega en otros renders. Por eso el `if (fase !== "cancelada")` de `transferir` nunca
-frena nada: siempre lee "lista".
+frena nada: siempre lee "preparada".
 
 </details>
 

@@ -30,7 +30,14 @@ import { EditorNota } from "./exercises/11-useState-useReducer/exercise-04b";
 import { TarjetaPerfil } from "./exercises/11-useState-useReducer/exercise-05";
 import { TiendaPedido } from "./exercises/11-useState-useReducer/exercise-06";
 import { FormReserva } from "./exercises/11-useState-useReducer/exercise-07";
-import { VotoConMeta, Transferencia } from "./exercises/11-useState-useReducer/exercise-08";
+import {
+  VotoConMeta,
+  DemoFoto,
+  Carrito,
+  Marcador,
+  Sala,
+  Transferencia,
+} from "./exercises/11-useState-useReducer/exercise-08";
 import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
@@ -50,18 +57,19 @@ import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
  * Del `exercise-05`, solo `TarjetaPerfil` (drill 10): del 1 al 5 son predicciones y
  * del 6 al 9, funciones puras. Del `exercise-06`, solo `TiendaPedido`, que junta los
  * drills 8 y 9. Del `exercise-07`, solo `FormReserva` (drill 8): del 1 al 7 son tipos,
- * predicciones y reducers sueltos. Del `exercise-08`, `VotoConMeta` (drill 3) y
+ * predicciones y reducers sueltos. Del `exercise-08`, `VotoConMeta` (drill 3), la `DemoFoto`, el refuerzo 3a-3c y
  * `Transferencia` (drills 5 y 7). Del `exercise-09`, solo `FormRegistro` (drills 4 y 8).
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
 
-type Estado = "starter" | "casi" | "resuelto";
+type Estado = "starter" | "casi" | "resuelto" | "demo";
 
 const CHIP: Record<Estado, { texto: string; punto: string; color: string }> = {
   starter: { texto: "Sin resolver", punto: "bg-[#ff9f0a]", color: "text-[#ff9f0a]" },
   casi: { texto: "Verde, con tipos rotos", punto: "bg-[#ff453a]", color: "text-[#ff453a]" },
   resuelto: { texto: "Resuelto", punto: "bg-[#30d158]", color: "text-[#30d158]" },
+  demo: { texto: "Demo, ya funciona", punto: "bg-[#0071e3]", color: "text-[#2997ff]" },
 };
 
 /* Los errores de muestra para el drill 4 del exercise-01. Van en una constante y no
@@ -73,7 +81,7 @@ const erroresDeMuestra = {
 };
 
 type TarjetaProps = {
-  n: number;
+  n: number | string;
   nombre: string;
   /* qué tiene que pasar cuando el drill está bien */
   mirar: string;
@@ -470,6 +478,43 @@ function App() {
           campos="un <p> con los votos · botón Votar · un <p> con el aviso"
         >
           <VotoConMeta />
+        </Tarjeta>
+
+        <Tarjeta
+          n="demo"
+          nombre="DemoFoto"
+          estado="demo"
+          mirar="No es un drill. Vota seis veces y lee la tabla: en cada clic, el if miró el número de ANTES y la pantalla pinta el de DESPUÉS. La columna naranja es el if del starter del drill 3, que entra un clic tarde; la verde, el que pregunta al reducer, que entra a tiempo. Para empezar de cero, recarga."
+          campos="un <p> con lo que hay en pantalla · botón Votar · una tabla con una fila por clic"
+        >
+          <DemoFoto />
+        </Tarjeta>
+
+        <Tarjeta
+          n="3a"
+          nombre="Carrito"
+          mirar="Agrega cinco unidades: el aviso tiene que salir justo con la quinta. Con el starter sale un clic tarde, con 6."
+          campos="un <p> con las unidades · botón Agregar · un <p> con el aviso"
+        >
+          <Carrito />
+        </Tarjeta>
+
+        <Tarjeta
+          n="3b"
+          nombre="Marcador"
+          mirar="Llega a 50 con cinco aciertos, y después recarga y llega con dos bonus: el aviso tiene que salir en el clic que llega a 50 las dos veces. Con el starter sale un clic tarde."
+          campos="un <p> con los puntos · botones Acierto (+10) y Bonus (+25) · un <p> con el aviso"
+        >
+          <Marcador />
+        </Tarjeta>
+
+        <Tarjeta
+          n="3c"
+          nombre="Sala"
+          mirar="Entran cuatro personas: Sala completa tiene que salir con la cuarta. Pulsa Vaciar: el aviso se va. Con el starter sale tarde y, al vaciar, se queda."
+          campos="un <p> con las personas · botones Entrar y Vaciar · un <p> con el aviso"
+        >
+          <Sala />
         </Tarjeta>
 
         <Tarjeta
