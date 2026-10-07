@@ -1,42 +1,75 @@
 import { describe, it, expect } from "vitest";
-import { validarSolicitud, respuesta1, respuesta3 } from "./exercise-10b";
+import {
+  solicitudReducer,
+  inicial,
+  vacios,
+  respuesta3,
+  respuesta4,
+  respuesta7,
+  type EstadoSolicitud,
+} from "./exercise-10b";
 
-/* Los drills 2, 4 y 5 tocan `validarSolicitud`, y cada test mira solo el campo de su
- * drill: un drill sin resolver no tumba el test de otro. Los 1 y 3 son predicciones. */
+/* Los drills 1, 2, 5 y 6 son cases de `solicitudReducer` y se prueban llamándolo a
+ * mano, cada uno desde el estado que le toca. Los drills 3, 4 y 7 son predicciones. */
 
-const validos = { nombre: "Ana", correo: "ana@mail.cl", detalle: "Una landing para mi tienda" };
+const rellenos = {
+  nombre: "Ana",
+  apellido: "Pérez",
+  correo: "ana@mail.cl",
+  detalle: "Una landing para mi tienda",
+};
 
-describe("11-useState-useReducer / exercise-10b — validar: un objeto de errores", () => {
-  it("1) respuesta1 — lo que devuelve con todo en regla", () => {
-    expect(respuesta1).toStrictEqual({});
+describe("11-useState-useReducer / exercise-10b — el reducer de tu 10, case por case", () => {
+  it("1) escribir — borra también el error del servidor", () => {
+    const conErrores: EstadoSolicitud = {
+      ...inicial,
+      errores: { correo: "No es válido", servidor: "Sin conexión" },
+    };
+    const despues = solicitudReducer(conErrores, { tipo: "escribir", campo: "nombre", valor: "A" });
+    expect(despues.errores.servidor).toBeFalsy();
+    expect(despues.errores.correo).toBe("No es válido");
   });
 
-  it("2) correo — con espacios alrededor se acepta", () => {
-    expect(validarSolicitud({ ...validos, correo: " ana@mail.cl " }).correo).toBeUndefined();
-    expect(validarSolicitud({ ...validos, correo: "ana@mail" }).correo).toBe(
-      "El correo no es válido",
+  it("2) escribir — desde error vuelve a editando; desde enviando, no", () => {
+    const enError: EstadoSolicitud = { ...inicial, fase: "error" };
+    expect(solicitudReducer(enError, { tipo: "escribir", campo: "nombre", valor: "A" }).fase).toBe(
+      "editando",
+    );
+    const enviando: EstadoSolicitud = { ...inicial, fase: "enviando" };
+    expect(solicitudReducer(enviando, { tipo: "escribir", campo: "nombre", valor: "A" }).fase).toBe(
+      "enviando",
     );
   });
 
-  it('3) respuesta3 — el error de " A "', () => {
-    expect(respuesta3).toBe("El nombre debe tener al menos 2 caracteres");
+  it("3) respuesta3 — lo que cambia envioFallido", () => {
+    expect([...respuesta3].sort()).toEqual(["errores", "fase"]);
   });
 
-  it("4) nombre — vacío da el error de obligatorio, no el de longitud", () => {
-    expect(validarSolicitud({ ...validos, nombre: "" }).nombre).toBe("El nombre es obligatorio");
-    expect(validarSolicitud({ ...validos, nombre: "A" }).nombre).toBe(
-      "El nombre debe tener al menos 2 caracteres",
-    );
+  it("4) respuesta4 — los errores después de envioFallido", () => {
+    expect(respuesta4).toStrictEqual({ servidor: "Sin conexión" });
   });
 
-  it("5) detalle — menos de 20 caracteres pide más; vacío sigue siendo obligatorio", () => {
-    expect(validarSolicitud({ ...validos, detalle: "Una web" }).detalle).toBe(
-      "Cuéntanos un poco más: mínimo 20 caracteres",
-    );
-    expect(validarSolicitud({ ...validos, detalle: "   Una web          " }).detalle).toBe(
-      "Cuéntanos un poco más: mínimo 20 caracteres",
-    );
-    expect(validarSolicitud({ ...validos, detalle: "" }).detalle).toBe("El detalle es obligatorio");
-    expect(validarSolicitud(validos).detalle).toBeUndefined();
+  it("5) envioFallido — solo desde enviando; si no, el mismo estado", () => {
+    const enviando: EstadoSolicitud = { ...inicial, datos: rellenos, fase: "enviando" };
+    const despues = solicitudReducer(enviando, { tipo: "envioFallido", mensaje: "Sin conexión" });
+    expect(despues.fase).toBe("error");
+
+    const editando: EstadoSolicitud = { ...inicial, datos: rellenos };
+    expect(solicitudReducer(editando, { tipo: "envioFallido", mensaje: "x" })).toBe(editando);
+  });
+
+  it("6) envioCompletado — enviado y con el formulario vacío", () => {
+    const enviando: EstadoSolicitud = { ...inicial, datos: rellenos, fase: "enviando" };
+    const despues = solicitudReducer(enviando, { tipo: "envioCompletado" });
+    expect(despues.fase).toBe("enviado");
+    expect(despues.datos).toEqual(vacios);
+  });
+
+  it("7) respuesta7 — el estado tras las cuatro acciones", () => {
+    expect(respuesta7).toEqual({
+      datos: { ...vacios, nombre: "Ana", apellido: "P" },
+      errores: { servidor: "", apellido: "" },
+      fase: "editando",
+    });
   });
 });

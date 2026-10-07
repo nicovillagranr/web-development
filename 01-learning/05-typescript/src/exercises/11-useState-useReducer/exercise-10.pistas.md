@@ -8,7 +8,7 @@ el test.
 
 ---
 
-## Drill 1 — lo que cambia "rechazar"
+## Drill 1 — lo que cambia "validacionFallida"
 
 <details><summary>Pista 1 — conceptual</summary>
 
@@ -129,7 +129,7 @@ reducer.
 
 ---
 
-## Drill 4 — "empezar" con guard
+## Drill 4 — "envioIniciado" con guard
 
 <details><summary>Pista 1 — conceptual</summary>
 
@@ -160,7 +160,7 @@ el MISMO.
 <details><summary>Solución</summary>
 
 ```ts
-case "empezar":
+case "envioIniciado":
   if (estado.fase === "enviando") return estado;
   return { ...estado, errores: {}, fase: "enviando" };
 // ¿Por qué el mismo estado? Porque no cambió nada. Si devuelvo el mismo objeto, React
@@ -172,18 +172,18 @@ case "empezar":
 
 ---
 
-## Drill 5 — "terminar"
+## Drill 5 — "envioCompletado"
 
 <details><summary>Pista 1 — conceptual</summary>
 
-El enunciado pide dos reglas: qué pasa cuando terminar vale, y cuándo no vale. El starter
+El enunciado pide dos reglas: qué pasa cuando "envioCompletado" vale, y cuándo no vale. El starter
 no cumple ninguna de las dos del todo.
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Un guard como el del drill 4, pero preguntando por las fases en las que terminar NO vale.
+Un guard como el del drill 4, pero preguntando por las fases en las que "envioCompletado" NO vale.
 Y en el `return`, además de `fase`, otra clave más: la que deja el formulario vacío. Ya
 tienes una constante con los tres campos en blanco.
 
@@ -202,7 +202,7 @@ expected { nombre: 'Ana', …(2) } to deeply equal { nombre: '', correo: '', det
 <details><summary>Solución</summary>
 
 ```ts
-case "terminar":
+case "envioCompletado":
   if (estado.fase !== "enviando") return estado;
   return { ...estado, datos: vacios, fase: "enviado" };
 ```
@@ -225,8 +225,8 @@ la siguiente.
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Después de escribir, `errores` tiene `nombre: ""`. Mira qué hace "empezar" con los errores,
-y qué hace "terminar" con los datos.
+Después de escribir, `errores` tiene `nombre: ""`. Mira qué hace "envioIniciado" con los errores,
+y qué hace "envioCompletado" con los datos.
 
 </details>
 
@@ -248,7 +248,7 @@ export const respuesta6: EstadoSolicitud = { datos: vacios, errores: {}, fase: "
 |---|---|---|---|
 | inicio | vacíos | `{}` | editando |
 | escribir "Ana" | nombre: "Ana" | `{ nombre: "" }` | editando |
-| empezar | nombre: "Ana" | `{}` | enviando |
-| terminar | vacíos | `{}` | enviado |
+| envioIniciado | nombre: "Ana" | `{}` | enviando |
+| envioCompletado | vacíos | `{}` | enviado |
 
 </details>

@@ -19,7 +19,7 @@ tiene que pasar antes de la espera para que se vea durante ella?
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Sin errores no hay rechazo. Y "empezar" es lo que pone "Enviando…": tiene que ir antes de
+Sin errores no hay rechazo. Y "envioIniciado" es lo que pone "Enviando…": tiene que ir antes de
 "esperar" (Teoría 2).
 
 </details>
@@ -37,7 +37,7 @@ Los dos primeros y la cantidad están bien; falla el orden de los tres últimos.
 <details><summary>Solución</summary>
 
 ```ts
-export const respuesta1: Paso[] = ["preventDefault", "validar", "empezar", "esperar", "terminar"];
+export const respuesta1: Paso[] = ["preventDefault", "validar", "envioIniciado", "esperar", "envioCompletado"];
 ```
 
 </details>
@@ -71,7 +71,7 @@ Sobran tres pasos.
 <details><summary>Solución</summary>
 
 ```ts
-export const respuesta2: Paso[] = ["preventDefault", "validar", "rechazar"];
+export const respuesta2: Paso[] = ["preventDefault", "validar", "validacionFallida"];
 ```
 
 </details>
@@ -124,8 +124,8 @@ Con datos vacíos, el rechazo sí se pide. ¿Qué pasa con las líneas que viene
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Falta cortar la función después del rechazo. Sin el corte, "empezar" borra los errores
-recién puestos, y "terminar" marca la solicitud como enviada.
+Falta cortar la función después del rechazo. Sin el corte, "envioIniciado" borra los errores
+recién puestos, y "envioCompletado" marca la solicitud como enviada.
 
 </details>
 
@@ -135,7 +135,7 @@ recién puestos, y "terminar" marca la solicitud como enviada.
 Unable to find an element with the text: El nombre es obligatorio.
 ```
 
-Los errores no se llegan a ver: "rechazar" y "empezar" se aplican antes del render.
+Los errores no se llegan a ver: "validacionFallida" y "envioIniciado" se aplican antes del render.
 
 </details>
 
@@ -143,7 +143,7 @@ Los errores no se llegan a ver: "rechazar" y "empezar" se aplican antes del rend
 
 ```ts
 if (Object.keys(errores).length > 0) {
-  pedir({ tipo: "rechazar", errores });
+  pedir({ tipo: "validacionFallida", errores });
   return;
 }
 ```
@@ -162,7 +162,7 @@ if (Object.keys(errores).length > 0) {
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Durante la espera, la fase sigue en "editando", porque "empezar" se pide después. Hay que
+Durante la espera, la fase sigue en "editando", porque "envioIniciado" se pide después. Hay que
 moverlo a antes del `await` (Teoría 2).
 
 </details>
@@ -180,9 +180,9 @@ Expected element to have text content:
 <details><summary>Solución</summary>
 
 ```ts
-pedir({ tipo: "empezar" });
+pedir({ tipo: "envioIniciado" });
 await esperar(1000);
-pedir({ tipo: "terminar" });
+pedir({ tipo: "envioCompletado" });
 ```
 
 Es el drill 5 del `08` otra vez, con otro nombre.

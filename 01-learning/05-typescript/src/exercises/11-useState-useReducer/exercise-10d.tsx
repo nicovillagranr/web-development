@@ -40,7 +40,7 @@ export type ErroresSolicitud = { nombre?: string; correo?: string; detalle?: str
 export type EstadoSolicitud = { datos: DatosSolicitud; errores: ErroresSolicitud };
 export type AccionSolicitud =
   | { tipo: "escribir"; campo: keyof DatosSolicitud; valor: string }
-  | { tipo: "rechazar"; errores: ErroresSolicitud }
+  | { tipo: "revisado"; errores: ErroresSolicitud }
   | { tipo: "limpiar" };
 
 const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
@@ -53,7 +53,7 @@ function solicitudReducer(estado: EstadoSolicitud, accion: AccionSolicitud): Est
         datos: { ...estado.datos, [accion.campo]: accion.valor },
         errores: { ...estado.errores, [accion.campo]: "" },
       };
-    case "rechazar":
+    case "revisado":
       return { ...estado, errores: accion.errores };
     case "limpiar":
       return inicial;
@@ -158,7 +158,7 @@ export function ErrorNombre() {
   const [estado, pedir] = useReducer(solicitudReducer, inicial);
   return (
     <div>
-      <button onClick={() => pedir({ tipo: "rechazar", errores: validarSolicitud(estado.datos) })}>
+      <button onClick={() => pedir({ tipo: "revisado", errores: validarSolicitud(estado.datos) })}>
         Revisar
       </button>
       <p role="alert">{estado.errores.nombre}</p>
@@ -186,7 +186,7 @@ export function ErrorCorreo() {
         onChange={(e) => pedir({ tipo: "escribir", campo: "correo", valor: e.target.value })}
         aria-invalid={estado.errores.correo}
       />
-      <button onClick={() => pedir({ tipo: "rechazar", errores: validarSolicitud(estado.datos) })}>
+      <button onClick={() => pedir({ tipo: "revisado", errores: validarSolicitud(estado.datos) })}>
         Revisar
       </button>
       {estado.errores.correo && <p role="alert">{estado.errores.correo}</p>}

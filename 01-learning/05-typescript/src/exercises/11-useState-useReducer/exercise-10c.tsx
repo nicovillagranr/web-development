@@ -5,9 +5,10 @@ import { useReducer, type FormEvent } from "react";
  * =============================================================================
  *
  * 📌 RECORDATORIO — lo que puede pedir un envío, y para qué:
- *     "rechazar" → hay errores: se enseñan y no se envía nada
- *     "empezar"  → arranca el envío: fase "enviando", botón bloqueado
- *     "terminar" → acabó la espera: fase "enviado", formulario vacío
+ *     "validacionFallida" → hay errores: se enseñan y no se envía nada
+ *     "envioIniciado"     → arranca el envío: fase "enviando", botón bloqueado
+ *     "envioCompletado"   → acabó la espera: fase "enviado", formulario vacío
+ *   Los tres los pide el envío, no el usuario: él solo pulsa "Enviar solicitud".
  *
  * 🎯 AL TERMINAR SABRÁS
  *   · decidir el envío con los errores recién calculados, no con los del estado
@@ -44,19 +45,21 @@ export type EstadoSolicitud = {
   fase: FaseSolicitud;
 };
 export type AccionSolicitud =
-  { tipo: "rechazar"; errores: ErroresSolicitud } | { tipo: "empezar" } | { tipo: "terminar" };
+  | { tipo: "validacionFallida"; errores: ErroresSolicitud }
+  | { tipo: "envioIniciado" }
+  | { tipo: "envioCompletado" };
 
 export const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
 const inicial: EstadoSolicitud = { datos: vacios, errores: {}, fase: "editando" };
 
 function solicitudReducer(estado: EstadoSolicitud, accion: AccionSolicitud): EstadoSolicitud {
   switch (accion.tipo) {
-    case "rechazar":
+    case "validacionFallida":
       return { ...estado, errores: accion.errores, fase: "editando" };
-    case "empezar":
+    case "envioIniciado":
       if (estado.fase === "enviando") return estado;
       return { ...estado, errores: {}, fase: "enviando" };
-    case "terminar":
+    case "envioCompletado":
       if (estado.fase !== "enviando") return estado;
       return { ...estado, datos: vacios, fase: "enviado" };
   }
@@ -107,7 +110,7 @@ function PanelEnvio(props: {
  *     e.preventDefault();                          // el navegador no recarga
  *     const errores = validar(estado.datos);       // recién calculados
  *     if (Object.keys(errores).length > 0) {       // ¿alguna clave? → hay errores
- *       pedir({ tipo: "rechazar", errores });
+ *       pedir({ tipo: "validacionFallida", errores });
  *       return;                                    // lo de abajo no se ejecuta
  *     }
  *
@@ -118,22 +121,35 @@ function PanelEnvio(props: {
  *     `errores` → lo de ahora  ·  `estado.errores` → la foto de este render
  *
  * ⚠️ TRAMPA — sin el `return`, el rechazo se pide, pero la función sigue de largo
- *    y pide también empezar y terminar: el reducer los aplica en ese orden.
+ *    y pide también "envioIniciado" y "envioCompletado": el reducer los aplica
+ *    en ese orden.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // 1) Predice: los datos están bien y se pulsa "Enviar solicitud". Ordena los
 //    pasos que se ejecutan, sin poner los que no se ejecutan.
-export type Paso = "preventDefault" | "validar" | "rechazar" | "empezar" | "esperar" | "terminar";
-export const respuesta1: Paso[] = ["preventDefault", "validar", "esperar", "empezar", "terminar"];
+export type Paso =
+  | "preventDefault"
+  | "validar"
+  | "validacionFallida"
+  | "envioIniciado"
+  | "esperar"
+  | "envioCompletado";
+export const respuesta1: Paso[] = [
+  "preventDefault",
+  "validar",
+  "esperar",
+  "envioIniciado",
+  "envioCompletado",
+];
 
 // 2) Predice: lo mismo, pero con el nombre vacío. ¿Qué pasos se ejecutan?
 export const respuesta2: Paso[] = [
   "preventDefault",
   "validar",
-  "rechazar",
-  "empezar",
+  "validacionFallida",
+  "envioIniciado",
   "esperar",
-  "terminar",
+  "envioCompletado",
 ];
 
 // 3) `EnvioFoto` — con los datos vacíos, la solicitud se envía igual y no sale
@@ -146,12 +162,12 @@ export function EnvioFoto({ datos }: { datos: DatosSolicitud }) {
     e.preventDefault();
     const errores = validarSolicitud(estado.datos);
     if (Object.keys(estado.errores).length > 0) {
-      pedir({ tipo: "rechazar", errores });
+      pedir({ tipo: "validacionFallida", errores });
       return;
     }
-    pedir({ tipo: "empezar" });
+    pedir({ tipo: "envioIniciado" });
     await esperar(1000);
-    pedir({ tipo: "terminar" });
+    pedir({ tipo: "envioCompletado" });
   };
 
   return <PanelEnvio estado={estado} alEnviar={enviar} />;
@@ -166,11 +182,11 @@ export function EnvioSinReturn({ datos }: { datos: DatosSolicitud }) {
     e.preventDefault();
     const errores = validarSolicitud(estado.datos);
     if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "rechazar", errores });
+      pedir({ tipo: "validacionFallida", errores });
     }
-    pedir({ tipo: "empezar" });
+    pedir({ tipo: "envioIniciado" });
     await esperar(1000);
-    pedir({ tipo: "terminar" });
+    pedir({ tipo: "envioCompletado" });
   };
 
   return <PanelEnvio estado={estado} alEnviar={enviar} />;
@@ -185,9 +201,9 @@ export function EnvioSinReturn({ datos }: { datos: DatosSolicitud }) {
  *   pide ANTES del `await`.
  *
  * SINTAXIS
- *     pedir({ tipo: "empezar" });    // antes: la pantalla dice "Enviando…"
+ *     pedir({ tipo: "envioIniciado" });    // antes: la pantalla dice "Enviando…"
  *     await esperar(1000);           // la función se pausa; React pinta
- *     pedir({ tipo: "terminar" });   // después: "Solicitud enviada"
+ *     pedir({ tipo: "envioCompletado" });   // después: "Solicitud enviada"
  *
  * 🧠 ANALOGÍA — el cartel de "en preparación" del local de comida se cuelga
  *    cuando entra el pedido, no cuando el plato ya está en la bandeja.
@@ -208,12 +224,12 @@ export function EnvioTarde({ datos }: { datos: DatosSolicitud }) {
     e.preventDefault();
     const errores = validarSolicitud(estado.datos);
     if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "rechazar", errores });
+      pedir({ tipo: "validacionFallida", errores });
       return;
     }
     await esperar(1000);
-    pedir({ tipo: "empezar" });
-    pedir({ tipo: "terminar" });
+    pedir({ tipo: "envioIniciado" });
+    pedir({ tipo: "envioCompletado" });
   };
 
   return <PanelEnvio estado={estado} alEnviar={enviar} />;
@@ -228,12 +244,12 @@ export function EnvioTipado({ datos }: { datos: DatosSolicitud }) {
     e.preventDefault();
     const errores = validarSolicitud(estado.datos);
     if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "rechazar", errores });
+      pedir({ tipo: "validacionFallida", errores });
       return;
     }
-    pedir({ tipo: "empezar" });
+    pedir({ tipo: "envioIniciado" });
     await esperar(1000);
-    pedir({ tipo: "terminar" });
+    pedir({ tipo: "envioCompletado" });
   };
 
   return <PanelEnvio estado={estado} alEnviar={enviar} />;

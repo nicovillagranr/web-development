@@ -1,238 +1,625 @@
-import { useReducer } from "react";
+import { type FormEvent, useReducer } from "react";
 
 /* =============================================================================
- * EJERCICIO 10 — el reducer, un case a la vez   ·  bloque 11
- * =============================================================================
+ * FORMULARIO COMPLETO — React + TypeScript + useReducer
  *
- * 📌 RECORDATORIO — la forma del estado, con valores de ejemplo:
- *     {
- *       datos:   { nombre: "Ana", correo: "ana@mail.cl", detalle: "Una landing" },
- *       errores: { correo: "El correo no es válido" },   // solo los que fallan
- *       fase:    "editando",  o "enviando", "enviado" -> type string literal
- *     }
+ * Este archivo reúne el flujo completo de un formulario real:
  *
- * 🎯 AL TERMINAR SABRÁS
- *   · decir, de cada case, qué partes del estado cambia y cuáles deja igual
- *   · escribir un guard que devuelve el mismo estado cuando el paso no aplica
- *   · seguir el estado a través de varias acciones seguidas
+ * 1. El usuario escribe
+ * 2. Se actualizan los datos
+ * 3. Se limpian los errores del campo que está corrigiendo
+ * 4. Se valida el formulario
+ * 5. Si hay errores → se muestran
+ * 6. Si no hay errores → comienza el envío
+ * 7. Se llama a una API
+ * 8. Si la API responde correctamente → enviado
+ * 9. Si la API falla → error de servidor
+ * 10. Se puede volver a editar / limpiar
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * En el 09 comentaste "escribir" y "rechazar", pero no "empezar", "terminar" ni
- * "limpiar". Aquí cada case es su propio drill, con un formulario nuevo: la
- * solicitud de presupuesto que tendría la agencia de Projex.
- *
- * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · un case: qué cambia y qué se queda  →  drills 1 a 3
- *   TEORÍA 2 · el guard: cuándo el paso no aplica   →  drills 4 a 6
- *
- * ▸ EJERCICIO — 6 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/11-useState-useReducer/exercise-10.test.tsx
- *     pnpm typecheck
- *
- *   Todos los starters están rotos a propósito, y los 6 compilan: toda la señal
- *   está en el test. Los drills 2 y 4 llevan un `// ¿Por qué?` que reviso yo.
- *   ¿Atascado? Las pistas están en `exercise-10.pistas.md`, de una en una.
- *
- * 👁️ `VisorSolicitud` (en `src/App.tsx`) pinta el estado que devuelve TU reducer.
- * ===========================================================================*/
+ * ============================================================================= */
 
-// Los tipos, `vacios` e `inicial` no se tocan. Cada drill te recuerda el que usa.
+// 1. Define la forma de los datos que maneja el formulario.
+// Cada propiedad representa un campo que el usuario puede completar.
 export type DatosSolicitud = {
   nombre: string;
+  apellido: string;
   correo: string;
   detalle: string;
 };
+
+// Cada campo puede tener un mensaje de error o no tenerlo.
+// El "?" indica que la propiedad es opcional.
+// "servidor" representa un error general proveniente del servidor.
 export type ErroresSolicitud = {
   nombre?: string;
+  apellido?: string;
   correo?: string;
   detalle?: string;
+  servidor?: string;
 };
+// La fase del flujo del formulario puede ser uno de estos 4 strings literales.
+// TypeScript solo permitirá estos valores.
+export type FaseSolicitud = "editando" | "enviando" | "enviado" | "error";
 
-export type FaseSolicitud = "editando" | "enviando" | "enviado";
-
+// 2. ESTADO COMPLETO
 export type EstadoSolicitud = {
   datos: DatosSolicitud;
   errores: ErroresSolicitud;
   fase: FaseSolicitud;
 };
 
-// const solicitudUno: EstadoSolicitud = {
-// datos: { nombre: "Ana", correo: "ana@example.com", detalle: "Necesito un presupuesto" },
-// errores: {},
-// fase: "editando",
-// };
+/* =============================================================================
+ * 3. ACCIONES DEL REDUCER
+ * Cada acción describe algo que ocurrió.
+ *
+ * "escribir"
+ *      → el usuario modificó un campo
+ *
+ * "validacionFallida"
+ *      → intentamos enviar, pero los datos tienen errores
+ *
+ * "envioIniciado"
+ *      → la validación pasó y comenzamos la petición
+ *
+ * "envioCompletado"
+ *      → la API respondió correctamente
+ *
+ * "envioFallido"
+ *      → la API respondió con error / falló la petición
+ *
+ * "limpiar"
+ *      → queremos volver al formulario inicial
+ *
+ * ============================================================================= */
 
 export type AccionSolicitud =
-  | { tipo: "escribir"; campo: keyof DatosSolicitud; valor: string }
-  | { tipo: "rechazar"; errores: ErroresSolicitud }
-  | { tipo: "empezar" }
-  | { tipo: "terminar" }
-  | { tipo: "limpiar" };
+  | {
+      tipo: "escribir";
+      campo: keyof DatosSolicitud;
+      valor: string;
+    }
+  | {
+      tipo: "validacionFallida";
+      errores: ErroresSolicitud;
+    }
+  | {
+      tipo: "envioIniciado";
+    }
+  | {
+      tipo: "envioCompletado";
+    }
+  | {
+      tipo: "envioFallido";
+      mensaje: string;
+    }
+  | {
+      tipo: "limpiar";
+    };
 
-export const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
-export const inicial: EstadoSolicitud = { datos: vacios, errores: {}, fase: "editando" };
+/* =============================================================================
+ * 4. ESTADO INICIAL
+ * ============================================================================= */
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 1 — un case: qué cambia y qué se queda
- * ─────────────────────────────────────────────────────────────────────────────
- * DEFINICIÓN
- *   Cada case del reducer es la regla de UN paso: devuelve un estado nuevo en el
- *   que cambian solo las partes que ese paso toca. El resto se copia tal cual.
- *
- * SINTAXIS — un case inventado, "reabrir", que no está en este reducer:
- *     case "reabrir":
- *       return {
- *         ...estado,          // lo que se queda: datos y errores, copiados
- *         fase: "editando",   // lo que cambia: escrito encima de la copia
- *       };
- *
- * 🧠 ANALOGÍA — la ficha de un paciente: en cada visita el médico corrige solo
- *    las líneas que cambiaron; el resto de la ficha se pasa en limpio igual.
- *
- * 🗣️ LAS PIEZAS
- *     `...estado` → spread, copia todo  ·  `fase: …` después → sobrescribe
- *
- * ⚠️ TRAMPA — lo que va DESPUÉS del spread gana. Con `fase: "editando"` escrito
- *    ANTES de `...estado`, el spread lo pisa con la fase vieja.
- * ───────────────────────────────────────────────────────────────────────────── */
+export const vacios: DatosSolicitud = {
+  nombre: "",
+  apellido: "",
+  correo: "",
+  detalle: "",
+};
 
-// 1) Predice: mira el `case "rechazar"` del reducer de más abajo (ese no está
-//    roto). ¿Qué partes del estado cambia? Escribe solo las que cambian.
-//    Recordatorio:  EstadoSolicitud = { datos: …; errores: …; fase: … }
-export const respuesta1: (keyof EstadoSolicitud)[] = ["errores", "fase"];
+export const inicial: EstadoSolicitud = {
+  datos: vacios,
+  errores: {},
+  fase: "editando",
+};
 
-// 2) Predice: el `case "limpiar"` de abajo devuelve `inicial`. Un compañero lo
-//    reescribe así:
-//        return { ...estado, datos: vacios, errores: {}, fase: "editando" };
-//    ¿Las dos versiones devuelven el mismo contenido, sea cual sea el estado?
-export const respuesta2: boolean = true;
-// ¿Por qué? Escribirlo a mano como en el ejemplo da el mismo contenido que escribir
-// `inicial`: después del `...estado` se pisan las tres llaves (datos, errores y fase)
-// con los mismos valores fijos que tiene `inicial`, así que del estado viejo no llega
-// ninguna. Lo que no es igual es el objeto: la versión a mano crea uno nuevo cada vez,
-// e `inicial` es siempre el mismo.
-
-// 3) y 4), 5) son cases de `solicitudReducer`, más abajo.
-// 3) "escribir" — copiar el texto y borrar el error del campo ya funciona. Falta
-//    una regla: si la solicitud estaba "enviado", al escribir otra vez vuelve a
-//    "editando", para que se quite el aviso de enviada. Desde las otras dos
-//    fases, la fase no cambia.
-//    Recordatorio:  FaseSolicitud = "editando" | "enviando" | "enviado"
-
-/* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 2 — el guard: cuándo el paso no aplica
- * ─────────────────────────────────────────────────────────────────────────────
- * DEFINICIÓN
- *   Un guard es un `if` al principio del case: si el paso no tiene sentido en la
- *   fase actual, devuelve `estado` tal cual, el MISMO objeto, sin copiarlo.
+/* =============================================================================
+ * 5. VALIDACIÓN
  *
- * SINTAXIS
- *     case "reabrir":
- *       if (estado.fase !== "enviado") return estado;   // no aplica: nada cambia
- *       return { ...estado, fase: "editando" };          // aplica: estado nuevo
+ * IMPORTANTE:
  *
- * 🧠 ANALOGÍA — el torniquete del metro: sin tarjeta no gira. No te da otro
- *    torniquete igual al anterior; simplemente se queda donde estaba.
+ * El reducer NO valida.
  *
- * 🗣️ LAS PIEZAS
- *     `return estado` → el mismo objeto  ·  `{ ...estado }` → un objeto nuevo
+ * Esta función recibe los datos y decide si son válidos.
  *
- * ⚠️ TRAMPA — el guard pregunta por la fase en la que el paso NO vale. Escrito
- *    al revés, bloquea justo el caso bueno y deja pasar el malo.
- * ───────────────────────────────────────────────────────────────────────────── */
+ * Devuelve:
+ *
+ * {} → no hay errores
+ *
+ * {
+ *   nombre: "...",
+ *   apellido: "...",
+ *   correo: "..."
+ * } → hay errores
+ *
+ * Esta separación es importante:
+ *
+ * VALIDAR
+ *      ↓
+ * produce errores
+ *
+ * REDUCER
+ *      ↓
+ * administra esos errores dentro del estado
+ *
+ * ============================================================================= */
 
-// 4) "empezar" — pasa a "enviando" y limpia los errores. Pero si ya se está
-//    enviando (un doble clic en el botón), no hace nada: devuelve el mismo estado.
-// ¿Por qué el mismo estado y no una copia con `{ ...estado }`?
+// Función que recibe el objeto datos y retorna un eventual objeto de errores.
+// Si no hay errores, retorna un objeto vacío.
 
-// 5) "terminar" — la solicitud queda "enviado" y el formulario vacío para la
-//    siguiente. Solo vale desde "enviando".
+export function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
+  // Creamos nuestro objeto vacío para ir metiendo
+  // los errores que vayamos encontrando.
+  const errores: ErroresSolicitud = {};
+
+  // ---------------------------------------------------------------------------
+  // VALIDACIÓN DEL NOMBRE
+  // ---------------------------------------------------------------------------
+
+  if (datos.nombre.trim() === "") {
+    errores.nombre = "El nombre es obligatorio";
+  } else if (datos.nombre.trim().length < 2) {
+    errores.nombre = "El nombre debe tener al menos 2 caracteres";
+  }
+
+  // ---------------------------------------------------------------------------
+  // VALIDACIÓN DEL APELLIDO
+  // ---------------------------------------------------------------------------
+
+  if (datos.apellido.trim() === "") {
+    errores.apellido = "El apellido es obligatorio";
+  } else if (datos.apellido.trim().length < 2) {
+    errores.apellido = "El apellido debe tener al menos 2 caracteres";
+  }
+
+  // ---------------------------------------------------------------------------
+  // VALIDACIÓN DEL CORREO
+  // ---------------------------------------------------------------------------
+
+  const correoValido = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(datos.correo);
+
+  if (datos.correo.trim() === "") {
+    errores.correo = "El correo es obligatorio";
+  } else if (!correoValido) {
+    errores.correo = "El correo no es válido";
+  }
+
+  // ---------------------------------------------------------------------------
+  // VALIDACIÓN DEL DETALLE
+  // ---------------------------------------------------------------------------
+
+  if (datos.detalle.trim() === "") {
+    errores.detalle = "El detalle es obligatorio";
+  } else if (datos.detalle.trim().length < 10) {
+    errores.detalle = "El detalle debe tener al menos 10 caracteres";
+  }
+
+  return errores;
+}
+
+/* =============================================================================
+ * 6. REDUCER
+ * ============================================================================= */
+
 export function solicitudReducer(
   estado: EstadoSolicitud,
   accion: AccionSolicitud,
 ): EstadoSolicitud {
   switch (accion.tipo) {
-    //
+    /* =========================================================================
+     * ESCRIBIR
+     *
+     * El usuario modificó un campo.
+     *
+     * Cambiamos:
+     *
+     * datos
+     * errores
+     * fase solamente si estaba en "enviado" o "error"
+     *
+     * El resto se conserva.
+     * ========================================================================= */
+
     case "escribir":
       return {
         ...estado,
-        datos: { ...estado.datos, [accion.campo]: accion.valor },
-        errores: { ...estado.errores, [accion.campo]: "" },
-        fase: estado.fase === "enviado" ? "editando" : estado.fase,
+
+        datos: {
+          ...estado.datos,
+
+          // Esto puede ser:
+          // "nombre"
+          // "apellido"
+          // "correo"
+          // "detalle"
+          //
+          // porque accion.campo es keyof DatosSolicitud.
+          [accion.campo]: accion.valor,
+        },
+
+        errores: {
+          ...estado.errores,
+
+          // Limpiamos el error del campo que estamos corrigiendo.
+          [accion.campo]: "",
+
+          // También limpiamos cualquier error del servidor.
+          servidor: "",
+        },
+
+        fase: estado.fase === "enviado" || estado.fase === "error" ? "editando" : estado.fase,
       };
-    //
-    case "rechazar":
+
+    /* =========================================================================
+     * VALIDACIÓN FALLIDA
+     *
+     * La función validarSolicitud encontró errores.
+     *
+     * Guardamos esos errores y dejamos el formulario en "editando".
+     * ========================================================================= */
+
+    case "validacionFallida":
       return {
         ...estado,
         errores: accion.errores,
         fase: "editando",
       };
-    //
-    case "empezar":
-      if (estado.fase !== "enviado") {
+
+    /* =========================================================================
+     * ENVÍO INICIADO
+     *
+     * Guard:
+     *
+     * Si YA estamos enviando, no hacemos absolutamente nada.
+     *
+     * Esto evita que un doble click produzca dos envíos.
+     *
+     * return estado
+     *      ↓
+     * devuelve exactamente el mismo objeto
+     * ========================================================================= */
+
+    case "envioIniciado":
+      if (estado.fase === "enviando") {
         return estado;
       }
+
       return {
         ...estado,
         errores: {},
         fase: "enviando",
       };
-    //
-    case "terminar": // ← drill 5
+
+    /* =========================================================================
+     * ENVÍO COMPLETADO
+     *
+     * Guard:
+     *
+     * Solo tiene sentido completar un envío si realmente estábamos enviando.
+     *
+     * Cuando termina correctamente:
+     *
+     * datos → formulario vacío
+     * errores → vacíos
+     * fase → enviado
+     * ========================================================================= */
+
+    case "envioCompletado":
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
+
       return {
         ...estado,
+        datos: vacios,
+        errores: {},
         fase: "enviado",
       };
-    //
+
+    /* =========================================================================
+     * ENVÍO FALLIDO
+     *
+     * La petición llegó a la etapa de servidor pero algo falló.
+     *
+     * Volvemos a "error" y mostramos el mensaje.
+     * ========================================================================= */
+
+    case "envioFallido":
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
+
+      return {
+        ...estado,
+        errores: {
+          servidor: accion.mensaje,
+        },
+        fase: "error",
+      };
+
+    /* =========================================================================
+     * LIMPIAR
+     *
+     * Volvemos completamente al estado inicial.
+     * ========================================================================= */
+
     case "limpiar":
       return inicial;
+
+    /* =========================================================================
+     * EXHAUSTIVIDAD
+     *
+     * TypeScript comprueba que todas las acciones hayan sido contempladas.
+     * ========================================================================= */
+
     default: {
       const _exhaustivo: never = accion;
       return _exhaustivo;
     }
   }
 }
-// solicitudReducer(inicial, { tipo: "empezar" })
-// solicitudReducer({ ...inicial, fase: "enviando" }, { tipo: "terminar" })
 
-// 6) Predice: partes de `inicial` y llegan tres acciones seguidas:
-//        escribir "Ana" en "nombre"  →  "empezar"  →  "terminar"
-//    ¿Cómo queda el estado al final? Con el reducer ya resuelto, no el starter.
-//    Recordatorio:  vacios = { nombre: "", correo: "", detalle: "" }
-export const respuesta6: EstadoSolicitud = {
-  datos: { ...vacios, nombre: "Ana" },
-  errores: { nombre: "" },
-  fase: "enviado",
-};
+/* =============================================================================
+ * 7. SIMULACIÓN DE UNA API
+ *
+ * En una aplicación real aquí tendrías algo como:
+ *
+ * await fetch("/api/contacto", {
+ *   method: "POST",
+ *   body: JSON.stringify(datos),
+ * });
+ *
+ * Para el ejercicio simulamos esa petición.
+ * ============================================================================= */
 
-// 👁️ No es un drill, y no hay que tocarlo: pinta el estado que devuelve tu
-//    reducer. Pulsa los botones en distinto orden y mira qué línea cambia.
-export function VisorSolicitud() {
+async function enviarSolicitud(datos: DatosSolicitud): Promise<void> {
+  console.log("Enviando:", datos);
+
+  await new Promise((resolver) => {
+    setTimeout(resolver, 1000);
+  });
+
+  /*
+   * Si quisieras simular un error:
+   *
+   * throw new Error("No se pudo conectar con el servidor");
+   */
+}
+
+/* =============================================================================
+ * 8. COMPONENTE DEL FORMULARIO
+ * ============================================================================= */
+
+export function FormularioSolicitud() {
   const [estado, pedir] = useReducer(solicitudReducer, inicial);
 
+  /* ===========================================================================
+   * HANDLE CHANGE
+   *
+   * El input produce un evento.
+   *
+   * event.currentTarget.name
+   *      → "nombre" | "apellido" | "correo" | "detalle"
+   *
+   * event.currentTarget.value
+   *      → texto escrito
+   *
+   * Como los nombres coinciden con las claves de DatosSolicitud,
+   * podemos utilizar el campo dinámicamente.
+   * =========================================================================== */
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const campo = event.currentTarget.name as keyof DatosSolicitud;
+
+    const valor = event.currentTarget.value;
+
+    pedir({
+      tipo: "escribir",
+      campo,
+      valor,
+    });
+  }
+
+  /* ===========================================================================
+   * HANDLE SUBMIT
+   *
+   * Este es el flujo importante.
+   *
+   * 1. Evitamos que el navegador recargue la página.
+   *
+   * 2. Validamos los datos.
+   *
+   * 3. Si existen errores:
+   *      validacionFallida
+   *
+   * 4. Si no existen:
+   *      envioIniciado
+   *
+   * 5. Esperamos la API.
+   *
+   * 6. Si funciona:
+   *      envioCompletado
+   *
+   * 7. Si falla:
+   *      envioFallido
+   * =========================================================================== */
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    /* -------------------------------------------------------------------------
+     * 1. VALIDAR
+     * ----------------------------------------------------------------------- */
+
+    const errores = validarSolicitud(estado.datos);
+
+    /* -------------------------------------------------------------------------
+     * 2. SI HAY ERRORES, NO ENVIAMOS
+     * ----------------------------------------------------------------------- */
+
+    if (Object.keys(errores).length > 0) {
+      pedir({
+        tipo: "validacionFallida",
+        errores,
+      });
+
+      return;
+    }
+
+    /* -------------------------------------------------------------------------
+     * 3. COMENZAMOS EL ENVÍO
+     * ----------------------------------------------------------------------- */
+
+    pedir({
+      tipo: "envioIniciado",
+    });
+
+    try {
+      /* -----------------------------------------------------------------------
+       * 4. PETICIÓN ASÍNCRONA
+       * --------------------------------------------------------------------- */
+
+      await enviarSolicitud(estado.datos);
+
+      /* -----------------------------------------------------------------------
+       * 5. ÉXITO
+       * --------------------------------------------------------------------- */
+
+      pedir({
+        tipo: "envioCompletado",
+      });
+    } catch (error) {
+      /* -----------------------------------------------------------------------
+       * 6. ERROR DEL SERVIDOR / RED
+       * --------------------------------------------------------------------- */
+
+      const mensaje = error instanceof Error ? error.message : "Ocurrió un error inesperado";
+
+      pedir({
+        tipo: "envioFallido",
+        mensaje,
+      });
+    }
+  }
+
+  /* ===========================================================================
+   * RENDER
+   * =========================================================================== */
+
   return (
-    <div>
-      <p>datos: {JSON.stringify(estado.datos)}</p>
-      <p>errores: {JSON.stringify(estado.errores)}</p>
-      <p>fase: {estado.fase}</p>
+    <form onSubmit={handleSubmit} noValidate>
+      {/* -----------------------------------------------------------------------
+       * NOMBRE
+       * --------------------------------------------------------------------- */}
+
       <div>
-        <button
-          onClick={() =>
-            pedir({ tipo: "escribir", campo: "nombre", valor: estado.datos.nombre + "a" })
-          }
-        >
-          Escribir
-        </button>
-        <button
-          onClick={() => pedir({ tipo: "rechazar", errores: { correo: "El correo no es válido" } })}
-        >
-          Rechazar
-        </button>
-        <button onClick={() => pedir({ tipo: "empezar" })}>Empezar</button>
-        <button onClick={() => pedir({ tipo: "terminar" })}>Terminar</button>
-        <button onClick={() => pedir({ tipo: "limpiar" })}>Limpiar</button>
+        <label htmlFor="nombre">Nombre</label>
+
+        <input
+          id="nombre"
+          name="nombre"
+          value={estado.datos.nombre}
+          onChange={handleChange}
+          disabled={estado.fase === "enviando"}
+        />
+
+        {estado.errores.nombre && (
+          <p className="text-red-600 text-sm mt-1">{estado.errores.nombre}</p>
+        )}
       </div>
-    </div>
+
+      {/* -----------------------------------------------------------------------
+       * APELLIDO
+       * --------------------------------------------------------------------- */}
+
+      <div>
+        <label htmlFor="apellido">Apellido</label>
+
+        <input
+          id="apellido"
+          name="apellido"
+          value={estado.datos.apellido}
+          onChange={handleChange}
+          disabled={estado.fase === "enviando"}
+        />
+
+        {estado.errores.apellido && (
+          <p className="text-red-600 text-sm mt-1">{estado.errores.apellido}</p>
+        )}
+      </div>
+
+      {/* -----------------------------------------------------------------------
+       * CORREO
+       * --------------------------------------------------------------------- */}
+
+      <div>
+        <label htmlFor="correo">Correo</label>
+
+        <input
+          id="correo"
+          name="correo"
+          type="email"
+          value={estado.datos.correo}
+          onChange={handleChange}
+          disabled={estado.fase === "enviando"}
+        />
+
+        {estado.errores.correo && (
+          <p className="text-red-600 text-sm mt-1">{estado.errores.correo}</p>
+        )}
+      </div>
+
+      {/* -----------------------------------------------------------------------
+       * DETALLE
+       * --------------------------------------------------------------------- */}
+
+      <div>
+        <label htmlFor="detalle">Detalle</label>
+
+        <textarea
+          id="detalle"
+          name="detalle"
+          value={estado.datos.detalle}
+          onChange={handleChange}
+          disabled={estado.fase === "enviando"}
+        />
+
+        {estado.errores.detalle && (
+          <p className="text-red-600 text-sm mt-1">{estado.errores.detalle}</p>
+        )}
+      </div>
+
+      {/* -----------------------------------------------------------------------
+       * ERROR DEL SERVIDOR
+       * --------------------------------------------------------------------- */}
+
+      {estado.errores.servidor && (
+        <p className="text-red-600 text-sm mt-2">{estado.errores.servidor}</p>
+      )}
+
+      {/* -----------------------------------------------------------------------
+       * ENVIAR
+       * --------------------------------------------------------------------- */}
+
+      <button type="submit" disabled={estado.fase === "enviando"}>
+        {estado.fase === "enviando" ? "Enviando..." : "Enviar solicitud"}
+      </button>
+
+      {/* -----------------------------------------------------------------------
+       * ÉXITO
+       * --------------------------------------------------------------------- */}
+
+      {estado.fase === "enviado" && (
+        <p className="text-green-600 text-sm mt-2">Solicitud enviada correctamente.</p>
+      )}
+
+      {/* -----------------------------------------------------------------------
+       * LIMPIAR
+       * --------------------------------------------------------------------- */}
+
+      <button type="button" onClick={() => pedir({ tipo: "limpiar" })}>
+        Limpiar
+      </button>
+    </form>
   );
 }
-// <VisorSolicitud />

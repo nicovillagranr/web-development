@@ -1,33 +1,32 @@
-# Pistas — exercise-10b · validar: un objeto de errores, una regla a la vez
+# Pistas — exercise-10b · el reducer de tu `10`, case por case
 
 Cuatro niveles por drill. Ábrelas **de una en una** y vuelve al archivo entre una y la
 siguiente.
 
-Los 5 starters compilan, así que ninguna Pista 3 cita a `tsc`: en su lugar va lo que dice
+Los 7 starters compilan, así que ninguna Pista 3 cita a `tsc`: en su lugar va lo que dice
 el test.
 
 ---
 
-## Drill 1 — lo que devuelve con todo en regla
+## Drill 1 — "escribir" borra el error del servidor
 
 <details><summary>Pista 1 — conceptual</summary>
 
-Sigue la función con datos buenos: ¿entra en algún `if`? ¿Qué le pasa entonces a
-`errores`?
+En `errores` ya se borra una llave. ¿Cuál otra tiene que quedar en `""`?
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-`errores` nace como `{}` y solo crece dentro de los `if`. Si no entra en ninguno, sale tal
-como nació.
+Dentro del objeto de `errores`, después del spread, hace falta una segunda llave escrita a
+mano: la del servidor, con el mismo valor que la del campo (Teoría 1, la copia con cambio).
 
 </details>
 
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected { nombre: '', correo: '', detalle: '' } to strictly equal {}
+expected 'Sin conexión' to be falsy
 ```
 
 </details>
@@ -35,38 +34,34 @@ expected { nombre: '', correo: '', detalle: '' } to strictly equal {}
 <details><summary>Solución</summary>
 
 ```ts
-export const respuesta1: ErroresSolicitud = {};
-// ¿Por qué? Porque `errores` empieza vacío y solo se le añade una clave cuando un campo
-// falla. Si todo pasa, no se añade nada: sale `{}`. Por eso el envío pregunta
-// `Object.keys(errores).length > 0`: cero claves quiere decir cero errores.
+errores: { ...estado.errores, [accion.campo]: "", servidor: "" },
 ```
 
-Un objeto con las claves en `""` tendría tres claves, y `Object.keys` diría que hay tres
-errores.
+El spread conserva los errores de los otros campos; `servidor: ""` apaga el aviso viejo.
 
 </details>
 
 ---
 
-## Drill 2 — el correo con espacios
+## Drill 2 — "escribir" desde "error"
 
 <details><summary>Pista 1 — conceptual</summary>
 
-Compara cómo llegan al `if` el nombre y el detalle con cómo llega el correo.
+El ternario de `fase` pregunta por una sola fase. ¿Cuántas tiene que aceptar ahora?
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-El nombre y el detalle pasan por `trim()` antes de validarse; el correo se valida tal como
-llega. Hay que normalizarlo igual.
+La condición del ternario tiene que ser verdadera si la fase es "enviado" **o** "error".
+Hay un operador para "o".
 
 </details>
 
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected 'El correo no es válido' to be undefined
+expected 'error' to be 'editando'
 ```
 
 </details>
@@ -74,35 +69,34 @@ expected 'El correo no es válido' to be undefined
 <details><summary>Solución</summary>
 
 ```ts
-if (!FORMA_DE_CORREO.test(datos.correo.trim())) {
+fase: estado.fase === "enviado" || estado.fase === "error" ? "editando" : estado.fase,
 ```
 
-O, para que se parezca al resto, una constante `const correo = datos.correo.trim();` junto
-a las otras dos, y `FORMA_DE_CORREO.test(correo)`. Es lo que hace Projex al principio de
-`ContactValidation`.
+Cada lado del `||` es una comparación completa. `estado.fase === "enviado" || "error"` no
+sirve: el lado derecho sería el string `"error"` a secas, que siempre cuenta como verdadero.
 
 </details>
 
 ---
 
-## Drill 3 — el error de " A "
+## Drill 3 — lo que cambia "envioFallido"
 
 <details><summary>Pista 1 — conceptual</summary>
 
-Lo primero que hace la función con el nombre no es validarlo.
+Mira el `return` del case: ¿qué llaves están escritas después del spread?
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Después del `trim()`, ¿cuántos caracteres le quedan a " A "? ¿Está vacío? ¿Llega a 2?
+Son dos. `datos` no aparece: llega del spread tal cual.
 
 </details>
 
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected undefined to be 'El nombre debe tener al menos 2 carac…'
+expected [ 'fase' ] to deeply equal [ 'errores', 'fase' ]
 ```
 
 </details>
@@ -110,75 +104,115 @@ expected undefined to be 'El nombre debe tener al menos 2 carac…'
 <details><summary>Solución</summary>
 
 ```ts
-export const respuesta3: string | undefined = "El nombre debe tener al menos 2 caracteres";
+export const respuesta3: (keyof EstadoSolicitud)[] = ["errores", "fase"];
 ```
 
-" A " tiene 3 caracteres, pero después del `trim()` queda "A", con 1. No está vacío, así
-que la regla de obligatorio pasa; la de longitud, no.
+Y fíjate en que `datos` se queda: si el servidor falla, el usuario no pierde lo que
+escribió y puede reintentar.
 
 </details>
 
 ---
 
-## Drill 4 — el nombre vacío
+## Drill 4 — los errores después de "envioFallido"
 
 <details><summary>Pista 1 — conceptual</summary>
 
-Con el nombre vacío, ¿cuántas de las dos reglas fallan? ¿Y cuál escribe la última?
+¿"envioFallido" copia los errores o los reemplaza?
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Son dos `if` sueltos: los dos se miran, y el segundo sobrescribe al primero. La segunda
-regla solo debería mirarse si la primera pasó (Teoría 2).
+`errores: { servidor: accion.mensaje }` no lleva `...estado.errores` delante: es un objeto
+nuevo desde cero (Teoría 1, el reemplazo). Lo que no esté escrito ahí, desaparece.
 
 </details>
 
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected 'El nombre debe tener al menos 2 carac…' to be 'El nombre es obligatorio'
+expected { …(2) } to strictly equal { servidor: 'Sin conexión' }
 ```
+
+Sobra una llave.
 
 </details>
 
 <details><summary>Solución</summary>
 
 ```ts
-if (!nombre) {
-  errores.nombre = "El nombre es obligatorio";
-} else if (nombre.length < 2) {
-  errores.nombre = "El nombre debe tener al menos 2 caracteres";
-}
+export const respuesta4: ErroresSolicitud = { servidor: "Sin conexión" };
+// ¿Por qué? Porque "envioFallido" reemplaza los errores por un objeto nuevo que solo
+// tiene `servidor`. Como no hay spread de los errores viejos, el del correo se pierde.
 ```
 
-Con `else if`, si el nombre está vacío se para en la primera regla. En Projex se hace lo
-mismo con `switch (true)` y un `break` por caso: es otra forma de escribir "gana la
-primera".
+En la práctica nunca habría un error de correo aquí: "envioIniciado" ya los dejó en `{}`.
+Pero el mecanismo es el que importa.
 
 </details>
 
 ---
 
-## Drill 5 — la segunda regla del detalle
+## Drill 5 — el guard de "envioFallido"
 
 <details><summary>Pista 1 — conceptual</summary>
 
-Es la misma forma que el nombre del drill 4, con otro número y otro mensaje.
+¿De qué fase tiene que venir un envío para poder fallar?
 
 </details>
 
 <details><summary>Pista 2 — más concreta</summary>
 
-Un `else if` debajo del de obligatorio, que mire la longitud del detalle ya normalizado.
+Un `if` antes del `return` que pregunte "¿no vengo de enviando?" y, si es así, devuelva
+`estado`. Es el mismo guard que ya tiene "envioCompletado", justo encima.
 
 </details>
 
 <details><summary>Pista 3 — lo que dice el test</summary>
 
 ```
-expected undefined to be 'Cuéntanos un poco más: mínimo 20 cara…'
+expected { Object (datos, errores, ...) } to be { Object (datos, errores, ...) }
+```
+
+Mismo contenido o no, el test pide el MISMO objeto.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+case "envioFallido":
+  if (estado.fase !== "enviando") return estado;
+  return { ...estado, errores: { servidor: accion.mensaje }, fase: "error" };
+// ¿Por qué el mismo estado? Porque no cambió nada. Devolviendo el mismo objeto, React ve
+// que es igual al de antes y no vuelve a pintar; una copia sería un objeto nuevo y
+// repintaría para nada.
+```
+
+</details>
+
+---
+
+## Drill 6 — "envioCompletado" vacía el formulario
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El enunciado pide dos cosas en el destino. ¿Cuál de las dos no está en el `return`?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Falta la llave que deja el formulario en blanco. Ya tienes una constante con los cuatro
+campos vacíos.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+expected { nombre: 'Ana', …(3) } to deeply equal { nombre: '', apellido: '', …(2) }
 ```
 
 </details>
@@ -186,14 +220,54 @@ expected undefined to be 'Cuéntanos un poco más: mínimo 20 cara…'
 <details><summary>Solución</summary>
 
 ```ts
-if (!detalle) {
-  errores.detalle = "El detalle es obligatorio";
-} else if (detalle.length < 20) {
-  errores.detalle = "Cuéntanos un poco más: mínimo 20 caracteres";
-}
+return { ...estado, datos: vacios, errores: {}, fase: "enviado" };
 ```
 
-Usa `detalle`, la constante con `trim()`, y no `datos.detalle`: el test prueba un detalle
-corto rodeado de espacios que, sin normalizar, llega a 20.
+</details>
+
+---
+
+## Drill 7 — cuatro acciones seguidas
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Hazlo en una tabla, fila por fila: lo que sale de una acción entra en la siguiente.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El último paso es un "escribir": mira qué hace con `servidor` (drill 1) y con la fase
+cuando viene de "error" (drill 2).
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+expected { Object (datos, errores, ...) } to deeply equal { Object (datos, errores, ...) }
+```
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export const respuesta7: EstadoSolicitud = {
+  datos: { ...vacios, nombre: "Ana", apellido: "P" },
+  errores: { servidor: "", apellido: "" },
+  fase: "editando",
+};
+```
+
+| Acción | datos | errores | fase |
+|---|---|---|---|
+| inicio | vacíos | `{}` | editando |
+| escribir "Ana" | nombre: "Ana" | `{ nombre: "", servidor: "" }` | editando |
+| envioIniciado | nombre: "Ana" | `{}` | enviando |
+| envioFallido | nombre: "Ana" | `{ servidor: "Sin conexión" }` | error |
+| escribir "P" | nombre "Ana", apellido "P" | `{ servidor: "", apellido: "" }` | editando |
+
+Los datos sobreviven al fallo: el usuario solo tiene que corregir y volver a enviar.
 
 </details>

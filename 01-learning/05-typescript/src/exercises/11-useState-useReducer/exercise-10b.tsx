@@ -1,177 +1,214 @@
-import { useState } from "react";
+import { useReducer } from "react";
 
 /* =============================================================================
- * EJERCICIO 10b — validar: un objeto de errores, una regla a la vez   ·  bloque 11
+ * EJERCICIO 10b — el reducer de tu `10`, case por case   ·  bloque 11
  * =============================================================================
  *
- * 📌 RECORDATORIO — lo que entra y lo que sale de `validarSolicitud`:
- *     entra:  { nombre: "A", correo: "ana@mail", detalle: "" }
- *     sale:   { nombre: "El nombre debe tener al menos 2 caracteres",
- *               correo: "El correo no es válido",
- *               detalle: "El detalle es obligatorio" }
+ * 📌 RECORDATORIO — el estado de tu formulario, con valores de ejemplo:
+ *     {
+ *       datos:   { nombre: "Ana", apellido: "Pérez", correo: "ana@mail.cl", detalle: "…" },
+ *       errores: { servidor: "Sin conexión" },   // solo los que hay
+ *       fase:    "error",        // o "editando", "enviando", "enviado"
+ *     }
  *
  * 🎯 AL TERMINAR SABRÁS
- *   · decir qué devuelve un validador cuando todo está bien
- *   · normalizar un dato con `trim()` antes de validarlo
- *   · encadenar varias reglas de un campo para que gane la primera que falla
+ *   · decir qué partes del estado cambia cada case de tu reducer
+ *   · distinguir un case que copia los errores de uno que los reemplaza
+ *   · escribir los guards de "envioCompletado" y "envioFallido"
  *
  * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * Es la pieza que decide si el envío sigue o se rechaza. Es una función pura,
- * sin React: entran datos, salen errores, y se prueba llamándola a mano. Es el
- * mismo trabajo que hace `ContactValidation` en Projex.
+ * Es el `solicitudReducer` de tu `exercise-10`, con los mismos tipos y nombres,
+ * roto por partes. Reconstruirlo pieza a pieza es la forma de entender al 100%
+ * el archivo entero, sobre todo lo que trajo la versión nueva: "envioFallido",
+ * la fase "error" y el error del servidor.
  *
  * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · la forma del resultado        →  drills 1 a 3
- *   TEORÍA 2 · varias reglas en un campo     →  drills 4, 5
+ *   TEORÍA 1 · copiar o reemplazar     →  drills 1 a 4
+ *   TEORÍA 2 · el guard                →  drills 5 a 7
  *
- * ▸ EJERCICIO — 5 drills, en orden. ❌ Prohibido `any` y `as`.
+ * ▸ EJERCICIO — 7 drills, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/11-useState-useReducer/exercise-10b.test.tsx
  *     pnpm typecheck
  *
- *   Todos los starters están rotos a propósito, y los 5 compilan: toda la señal
- *   está en el test. El drill 1 lleva un `// ¿Por qué?` que reviso yo.
+ *   Todos los starters están rotos a propósito, y los 7 compilan: toda la señal
+ *   está en el test. Los drills 4 y 5 llevan un `// ¿Por qué?` que reviso yo.
  *   ¿Atascado? Las pistas están en `exercise-10b.pistas.md`, de una en una.
  *
- * 👁️ `ProbadorValidacion` (en `src/App.tsx`) pinta lo que devuelve TU validador.
+ * 👁️ `VisorSolicitud` (en `src/App.tsx`) pinta el estado que devuelve TU reducer.
  * ===========================================================================*/
 
-// Los tipos y `vacios` no se tocan.
-export type DatosSolicitud = { nombre: string; correo: string; detalle: string };
-export type ErroresSolicitud = { nombre?: string; correo?: string; detalle?: string };
+// Los tipos, `vacios` e `inicial` son los de tu `10` y no se tocan.
+export type DatosSolicitud = { nombre: string; apellido: string; correo: string; detalle: string };
+export type ErroresSolicitud = {
+  nombre?: string;
+  apellido?: string;
+  correo?: string;
+  detalle?: string;
+  servidor?: string;
+};
+export type FaseSolicitud = "editando" | "enviando" | "enviado" | "error";
+export type EstadoSolicitud = {
+  datos: DatosSolicitud;
+  errores: ErroresSolicitud;
+  fase: FaseSolicitud;
+};
 
-export const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
+// Quién pide cada acción: "escribir" y "limpiar", el usuario; las otras cuatro,
+// el envío (`handleSubmit`), según lo que haya pasado.
+export type AccionSolicitud =
+  | { tipo: "escribir"; campo: keyof DatosSolicitud; valor: string }
+  | { tipo: "validacionFallida"; errores: ErroresSolicitud }
+  | { tipo: "envioIniciado" }
+  | { tipo: "envioCompletado" }
+  | { tipo: "envioFallido"; mensaje: string }
+  | { tipo: "limpiar" };
+
+export const vacios: DatosSolicitud = { nombre: "", apellido: "", correo: "", detalle: "" };
+export const inicial: EstadoSolicitud = { datos: vacios, errores: {}, fase: "editando" };
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 1 — la forma del resultado
+ * ▸ TEORÍA 1 — copiar o reemplazar
  * ─────────────────────────────────────────────────────────────────────────────
  * DEFINICIÓN
- *   Un validador parte de un objeto de errores vacío y le añade una clave por
- *   cada campo que falla. Los campos que pasan no aparecen.
+ *   Un objeto anidado se puede COPIAR y tocar una llave (spread + llave), o
+ *   REEMPLAZAR entero por otro (sin spread). Lo que no aparece en un reemplazo,
+ *   desaparece.
  *
  * SINTAXIS
- *     const errores: ErroresSolicitud = {};          // empieza vacío
- *     const nombre = datos.nombre.trim();            // normalizado antes de mirar
- *     if (!nombre) errores.nombre = "…";             // solo si falla, se añade
- *     return errores;
+ *     errores: { ...estado.errores, nombre: "" }   // copia: los demás se quedan
+ *     errores: { nombre: "Muy corto" }             // reemplazo: solo queda este
  *
- * 🧠 ANALOGÍA — la revisión técnica del auto: el informe solo lista lo que falló.
- *    Un auto en regla sale con la hoja en blanco, no con "frenos: nada".
+ * 🧠 ANALOGÍA — corregir una lista con típex frente a tirarla y escribir una
+ *    nueva: con el típex, el resto de la lista sigue ahí; con la hoja nueva,
+ *    solo está lo que escribiste en ella.
  *
  * 🗣️ LAS PIEZAS
- *     `{}` → objeto vacío, todo en regla  ·  `trim()` → quita espacios al borde
+ *     `{ ...a, x }` → copia con cambio  ·  `{ x }` → objeto nuevo desde cero
  *
- * ⚠️ TRAMPA — validar el dato tal como llega. "  " (dos espacios) no es un campo
- *    vacío para JavaScript, y un correo pegado con un espacio al final no casa
- *    con la expresión regular.
+ * ⚠️ TRAMPA — en tu reducer conviven los dos: "escribir" copia los errores y
+ *    "validacionFallida" los reemplaza. Leerlos con el mismo molde confunde.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) Predice: llegan datos que cumplen todas las reglas. ¿Qué devuelve
-//    `validarSolicitud`?
-//    Recordatorio:  ErroresSolicitud = { nombre?: string; correo?: string; detalle?: string }
-export const respuesta1: ErroresSolicitud = { nombre: "", correo: "", detalle: "" };
+// 1) y 2) son el `case "escribir"`, más abajo.
+// 1) "escribir" — borrar el error del campo ya funciona. Pero si había un error
+//    del servidor, también tiene que quedar en "" al volver a escribir: el
+//    usuario está corrigiendo, y el aviso viejo ya no vale.
+//    Recordatorio:  ErroresSolicitud = { nombre?, apellido?, correo?, detalle?, servidor? }
+
+// 2) "escribir" — desde "enviado" ya vuelve a "editando". Desde "error" tiene que
+//    volver también; desde "editando" o "enviando", la fase no cambia.
+//    Recordatorio:  FaseSolicitud = "editando" | "enviando" | "enviado" | "error"
+
+// 3) Predice: cuando "envioFallido" aplica, ¿qué partes del estado cambia?
+export const respuesta3: (keyof EstadoSolicitud)[] = ["fase"];
+
+// 4) Predice: el estado está "enviando" y sus errores son
+//    { correo: "El correo no es válido" }. Llega "envioFallido" con el mensaje
+//    "Sin conexión". ¿Qué vale `errores` después?
+export const respuesta4: ErroresSolicitud = {
+  correo: "El correo no es válido",
+  servidor: "Sin conexión",
+};
 // ¿Por qué?
 
-// 2) `validarSolicitud`, el correo — un correo copiado de otro lado llega con
-//    espacios alrededor, como " ana@mail.cl ", y hoy se rechaza. Tiene que
-//    aceptarse, como ya se hace con el nombre y el detalle.
-
-// 3) Predice: el nombre llega como " A " (espacio, A, espacio). ¿Qué error le
-//    toca al nombre? Si no le toca ninguno, `undefined`.
-export const respuesta3: string | undefined = undefined;
-
 /* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 2 — varias reglas en un campo
+ * ▸ TEORÍA 2 — el guard
  * ─────────────────────────────────────────────────────────────────────────────
  * DEFINICIÓN
- *   Cuando un campo tiene varias reglas, se encadenan con `else if`: se mira la
- *   primera, y solo si pasa se mira la siguiente. Gana la primera que falla.
+ *   Un guard es un `if` antes del `return { … }`: si el paso no tiene sentido en
+ *   la fase actual, devuelve `estado`, el MISMO objeto, sin construir nada.
  *
- * SINTAXIS — una regla inventada para la edad, que no está en este archivo:
- *     if (!edad) {
- *       errores.edad = "La edad es obligatoria";      // falla esta → se para aquí
- *     } else if (edad < 18) {
- *       errores.edad = "Tienes que ser mayor de edad"; // solo si la de arriba pasó
- *     }
+ * SINTAXIS — con un case inventado, "reabrir":
+ *     case "reabrir":
+ *       if (estado.fase !== "enviado") return estado;   // origen: ¿vengo de ahí?
+ *       return { ...estado, fase: "editando" };          // destino
  *
- * 🧠 ANALOGÍA — el guardia de una discoteca: si no traes carnet, no te pregunta
- *    la edad. Te da un solo motivo, el primero.
+ * 🧠 ANALOGÍA — el boleto de tren: el revisor mira la estación de ORIGEN en la
+ *    puerta (el guard); el DESTINO es adonde te lleva el viaje (el return).
  *
  * 🗣️ LAS PIEZAS
- *     `else if` → regla encadenada  ·  dos `if` sueltos → reglas independientes
+ *     `return estado` → el mismo objeto  ·  `{ ...estado }` → uno nuevo
  *
- * ⚠️ TRAMPA — con dos `if` sueltos se miran las dos reglas, y si fallan ambas,
- *    la segunda sobrescribe a la primera: sale el motivo menos importante.
+ * ⚠️ TRAMPA — el origen va en el `if` y el destino en el `return`. Si escribes
+ *    el destino en el `if`, el guard bloquea justo el caso bueno.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `validarSolicitud`, el nombre — con el nombre vacío tiene que salir "El
-//    nombre es obligatorio", y hoy sale el mensaje de la longitud.
+// 5) "envioFallido" — solo tiene sentido si se estaba enviando. Desde cualquier
+//    otra fase, devuelve el mismo estado.
+// ¿Por qué el mismo estado y no una copia con `{ ...estado }`?
 
-// 5) `validarSolicitud`, el detalle — falta su segunda regla: si tiene menos de
-//    20 caracteres (sin contar los espacios del borde), el error es
-//    "Cuéntanos un poco más: mínimo 20 caracteres". Vacío sigue siendo obligatorio.
-const FORMA_DE_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
-  const errores: ErroresSolicitud = {};
-
-  const nombre = datos.nombre.trim();
-  const detalle = datos.detalle.trim();
-
-  // ← drill 4
-  if (!nombre) {
-    errores.nombre = "El nombre es obligatorio";
+// 6) "envioCompletado" — el guard está bien. Pero la solicitud tiene que quedar
+//    "enviado" CON el formulario vacío, listo para la siguiente.
+export function solicitudReducer(
+  estado: EstadoSolicitud,
+  accion: AccionSolicitud,
+): EstadoSolicitud {
+  switch (accion.tipo) {
+    case "escribir": // ← drills 1 y 2
+      return {
+        ...estado,
+        datos: { ...estado.datos, [accion.campo]: accion.valor },
+        errores: { ...estado.errores, [accion.campo]: "" },
+        fase: estado.fase === "enviado" ? "editando" : estado.fase,
+      };
+    case "validacionFallida":
+      return { ...estado, errores: accion.errores, fase: "editando" };
+    case "envioIniciado":
+      if (estado.fase === "enviando") return estado;
+      return { ...estado, errores: {}, fase: "enviando" };
+    case "envioCompletado": // ← drill 6
+      if (estado.fase !== "enviando") return estado;
+      return { ...estado, errores: {}, fase: "enviado" };
+    case "envioFallido": // ← drill 5
+      return { ...estado, errores: { servidor: accion.mensaje }, fase: "error" };
+    case "limpiar":
+      return inicial;
+    default: {
+      const _exhaustivo: never = accion;
+      return _exhaustivo;
+    }
   }
-  if (nombre.length < 2) {
-    errores.nombre = "El nombre debe tener al menos 2 caracteres";
-  }
-
-  // ← drill 2
-  if (!FORMA_DE_CORREO.test(datos.correo)) {
-    errores.correo = "El correo no es válido";
-  }
-
-  // ← drill 5
-  if (!detalle) {
-    errores.detalle = "El detalle es obligatorio";
-  }
-
-  return errores;
 }
-// validarSolicitud(vacios)
-// validarSolicitud({ nombre: "Ana", correo: " ana@mail.cl ", detalle: "Una landing para mi tienda" })
+// solicitudReducer({ ...inicial, fase: "error" }, { tipo: "escribir", campo: "nombre", valor: "A" })
+// solicitudReducer(inicial, { tipo: "envioFallido", mensaje: "Sin conexión" })
 
-// 👁️ No es un drill, y no hay que tocarlo: escribe en los tres campos y mira qué
-//    objeto devuelve tu validador en cada tecla.
-export function ProbadorValidacion() {
-  const [datos, setDatos] = useState<DatosSolicitud>(vacios);
-  const errores = validarSolicitud(datos);
+// 7) Predice: partes de `inicial` y llegan cuatro acciones seguidas, con el
+//    reducer ya resuelto:
+//        escribir "Ana" en "nombre"  →  "envioIniciado"
+//        →  "envioFallido" con "Sin conexión"  →  escribir "P" en "apellido"
+//    ¿Cómo queda el estado al final?
+export const respuesta7: EstadoSolicitud = {
+  datos: { ...vacios, nombre: "Ana" },
+  errores: { servidor: "Sin conexión" },
+  fase: "error",
+};
 
-  const cambiar = (campo: keyof DatosSolicitud, valor: string) => {
-    setDatos({ ...datos, [campo]: valor });
-  };
+// 👁️ No es un drill, y no hay que tocarlo: aquí haces tú de usuario Y de envío,
+//    pulsando cada acción a mano. Mira qué línea cambia con cada botón.
+export function VisorSolicitud() {
+  const [estado, pedir] = useReducer(solicitudReducer, inicial);
 
   return (
     <div>
-      <input
-        aria-label="Nombre"
-        placeholder="Nombre"
-        value={datos.nombre}
-        onChange={(e) => cambiar("nombre", e.target.value)}
-      />
-      <input
-        aria-label="Correo"
-        placeholder="Correo"
-        value={datos.correo}
-        onChange={(e) => cambiar("correo", e.target.value)}
-      />
-      <input
-        aria-label="Detalle"
-        placeholder="Detalle"
-        value={datos.detalle}
-        onChange={(e) => cambiar("detalle", e.target.value)}
-      />
-      <p>errores: {JSON.stringify(errores)}</p>
+      <p>datos: {JSON.stringify(estado.datos)}</p>
+      <p>errores: {JSON.stringify(estado.errores)}</p>
+      <p>fase: {estado.fase}</p>
+      <div>
+        <button
+          onClick={() =>
+            pedir({ tipo: "escribir", campo: "nombre", valor: estado.datos.nombre + "a" })
+          }
+        >
+          Escribir
+        </button>
+        <button onClick={() => pedir({ tipo: "envioIniciado" })}>Envío iniciado</button>
+        <button onClick={() => pedir({ tipo: "envioCompletado" })}>Envío completado</button>
+        <button onClick={() => pedir({ tipo: "envioFallido", mensaje: "Sin conexión" })}>
+          Envío fallido
+        </button>
+        <button onClick={() => pedir({ tipo: "limpiar" })}>Limpiar</button>
+      </div>
     </div>
   );
 }
-// <ProbadorValidacion />
+// <VisorSolicitud />

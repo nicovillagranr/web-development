@@ -19,11 +19,17 @@ const pausa = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 describe("11-useState-useReducer / exercise-10c — enviar: decidir con lo de ahora", () => {
   it("1) respuesta1 — los pasos de un envío bueno", () => {
-    expect(respuesta1).toEqual(["preventDefault", "validar", "empezar", "esperar", "terminar"]);
+    expect(respuesta1).toEqual([
+      "preventDefault",
+      "validar",
+      "envioIniciado",
+      "esperar",
+      "envioCompletado",
+    ]);
   });
 
   it("2) respuesta2 — los pasos de un envío rechazado", () => {
-    expect(respuesta2).toEqual(["preventDefault", "validar", "rechazar"]);
+    expect(respuesta2).toEqual(["preventDefault", "validar", "validacionFallida"]);
   });
 
   it("3) EnvioFoto — vacío enseña los errores y no envía", async () => {

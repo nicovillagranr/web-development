@@ -39,8 +39,8 @@ import {
   Transferencia,
 } from "./exercises/11-useState-useReducer/exercise-08";
 import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
-import { VisorSolicitud } from "./exercises/11-useState-useReducer/exercise-10";
-import { ProbadorValidacion } from "./exercises/11-useState-useReducer/exercise-10b";
+import { FormularioSolicitud } from "./exercises/11-useState-useReducer/exercise-10";
+import { VisorSolicitud } from "./exercises/11-useState-useReducer/exercise-10b";
 import {
   EnvioFoto,
   EnvioSinReturn,
@@ -75,10 +75,11 @@ import {
  * drills 8 y 9. Del `exercise-07`, solo `FormReserva` (drill 8): del 1 al 7 son tipos,
  * predicciones y reducers sueltos. Del `exercise-08`, `VotoConMeta` (drill 3), la `DemoFoto`, el refuerzo 3a-3c y
  * `Transferencia` (drills 5 y 7). Del `exercise-09`, solo `FormRegistro` (drills 4 y 8).
- * Del `exercise-10` y el `10b`, solo un visor cada uno (`VisorSolicitud` y
- * `ProbadorValidacion`): sus drills son funciones puras, y el visor pinta lo que
- * devuelven las tuyas. Del `10c`, los envíos de los drills 3 a 6, y del `10d`, los
- * campos de los drills 1 a 4 y 6.
+ * Del `exercise-10`, `FormularioSolicitud`: el formulario completo que reescribiste
+ * para juntar todo lo aprendido, ya sin drills. Del `10b` (su reducer, en drills),
+ * el visor `VisorSolicitud`, que pinta lo que devuelve tu reducer. Del `10c`, los
+ * envíos de los drills 3 a 6, y del `10d`, los campos de los drills 1 a 4 y 6. Ojo:
+ * el `10c` y el `10d` son todavía los de la versión vieja del `10`; se rehacen.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -142,7 +143,12 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
       </div>
 
       {/* El componente vivo. Las reglas que importan en este bloque:
-       *   [&_p]      → los textos que pinta el drill: el número, el aviso, el estado
+       *   [&_p]      → los textos que pinta el drill: el número, el aviso, el estado.
+       *                Solo los <p> SIN className ni role="alert": un selector como
+       *                [&_p] pesa más que una clase suelta (.text-red-600), así que
+       *                sin ese :not() pisaba los estilos que el componente se pone solo
+       *   [role=alert] → los errores por defecto, en rojo y más pequeños
+       *   [aria-invalid=true] → el campo con error, con el borde en rojo
        *   [&_button] → todo se dispara pulsando; varios drills tienen más de uno
        *   [&_ul_li]  → las listas de ListaTareas, RegistroDoble, PanelConHistorial,
        *                ListaCompra y PanelNotas
@@ -151,12 +157,20 @@ function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children }: Tar
       <div
         className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
           bg-black/40 px-7 py-7
-          [&_p]:text-[17px] [&_p]:font-medium [&_p]:tracking-[-0.01em] [&_p]:text-[#f5f5f7]
+          [&_p:not([class],[role=alert])]:text-[17px] [&_p:not([class],[role=alert])]:font-medium
+          [&_p:not([class],[role=alert])]:tracking-[-0.01em] [&_p:not([class],[role=alert])]:text-[#f5f5f7]
+          [&_[role=alert]]:text-[14px] [&_[role=alert]]:text-[#ff453a]
+          [&_[aria-invalid=true]]:border-[#ff453a]
           [&_input]:w-72 [&_input]:rounded-xl [&_input]:border [&_input]:border-white/10
           [&_input]:bg-white/[0.04] [&_input]:px-4 [&_input]:py-2.5 [&_input]:text-[15px]
           [&_input]:text-[#f5f5f7] [&_input]:outline-none
           [&_input::placeholder]:text-[#6e6e73]
           [&_input:focus]:border-[#0071e3]
+          [&_textarea]:w-72 [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-white/10
+          [&_textarea]:bg-white/[0.04] [&_textarea]:px-4 [&_textarea]:py-2.5 [&_textarea]:text-[15px]
+          [&_textarea]:text-[#f5f5f7] [&_textarea]:outline-none [&_textarea:focus]:border-[#0071e3]
+          [&_label]:mb-1.5 [&_label]:block [&_label]:text-[13px] [&_label]:text-[#86868b]
+          [&_:disabled]:opacity-50
           [&_form]:flex [&_form]:flex-col [&_form]:items-start [&_form]:gap-3
           [&_button]:mr-2 [&_button]:cursor-pointer [&_button]:rounded-full
           [&_button]:bg-[#0071e3] [&_button]:px-5 [&_button]:py-2 [&_button]:text-[15px]
@@ -573,30 +587,31 @@ function App() {
 
         <Seccion
           archivo="exercise-10"
-          titulo="Cada case cambia lo suyo, y el guard dice cuándo no aplica."
+          titulo="El formulario completo: validar, enviar, y qué hacer si el servidor falla."
+        />
+
+        <Tarjeta
+          n="form"
+          nombre="FormularioSolicitud"
+          mirar="Envía en vacío: salen los cuatro errores. Escribe en un campo con error y su error se va. Rellena bien (detalle de 10 o más) y envía: Enviando… con todo bloqueado, y al segundo el aviso de enviada con el formulario vacío. Un correo sin @ enseña tu mensaje, no el globo del navegador."
+          campos="cuatro campos con su <label>: Nombre, Apellido, Correo y Detalle (textarea), cada uno con su error · botones Enviar solicitud y Limpiar · el aviso de enviada"
+          estado="resuelto"
+        >
+          <FormularioSolicitud />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-10b"
+          titulo="El reducer de tu 10: copiar o reemplazar, y el guard."
         />
 
         <Tarjeta
           n="visor"
           nombre="VisorSolicitud"
-          mirar="No es un drill: pinta el estado que devuelve tu reducer. Empezar dos veces seguidas no cambia nada. Terminar estando en editando, tampoco. Desde enviando, Terminar deja los datos vacíos. Y tras Terminar, Escribir vuelve a editando. Con el starter, todo eso falla."
-          campos="tres <p>: datos, errores y fase · botones Escribir, Rechazar, Empezar, Terminar y Limpiar"
+          mirar="No es un drill: aquí haces tú de usuario y de envío, pulsando cada acción a mano. Prueba Envío iniciado → Envío fallido → Escribir: el error del servidor tiene que borrarse y la fase volver a editando. Envío fallido estando en editando no cambia nada. Y Envío completado deja los datos vacíos. Con el starter, todo eso falla."
+          campos="tres <p>: datos, errores y fase · botones Escribir, Envío iniciado, Envío completado, Envío fallido y Limpiar"
         >
           <VisorSolicitud />
-        </Tarjeta>
-
-        <Seccion
-          archivo="exercise-10b"
-          titulo="Un validador devuelve solo lo que falla, y gana la primera regla."
-        />
-
-        <Tarjeta
-          n="probador"
-          nombre="ProbadorValidacion"
-          mirar="No es un drill: pinta lo que devuelve tu validador en cada tecla. Con el nombre vacío tiene que decir obligatorio, no la longitud. Un correo con espacios alrededor pasa. Un detalle corto pide 20 caracteres. Con todo bien, errores es {}."
-          campos="tres <input>: Nombre, Correo y Detalle · un <p> con el objeto de errores"
-        >
-          <ProbadorValidacion />
         </Tarjeta>
 
         <Seccion
