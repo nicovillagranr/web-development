@@ -30,25 +30,51 @@ import { useReducer, type FormEvent } from "react";
  * 👁️ `FormRegistro` (drills 4 y 8) está montado en `src/App.tsx`.
  * ===========================================================================*/
 
-// El registro de una cuenta nueva. Los tipos y `vacios` no se tocan.
-export type DatosRegistro = { usuario: string; correo: string; clave: string };
-export type ErroresRegistro = { usuario?: string; correo?: string; clave?: string };
-export type FaseRegistro = "editando" | "enviando" | "enviado";
-export type EstadoRegistro = {
-  datos: DatosRegistro;
-  errores: ErroresRegistro;
-  fase: FaseRegistro;
+export type DatosRegistro = {
+  usuario: string;
+  correo: string;
+  clave: string;
 };
 
-export const vacios: DatosRegistro = { usuario: "", correo: "", clave: "" };
-export const inicial: EstadoRegistro = { datos: vacios, errores: {}, fase: "editando" };
+// Los errores que puede tener cada campo.
+// Cada propiedad es opcional porque puede no existir ningún error.
+export type ErroresRegistro = {
+  usuario?: string;
+  correo?: string;
+  clave?: string;
+};
 
+// Las fases posibles del registro.
+export type FaseRegistro = "editando" | "enviando" | "enviado";
+
+// El papel que lleva cada acción al reducer.
 export type AccionRegistro =
   | { tipo: "escribir"; campo: keyof DatosRegistro; valor: string }
   | { tipo: "rechazar"; errores: ErroresRegistro }
   | { tipo: "empezar" }
   | { tipo: "terminar" }
   | { tipo: "limpiar" };
+
+// El estado completo del formulario.
+export type EstadoRegistro = {
+  datos: DatosRegistro;
+  errores: ErroresRegistro;
+  fase: FaseRegistro;
+};
+
+// Los datos iniciales del formulario.
+export const vacios: DatosRegistro = {
+  usuario: "",
+  correo: "",
+  clave: "",
+};
+
+// El estado inicial completo.
+export const inicial: EstadoRegistro = {
+  datos: vacios,
+  errores: {},
+  fase: "editando",
+};
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el estado anidado se copia por niveles
@@ -82,8 +108,40 @@ export type AccionRegistro =
 //        return { ...estado, datos: { [accion.campo]: accion.valor } };
 //    TypeScript se lo marca, pero ejecuta el test igual. Parte de `inicial` y
 //    escribe "ana" en "usuario". ¿Qué vale después `datos.correo`?
-export const respuesta3: string | undefined = "";
-// ¿Por qué?
+
+// Forma incorrecta de actualizar un campo anidado:
+// NO copiamos el objeto "datos" anterior.
+//
+// const estadoNuevo = {
+//   ...inicial,
+//   datos: { usuario: "ana" },
+// };
+//
+// "datos" ahora es solamente:
+// { usuario: "ana" }
+//
+// Por eso "correo" desaparece.
+//
+// console.log(estadoNuevo.datos.correo); // undefined
+
+// Forma correcta de actualizar un campo anidado:
+// copiamos primero el objeto "datos" anterior.
+//
+// const estadoNuevoCorrecto = {
+//   ...inicial,
+//   datos: { ...inicial.datos, usuario: "ana" },
+// };
+//
+// Primero copiamos:
+// { usuario: "", correo: "", clave: "" }
+//
+// Y después reemplazamos solamente "usuario":
+// { usuario: "ana", correo: "", clave: "" }
+//
+// console.log(estadoNuevoCorrecto.datos.correo); // ""
+
+export const respuesta3: string | undefined = undefined;
+// ¿Por qué? Al actualizar un campo de un objeto, si no copias primero el objeto anterior, reemplazas todo el objeto por uno nuevo.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el texto vive en el estado, no en el input
@@ -115,7 +173,7 @@ export const respuesta3: string | undefined = "";
 //      "formReducer" → React calcula el estado nuevo
 //      "render"      → React vuelve a pintar el input con el texto del estado
 export type Paso = "onChange" | "pedir" | "formReducer" | "render";
-export const respuesta5: [Paso, Paso, Paso, Paso] = ["pedir", "onChange", "render", "formReducer"];
+export const respuesta5: [Paso, Paso, Paso, Paso] = ["onChange", "pedir", "formReducer", "render"];
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — validar y enviar
@@ -137,6 +195,52 @@ export const respuesta5: [Paso, Paso, Paso, Paso] = ["pedir", "onChange", "rende
  *    tiene los errores que acabas de calcular.
  * ───────────────────────────────────────────────────────────────────────────── */
 
+// export type DatosRegistro = {
+// usuario: string;
+// correo: string;
+// clave: string;
+// };
+
+// Los errores que puede tener cada campo.
+// Cada propiedad es opcional porque puede no existir ningún error.
+// export type ErroresRegistro = {
+// usuario?: string;
+// correo?: string;
+// clave?: string;
+// };
+
+// Las fases posibles del registro.
+// export type FaseRegistro = "editando" | "enviando" | "enviado";
+
+// El papel que lleva cada acción al reducer.
+// export type AccionRegistro =
+// | { tipo: "escribir"; campo: keyof DatosRegistro; valor: string }
+// | { tipo: "rechazar"; errores: ErroresRegistro }
+// | { tipo: "empezar" }
+// | { tipo: "terminar" }
+// | { tipo: "limpiar" };
+
+// El estado completo del formulario.
+// export type EstadoRegistro = {
+// datos: DatosRegistro;
+// errores: ErroresRegistro;
+// fase: FaseRegistro;
+// };
+
+// Los datos iniciales del formulario.
+// export const vacios: DatosRegistro = {
+// usuario: "",
+// correo: "",
+// clave: "",
+// };
+
+// El estado inicial completo.
+// export const inicial: EstadoRegistro = {
+// datos: vacios,
+// errores: {},
+// fase: "editando",
+// };
+
 const FORMA_DE_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // 6) `validarRegistro` — el usuario y el correo ya se validan. Falta la clave:
@@ -151,6 +255,9 @@ export function validarRegistro(datos: DatosRegistro): ErroresRegistro {
   if (!FORMA_DE_CORREO.test(datos.correo)) {
     errores.correo = "El correo no es válido";
   }
+  if (datos.clave.length < 8) {
+    errores.clave = "La clave debe tener al menos 8 caracteres";
+  }
 
   return errores;
 }
@@ -160,25 +267,45 @@ export function validarRegistro(datos: DatosRegistro): ErroresRegistro {
 //    siguiente registro. Solo vale desde "enviando".
 export function registroReducer(estado: EstadoRegistro, accion: AccionRegistro): EstadoRegistro {
   switch (accion.tipo) {
-    case "escribir": // ← drills 1 y 2
-      return { ...estado, [accion.campo]: accion.valor };
+    // Cuando el usuario tiene la intención de escribir:
+    // 1. Creamos un objeto nuevo
+    // 2. Copiamos las propiedades de primera capa del objeto anterior
+    // 3. En los campos datos, hacemos lo mismo para acceder a esa capa de datos y cambiar solo el campo que nos interesa.
+    // 4. En los campos errores, hacemos lo mismo para acceder a esa capa de errores y borrar el error del campo que nos interesa.
+    case "escribir":
+      return {
+        ...estado,
+        datos: { ...estado.datos, [accion.campo]: accion.valor },
+        errores: { ...estado.errores, [accion.campo]: "" },
+      };
+    // Cuando la intención del usuario es rechazar:
+    // 1. Creamos un objeto nuevo
+    // 2. Copiamos las propiedades de primera capa del objeto anterior
+    // 3. En los campos errores, hacemos lo mismo para acceder a esa capa de errores y cambiar solo el campo que nos interesa.
+    // 4. Cambiamos la fase a editando.
     case "rechazar":
       return { ...estado, errores: accion.errores, fase: "editando" };
     case "empezar":
-      if (estado.fase === "enviando") return estado;
+      if (estado.fase === "enviando") {
+        return estado;
+      }
       return { ...estado, errores: {}, fase: "enviando" };
-    case "terminar": // ← drill 7
-      if (estado.fase !== "enviando") return estado;
+    case "terminar":
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
       return { ...estado, fase: "enviado" };
     case "limpiar":
-      return inicial;
+      return { ...estado, datos: vacios, errores: {}, fase: "editando" };
     default: {
       const _exhaustivo: never = accion;
       return _exhaustivo;
     }
   }
 }
-// registroReducer(inicial, { tipo: "escribir", campo: "usuario", valor: "ana" })
+
+// registroReducer({datos: vacios, errores: {}, fase: "editando"}, {tipo: "escribir", campo: "usuario", valor: "ana"})
+// -> {datos: {usuario: "ana", correo: "", clave: ""}, errores: {usuario: ""}, fase: "editando"}
 
 const esperar = (ms: number) => new Promise((resolver) => setTimeout(resolver, ms));
 
@@ -190,7 +317,7 @@ export function FormRegistro() {
   const enviar = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errores = validarRegistro(estado.datos);
-    if (Object.keys(estado.errores).length > 0) {
+    if (Object.keys(errores).length > 0) {
       pedir({ tipo: "rechazar", errores });
       return;
     }
@@ -219,6 +346,7 @@ export function FormRegistro() {
         aria-label="Clave"
         placeholder="Clave"
         type="password"
+        value={estado.datos.clave}
         onChange={(e) => pedir({ tipo: "escribir", campo: "clave", valor: e.target.value })}
       />
       {estado.errores.clave && <p>{estado.errores.clave}</p>}

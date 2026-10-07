@@ -226,7 +226,10 @@ export function Carrito() {
   const agregar = () => {
     const accion: AccionCarrito = { tipo: "agregar" };
     pedir(accion);
-    if (unidades === 5) {
+
+    const nuevoUnidades = carritoReducer(unidades, accion);
+
+    if (nuevoUnidades >= 5) {
       setAviso("Carrito lleno");
     }
   };
@@ -267,7 +270,14 @@ export function Marcador() {
 
   const sumar = (accion: AccionPuntos) => {
     pedir(accion);
-    if (puntos >= 50) {
+    // Cómo funciona esta variable:
+    // 1. `puntos` es la foto del render actual, que todavía no ha cambiado.
+    // 2. `puntosReducer(puntos, accion)` hace la cuenta que hará el reducer.
+    // 3. `nuevoPuntos` es el resultado de esa cuenta, y nos permite decidir si
+    //    hay que avisar o no.
+    const nuevoPuntos = puntosReducer(puntos, accion);
+
+    if (nuevoPuntos >= 50) {
       setAviso("¡Nivel superado!");
     }
   };
@@ -309,9 +319,6 @@ export function Sala() {
   // personas empieza en 0, y pedir anota la acción en la cola del reducer
   const [personas, pedir] = useReducer(salaReducer, 0);
 
-  // aviso parte como un string vacío, y setAviso lo cambia a "Sala completa" cuando toca
-  const [aviso, setAviso] = useState("");
-
   // Flujo completo.
   // Cuando carga la App, personas = 0 y aviso = "".
   // Click en Entrar -> pedir({ tipo: "entrar" }) → personas = 1, aviso = "".
@@ -336,9 +343,6 @@ export function Sala() {
     //
     // `pedir()` prepara el siguiente estado, pero no cambia
     // inmediatamente la variable `personas` de este render.
-    if (personas === 3) {
-      setAviso("Sala completa");
-    }
   };
 
   return (
@@ -346,7 +350,7 @@ export function Sala() {
       <p>Personas: {personas}</p>
       <button onClick={entrar}>Entrar</button>
       <button onClick={() => pedir({ tipo: "vaciar" })}>Vaciar</button>
-      <p role="status">{aviso}</p>
+      <p role="status">{personas >= 4 ? "Sala completa" : ""}</p>
     </div>
   );
 }

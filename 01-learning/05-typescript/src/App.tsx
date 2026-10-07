@@ -39,6 +39,22 @@ import {
   Transferencia,
 } from "./exercises/11-useState-useReducer/exercise-08";
 import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
+import { VisorSolicitud } from "./exercises/11-useState-useReducer/exercise-10";
+import { ProbadorValidacion } from "./exercises/11-useState-useReducer/exercise-10b";
+import {
+  EnvioFoto,
+  EnvioSinReturn,
+  EnvioTarde,
+  EnvioTipado,
+  vacios as solicitudVacia,
+} from "./exercises/11-useState-useReducer/exercise-10c";
+import {
+  CampoNombre,
+  CampoCorreo,
+  CampoDetalle,
+  ErrorNombre,
+  ErrorCorreo,
+} from "./exercises/11-useState-useReducer/exercise-10d";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes del bloque que estés estudiando.
  *   1. `pnpm dev` y abre la URL que te diga
@@ -59,6 +75,10 @@ import { FormRegistro } from "./exercises/11-useState-useReducer/exercise-09";
  * drills 8 y 9. Del `exercise-07`, solo `FormReserva` (drill 8): del 1 al 7 son tipos,
  * predicciones y reducers sueltos. Del `exercise-08`, `VotoConMeta` (drill 3), la `DemoFoto`, el refuerzo 3a-3c y
  * `Transferencia` (drills 5 y 7). Del `exercise-09`, solo `FormRegistro` (drills 4 y 8).
+ * Del `exercise-10` y el `10b`, solo un visor cada uno (`VisorSolicitud` y
+ * `ProbadorValidacion`): sus drills son funciones puras, y el visor pinta lo que
+ * devuelven las tuyas. Del `10c`, los envíos de los drills 3 a 6, y del `10d`, los
+ * campos de los drills 1 a 4 y 6.
  *
  * Nada de esto toca el archivo de estudio: se hace desde fuera con los `[&_...]:` de
  * Tailwind, que aplican una utilidad a los descendientes que casen con el selector. */
@@ -78,6 +98,14 @@ const CHIP: Record<Estado, { texto: string; punto: string; color: string }> = {
 const erroresDeMuestra = {
   nombre: "El nombre es obligatorio",
   email: "El correo no es válido",
+};
+
+/* Los datos ya escritos que reciben los envíos del exercise-10c: unos que pasan la
+ * validación y, para los rechazos, la solicitud vacía que exporta el propio archivo. */
+const solicitudBuena = {
+  nombre: "Ana",
+  correo: "ana@mail.cl",
+  detalle: "Una landing para mi tienda",
 };
 
 type TarjetaProps = {
@@ -462,6 +490,7 @@ function App() {
           nombre="FormReserva"
           mirar="Escribe en los tres campos: cada uno guarda lo suyo y no toca los otros dos. Vaciar los deja todos en blanco. Con el starter, lo que escribes en Teléfono aparece en Nombre."
           campos="tres <input>: Nombre, Teléfono y Comentario · botón Vaciar"
+          estado="resuelto"
         >
           <FormReserva />
         </Tarjeta>
@@ -476,6 +505,7 @@ function App() {
           nombre="VotoConMeta"
           mirar="Vota tres veces: el aviso tiene que salir justo con el tercer voto. Con el starter sale un clic tarde, con 4."
           campos="un <p> con los votos · botón Votar · un <p> con el aviso"
+          estado="resuelto"
         >
           <VotoConMeta />
         </Tarjeta>
@@ -522,6 +552,7 @@ function App() {
           nombre="Transferencia"
           mirar="Transferir: sale Enviando… en el acto y, al rato, Transferencia enviada. Transfiere y cancela antes de que acabe: tiene que quedarse en cancelada. Con el starter, Enviando… no sale nunca y cancelar no sirve."
           campos="botones Transferir y Cancelar · un <p> con el estado de la transferencia"
+          estado="resuelto"
         >
           <Transferencia />
         </Tarjeta>
@@ -538,6 +569,126 @@ function App() {
           campos="tres <input>: Usuario, Correo y Clave, cada uno con su error debajo · botones Crear cuenta y Limpiar · un <p> con el estado"
         >
           <FormRegistro />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-10"
+          titulo="Cada case cambia lo suyo, y el guard dice cuándo no aplica."
+        />
+
+        <Tarjeta
+          n="visor"
+          nombre="VisorSolicitud"
+          mirar="No es un drill: pinta el estado que devuelve tu reducer. Empezar dos veces seguidas no cambia nada. Terminar estando en editando, tampoco. Desde enviando, Terminar deja los datos vacíos. Y tras Terminar, Escribir vuelve a editando. Con el starter, todo eso falla."
+          campos="tres <p>: datos, errores y fase · botones Escribir, Rechazar, Empezar, Terminar y Limpiar"
+        >
+          <VisorSolicitud />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-10b"
+          titulo="Un validador devuelve solo lo que falla, y gana la primera regla."
+        />
+
+        <Tarjeta
+          n="probador"
+          nombre="ProbadorValidacion"
+          mirar="No es un drill: pinta lo que devuelve tu validador en cada tecla. Con el nombre vacío tiene que decir obligatorio, no la longitud. Un correo con espacios alrededor pasa. Un detalle corto pide 20 caracteres. Con todo bien, errores es {}."
+          campos="tres <input>: Nombre, Correo y Detalle · un <p> con el objeto de errores"
+        >
+          <ProbadorValidacion />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-10c"
+          titulo="Enviar: decidir con lo de ahora, y pedir en orden."
+        />
+
+        <Tarjeta
+          n={3}
+          nombre="EnvioFoto"
+          mirar="Llega con los datos vacíos. Al enviar tienen que salir los tres errores, y nunca Solicitud enviada. Con el starter no sale ningún error y al rato dice enviada."
+          campos="botón Enviar solicitud · un <p> por error · un <p> con la fase"
+        >
+          <EnvioFoto datos={solicitudVacia} />
+        </Tarjeta>
+
+        <Tarjeta
+          n={4}
+          nombre="EnvioSinReturn"
+          mirar="Llega con los datos vacíos. Al enviar, los errores tienen que quedarse a la vista. Con el starter no llegan a verse y al rato dice enviada."
+          campos="botón Enviar solicitud · un <p> por error · un <p> con la fase"
+        >
+          <EnvioSinReturn datos={solicitudVacia} />
+        </Tarjeta>
+
+        <Tarjeta
+          n={5}
+          nombre="EnvioTarde"
+          mirar="Llega con datos buenos. Al enviar tiene que salir Enviando… en el acto, con el botón bloqueado, y al segundo Solicitud enviada. Con el starter no sale Enviando… nunca."
+          campos="botón Enviar solicitud · un <p> con la fase"
+        >
+          <EnvioTarde datos={solicitudBuena} />
+        </Tarjeta>
+
+        <Tarjeta
+          n={6}
+          nombre="EnvioTipado"
+          mirar="Llega con datos buenos y se envía bien también con el starter: el fallo está en el tipo, y solo lo ve pnpm typecheck."
+          campos="botón Enviar solicitud · un <p> con la fase"
+          estado="casi"
+        >
+          <EnvioTipado datos={solicitudBuena} />
+        </Tarjeta>
+
+        <Seccion
+          archivo="exercise-10d"
+          titulo="El input refleja el estado, y el error solo existe cuando hay error."
+        />
+
+        <Tarjeta
+          n={1}
+          nombre="CampoNombre"
+          mirar="Escribe: tiene que verse lo que tecleas. Con el starter el campo no cambia."
+          campos="un <input> Nombre"
+        >
+          <CampoNombre />
+        </Tarjeta>
+
+        <Tarjeta
+          n={2}
+          nombre="CampoCorreo"
+          mirar="Escribe un correo: tiene que verse. Con el starter el campo se queda en blanco."
+          campos="un <input> Correo"
+        >
+          <CampoCorreo />
+        </Tarjeta>
+
+        <Tarjeta
+          n={3}
+          nombre="CampoDetalle"
+          mirar="Escribe y pulsa Limpiar: el campo tiene que quedar en blanco. Con el starter el texto se queda."
+          campos="un <input> Detalle · botón Limpiar"
+        >
+          <CampoDetalle />
+        </Tarjeta>
+
+        <Tarjeta
+          n={4}
+          nombre="ErrorNombre"
+          mirar="Antes de Revisar no tiene que haber nada debajo del botón. Pulsa Revisar: sale El nombre es obligatorio. Con el starter el párrafo existe desde el principio, vacío."
+          campos="botón Revisar · un <p role=alert> solo si hay error"
+        >
+          <ErrorNombre />
+        </Tarjeta>
+
+        <Tarjeta
+          n={6}
+          nombre="ErrorCorreo"
+          mirar="Pulsa Revisar con el campo vacío y sale el error; escribe una letra y se va. Lo que cambia es el aria-invalid del input, que no se ve: míralo en las DevTools. Tiene que decir true o false, no el texto del error."
+          campos="un <input> Correo · botón Revisar · un <p role=alert> solo si hay error"
+        >
+          <ErrorCorreo />
         </Tarjeta>
       </div>
     </main>
