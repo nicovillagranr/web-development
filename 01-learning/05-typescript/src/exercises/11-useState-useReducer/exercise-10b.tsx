@@ -38,7 +38,13 @@ import { useReducer } from "react";
  * ===========================================================================*/
 
 // Los tipos, `vacios` e `inicial` son los de tu `10` y no se tocan.
-export type DatosSolicitud = { nombre: string; apellido: string; correo: string; detalle: string };
+export type DatosSolicitud = {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  detalle: string;
+};
+
 export type ErroresSolicitud = {
   nombre?: string;
   apellido?: string;
@@ -47,6 +53,7 @@ export type ErroresSolicitud = {
   servidor?: string;
 };
 export type FaseSolicitud = "editando" | "enviando" | "enviado" | "error";
+
 export type EstadoSolicitud = {
   datos: DatosSolicitud;
   errores: ErroresSolicitud;
@@ -100,7 +107,7 @@ export const inicial: EstadoSolicitud = { datos: vacios, errores: {}, fase: "edi
 //    Recordatorio:  FaseSolicitud = "editando" | "enviando" | "enviado" | "error"
 
 // 3) Predice: cuando "envioFallido" aplica, ¿qué partes del estado cambia?
-export const respuesta3: (keyof EstadoSolicitud)[] = ["fase"];
+export const respuesta3: (keyof EstadoSolicitud)[] = ["errores", "fase"];
 
 // 4) Predice: el estado está "enviando" y sus errores son
 //    { correo: "El correo no es válido" }. Llega "envioFallido" con el mensaje
@@ -144,23 +151,58 @@ export function solicitudReducer(
   accion: AccionSolicitud,
 ): EstadoSolicitud {
   switch (accion.tipo) {
-    case "escribir": // ← drills 1 y 2
+    // El usuario quiere escribir en un campo del form.
+    // Copia las propiedades de estado
+    // Copia las propiedades de estado.datos y cambia la del campo que toca
+    // Copia las propiedades de estado.errores y borra la del campo que toca
+    // Si la fase era "enviado" o "error", vuelve a "editando"; si no, no cambia.
+    case "escribir":
       return {
         ...estado,
         datos: { ...estado.datos, [accion.campo]: accion.valor },
-        errores: { ...estado.errores, [accion.campo]: "" },
-        fase: estado.fase === "enviado" ? "editando" : estado.fase,
+        errores: {
+          ...estado.errores,
+          [accion.campo]: "",
+          servidor: "",
+        },
+        fase: estado.fase === "enviado" || estado.fase === "error" ? "editando" : estado.fase,
       };
+    // La validación del formulario falló.
+    // Copia las propiedades de estado
+    // Reemplaza estado.errores por los errores que vienen en la acción.
+    // Vuelve a "editando" (el usuario tiene que corregir).
     case "validacionFallida":
-      return { ...estado, errores: accion.errores, fase: "editando" };
+      return {
+        ...estado,
+        errores: accion.errores,
+        fase: "editando",
+      };
+    //
     case "envioIniciado":
-      if (estado.fase === "enviando") return estado;
-      return { ...estado, errores: {}, fase: "enviando" };
+      if (estado.fase === "enviando") {
+        return estado;
+      }
+      return {
+        ...estado,
+        errores: {},
+        fase: "enviando",
+      };
+    //
     case "envioCompletado": // ← drill 6
       if (estado.fase !== "enviando") return estado;
-      return { ...estado, errores: {}, fase: "enviado" };
+      return {
+        ...estado,
+        errores: {},
+        fase: "enviado",
+      };
+    //
     case "envioFallido": // ← drill 5
-      return { ...estado, errores: { servidor: accion.mensaje }, fase: "error" };
+      return {
+        ...estado,
+        errores: { servidor: accion.mensaje },
+        fase: "error",
+      };
+    //
     case "limpiar":
       return inicial;
     default: {
@@ -196,7 +238,7 @@ export function VisorSolicitud() {
       <div>
         <button
           onClick={() =>
-            pedir({ tipo: "escribir", campo: "nombre", valor: estado.datos.nombre + "a" })
+            pedir({ tipo: "escribir", campo: "nombre", valor: estado.datos.nombre + "Nicolás" })
           }
         >
           Escribir
