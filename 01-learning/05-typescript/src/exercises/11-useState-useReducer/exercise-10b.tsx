@@ -113,10 +113,10 @@ export const respuesta3: (keyof EstadoSolicitud)[] = ["errores", "fase"];
 //    { correo: "El correo no es válido" }. Llega "envioFallido" con el mensaje
 //    "Sin conexión". ¿Qué vale `errores` después?
 export const respuesta4: ErroresSolicitud = {
-  correo: "El correo no es válido",
   servidor: "Sin conexión",
 };
 // ¿Por qué?
+// Como el código no usa el spread, no se copian los errores que había antes: el único que queda es el del servidor.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el guard
@@ -143,6 +143,14 @@ export const respuesta4: ErroresSolicitud = {
 // 5) "envioFallido" — solo tiene sentido si se estaba enviando. Desde cualquier
 //    otra fase, devuelve el mismo estado.
 // ¿Por qué el mismo estado y no una copia con `{ ...estado }`?
+
+// Tiene sentido copiar algo a lo que no le vamos a agregar/modificar nada? No, no lo tiene. Por lo tanto se devuelve el mismo estado, porque este case no busca cambiar nada a algo que aún no se está enviando.
+// Y además copiar tiene un costo. Soy el Señor React y tengo un cartel:
+//   · `return estado`    → el reducer me devuelve el MISMO cartel: no hago nada.
+//   · `{ ...estado }`    → me devuelve una fotocopia. Aunque no cambie ni un píxel,
+//                          es otra hoja, y de fábrica miro la hoja, no lo que dice:
+//                          repinto por nada.
+//   La fotocopia no la hago yo (React): la hace el reducer.
 
 // 6) "envioCompletado" — el guard está bien. Pero la solicitud tiene que quedar
 //    "enviado" CON el formulario vacío, listo para la siguiente.
@@ -188,15 +196,24 @@ export function solicitudReducer(
         fase: "enviando",
       };
     //
-    case "envioCompletado": // ← drill 6
-      if (estado.fase !== "enviando") return estado;
+    case "envioCompletado":
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
       return {
         ...estado,
+        datos: vacios,
         errores: {},
         fase: "enviado",
       };
     //
-    case "envioFallido": // ← drill 5
+    case "envioFallido":
+      // Si no estaba enviando, no tiene sentido cambiar nada: devuelve el mismo estado.
+      if (estado.fase !== "enviando") {
+        return estado;
+      }
+      // Si estaba enviando, copia el estado y reemplaza los errores por el del servidor,
+      // y cambia la fase a "error".
       return {
         ...estado,
         errores: { servidor: accion.mensaje },
@@ -211,7 +228,7 @@ export function solicitudReducer(
     }
   }
 }
-// solicitudReducer({ ...inicial, fase: "error" }, { tipo: "escribir", campo: "nombre", valor: "A" })
+// solicitudReducer({ ...inicial, fase: "error" }, { tipo: "escribir", campo: "nombre", valor: "A" }) -> {}
 // solicitudReducer(inicial, { tipo: "envioFallido", mensaje: "Sin conexión" })
 
 // 7) Predice: partes de `inicial` y llegan cuatro acciones seguidas, con el
@@ -220,9 +237,9 @@ export function solicitudReducer(
 //        →  "envioFallido" con "Sin conexión"  →  escribir "P" en "apellido"
 //    ¿Cómo queda el estado al final?
 export const respuesta7: EstadoSolicitud = {
-  datos: { ...vacios, nombre: "Ana" },
-  errores: { servidor: "Sin conexión" },
-  fase: "error",
+  datos: { ...vacios, nombre: "Ana", apellido: "P" },
+  errores: { servidor: "", apellido: "" },
+  fase: "editando",
 };
 
 // 👁️ No es un drill, y no hay que tocarlo: aquí haces tú de usuario Y de envío,

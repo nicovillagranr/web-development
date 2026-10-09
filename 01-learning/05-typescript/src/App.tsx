@@ -610,6 +610,7 @@ function App() {
           nombre="VisorSolicitud"
           mirar="No es un drill: aquí haces tú de usuario y de envío, pulsando cada acción a mano. Prueba Envío iniciado → Envío fallido → Escribir: el error del servidor tiene que borrarse y la fase volver a editando. Envío fallido estando en editando no cambia nada. Y Envío completado deja los datos vacíos. Con el starter, todo eso falla."
           campos="tres <p>: datos, errores y fase · botones Escribir, Envío iniciado, Envío completado, Envío fallido y Limpiar"
+          estado="resuelto"
         >
           <VisorSolicitud />
         </Tarjeta>
