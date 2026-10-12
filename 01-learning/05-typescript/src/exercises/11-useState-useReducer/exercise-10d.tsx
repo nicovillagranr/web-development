@@ -35,26 +35,55 @@ import { useReducer } from "react";
  * ===========================================================================*/
 
 // De aquí hasta los drills, nada se toca: tipos, reducer y validador ya funcionan.
-export type DatosSolicitud = { nombre: string; correo: string; detalle: string };
-export type ErroresSolicitud = { nombre?: string; correo?: string; detalle?: string };
-export type EstadoSolicitud = { datos: DatosSolicitud; errores: ErroresSolicitud };
+export type DatosSolicitud = {
+  nombre: string;
+  correo: string;
+  detalle: string;
+};
+
+export type ErroresSolicitud = {
+  nombre?: string;
+  correo?: string;
+  detalle?: string;
+};
+
+export type EstadoSolicitud = {
+  datos: DatosSolicitud;
+  errores: ErroresSolicitud;
+};
+
 export type AccionSolicitud =
   | { tipo: "escribir"; campo: keyof DatosSolicitud; valor: string }
   | { tipo: "revisado"; errores: ErroresSolicitud }
   | { tipo: "limpiar" };
 
-const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
-const inicial: EstadoSolicitud = { datos: vacios, errores: {} };
+const vacios: DatosSolicitud = {
+  nombre: "",
+  correo: "",
+  detalle: "",
+};
+
+const inicial: EstadoSolicitud = {
+  datos: vacios,
+  errores: {},
+};
 
 function solicitudReducer(estado: EstadoSolicitud, accion: AccionSolicitud): EstadoSolicitud {
   switch (accion.tipo) {
+    // Cuando el usuario escribe:
+    //  1) actualiza el campo correspondiente en `datos`
+    //  2) borra el error de ese campo, si lo había
     case "escribir":
       return {
         datos: { ...estado.datos, [accion.campo]: accion.valor },
         errores: { ...estado.errores, [accion.campo]: "" },
       };
+    // Cuando el usuario pulsa "Revisar":
+    // El validador ejecuta su lógica y devuelve un objeto de errores. El reducer lo guarda en `errores`.
     case "revisado":
       return { ...estado, errores: accion.errores };
+    // El usuario quiere limpiar los campos:
+    // 1) borra todos los datos. De qué forma? Retornando el objeto`inicial` que ya tiene los datos vacíos.
     case "limpiar":
       return inicial;
   }
@@ -62,7 +91,10 @@ function solicitudReducer(estado: EstadoSolicitud, accion: AccionSolicitud): Est
 
 function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
   const errores: ErroresSolicitud = {};
-  if (!datos.nombre.trim()) errores.nombre = "El nombre es obligatorio";
+
+  if (!datos.nombre.trim()) {
+    errores.nombre = "El nombre es obligatorio";
+  }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo.trim())) {
     errores.correo = "El correo no es válido";
   }
@@ -97,31 +129,45 @@ function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
 // 1) `CampoNombre` — al escribir en el input no aparece nada. Tiene que verse lo
 //    que escribes.
 export function CampoNombre() {
-  const [estado] = useReducer(solicitudReducer, inicial);
-  return <input aria-label="Nombre" placeholder="Nombre" value={estado.datos.nombre} />;
+  const [estado, pedir] = useReducer(solicitudReducer, inicial);
+  return (
+    <>
+      <input
+        aria-label="Nombre"
+        placeholder="Nombre"
+        value={estado.datos.nombre}
+        onChange={(e) => pedir({ tipo: "escribir", campo: "nombre", valor: e.target.value })}
+      />
+      <p>{estado.datos.nombre}</p>
+    </>
+  );
 }
 
 // 2) `CampoCorreo` — al escribir en el input de Correo, el texto no aparece.
 export function CampoCorreo() {
   const [estado, pedir] = useReducer(solicitudReducer, inicial);
   return (
-    <input
-      aria-label="Correo"
-      placeholder="Correo"
-      value={estado.datos.correo}
-      onChange={(e) => pedir({ tipo: "escribir", campo: "nombre", valor: e.target.value })}
-    />
+    <>
+      <input
+        aria-label="Correo"
+        placeholder="Correo"
+        value={estado.datos.correo}
+        onChange={(e) => pedir({ tipo: "escribir", campo: "correo", valor: e.target.value })}
+      />
+      <p>{estado.datos.correo}</p>
+    </>
   );
 }
 
 // 3) `CampoDetalle` — se escribe bien, pero "Limpiar" no borra el texto.
 export function CampoDetalle() {
-  const [, pedir] = useReducer(solicitudReducer, inicial);
+  const [estado, pedir] = useReducer(solicitudReducer, inicial);
   return (
     <div>
       <input
         aria-label="Detalle"
         placeholder="Detalle"
+        value={estado.datos.detalle}
         onChange={(e) => pedir({ tipo: "escribir", campo: "detalle", valor: e.target.value })}
       />
       <button onClick={() => pedir({ tipo: "limpiar" })}>Limpiar</button>
@@ -161,7 +207,11 @@ export function ErrorNombre() {
       <button onClick={() => pedir({ tipo: "revisado", errores: validarSolicitud(estado.datos) })}>
         Revisar
       </button>
-      <p role="alert">{estado.errores.nombre}</p>
+      {estado.errores.nombre && <p role="alert">{estado.errores.nombre}</p>}
+      {/* {estado.errores.correo && <p role="alert">{estado.errores.correo}</p>} */}
+      {/*
+        <p role="alert">{estado.errores.detalle}</p> No forma parte de la validación, así que no se pinta.
+       */}
     </div>
   );
 }
@@ -170,8 +220,8 @@ export function ErrorNombre() {
 //    el nombre. El reducer deja `errores.nombre` en "". ¿Qué pinta entonces
 //    `{estado.errores.nombre && <p role="alert">…</p>}`?
 export type Pinta = "ningún <p>" | "un <p> vacío";
-export const respuesta5: Pinta = "un <p> vacío";
-// ¿Por qué?
+export const respuesta5: Pinta = "ningún <p>";
+// ¿Por qué? El operador && en este caso sirve para renderizar la etiqueta HTML sólo cuando error es truthy. Si errores.nombre es "" o undefined, React ni siquiera se tomará la molestia de renderizar el <p> y no aparecerá en el DOM.
 
 // 6) `ErrorCorreo` — el input tiene que avisar con `aria-invalid` de si su valor
 //    es inválido: "true" con error, "false" sin él. Hoy le llega el texto del error.
@@ -184,7 +234,7 @@ export function ErrorCorreo() {
         placeholder="Correo"
         value={estado.datos.correo}
         onChange={(e) => pedir({ tipo: "escribir", campo: "correo", valor: e.target.value })}
-        aria-invalid={estado.errores.correo}
+        aria-invalid={!!estado.errores.correo}
       />
       <button onClick={() => pedir({ tipo: "revisado", errores: validarSolicitud(estado.datos) })}>
         Revisar

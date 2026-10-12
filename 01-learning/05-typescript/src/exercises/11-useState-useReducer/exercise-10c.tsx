@@ -1,257 +1,222 @@
-import { useReducer, type FormEvent } from "react";
+import { useState } from "react";
 
 /* =============================================================================
- * EJERCICIO 10c — enviar: decidir con lo de ahora, y en orden   ·  bloque 11
+ * EJERCICIO 10c — `validarSolicitud`: un objeto de errores, una regla a la vez
  * =============================================================================
  *
- * 📌 RECORDATORIO — lo que puede pedir un envío, y para qué:
- *     "validacionFallida" → hay errores: se enseñan y no se envía nada
- *     "envioIniciado"     → arranca el envío: fase "enviando", botón bloqueado
- *     "envioCompletado"   → acabó la espera: fase "enviado", formulario vacío
- *   Los tres los pide el envío, no el usuario: él solo pulsa "Enviar solicitud".
+ * 📌 RECORDATORIO — lo que entra y lo que sale de tu `validarSolicitud`:
+ *     entra:  { nombre: "Ana", apellido: "P", correo: "ana@mail.cl", detalle: "(600 letras)" }
+ *     sale:   { apellido: "El apellido debe tener al menos 2 caracteres",
+ *               detalle:  "El detalle no puede superar los 500 caracteres" }
+ *     `servidor` no lo pone nunca el validador: lo pone "envioFallido".
  *
  * 🎯 AL TERMINAR SABRÁS
- *   · decidir el envío con los errores recién calculados, no con los del estado
- *   · ordenar los pasos de un envío y cortar con `return` cuando se rechaza
- *   · tipar el manejador de un `onSubmit`
+ *   · decir qué devuelve tu validador cuando todo está bien
+ *   · normalizar un dato con `trim()` antes de validarlo
+ *   · encadenar las reglas de un campo para que gane la que toca
  *
  * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * El reducer (`10`) y el validador (`10b`) ya están hechos y aquí no se tocan.
- * Lo único que falta es quién los usa en el momento justo: el manejador del
- * envío. Cada drill es un envío distinto con un fallo distinto.
+ * Es la pieza que decide, en tu `handleSubmit`, si el envío sigue o se para. Es
+ * una función pura, sin React: entran datos, salen errores, y se prueba
+ * llamándola a mano. Aquí está la de tu `10`, rota por partes.
  *
  * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · los pasos de un envío, en orden   →  drills 1 a 4
- *   TEORÍA 2 · el envío espera; la pantalla, no  →  drills 5, 6
+ *   TEORÍA 1 · la forma del resultado        →  drills 1 a 3
+ *   TEORÍA 2 · varias reglas en un campo     →  drills 4 a 6
  *
  * ▸ EJERCICIO — 6 drills, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/11-useState-useReducer/exercise-10c.test.tsx
  *     pnpm typecheck
  *
- *   Todos los starters están rotos a propósito. 1 de los 6 pasa el test con el
- *   fallo dentro: corre siempre los dos comandos.
+ *   Todos los starters están rotos a propósito, y los 6 compilan: toda la señal
+ *   está en el test. Las predicciones (1, 3 y 6) se responden leyendo el
+ *   validador, sin tocarlo. Los drills 1 y 3 llevan un `// ¿Por qué?` que reviso yo.
  *   ¿Atascado? Las pistas están en `exercise-10c.pistas.md`, de una en una.
  *
- * 👁️ Los componentes de los drills 3 a 6 están montados en `src/App.tsx`.
+ * 👁️ `ProbadorValidacion` (en `src/App.tsx`) pinta lo que devuelve TU validador.
  * ===========================================================================*/
 
-// De aquí hasta los drills, nada se toca: tipos, reducer y validador ya funcionan.
-export type DatosSolicitud = { nombre: string; correo: string; detalle: string };
-export type ErroresSolicitud = { nombre?: string; correo?: string; detalle?: string };
-export type FaseSolicitud = "editando" | "enviando" | "enviado";
-export type EstadoSolicitud = {
-  datos: DatosSolicitud;
-  errores: ErroresSolicitud;
-  fase: FaseSolicitud;
+// Los tipos y `vacios` son los de tu `10` y no se tocan.
+export type DatosSolicitud = {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  detalle: string;
 };
-export type AccionSolicitud =
-  | { tipo: "validacionFallida"; errores: ErroresSolicitud }
-  | { tipo: "envioIniciado" }
-  | { tipo: "envioCompletado" };
 
-export const vacios: DatosSolicitud = { nombre: "", correo: "", detalle: "" };
-const inicial: EstadoSolicitud = { datos: vacios, errores: {}, fase: "editando" };
+export type ErroresSolicitud = {
+  nombre?: string;
+  apellido?: string;
+  correo?: string;
+  detalle?: string;
+  servidor?: string;
+};
 
-function solicitudReducer(estado: EstadoSolicitud, accion: AccionSolicitud): EstadoSolicitud {
-  switch (accion.tipo) {
-    case "validacionFallida":
-      return { ...estado, errores: accion.errores, fase: "editando" };
-    case "envioIniciado":
-      if (estado.fase === "enviando") return estado;
-      return { ...estado, errores: {}, fase: "enviando" };
-    case "envioCompletado":
-      if (estado.fase !== "enviando") return estado;
-      return { ...estado, datos: vacios, fase: "enviado" };
-  }
-}
-
-function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
-  const errores: ErroresSolicitud = {};
-  if (!datos.nombre.trim()) errores.nombre = "El nombre es obligatorio";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo.trim())) {
-    errores.correo = "El correo no es válido";
-  }
-  if (!datos.detalle.trim()) errores.detalle = "El detalle es obligatorio";
-  return errores;
-}
-
-const esperar = (ms: number) => new Promise((resolver) => setTimeout(resolver, ms));
-
-// Lo que pinta cada drill: el botón, los errores que haya y la fase. Los drills
-// no tienen inputs: los datos llegan ya escritos por props, para mirar solo el envío.
-function PanelEnvio(props: {
-  estado: EstadoSolicitud;
-  alEnviar: (e: FormEvent<HTMLFormElement>) => void;
-}) {
-  const { errores, fase } = props.estado;
-  return (
-    <form onSubmit={props.alEnviar} noValidate>
-      <button type="submit" disabled={fase === "enviando"}>
-        Enviar solicitud
-      </button>
-      {errores.nombre && <p>{errores.nombre}</p>}
-      {errores.correo && <p>{errores.correo}</p>}
-      {errores.detalle && <p>{errores.detalle}</p>}
-      <p role="status">
-        {fase === "enviando" ? "Enviando…" : fase === "enviado" ? "Solicitud enviada" : ""}
-      </p>
-    </form>
-  );
-}
+export const vacios: DatosSolicitud = { nombre: "", apellido: "", correo: "", detalle: "" };
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 1 — los pasos de un envío, en orden
+ * ▸ TEORÍA 1 — la forma del resultado
  * ─────────────────────────────────────────────────────────────────────────────
  * DEFINICIÓN
- *   Un envío es una receta fija: frenar la recarga, validar AHORA, y decidir con
- *   ese resultado. Si hay errores, se rechaza y la función se corta con `return`.
+ *   Un validador parte de un objeto de errores sin claves y le añade una por
+ *   cada campo que falla. Los campos que pasan no aparecen: ni con `""` ni con
+ *   `undefined`. Simplemente no están.
  *
- * SINTAXIS
- *     e.preventDefault();                          // el navegador no recarga
- *     const errores = validar(estado.datos);       // recién calculados
- *     if (Object.keys(errores).length > 0) {       // ¿alguna clave? → hay errores
- *       pedir({ tipo: "validacionFallida", errores });
- *       return;                                    // lo de abajo no se ejecuta
+ * SINTAXIS — con un campo inventado, la ciudad:
+ *     const errores: ErroresSolicitud = {};               // empieza sin claves
+ *     if (datos.ciudad.trim() === "") {                   // normaliza antes de mirar
+ *       errores.ciudad = "La ciudad es obligatoria";      // solo si falla, se añade
+ *     }
+ *     return errores;
+ *
+ * 🧠 ANALOGÍA — la revisión técnica del auto: el informe solo lista lo que falló.
+ *    Un auto en regla sale con la hoja en blanco, no con "frenos: nada".
+ *
+ * 🗣️ LAS PIEZAS
+ *     `{}` → objeto sin claves: todo en regla  ·  `trim()` → quita los espacios del borde
+ *
+ * ⚠️ TRAMPA — validar el dato tal como llega. "   " (tres espacios) no es un
+ *    texto vacío para JavaScript: mide 3, y `=== ""` lo deja pasar.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 1) Predice: llegan datos que cumplen todas las reglas. ¿Qué devuelve
+//    `validarSolicitud`?
+//    Recordatorio:  ErroresSolicitud = { nombre?, apellido?, correo?, detalle?, servidor? }
+export const respuesta1: ErroresSolicitud = {};
+// ¿Por qué? Al no haber errores, este objeto queda vacío.
+// ¿Cuándo entra un error al objeto? Cuando una condicional de la validación se cumple y se asigna un mensaje a la propiedad correspondiente del objeto errores.
+
+// 2) `validarSolicitud`, el nombre — hoy un nombre de solo espacios pasa como
+//    válido, y al envío llegaría un nombre en blanco. Tiene que dar "El nombre es
+//    obligatorio", y la regla de los 2 caracteres tampoco puede contar los
+//    espacios del borde.
+
+// 3) Predice: el detalle llega como "   Hola   " (tres espacios, Hola, tres
+//    espacios: 10 caracteres en total). ¿Qué error le toca? Si ninguno, `undefined`.
+export const respuesta3: string | undefined = "El detalle debe tener al menos 10 caracteres";
+// ¿Por qué? El if del detalle si abarca el trim, por lo tanto ese hola quedaría con 4 caracteres.
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 2 — varias reglas en un campo
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   Cuando un campo tiene varias reglas, se encadenan con `else if`: se mira la
+ *   primera, y solo si pasa se mira la siguiente. Gana la primera que falla, así
+ *   que el ORDEN de la cadena decide qué mensaje sale.
+ *
+ * SINTAXIS — con un campo inventado, la edad:
+ *     if (edad === "") {
+ *       errores.edad = "La edad es obligatoria";        // falla esta → se para aquí
+ *     } else if (Number(edad) < 18) {
+ *       errores.edad = "Tienes que ser mayor de edad";  // solo si la de arriba pasó
  *     }
  *
- * 🧠 ANALOGÍA — el control del aeropuerto revisa tu maleta cuando pasas, y si
- *    encuentra algo no te deja seguir hacia la puerta de embarque.
+ * 🧠 ANALOGÍA — el guardia de una discoteca: si no traes carnet, no te pregunta
+ *    la edad. Te da un solo motivo, el primero.
  *
  * 🗣️ LAS PIEZAS
- *     `errores` → lo de ahora  ·  `estado.errores` → la foto de este render
+ *     `else if` → regla encadenada  ·  dos `if` sueltos → reglas independientes
  *
- * ⚠️ TRAMPA — sin el `return`, el rechazo se pide, pero la función sigue de largo
- *    y pide también "envioIniciado" y "envioCompletado": el reducer los aplica
- *    en ese orden.
+ * ⚠️ TRAMPA — con dos `if` sueltos se miran las dos reglas, y si fallan ambas, la
+ *    segunda sobrescribe a la primera. Y en una cadena mal ordenada, una regla
+ *    puede tapar a otra que nunca llega a mirarse.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) Predice: los datos están bien y se pulsa "Enviar solicitud". Ordena los
-//    pasos que se ejecutan, sin poner los que no se ejecutan.
-export type Paso =
-  | "preventDefault"
-  | "validar"
-  | "validacionFallida"
-  | "envioIniciado"
-  | "esperar"
-  | "envioCompletado";
-export const respuesta1: Paso[] = [
-  "preventDefault",
-  "validar",
-  "esperar",
-  "envioIniciado",
-  "envioCompletado",
-];
+// 4) `validarSolicitud`, el apellido — con el apellido vacío tiene que salir "El
+//    apellido es obligatorio", y hoy sale el mensaje de la longitud.
 
-// 2) Predice: lo mismo, pero con el nombre vacío. ¿Qué pasos se ejecutan?
-export const respuesta2: Paso[] = [
-  "preventDefault",
-  "validar",
-  "validacionFallida",
-  "envioIniciado",
-  "esperar",
-  "envioCompletado",
-];
+// 5) `validarSolicitud`, el detalle — con el detalle vacío tiene que salir "El
+//    detalle es obligatorio", y hoy sale otro mensaje. Las tres reglas están bien
+//    escritas una por una.
 
-// 3) `EnvioFoto` — con los datos vacíos, la solicitud se envía igual y no sale
-//    ningún error. Tiene que enseñar los errores y no enviar nada.
-//    Recordatorio:  `inicial` = { datos: vacios, errores: {}, fase: "editando" }
-export function EnvioFoto({ datos }: { datos: DatosSolicitud }) {
-  const [estado, pedir] = useReducer(solicitudReducer, { ...inicial, datos });
+// 6) Predice, con el validador ya resuelto (drills 2, 4 y 5): llegan estos datos.
+//        { nombre: "   ", apellido: "Pérez", correo: "ana@mail", detalle: "Hola" }
+//    ¿Qué devuelve `validarSolicitud`?
+export const respuesta6: ErroresSolicitud = {
+  nombre: "El nombre es obligatorio",
+  correo: "El correo no es válido",
+  detalle: "El detalle debe tener al menos 10 caracteres",
+};
 
-  const enviar = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errores = validarSolicitud(estado.datos);
-    if (Object.keys(estado.errores).length > 0) {
-      pedir({ tipo: "validacionFallida", errores });
-      return;
-    }
-    pedir({ tipo: "envioIniciado" });
-    await esperar(1000);
-    pedir({ tipo: "envioCompletado" });
+// 2), 4) y 5) son partes de `validarSolicitud`. El correo está bien y no se toca.
+export function validarSolicitud(datos: DatosSolicitud): ErroresSolicitud {
+  const errores: ErroresSolicitud = {};
+
+  // Validación Nombre
+  if (datos.nombre.trim() === "") {
+    errores.nombre = "El nombre es obligatorio";
+  } else if (datos.nombre.trim().length < 2) {
+    errores.nombre = "El nombre debe tener al menos 2 caracteres";
+  }
+
+  // Validación Apellido
+  if (datos.apellido.trim() === "") {
+    errores.apellido = "El apellido es obligatorio";
+  } else if (datos.apellido.trim().length < 2) {
+    errores.apellido = "El apellido debe tener al menos 2 caracteres";
+  }
+
+  // Validación Correo
+  const correoValido = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(datos.correo);
+  if (datos.correo.trim() === "") {
+    errores.correo = "El correo es obligatorio";
+  } else if (!correoValido) {
+    errores.correo = "El correo no es válido";
+  }
+
+  // Validación Detalle
+  if (datos.detalle.trim() === "") {
+    errores.detalle = "El detalle es obligatorio";
+  } else if (datos.detalle.trim().length < 10) {
+    errores.detalle = "El detalle debe tener al menos 10 caracteres";
+  } else if (datos.detalle.trim().length > 500) {
+    errores.detalle = "El detalle no puede superar los 500 caracteres";
+  }
+
+  // Retorno del objeto/resultado final.
+  return errores;
+}
+// validarSolicitud(vacios)
+// validarSolicitud({ ...vacios, nombre: "Ana", apellido: "Pérez" })
+
+// 👁️ No es un drill, y no hay que tocarlo: escribe en los cuatro campos y mira
+//    qué objeto devuelve tu validador en cada tecla.
+export function ProbadorValidacion() {
+  const [datos, setDatos] = useState<DatosSolicitud>(vacios);
+  const errores = validarSolicitud(datos);
+
+  const cambiar = (campo: keyof DatosSolicitud, valor: string) => {
+    setDatos({ ...datos, [campo]: valor });
   };
 
-  return <PanelEnvio estado={estado} alEnviar={enviar} />;
+  return (
+    <div>
+      <input
+        aria-label="Nombre"
+        placeholder="Nombre"
+        value={datos.nombre}
+        onChange={(e) => cambiar("nombre", e.target.value)}
+      />
+      <input
+        aria-label="Apellido"
+        placeholder="Apellido"
+        value={datos.apellido}
+        onChange={(e) => cambiar("apellido", e.target.value)}
+      />
+      <input
+        aria-label="Correo"
+        placeholder="Correo"
+        value={datos.correo}
+        onChange={(e) => cambiar("correo", e.target.value)}
+      />
+      <textarea
+        aria-label="Detalle"
+        placeholder="Detalle"
+        value={datos.detalle}
+        onChange={(e) => cambiar("detalle", e.target.value)}
+      />
+      <p>errores: {JSON.stringify(errores)}</p>
+    </div>
+  );
 }
-
-// 4) `EnvioSinReturn` — con los datos vacíos, los errores no llegan a verse y al
-//    rato sale "Solicitud enviada". Tiene que quedarse con los errores a la vista.
-export function EnvioSinReturn({ datos }: { datos: DatosSolicitud }) {
-  const [estado, pedir] = useReducer(solicitudReducer, { ...inicial, datos });
-
-  const enviar = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errores = validarSolicitud(estado.datos);
-    if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "validacionFallida", errores });
-    }
-    pedir({ tipo: "envioIniciado" });
-    await esperar(1000);
-    pedir({ tipo: "envioCompletado" });
-  };
-
-  return <PanelEnvio estado={estado} alEnviar={enviar} />;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 2 — el envío espera; la pantalla, no
- * ─────────────────────────────────────────────────────────────────────────────
- * DEFINICIÓN
- *   `await` pausa la función del envío, pero no a React: mientras dura la espera
- *   se pinta lo que diga el estado. Lo que tenga que verse DURANTE la espera se
- *   pide ANTES del `await`.
- *
- * SINTAXIS
- *     pedir({ tipo: "envioIniciado" });    // antes: la pantalla dice "Enviando…"
- *     await esperar(1000);           // la función se pausa; React pinta
- *     pedir({ tipo: "envioCompletado" });   // después: "Solicitud enviada"
- *
- * 🧠 ANALOGÍA — el cartel de "en preparación" del local de comida se cuelga
- *    cuando entra el pedido, no cuando el plato ya está en la bandeja.
- *
- * 🗣️ LAS PIEZAS
- *     `async` → la función puede esperar  ·  `await` → aquí espera
- *
- * ⚠️ TRAMPA — el evento de un `onSubmit` es el del formulario, no el del botón
- *    que lo dispara, aunque el clic sea en el botón.
- * ───────────────────────────────────────────────────────────────────────────── */
-
-// 5) `EnvioTarde` — con datos buenos, durante la espera no sale "Enviando…" y el
-//    botón se puede volver a pulsar. Tiene que salir en cuanto se pulsa.
-export function EnvioTarde({ datos }: { datos: DatosSolicitud }) {
-  const [estado, pedir] = useReducer(solicitudReducer, { ...inicial, datos });
-
-  const enviar = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errores = validarSolicitud(estado.datos);
-    if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "validacionFallida", errores });
-      return;
-    }
-    await esperar(1000);
-    pedir({ tipo: "envioIniciado" });
-    pedir({ tipo: "envioCompletado" });
-  };
-
-  return <PanelEnvio estado={estado} alEnviar={enviar} />;
-}
-
-// 6) `EnvioTipado` — funciona, pero el tipo del evento del manejador no es el
-//    que le llega desde `PanelEnvio`.
-export function EnvioTipado({ datos }: { datos: DatosSolicitud }) {
-  const [estado, pedir] = useReducer(solicitudReducer, { ...inicial, datos });
-
-  const enviar = async (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const errores = validarSolicitud(estado.datos);
-    if (Object.keys(errores).length > 0) {
-      pedir({ tipo: "validacionFallida", errores });
-      return;
-    }
-    pedir({ tipo: "envioIniciado" });
-    await esperar(1000);
-    pedir({ tipo: "envioCompletado" });
-  };
-
-  return <PanelEnvio estado={estado} alEnviar={enviar} />;
-}
-// <EnvioFoto datos={vacios} />  ·  <EnvioTarde datos={{ nombre: "Ana", correo: "ana@mail.cl", detalle: "Una landing" }} />
+// <ProbadorValidacion />

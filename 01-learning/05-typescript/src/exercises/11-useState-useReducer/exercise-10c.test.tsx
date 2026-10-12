@@ -1,72 +1,65 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import {
+  validarSolicitud,
   respuesta1,
-  respuesta2,
-  EnvioFoto,
-  EnvioSinReturn,
-  EnvioTarde,
-  EnvioTipado,
-  vacios,
+  respuesta3,
+  respuesta6,
+  type DatosSolicitud,
 } from "./exercise-10c";
 
-/* Los drills 3 a 6 reciben los datos ya escritos por props y se prueban pulsando
- * "Enviar solicitud". La espera del envío es de 1000 ms; los tests esperan un poco más. */
+/* Los drills 2, 4 y 5 son partes de `validarSolicitud` y se prueban llamándola a mano,
+ * cambiando un solo campo sobre unos datos buenos. Los drills 1, 3 y 6 son predicciones. */
 
-const buenos = { nombre: "Ana", correo: "ana@mail.cl", detalle: "Una landing para mi tienda" };
-const pausa = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const buenos: DatosSolicitud = {
+  nombre: "Ana",
+  apellido: "Pérez",
+  correo: "ana@mail.cl",
+  detalle: "Una landing para mi tienda",
+};
 
-describe("11-useState-useReducer / exercise-10c — enviar: decidir con lo de ahora", () => {
-  it("1) respuesta1 — los pasos de un envío bueno", () => {
-    expect(respuesta1).toEqual([
-      "preventDefault",
-      "validar",
-      "envioIniciado",
-      "esperar",
-      "envioCompletado",
-    ]);
+describe("11-useState-useReducer / exercise-10c — validarSolicitud, una regla a la vez", () => {
+  it("1) respuesta1 — lo que devuelve con todo en regla", () => {
+    expect(respuesta1).toStrictEqual({});
   });
 
-  it("2) respuesta2 — los pasos de un envío rechazado", () => {
-    expect(respuesta2).toEqual(["preventDefault", "validar", "validacionFallida"]);
+  it("2) el nombre — sin contar los espacios del borde", () => {
+    expect(validarSolicitud({ ...buenos, nombre: "   " }).nombre).toBe("El nombre es obligatorio");
+    expect(validarSolicitud({ ...buenos, nombre: " A " }).nombre).toBe(
+      "El nombre debe tener al menos 2 caracteres",
+    );
+    expect(validarSolicitud({ ...buenos, nombre: " Ana " }).nombre).toBeUndefined();
   });
 
-  it("3) EnvioFoto — vacío enseña los errores y no envía", async () => {
-    const user = userEvent.setup();
-    render(<EnvioFoto datos={vacios} />);
-
-    await user.click(screen.getByRole("button", { name: "Enviar solicitud" }));
-    expect(screen.getByText("El nombre es obligatorio")).toBeInTheDocument();
-    await pausa(1200);
-    expect(screen.getByRole("status")).not.toHaveTextContent("Solicitud enviada");
+  it("3) respuesta3 — el error del detalle «   Hola   »", () => {
+    expect(respuesta3).toBe("El detalle debe tener al menos 10 caracteres");
   });
 
-  it("4) EnvioSinReturn — vacío se queda con los errores a la vista", async () => {
-    const user = userEvent.setup();
-    render(<EnvioSinReturn datos={vacios} />);
-
-    await user.click(screen.getByRole("button", { name: "Enviar solicitud" }));
-    await pausa(1200);
-    expect(screen.getByText("El nombre es obligatorio")).toBeInTheDocument();
-    expect(screen.getByRole("status")).not.toHaveTextContent("Solicitud enviada");
+  it("4) el apellido — vacío es obligatorio, no corto", () => {
+    expect(validarSolicitud({ ...buenos, apellido: "" }).apellido).toBe(
+      "El apellido es obligatorio",
+    );
+    expect(validarSolicitud({ ...buenos, apellido: "P" }).apellido).toBe(
+      "El apellido debe tener al menos 2 caracteres",
+    );
+    expect(validarSolicitud(buenos).apellido).toBeUndefined();
   });
 
-  it("5) EnvioTarde — Enviando… y botón bloqueado durante la espera", async () => {
-    const user = userEvent.setup();
-    render(<EnvioTarde datos={buenos} />);
-
-    await user.click(screen.getByRole("button", { name: "Enviar solicitud" }));
-    expect(screen.getByRole("status")).toHaveTextContent("Enviando…");
-    expect(screen.getByRole("button", { name: "Enviar solicitud" })).toBeDisabled();
-    expect(await screen.findByText("Solicitud enviada", {}, { timeout: 2000 })).toBeInTheDocument();
+  it("5) el detalle — vacío es obligatorio, y las otras dos reglas siguen", () => {
+    expect(validarSolicitud({ ...buenos, detalle: "" }).detalle).toBe("El detalle es obligatorio");
+    expect(validarSolicitud({ ...buenos, detalle: "Hola" }).detalle).toBe(
+      "El detalle debe tener al menos 10 caracteres",
+    );
+    expect(validarSolicitud({ ...buenos, detalle: "x".repeat(501) }).detalle).toBe(
+      "El detalle no puede superar los 500 caracteres",
+    );
+    expect(validarSolicitud({ ...buenos, detalle: "x".repeat(500) }).detalle).toBeUndefined();
   });
 
-  it("6) EnvioTipado — con datos buenos, se envía", async () => {
-    const user = userEvent.setup();
-    render(<EnvioTipado datos={buenos} />);
-
-    await user.click(screen.getByRole("button", { name: "Enviar solicitud" }));
-    expect(await screen.findByText("Solicitud enviada", {}, { timeout: 2000 })).toBeInTheDocument();
+  it("6) respuesta6 — los errores de los cuatro campos juntos", () => {
+    expect(respuesta6).toStrictEqual({
+      nombre: "El nombre es obligatorio",
+      correo: "El correo no es válido",
+      detalle: "El detalle debe tener al menos 10 caracteres",
+    });
   });
 });
