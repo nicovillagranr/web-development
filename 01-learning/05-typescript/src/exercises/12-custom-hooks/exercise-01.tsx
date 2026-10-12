@@ -1,0 +1,185 @@
+import { useEffect, useState } from "react";
+
+/* =============================================================================
+ * EJERCICIO 01 — `useEffect`: cuándo corre y cuándo se repite   ·  bloque 12
+ * =============================================================================
+ *
+ * 📌 RECORDATORIO — el efecto de tu `MapModal`, recortado a lo que mira este archivo:
+ *     useEffect(() => {
+ *       document.body.style.overflow = "hidden";   // toca algo de FUERA de React
+ *       closeButtonRef.current?.focus();            // y algo que ya está pintado
+ *     }, [onClose]);                                // ← cuándo se repite
+ *     El `return` de limpieza es el 02, y los refs, el 03. Aquí, solo el CUÁNDO.
+ *
+ * 🎯 AL TERMINAR SABRÁS
+ *   · decir en qué momento corre un efecto respecto al pintado
+ *   · escribir un `useEffect` que toque algo que React no controla
+ *   · elegir entre sin array, `[]` y `[valor]` según cuándo deba repetirse
+ *
+ * 🟢 ¿POR QUÉ ESTE ARCHIVO?
+ * Es la primera pieza de tu `MapModal` y la base de cualquier custom hook.
+ * `useState` le da memoria al componente; `useEffect` le deja tocar lo que vive
+ * fuera de él: el título de la pestaña, el scroll del `body`, el foco.
+ *
+ * 🗺️ MAPA DEL ARCHIVO
+ *   TEORÍA 1 · cuándo corre un efecto          →  drills 1 a 3
+ *   TEORÍA 2 · el array de dependencias        →  drills 4 a 6
+ *
+ * ▸ EJERCICIO — 6 drills, en orden. ❌ Prohibido `any` y `as`.
+ *     pnpm test:run src/exercises/12-custom-hooks/exercise-01.test.tsx
+ *     pnpm typecheck
+ *
+ *   Todos los starters están rotos a propósito, y los 6 compilan: toda la señal
+ *   está en el test (la del 4 también la da el linter). Las predicciones (2, 3 y
+ *   5) se responden leyendo el código, sin ejecutarlo. Los drills 2 y 5 llevan un
+ *   `// ¿Por qué?` que reviso yo.
+ *   ¿Atascado? Las pistas están en `exercise-01.pistas.md`, de una en una.
+ *
+ * 👁️ Los componentes de los drills 1, 4 y 6 están montados en `src/App.tsx`.
+ * ===========================================================================*/
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 1 — cuándo corre un efecto
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   Un efecto es código que React ejecuta DESPUÉS de pintar el componente en la
+ *   página. Sirve para sincronizarlo con algo que React no controla: el título
+ *   de la pestaña, el `body`, el foco. Sin segundo argumento, se repite después
+ *   de CADA render.
+ *
+ * SINTAXIS — con un ejemplo inventado, el título de un chat:
+ *     function Chat({ sinLeer }: { sinLeer: number }) {
+ *       useEffect(() => {                              // con llaves: no devuelve nada
+ *         document.title = `(${sinLeer}) Mensajes`;   // corre con la página ya pintada
+ *       });                                            // sin array: tras cada render
+ *       return <p>Tienes {sinLeer} sin leer</p>;
+ *     }
+ *
+ * 🧠 ANALOGÍA — colgar un cuadro: primero se pinta la pared (el render) y, solo
+ *    cuando está seca, se cuelga el cuadro (el efecto). Colgarlo mientras pintas
+ *    es colgarlo de una pared que todavía no existe.
+ *
+ * 🗣️ LAS PIEZAS
+ *     el cuerpo del componente → decide qué pintar  ·  `useEffect` → actúa después
+ *
+ * ⚠️ TRAMPA — tocar la página desde el cuerpo del componente. En el primer
+ *    render, lo que vas a devolver todavía no está en la página: si buscas ahí
+ *    un botón tuyo, no lo encuentras.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 1) `EnfocarCerrar` — al abrirse el mapa, el foco tiene que caer en la ✕, como en
+//    tu `MapModal`: así quien usa teclado lo cierra sin tener que ir a buscarla.
+//    Hoy el foco no cae en ningún sitio.
+//    Sin `autoFocus`: lo que se entrena es en qué momento corre esa línea.
+//    💡 En tu `MapModal` esto va con un ref. Aquí va con `getElementById` para no
+//       mezclarlo con el 03.
+export function EnfocarCerrar() {
+  document.getElementById("cerrar-mapa")?.focus();
+
+  return (
+    <div role="dialog" aria-label="Mapa de ubicación">
+      <button id="cerrar-mapa" type="button" aria-label="Cerrar mapa">
+        ×
+      </button>
+      <p>Aquí iría el mapa.</p>
+    </div>
+  );
+}
+
+// 2) Predice: este componente se monta una vez. ¿En qué orden quedan los dos
+//    registros?
+//        function Registro({ registrar }: { registrar: (paso: string) => void }) {
+//          useEffect(() => { registrar("efecto"); });
+//          registrar("pinta");
+//          return <p>Hola</p>;
+//        }
+export type Orden = "efecto, pinta" | "pinta, efecto";
+export const respuesta2: Orden = "efecto, pinta";
+// ¿Por qué?
+
+// 3) Predice: `Lupa` tiene un efecto sin array. Se monta, y el usuario pulsa dos
+//    veces "Acercar". ¿Cuántas veces ha corrido el efecto en total?
+//        function Lupa() {
+//          const [zoom, setZoom] = useState(1);
+//          useEffect(() => { document.title = `Mapa · zoom ${zoom}`; });
+//          return <button onClick={() => setZoom(zoom + 1)}>Acercar</button>;
+//        }
+//    💡 Cuéntalo como en producción. En `pnpm dev`, el modo estricto de React
+//       repite el montaje una vez a propósito; el porqué es del 02.
+export const respuesta3: number = 2;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 2 — el array de dependencias
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   El segundo argumento de `useEffect` es la lista de valores que vigila. Tras
+ *   cada render, React compara cada valor con el del render anterior y solo
+ *   repite el efecto si alguno cambió. Con la lista vacía no vigila nada: corre
+ *   una sola vez, al montarse.
+ *
+ * SINTAXIS — el chat de antes, vigilando `sinLeer`:
+ *     useEffect(() => {
+ *       document.title = `(${sinLeer}) Mensajes`;
+ *     }, [sinLeer]);
+ *
+ *     sin array   →  tras cada render
+ *     []          →  una vez, al montarse
+ *     [sinLeer]   →  al montarse, y cada vez que `sinLeer` cambie
+ *
+ * 🧠 ANALOGÍA — un vigilante con una lista: solo repite la ronda si cambió algo
+ *    de lo que tiene apuntado. Sin lista, la hace siempre; con la lista vacía,
+ *    solo la primera noche.
+ *
+ * 🗣️ LAS PIEZAS
+ *     `[sinLeer]` → array de dependencias  ·  `react-hooks/exhaustive-deps` → la
+ *     regla del linter que avisa si usas un valor y no está en la lista
+ *
+ * ⚠️ TRAMPA — usar un valor dentro del efecto y dejarlo fuera del array. El
+ *    efecto no se repite cuando ese valor cambia: lo de fuera se queda como lo
+ *    dejó el primer render.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 4) `BloqueoScroll` — mientras el mapa está abierto, la página de fondo no se
+//    tiene que poder mover: es la primera línea del efecto de tu `MapModal`. Hoy,
+//    si el mapa se abre después de montarse el componente, el fondo se sigue
+//    moviendo. Y al cerrarlo, el scroll tiene que volver.
+export function BloqueoScroll({ abierto }: { abierto: boolean }) {
+  useEffect(() => {
+    document.body.style.overflow = abierto ? "hidden" : "";
+  }, []);
+
+  return <p>{abierto ? "Mapa abierto: el fondo no se mueve" : "Mapa cerrado"}</p>;
+}
+
+// 5) Predice: `MapaConLupa` vigila `[abierto]`. Se monta con el mapa abierto, y el
+//    usuario pulsa tres veces "Acercar". `abierto` no cambia en ningún momento.
+//    ¿Cuántas veces ha corrido el efecto en total?
+//        function MapaConLupa({ abierto }: { abierto: boolean }) {
+//          const [zoom, setZoom] = useState(1);
+//          useEffect(() => {
+//            document.body.style.overflow = abierto ? "hidden" : "";
+//          }, [abierto]);
+//          return <button onClick={() => setZoom(zoom + 1)}>Acercar ({zoom})</button>;
+//        }
+export const respuesta5: number = 4;
+// ¿Por qué?
+
+// 6) `TituloMapa` — la pestaña del navegador tiene que decir "Mapa · zoom 1" y
+//    seguir al zoom cada vez que pulsas "Acercar". Marcar "Favorito" no cambia el
+//    título, así que tampoco tiene que repetir el efecto.
+export function TituloMapa() {
+  const [zoom, setZoom] = useState(1);
+  const [favorito, setFavorito] = useState(false);
+
+  return (
+    <div>
+      <p>
+        Zoom {zoom}
+        {favorito ? " · ★ favorito" : ""}
+      </p>
+      <button onClick={() => setZoom(zoom + 1)}>Acercar</button>
+      <button onClick={() => setFavorito(!favorito)}>Favorito</button>
+    </div>
+  );
+}
+// <EnfocarCerrar />  ·  <BloqueoScroll abierto />  ·  <TituloMapa />
