@@ -294,7 +294,7 @@ export function registroReducer(estado: EstadoRegistro, accion: AccionRegistro):
       if (estado.fase !== "enviando") {
         return estado;
       }
-      return { ...estado, fase: "enviado" };
+      return { ...inicial, fase: "enviado" };
     case "limpiar":
       return { ...estado, datos: vacios, errores: {}, fase: "editando" };
     default: {

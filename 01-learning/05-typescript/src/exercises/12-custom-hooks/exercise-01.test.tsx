@@ -48,17 +48,15 @@ describe("12-custom-hooks / exercise-01 — useEffect: cuándo corre y cuándo s
     expect(respuesta5).toBe(1);
   });
 
-  it("6) TituloMapa — el título sigue al zoom, y Favorito no repite el efecto", async () => {
+  it("6) TituloMapa — el título sigue al zoom y muestra la ★ del favorito", async () => {
     const user = userEvent.setup();
-    const ponerTitulo = vi.spyOn(document, "title", "set");
     render(<TituloMapa />);
     expect(document.title).toBe("Mapa · zoom 1");
 
     await user.click(screen.getByRole("button", { name: "Acercar" }));
     expect(document.title).toBe("Mapa · zoom 2");
 
-    const vecesHastaAqui = ponerTitulo.mock.calls.length;
     await user.click(screen.getByRole("button", { name: "Favorito" }));
-    expect(ponerTitulo).toHaveBeenCalledTimes(vecesHastaAqui);
+    expect(document.title).toBe("Mapa · zoom 2 ★");
   });
 });

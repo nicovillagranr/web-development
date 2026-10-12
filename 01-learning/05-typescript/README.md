@@ -1549,3 +1549,38 @@ real de Projex: el botón vive fuera del `<form>` (atributo `form="contact-form"
 el estado, así que la protección contra el doble envío tiene que ser el portero dentro del
 manejador. El test, con la regla del `13d`: mirar los viajes al servidor, no solo lo que se ve
 en pantalla.
+
+## Sesión 12 oct 2026 — `12/exercise-01` cerrado (6/6) y el `11/exercise-09` también (8/8)
+
+### Qué se cerró
+
+- **`12-custom-hooks/exercise-01`** (`useEffect`: cuándo corre y cuándo se repite): 6/6,
+  typecheck y lint a 0. Lo hizo todo él, sin pedir ninguna pista.
+- **`11-useState-useReducer/exercise-09`**: el drill 7 (`terminar` no vaciaba `datos`), que
+  llevaba pendiente desde el 6 oct después de dos pistas, lo cerró solo con
+  `{ ...inicial, fase: "enviado" }`. Suite completa: 1192/1192.
+
+### Decisiones
+
+**El drill 6 se cambió a su versión.** Quiso que el título llevara la ★ del favorito, con
+`[zoom, favorito]`. Se le enseñó con una tabla que así el drill deja de discriminar ("sin
+array" también pasa) y decidió mantenerla. Se ajustaron el test (ahora comprueba el texto
+del título con y sin ★, y ya no cuenta escrituras), el enunciado, un aviso en las pistas y
+la tarjeta del banco.
+
+**El drill 5 se reabrió y se volvió a cerrar.** Su "¿Por qué?" era correcto, pero al
+preguntarle cuántas veces se renderizaba `MapaConLupa` dijo que una. Confundía render con
+efecto. Se corrigió con su propio botón `Acercar ({zoom})` como prueba y la analogía del
+pintor (el render, que lo provoca cualquier setter) y el vigilante (el efecto, que mira su
+lista). Respondió 4 renders. El comentario del drill 3 tenía el mismo hueco, y él mismo le
+añadió el eslabón "sin array corre después de cada render".
+
+**Tarjeta 🧪 `PruebaZoom` en el banco del 12**, temporal. Con ella vio por su cuenta que dos
+efectos que escriben el mismo `document.title` se pisan, y se le dio la regla de que lo que
+vive fuera de React necesita un solo dueño (el caso del `overflow` con dos modales). Se
+queda hasta que él diga que se quite.
+
+### Pendiente
+
+Borró la línea de trazado del final del `exercise-01` (`// <EnfocarCerrar />  ·  …`). Se le
+ofreció devolverla.

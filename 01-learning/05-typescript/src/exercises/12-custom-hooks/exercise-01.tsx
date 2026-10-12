@@ -74,7 +74,13 @@ import { useEffect, useState } from "react";
 //    💡 En tu `MapModal` esto va con un ref. Aquí va con `getElementById` para no
 //       mezclarlo con el 03.
 export function EnfocarCerrar() {
-  document.getElementById("cerrar-mapa")?.focus();
+  // Con useEffect controlamos los efectos post-render en React.
+  useEffect(() => {
+    // Buscamos el botón por su id
+    const boton = document.getElementById("cerrar-mapa");
+    // Y le pedimos que se enfoque. Esto corre después de pintar el componente.
+    boton?.focus();
+  }, []);
 
   return (
     <div role="dialog" aria-label="Mapa de ubicación">
@@ -94,8 +100,15 @@ export function EnfocarCerrar() {
 //          return <p>Hola</p>;
 //        }
 export type Orden = "efecto, pinta" | "pinta, efecto";
-export const respuesta2: Orden = "efecto, pinta";
+export const respuesta2: Orden = "pinta, efecto";
 // ¿Por qué?
+// Porque registrar("pinta") se ejecuta directamente en el cuerpo
+// del componente durante el render.
+//
+// En cambio, registrar("efecto") está dentro de useEffect, por lo
+// que React lo ejecuta después del pintado.
+//
+// Por eso el orden es: "pinta, efecto".
 
 // 3) Predice: `Lupa` tiene un efecto sin array. Se monta, y el usuario pulsa dos
 //    veces "Acercar". ¿Cuántas veces ha corrido el efecto en total?
@@ -106,7 +119,11 @@ export const respuesta2: Orden = "efecto, pinta";
 //        }
 //    💡 Cuéntalo como en producción. En `pnpm dev`, el modo estricto de React
 //       repite el montaje una vez a propósito; el porqué es del 02.
-export const respuesta3: number = 2;
+export const respuesta3: number = 3;
+// La App inicia = 1er render
+// El usuario pulsa "Acercar" = 2do render
+// El usuario pulsa "Acercar" = 3er render
+//  este efecto no tiene array, y sin array corre después de cada render. Por eso 3 renders dan 3 efectos.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el array de dependencias
@@ -145,10 +162,17 @@ export const respuesta3: number = 2;
 //    moviendo. Y al cerrarlo, el scroll tiene que volver.
 export function BloqueoScroll({ abierto }: { abierto: boolean }) {
   useEffect(() => {
+    // Ubicamos el scroll del body según el estado de abierto. Si está abierto, bloqueamos el scroll; si está cerrado, lo desbloqueamos.
+    // abierto = true → document.body.style.overflow = "hidden" → bloquea el scroll
+    // abierto = false → document.body.style.overflow = "" → desbloquea el scroll
     document.body.style.overflow = abierto ? "hidden" : "";
-  }, []);
+  }, [abierto]);
 
-  return <p>{abierto ? "Mapa abierto: el fondo no se mueve" : "Mapa cerrado"}</p>;
+  return (
+    <>
+      <p>{abierto ? "Mapa abierto: el fondo no se mueve" : "Mapa cerrado"}</p>
+    </>
+  );
 }
 
 // 5) Predice: `MapaConLupa` vigila `[abierto]`. Se monta con el mapa abierto, y el
@@ -161,15 +185,46 @@ export function BloqueoScroll({ abierto }: { abierto: boolean }) {
 //          }, [abierto]);
 //          return <button onClick={() => setZoom(zoom + 1)}>Acercar ({zoom})</button>;
 //        }
-export const respuesta5: number = 4;
+export const respuesta5: number = 1;
 // ¿Por qué?
+// Sólo corrió el efecto en el primer render, pero como la lógica de abierto no se ha modificado en ningún momento, el efecto no se repitió. Por eso, la respuesta es 1.
 
-// 6) `TituloMapa` — la pestaña del navegador tiene que decir "Mapa · zoom 1" y
-//    seguir al zoom cada vez que pulsas "Acercar". Marcar "Favorito" no cambia el
-//    título, así que tampoco tiene que repetir el efecto.
+// 6) `TituloMapa` — la pestaña del navegador tiene que decir "Mapa · zoom 1",
+//    seguir al zoom cada vez que pulsas "Acercar" y mostrar una ★ cuando está
+//    marcado "Favorito".
+//    (Enunciado ajustado el 12 oct a tu versión: el original pedía que Favorito
+//    NO repitiera el efecto.)
 export function TituloMapa() {
   const [zoom, setZoom] = useState(1);
   const [favorito, setFavorito] = useState(false);
+
+  // ARRAY DE DEPENDENCIAS:
+  //
+  // Le indica a React cuándo debe volver a ejecutar el efecto.
+  //
+  // Sin array:
+  // Se ejecuta después de cada render.
+  //
+  // Con []:
+  // Se ejecuta al montarse el componente, salvo repeticiones
+  // adicionales de desarrollo por StrictMode.
+  //
+  // Con [zoom]:
+  // Se ejecuta al montarse y cuando cambia zoom.
+  //
+  // Con [zoom, favorito]:
+  // Se ejecuta al montarse y cuando cambia zoom o favorito.
+  //
+  // IMPORTANTE:
+  // React vuelve a renderizar el componente cuando cambia un estado.
+  // El efecto solo vuelve a ejecutarse si corresponde según sus
+  // dependencias. El efecto no actualiza necesariamente la interfaz;
+  // en este caso, modifica el título de la pestaña del navegador.
+
+  // Por eso: Cada vez que el valor de zoom o favorito cambia, el efecto se ejecuta y actualiza la App con la nueva información. Si solo quieres que se ejecute cuando cambia zoom, puedes poner solo [zoom] en el array de dependencias.
+  useEffect(() => {
+    document.title = `Mapa · zoom ${zoom} ${favorito ? "★" : ""}`;
+  }, [zoom, favorito]);
 
   return (
     <div>
@@ -177,9 +232,17 @@ export function TituloMapa() {
         Zoom {zoom}
         {favorito ? " · ★ favorito" : ""}
       </p>
-      <button onClick={() => setZoom(zoom + 1)}>Acercar</button>
+      {/* Al dar click seteamos con el useState el valor de zoom uno a uno */}
+      <button
+        onClick={() => {
+          setZoom(zoom + 1);
+          setFavorito(false);
+        }}
+      >
+        Acercar
+      </button>
+      {/* Como favorito está seteado en false, cuando el usuario lo añade a favorito, este cambia a true y se renderiza en el <p> de la línea 186 */}
       <button onClick={() => setFavorito(!favorito)}>Favorito</button>
     </div>
   );
 }
-// <EnfocarCerrar />  ·  <BloqueoScroll abierto />  ·  <TituloMapa />

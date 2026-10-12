@@ -83,7 +83,7 @@ function App() {
                 className={`rounded-full border-0 px-4 py-1.5 text-[14px] font-normal transition-colors ${
                   seleccionada
                     ? "bg-[#f5f5f7] text-black hover:bg-[#f5f5f7]"
-                    : "bg-transparent text-[#86868b] hover:bg-white/[0.06] hover:text-[#f5f5f7]"
+                    : "bg-transparent text-[#86868b] hover:bg-white/6 hover:text-[#f5f5f7]"
                 }`}
               >
                 <span className="font-mono">{id}</span> · {BLOQUES[id].titulo}

@@ -230,6 +230,9 @@ hace tu `[onClose]`: el efecto de tu `MapModal` no se repite por renders que no 
 
 ## Drill 6 — `TituloMapa`
 
+> ⚠️ Estas pistas son del enunciado ORIGINAL (Favorito no repetía el efecto, `[zoom]`).
+> El 12 oct el enunciado cambió a su versión: la ★ en el título y `[zoom, favorito]`.
+
 <details><summary>Pista 1 — conceptual</summary>
 
 Aquí no hay ningún efecto todavía. Antes de escribirlo, responde dos cosas: ¿qué tiene
