@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   ModalSinScroll,
@@ -14,6 +14,16 @@ import {
   AvisarClics,
   pideMenosMovimiento,
   PreferenciaMovimiento,
+  respuesta12,
+  AvisoDemo,
+  respuesta14,
+  AvisoConLikes,
+  respuesta16,
+  respuesta17,
+  AvisoConLimpieza,
+  respuesta19,
+  respuesta20,
+  AvisoProyectoDemo,
 } from "./exercise-02";
 
 /* Los efectos tocan cosas de fuera de React, así que cada test deja la página como
@@ -138,5 +148,102 @@ describe("12-custom-hooks / exercise-02 — la limpieza de un efecto", () => {
 
     unmount();
     expect(oyentes.size).toBe(0);
+  });
+});
+
+/* Escalera 2: los temporizadores son de mentira (`vi.useFakeTimers`), así que el test
+ * adelanta el reloj con `pasar(ms)` en vez de esperar de verdad. `vi.getTimerCount()`
+ * cuenta los temporizadores que siguen pendientes. */
+
+const AVISO = "AVISO: Proyecto Demo";
+const pasar = (ms: number) =>
+  act(() => {
+    vi.advanceTimersByTime(ms);
+  });
+
+describe("12-custom-hooks / exercise-02 — escalera 2, un temporizador de principio a fin", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.useRealTimers();
+  });
+
+  it("12) respuesta12 — los registros al montarse", () => {
+    expect(respuesta12).toEqual(["pinta", "efecto"]);
+  });
+
+  it("13) AvisoDemo — se va a los 3 segundos y no deja otro temporizador programado", () => {
+    render(<AvisoDemo />);
+    expect(screen.getByText(AVISO)).toBeInTheDocument();
+
+    pasar(3000);
+    expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+    expect(vi.getTimerCount(), "temporizadores pendientes").toBe(0);
+  });
+
+  it("14) respuesta14 — los registros al pasar 3 segundos", () => {
+    expect(respuesta14).toEqual(["pinta", "efecto", "se acaba el tiempo", "pinta"]);
+  });
+
+  it("15) AvisoConLikes — un clic en Me gusta no le da más tiempo al aviso", () => {
+    render(<AvisoConLikes />);
+
+    pasar(2000);
+    fireEvent.click(screen.getByRole("button", { name: "Me gusta (0)" }));
+    expect(screen.getByRole("button", { name: "Me gusta (1)" })).toBeInTheDocument();
+
+    pasar(1000);
+    expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+  });
+
+  it("16) respuesta16 — los registros si se desmonta al segundo 1", () => {
+    expect(respuesta16).toEqual(["pinta", "efecto", "limpieza"]);
+  });
+
+  it("17) respuesta17 — los registros si la limpieza no cancela", () => {
+    expect(respuesta17).toEqual(["pinta", "efecto", "limpieza", "se acaba el tiempo"]);
+  });
+
+  it("18) AvisoConLimpieza — se va a los 3 segundos, y si se desmonta antes cancela el temporizador", () => {
+    const primero = render(<AvisoConLimpieza />);
+    pasar(3000);
+    expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+    primero.unmount();
+
+    const segundo = render(<AvisoConLimpieza />);
+    pasar(1000);
+    segundo.unmount();
+    expect(vi.getTimerCount(), "temporizadores pendientes").toBe(0);
+  });
+
+  it("19) respuesta19 — el segundo en que desaparece el aviso", () => {
+    expect(respuesta19).toBe(5);
+  });
+
+  it("20) respuesta20 — los registros de tu PortfolioItem", () => {
+    expect(respuesta20).toEqual(["programa", "limpieza"]);
+  });
+
+  it("21) AvisoProyectoDemo — aparece al pulsar, se va a los 3 segundos aunque el padre repinte, y se cancela al desmontarse", () => {
+    const { rerender, unmount } = render(<AvisoProyectoDemo />);
+    const boton = screen.getByRole("button", { name: "Ver detalle" });
+    expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+
+    fireEvent.click(boton);
+    expect(screen.getByText(AVISO)).toBeInTheDocument();
+
+    pasar(2000);
+    rerender(<AvisoProyectoDemo />);
+    pasar(1000);
+    expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+
+    fireEvent.click(boton);
+    expect(screen.getByText(AVISO)).toBeInTheDocument();
+
+    pasar(1000);
+    unmount();
+    expect(vi.getTimerCount(), "temporizadores pendientes").toBe(0);
   });
 });

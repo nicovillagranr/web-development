@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
  *   · escribir la limpieza de un efecto y decir cuándo la llama React
  *   · quitar un listener con la misma función con la que lo pusiste
  *   · explicar por qué en `pnpm dev` cada efecto se monta dos veces
+ *   · cancelar con la limpieza el temporizador que un efecto dejó programado
  *
  * 🟢 ¿POR QUÉ ESTE ARCHIVO?
  * Haz la prueba en el banco: abre el mapa del drill 4 del 01 y cambia a la pestaña
@@ -28,17 +29,17 @@ import { useEffect, useState } from "react";
  *   TEORÍA 1 · qué es la limpieza y cuándo corre              →  drills 1 a 3
  *   TEORÍA 2 · la limpieza antes de repetir, y el doble montaje →  drills 4 y 5
  *   ESCALERA · quitar con la misma función, paso a paso       →  drills 6 a 11
+ *   ESCALERA 2 · un temporizador, de principio a fin          →  drills 12 a 21
  *
- * ▸ EJERCICIO — 11 drills, en orden. ❌ Prohibido `any` y `as`.
+ * ▸ EJERCICIO — 21 drills, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/12-custom-hooks/exercise-02.test.tsx
  *     pnpm typecheck
  *
- *   Todos los starters están rotos a propósito, y los 11 compilan: toda la señal
- *   está en el test. Las predicciones (3, 4, 5 y 6) se responden leyendo el
- *   código, sin ejecutarlo. Los drills 3 y 5 llevan un `// ¿Por qué?` que reviso yo.
- *   ¿Atascado? Las pistas están en `exercise-02.pistas.md`, de una en una.
- *
- * 👁️ Los drills 1, 2, 9 y 11 están montados en el banco (pestaña 12).
+ *   Todos los starters están rotos a propósito y los 21 compilan: la señal está en
+ *   el test. Las predicciones (3-6, 12, 14, 16, 17, 19 y 20) se leen sin ejecutar,
+ *   y las 3, 5, 14, 17 y 20 llevan un `// ¿Por qué?` que reviso yo. ¿Atascado? Las
+ *   pistas están en `exercise-02.pistas.md`, de una en una.
+ * 👁️ Los drills 1, 2, 9, 11, 13, 15, 18 y 21 están montados en el banco (pestaña 12).
  * ===========================================================================*/
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -342,3 +343,179 @@ export function PreferenciaMovimiento() {
   return <p>Animaciones: {reducidas ? "reducidas" : "normales"}</p>;
 }
 // <ModalSinScroll />  ·  <CerrarConEscape onClose={() => {}} />  ·  <AvisarClics alHacerClic={() => {}} />  ·  <PreferenciaMovimiento />
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA 2 — un temporizador, de principio a fin (drills 12 a 21)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEFINICIÓN
+ *   `window.setTimeout` deja una tarea programada fuera de React y devuelve un
+ *   número: el id del temporizador. `window.clearTimeout(id)` cancela esa tarea
+ *   si todavía no ha corrido. El efecto la programa; la limpieza la cancela.
+ *
+ * SINTAXIS — el aviso "Proyecto Demo" de tu `PortfolioItem`, simplificado a `[]`:
+ *     useEffect(() => {
+ *       const id = window.setTimeout(() => setVisible(false), 3000); // programa y guarda el id
+ *       return () => {
+ *         window.clearTimeout(id);                                   // cancela ESE
+ *       };
+ *     }, []);
+ *
+ *     segundo 0   se monta     →  pinta  ·  efecto: programa el temporizador
+ *     segundo 3   el temporizador llama a setVisible(false)  →  pinta otra vez
+ *     después     se desmonta  →  limpieza: cancela el temporizador si sigue pendiente
+ *
+ * 🧠 ANALOGÍA — el hotel de la Teoría 1: pides que te despierten a las 7 y en
+ *    recepción te dan un número de reserva (el id). Si te vas antes, cancelas con
+ *    ESE número; si no, el teléfono suena en una habitación vacía.
+ *
+ * 🗣️ LAS PIEZAS
+ *     `setTimeout(fn, ms)` → programar  ·  el número que devuelve → id del temporizador
+ *     `clearTimeout(id)` → cancelar
+ *
+ * ⚠️ TRAMPA — creer que la limpieza es lo que esconde el aviso. Lo esconde
+ *    `setVisible(false)`; la limpieza solo cancela lo que quede pendiente.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// ── FASE 1 · el montaje: el efecto deja una tarea programada ──────────────────
+
+// 📌 El `Aviso` de los drills 12, 14, 16 y 17. `registrar` apunta cada paso:
+//        function Aviso({ registrar }: { registrar: (texto: string) => void }) {
+//          const [visible, setVisible] = useState(true);
+//          registrar("pinta");
+//          useEffect(() => {
+//            registrar("efecto");
+//            const id = window.setTimeout(() => {
+//              registrar("se acaba el tiempo");
+//              setVisible(false);
+//            }, 3000);
+//            return () => {
+//              registrar("limpieza");
+//              window.clearTimeout(id);
+//            };
+//          }, []);
+//          return <p>{visible ? "AVISO: Proyecto Demo" : "Aviso cerrado"}</p>;
+//        }
+
+// 12) Predice: `Aviso` se monta y pasa 1 segundo. Escribe los registros en orden,
+//     contados como en producción.
+export const respuesta12: string[] = [];
+
+// 13) `AvisoDemo` — el aviso de tu `PortfolioItem`: aparece al montarse y se va a
+//     los 3 segundos. En pantalla funciona, pero el temporizador se programa en el
+//     cuerpo del componente, que corre en cada render. Tiene que programarse una
+//     sola vez, al montarse.
+export function AvisoDemo() {
+  const [visible, setVisible] = useState(true);
+  window.setTimeout(() => setVisible(false), 3000);
+
+  return visible ? <p role="status">AVISO: Proyecto Demo</p> : null;
+}
+
+// ── FASE 2 · sigue montado: un render nuevo no repite el efecto ───────────────
+
+// 14) Predice: `Aviso` se monta y pasan 3 segundos sin que el usuario toque nada.
+//     Escribe los registros en orden, contados como en producción.
+export const respuesta14: string[] = [];
+// ¿Por qué no aparece "limpieza"?
+//
+
+// 15) `AvisoConLikes` — el aviso tiene que irse a los 3 segundos de aparecer, pulse
+//     el usuario lo que pulse. Hoy, cada clic en "Me gusta" le da 3 segundos más.
+export function AvisoConLikes() {
+  const [visible, setVisible] = useState(true);
+  const [likes, setLikes] = useState(0);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setVisible(false), 3000);
+    return () => {
+      window.clearTimeout(id);
+    };
+  });
+
+  return (
+    <div>
+      {visible && <p role="status">AVISO: Proyecto Demo</p>}
+      <button type="button" onClick={() => setLikes(likes + 1)}>
+        Me gusta ({likes})
+      </button>
+    </div>
+  );
+}
+
+// ── FASE 3 · el desmontaje: la limpieza cancela lo que quedó pendiente ────────
+
+// 16) Predice: `Aviso` se monta y, al segundo 1, el usuario se va a otra sección:
+//     el aviso se desmonta. Escribe los registros hasta el segundo 5.
+export const respuesta16: string[] = [];
+
+// 17) Predice: lo mismo que en el 16, pero con un `Aviso` cuya limpieza se olvida
+//     de cancelar el temporizador:
+//        return () => {
+//          registrar("limpieza");
+//        };
+export const respuesta17: string[] = [];
+// ¿Por qué?
+//
+
+// 18) `AvisoConLimpieza` — si el usuario se va antes de los 3 segundos, el
+//     temporizador se queda pendiente, como en el 17. Al desmontarse, cancélalo.
+export function AvisoConLimpieza() {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    window.setTimeout(() => setVisible(false), 3000);
+  }, []);
+
+  return visible ? <p role="status">AVISO: Proyecto Demo</p> : null;
+}
+
+// ── FASE 4 · el array: si cambia, la limpieza corre antes de repetir ──────────
+
+// 19) Predice: `AvisoConTexto` se monta con `texto="Enviado"` y, al segundo 2, el
+//     padre le pasa `texto="Reenviado"`. ¿En qué segundo desaparece el aviso?
+//        function AvisoConTexto({ texto }: { texto: string }) {
+//          const [visible, setVisible] = useState(true);
+//          useEffect(() => {
+//            const id = window.setTimeout(() => setVisible(false), 3000);
+//            return () => {
+//              window.clearTimeout(id);
+//            };
+//          }, [texto]);
+//          return visible ? <p role="status">{texto}</p> : null;
+//        }
+export const respuesta19: number = 0;
+
+// 20) Predice: el efecto de tu `PortfolioItem` de Projex, tal cual, con dos
+//     `registrar`. El usuario pulsa "Ver detalle" y pasan 3 segundos. Escribe los
+//     registros en orden.
+//        const [showDemoMessage, setShowDemoMessage] = useState(false);
+//        useEffect(() => {
+//          if (!showDemoMessage) return;
+//          registrar("programa");
+//          const id = setTimeout(() => setShowDemoMessage(false), 3000);
+//          return () => {
+//            registrar("limpieza");
+//            clearTimeout(id);
+//          };
+//        }, [showDemoMessage]);
+export const respuesta20: string[] = [];
+// ¿Por qué aparece "limpieza", si el componente no se desmonta?
+//
+
+// 21) `AvisoProyectoDemo` — tu `PortfolioItem` desde cero, solo con el aviso. Al
+//     pulsar "Ver detalle", "AVISO: Proyecto Demo" aparece y se va a los 3
+//     segundos, aunque el padre se vuelva a pintar entre medias. Se puede volver a
+//     pulsar, y si se desmonta antes de tiempo, el temporizador se cancela.
+export function AvisoProyectoDemo() {
+  const [showDemoMessage, setShowDemoMessage] = useState(false);
+
+  return (
+    <div>
+      <button type="button" onClick={() => setShowDemoMessage(true)}>
+        Ver detalle
+      </button>
+      {showDemoMessage && <p role="status">AVISO: Proyecto Demo</p>}
+    </div>
+  );
+}
+// <AvisoDemo />  ·  <AvisoConLikes />  ·  <AvisoConLimpieza />  ·  <AvisoProyectoDemo />

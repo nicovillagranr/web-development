@@ -1622,3 +1622,49 @@ podía pasar tal cual, sin envolverla.
 ### Pendiente
 
 El `exercise-03` (`useRef` al DOM), montado y sin resolver: 0/6.
+
+## Sesión 15 oct 2026 (2) — dos escaleras nuevas en el 12, y el `03` en 5/13
+
+### Qué se montó
+
+- **`exercise-02` · ESCALERA 2, un temporizador de principio a fin (drills 12 a 21).** La
+  pidió él después de repasar con ChatGPT el flujo del temporizador, en las mismas cuatro
+  fases: el montaje, sigue montado, el desmontaje y el array. Sale de su propio código: el
+  aviso "AVISO: Proyecto Demo" del `PortfolioItem` de Projex. Seis predicciones (12, 14,
+  16, 17, 19 y 20) y cuatro de código (13, 15, 18 y 21); el 21 es su `PortfolioItem` desde
+  cero. Los tests usan `vi.useFakeTimers` y `vi.getTimerCount()`.
+- **`exercise-03` · ESCALERA, ¿en el manejador o en un efecto? (drills 6 a 12).** La pidió
+  porque "el drill 6 estuvo pesado". Su `MapaConRetorno` pasa a ser el **13**, con su código
+  tal cual. Cubre todo lo que pedía: el setter no pinta en el acto (6), la ida en un efecto
+  (7), dónde queda el foco si nadie lo mueve (8), por qué un `else` en el efecto corre al
+  montarse (9), la bandera del primer montaje contra StrictMode (10), clasificar casos con
+  un `Record` (11) y un caso fuera del modal, `LimpiarBusqueda` (12).
+- Las dos verificadas en copia: soluciones en verde, cada starter en rojo, typecheck y lint a
+  0. En el 21 del 02 se probaron además las soluciones equivocadas más probables, y fallan.
+
+### Qué se cerró
+
+- **`exercise-02`**: drills 1-11 (commit `042fb`). Queda la escalera 2.
+- **`exercise-03`**: drills 1 a 5. El 4 lo reabrió él ("no entiendo el 4"): esperaba que al
+  abrir el foco se moviera solo, y no veía que "Ir al mapa" manda el foco al panel en vez de
+  recibirlo.
+
+### Decisiones
+
+**El test del 13 del 03 ahora mira el montaje, dentro de `StrictMode`.** Su primer intento
+metía la vuelta a "Abrir mapa" en el efecto con un `else`, que corre también al montarse y
+roba el foco. El segundo lo esquivaba con una bandera en un ref, y en `pnpm dev` el ensayo de
+StrictMode la deja sin efecto. Los dos pasaban el test viejo; era un hueco del test, no suyo.
+
+**Su porqué del drill 3 hablaba de tiempo** ("milésimas de segundo") y se corrigió a orden:
+el render describe, React mete el elemento y llena `.current`, y después corren los efectos.
+A petición suya se reescribió esa línea de su comentario.
+
+**No se montaron el 04, el 05 y el 06**, aunque los pidió: el contrato del coach dice que no
+se monta el siguiente hasta cerrar el actual, ni más de dos por delante, y el 02 y el 03
+siguen abiertos.
+
+### Pendiente
+
+Las dos escaleras: del 12 al 21 del 02, y del 6 al 13 del 03. Y la pregunta de cierre del
+drill 3 del 03: con el `console.log` dentro del efecto, ¿qué imprime?

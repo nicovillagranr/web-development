@@ -5,11 +5,17 @@ import {
   CerrarConEscape,
   AvisarClics,
   PreferenciaMovimiento,
+  AvisoDemo,
+  AvisoConLikes,
+  AvisoConLimpieza,
+  AvisoProyectoDemo,
 } from "../exercises/12-custom-hooks/exercise-02";
 import {
   EnfocarConRef,
   CampoCiudad,
   PanelEnfocable,
+  MapaSoloIda,
+  LimpiarBusqueda,
   MapaConRetorno,
 } from "../exercises/12-custom-hooks/exercise-03";
 import { Seccion, Tarjeta } from "./piezas";
@@ -108,6 +114,62 @@ function DemoClics() {
       </button>
       {contando && <AvisarClics alHacerClic={() => setClics((n) => n + 1)} />}
       <p>Clics contados: {clics}</p>
+    </>
+  );
+}
+
+/* 02 · drills 13 y 15: el aviso se va solo, así que la demo lo vuelve a montar para
+ * que puedas repetirlo. Cambiar la `key` es desmontarlo y montarlo de nuevo. */
+function DemoAvisoDemo() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Volver a montar
+      </button>
+      <AvisoDemo key={vez} />
+    </>
+  );
+}
+
+function DemoLikes() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Volver a montar
+      </button>
+      <AvisoConLikes key={vez} />
+    </>
+  );
+}
+
+/* 02 · drill 18: "Ir a otra sección" desmonta el aviso antes de los 3 segundos. */
+function DemoIrseAntes() {
+  const [enLaSeccion, setEnLaSeccion] = useState(true);
+
+  return (
+    <>
+      <button type="button" onClick={() => setEnLaSeccion(!enLaSeccion)}>
+        {enLaSeccion ? "Ir a otra sección" : "Volver"}
+      </button>
+      {enLaSeccion && <AvisoConLimpieza />}
+    </>
+  );
+}
+
+/* 02 · drill 21: el botón del padre lo repinta, como el `rerender` del test. */
+function DemoProyectoDemo() {
+  const [repintados, setRepintados] = useState(0);
+
+  return (
+    <>
+      <button type="button" onClick={() => setRepintados(repintados + 1)}>
+        Repintar el padre ({repintados})
+      </button>
+      <AvisoProyectoDemo />
     </>
   );
 }
@@ -271,6 +333,42 @@ export function Bloque12() {
         <PreferenciaMovimiento />
       </Tarjeta>
 
+      <Tarjeta
+        n={13}
+        nombre="AvisoDemo"
+        mirar="El aviso aparece y se va a los 3 segundos; Volver a montar lo repite. Con el starter en pantalla se ve igual: lo que falla es que deja otro temporizador programado, y eso lo cuenta el test."
+        campos="botón Volver a montar (de la demo) · un <p role=status> con el aviso"
+      >
+        <DemoAvisoDemo />
+      </Tarjeta>
+
+      <Tarjeta
+        n={15}
+        nombre="AvisoConLikes"
+        mirar="Pulsa Me gusta varias veces antes de que pasen 3 segundos. Con el starter, el aviso no se va mientras sigas pulsando; resuelto, se va a los 3 segundos del montaje."
+        campos="botón Volver a montar (de la demo) · un <p role=status> con el aviso · botón Me gusta (n)"
+      >
+        <DemoLikes />
+      </Tarjeta>
+
+      <Tarjeta
+        n={18}
+        nombre="AvisoConLimpieza"
+        mirar="Pulsa Ir a otra sección antes de 3 segundos. Lo que falla no se ve aquí: con el starter el temporizador sigue pendiente aunque el aviso ya no esté, y eso lo cuenta el test."
+        campos="botón Ir a otra sección/Volver (de la demo) · un <p role=status> con el aviso"
+      >
+        <DemoIrseAntes />
+      </Tarjeta>
+
+      <Tarjeta
+        n={21}
+        nombre="AvisoProyectoDemo"
+        mirar="Pulsa Ver detalle: el aviso tiene que irse a los 3 segundos aunque pulses Repintar el padre entre medias. Con el starter no se va nunca."
+        campos="botón Repintar el padre (de la demo) · botón Ver detalle · al pulsar: un <p role=status> con el aviso"
+      >
+        <DemoProyectoDemo />
+      </Tarjeta>
+
       <Seccion
         archivo="exercise-03"
         titulo="Un ref es tu agarradera a un elemento, y vale null mientras no está."
@@ -281,6 +379,7 @@ export function Bloque12() {
         nombre="EnfocarConRef"
         mirar="Pulsa Abrir mapa: el anillo naranja tiene que saltar a la ✕. Con el starter se queda en Abrir mapa."
         campos="botón Abrir mapa · al abrir: un diálogo con la ✕ y un <p>"
+        estado="resuelto"
       >
         <DemoEnfocarRef />
       </Tarjeta>
@@ -290,6 +389,7 @@ export function Bloque12() {
         nombre="CampoCiudad"
         mirar="Pulsa Abrir buscador: el campo aparece con Santiago seleccionado entero, listo para escribir encima. Con el starter aparece sin seleccionar."
         campos="botón Abrir/Cerrar buscador · al abrir: un <input> Ciudad"
+        estado="resuelto"
       >
         <DemoCampo />
       </Tarjeta>
@@ -299,6 +399,7 @@ export function Bloque12() {
         nombre="PanelEnfocable"
         mirar="Con el mapa cerrado, pulsa Ir al mapa: no tiene que pasar nada (con el starter, la consola muestra un TypeError). Ábrelo y pulsa Ir al mapa: el anillo salta al panel."
         campos="botones Abrir/Cerrar mapa e Ir al mapa · al abrir: un panel con un <p>"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <PanelEnfocable />
@@ -306,9 +407,29 @@ export function Bloque12() {
       </Tarjeta>
 
       <Tarjeta
-        n={6}
+        n={7}
+        nombre="MapaSoloIda"
+        mirar="Pulsa Abrir mapa: el anillo tiene que saltar a la ✕; con el starter se queda en Abrir mapa. Después pulsa la ✕: el anillo desaparece porque el foco vuelve al <body>, que es tu predicción del 8."
+        campos="botón Abrir mapa · al abrir: un diálogo con la ✕ y un <p>"
+      >
+        <div className={ANILLO}>
+          <MapaSoloIda />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={12}
+        nombre="LimpiarBusqueda"
+        mirar="Escribe una ciudad y pulsa Limpiar: el campo se vacía y el cursor queda dentro. Con el starter, además, el buscador roba el foco al montarse: entra en la pestaña 12 con las flechas del teclado y mira dónde acaba el foco."
+        campos="un <input> Ciudad · botón Limpiar"
+      >
+        <LimpiarBusqueda />
+      </Tarjeta>
+
+      <Tarjeta
+        n={13}
         nombre="MapaConRetorno"
-        mirar="Pulsa Abrir mapa: el anillo salta a la ✕. Pulsa la ✕: el mapa se cierra y el anillo vuelve a Abrir mapa. Con el starter el foco se queda donde hiciste clic."
+        mirar="Pulsa Abrir mapa: el anillo salta a la ✕. Pulsa la ✕: el mapa se cierra y el anillo vuelve a Abrir mapa. Y al entrar en la pestaña 12, el foco no tiene que saltar solo a este Abrir mapa."
         campos="botón Abrir mapa · al abrir: un diálogo con la ✕ y un <p>"
       >
         <div className={ANILLO}>
