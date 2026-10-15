@@ -1584,3 +1584,41 @@ queda hasta que él diga que se quite.
 
 Borró la línea de trazado del final del `exercise-01` (`// <EnfocarCerrar />  ·  …`). Se le
 ofreció devolverla.
+
+## Sesiones 12–15 oct 2026 — `12/exercise-02` cerrado (11/11) y `12/exercise-03` montado
+
+### Qué se montó (12 oct, noche)
+
+- **`exercise-02` · la limpieza de un efecto** (6 drills) y **`exercise-03` · `useRef` al
+  DOM** (6 drills, con 1 error de tipos a propósito en el 4). Los dos verificados en copia
+  (6/6, typecheck y lint a 0) y montados en el banco, en las secciones 02 y 03 de
+  `banco/Bloque12.tsx`.
+
+### Qué se cerró
+
+- **`12-custom-hooks/exercise-02`**: 11/11, sin errores de tipos en el archivo y lint a 0.
+  Los drills 1-5 se aprobaron el 13 oct y los 6-11 los resolvió entre el 13 y el 15.
+
+### Decisiones
+
+**Escalera dentro del mismo archivo.** El drill 6 original (`PreferenciaMovimiento`) lo
+escribió con el mismo fallo del drill 3 (quitar el listener con una flecha nueva) y dijo
+que estaba en blanco: entendía la idea en prosa, no en código. A petición suya se metieron
+los drills 6-10 en el mismo archivo (`copia === avisar`, el tablón de mentira, `document`
+sin React, `AvisarClics` en un efecto y qué es la consulta), con la analogía del guardarropa
+(la constante es el ticket). El viejo 6 pasó a ser el 11, y lo cerró sacando la flecha a
+`actualizarPreferencia` y explicando bien por qué el array va vacío. El archivo queda en
+344 líneas, por encima del techo, aceptado por ser una escalera.
+
+**Los dos resbalones de siempre, en el 3 y el 5.** En el 3 explicó bien el porqué pero dejó
+la constante sin cambiar. En el 5 respondió 2 sin el eslabón "sin limpieza", y lo cerró
+cuando se le preguntó por su propio drill 2.
+
+**Comentarios corregidos a petición suya** en el 11: el estado no "parte en false", parte
+con lo que diga `.matches` al montar; y `"change"` avisa en los dos sentidos, no solo
+hacia `true`. En el 8 se le señaló que `alHacerClic` ya es una referencia con nombre y se
+podía pasar tal cual, sin envolverla.
+
+### Pendiente
+
+El `exercise-03` (`useRef` al DOM), montado y sin resolver: 0/6.
