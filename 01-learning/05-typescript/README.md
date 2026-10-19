@@ -1668,3 +1668,75 @@ siguen abiertos.
 
 Las dos escaleras: del 12 al 21 del 02, y del 6 al 13 del 03. Y la pregunta de cierre del
 drill 3 del 03: con el `console.log` dentro del efecto, ¿qué imprime?
+
+## Sesión 16 oct 2026 — la escalera 2 del `02` en verde (21/21), sin cerrar
+
+### Qué se cerró
+
+- **`exercise-02`, drills 12 a 21**: 21/21, typecheck y lint a 0. El archivo **no se da
+  por cerrado** todavía: falta el porqué del `return;` temprano del 21 (ver Pendiente).
+
+### Decisiones
+
+**El drill 12 dejó el archivo sin tests un rato.** Descomentó el `Aviso` de lectura y le puso
+una trace line ejecutable, `Aviso({ registrar: … })`. Llamar a un componente con hooks fuera
+de React lanza "Invalid hook call" al importar: 0 tests en todo el 02 y `pnpm dev` en blanco.
+Lo arregló él volviéndolo a comentar. En los componentes, la trace line va como JSX comentado.
+En el 19 repitió el descomentado, pero sin llamarlo: solo saltó un `TS6133`, y lo volvió a
+comentar.
+
+**En el 14 y el 17 se le corrigieron dos ideas.** En el 14 generalizaba que "la limpieza solo
+corre al desmontar"; vale con `[]`, no con un array que cambia (su drill 4 y el 20). En el 17
+creía que un componente desmontado se vuelve a pintar cuando el temporizador llama al setter;
+lo sacó solo con la línea del hotel de la teoría: el teléfono suena en una habitación vacía.
+
+**El test del 15 se ajustó a su texto** ("Me gusta 0 likes" / "Me gusta 1 like"), como pidió.
+Queda sin aplicar un hueco del test: con `useState(false)` el 15 y el 18 salían en verde.
+
+**A petición suya se corrigieron solo comentarios del archivo**: dos que decían algo incorrecto
+(el efecto no corre al desmontar, corre la limpieza; "puede" donde es seguro), erratas y la
+sangría de los bloques de lectura del 12 y el 19.
+
+### Pendiente
+
+- **El `return;` temprano dentro del efecto.** Su respuesta fue "no programa otro temporizador
+  porque `setShowDemoMessage` cambió su estado", la mitad: falta a qué valor lo cambió y qué
+  hace `if (!showDemoMessage) return;` con ese valor. Tiene una tabla por rellenar (1ª vez
+  frente a los 3 segundos) y dijo que **quiere reforzarlo** antes de seguir.
+- El `exercise-03`, del 6 al 13, y la pregunta de cierre del drill 3.
+
+## Sesión 17–19 oct 2026 — el `exercise-00` del 12, el ciclo de vida (9/9)
+
+### Qué se montó y se cerró
+
+- **Diagnóstico suyo:** lo que lo estancaba en `useEffect` era no entender el ciclo de vida
+  del componente. Se montó `12-custom-hooks/exercise-00` (montar, actualizar, desmontar)
+  delante del 01, con el 02 y el 03 en pausa: 7 predicciones y 2 de código (6 y 8, en el banco).
+- **9/9, typecheck y lint a 0.** Aprobados el 1, el 2 y del 4 al 9. El 3, en verde sin aprobar.
+
+### Decisiones
+
+**Las predicciones no van al banco.** Verlas vivas daría la respuesta en vez de deducirla. Se
+le ofreció montarlas después de contestar, avisando de que StrictMode duplica registros en dev.
+
+**El 5 se aprobó con su porqué tal cual** ("se desmonta… no se registran más eventos"), tras
+tres rondas, porque lo dio por definitivo. Se le dejó dicho el eslabón: al desmontar, React no
+llama a `Mapa`, y los dos `registrar` viven dentro de esa llamada.
+
+**El 6 y el 8, bien a la primera.** En el 6 subió el zoom al padre; en el 8 derivó el título de
+la prop, sin copiarlo al estado y sin efecto.
+
+**El 9 contesta el pendiente del 21 del 02** (el `return;` temprano). Corrección que se le hizo:
+lo que no se programa es el temporizador; el efecto sí corre, y lo prueba su quinto registro.
+Con esto el 02 se queda sin pendientes de contenido.
+
+**Al escribir sus trazas reescribe el enunciado.** En el 5 y el 9 borró "contados como en
+producción", y en el 9 le añadió un `registrar` al código de lectura que duplicaría un registro.
+
+### Pendiente
+
+- **El 3:** el comentario explica por qué son 2 renders, pero no contesta "¿cambia algo de lo
+  que ves dentro de `Info`?". En el chat dijo que no cambia nada; falta el porqué en el archivo.
+- Restaurar el bloque de lectura del 9 (ofrecido, sin respuesta).
+- El `exercise-00b` (identidad, `key` y el ciclo completo) sin montar, y el `exercise-03`, del 6
+  al 13.

@@ -191,8 +191,8 @@ describe("12-custom-hooks / exercise-02 — escalera 2, un temporizador de princ
     render(<AvisoConLikes />);
 
     pasar(2000);
-    fireEvent.click(screen.getByRole("button", { name: "Me gusta (0)" }));
-    expect(screen.getByRole("button", { name: "Me gusta (1)" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Me gusta 0 likes" }));
+    expect(screen.getByRole("button", { name: "Me gusta 1 like" })).toBeInTheDocument();
 
     pasar(1000);
     expect(screen.queryByText(AVISO)).not.toBeInTheDocument();

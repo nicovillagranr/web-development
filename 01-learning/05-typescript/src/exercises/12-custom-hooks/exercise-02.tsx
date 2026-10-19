@@ -86,7 +86,7 @@ export function ModalSinScroll() {
     return () => {
       document.body.style.overflow = "";
     };
-    // Array de dependencias vacío: el efecto solo corre al montar y al desmontar.
+    // Array de dependencias vacío: el efecto corre solo al montar; la limpieza, al desmontar.
   }, []);
 
   return (
@@ -200,9 +200,12 @@ export const respuesta4: string[] = [
 //    el mapa una vez y pulsas Escape una vez. ¿Cuántas veces se llama a `onClose`?
 export const respuesta5: number = 2;
 // ¿Por qué?
-// Cuando estamos en un entorno de desarrollo con 'StrictMode', pasa lo siguiente:
-// Se monta el componente -> desmonta -> Vuelve a montar
-// Cuando compilamos y subimos a producción, esto no pasa. Por eso, al pulsar Escape, se llama dos veces a `onClose`.
+// En desarrollo, StrictMode hace un ensayo adicional:
+// ejecuta el efecto, hace la limpieza y vuelve a ejecutarlo.
+// Si no existe limpieza, los listeners del primer efecto
+// no se eliminan y se acumulan.
+// Por eso, una pulsación de Escape llama dos veces
+// a onClose. En producción no ocurre ese ensayo adicional.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA — quitar con la misma función, paso a paso (drills 6 a 11)
@@ -264,7 +267,7 @@ export function colgarYQuitar(tablon: Tablon) {
   tablon.colgar(colgarAviso);
   tablon.quitar(colgarAviso);
 }
-// Ahí si funcionaría: colgarYQuitar(crearTablon())
+// Ahí sí funcionaría: colgarYQuitar(crearTablon())
 
 // 8) `colgarYQuitarClic` — lo mismo con el `document` de verdad, todavía sin
 //    React: cuelga un listener de "click" que llame a `alHacerClic` y quítalo
@@ -281,7 +284,7 @@ export function colgarYQuitarClic(alHacerClic: () => void) {
 //    deja de hacerlo. Hoy la limpieza no suelta nada.
 export function AvisarClics({ alHacerClic }: { alHacerClic: () => void }) {
   useEffect(() => {
-    // Guardamos la función para reutlizar la misma referencia al guardar y al quitar el listener.
+    // Guardamos la función para reutilizar la misma referencia al poner y al quitar el listener.
     const listener = () => alHacerClic();
     document.addEventListener("click", listener);
 
@@ -331,12 +334,12 @@ export function PreferenciaMovimiento() {
     };
     consulta.addEventListener("change", actualizarPreferencia);
 
-    // Cuándo ocurre el return?
+    // ¿Cuándo ocurre el return?
     // El return ocurre cuando el componente se desmonta o cuando el efecto se vuelve a ejecutar debido a un cambio en las dependencias (en este caso, no hay dependencias, así que solo ocurrirá al desmontarse). En ese momento, la función de limpieza se ejecuta para eliminar el listener y evitar fugas de memoria o comportamientos inesperados.
     return () => {
       consulta.removeEventListener("change", actualizarPreferencia);
     };
-    // Por qué el array de dependencias está vacío?
+    // ¿Por qué el array de dependencias está vacío?
     // No necesitamos registrar un listener nuevo cada vez que cambia reducidas. El listener que ya registramos puede consultar consulta.matches cada vez que se produce el evento.
   }, []);
 
@@ -395,19 +398,30 @@ export function PreferenciaMovimiento() {
 //          }, []);
 //          return <p>{visible ? "AVISO: Proyecto Demo" : "Aviso cerrado"}</p>;
 //        }
+// Mientras `visible` sea `true`, pinta el aviso; si es `false`, pinta "Aviso cerrado".
+// El primer render pinta "AVISO: Proyecto Demo", y después de 3 segundos, el temporizador llama a `setVisible(false)`, lo que provoca un re-render y muestra "Aviso cerrado".
 
 // 12) Predice: `Aviso` se monta y pasa 1 segundo. Escribe los registros en orden,
 //     contados como en producción.
-export const respuesta12: string[] = [];
+export const respuesta12: string[] = ["pinta", "efecto"];
 
 // 13) `AvisoDemo` — el aviso de tu `PortfolioItem`: aparece al montarse y se va a
 //     los 3 segundos. En pantalla funciona, pero el temporizador se programa en el
 //     cuerpo del componente, que corre en cada render. Tiene que programarse una
 //     sola vez, al montarse.
 export function AvisoDemo() {
+  // El aviso aparece en true, o sea que el primer render pinta AVISO
   const [visible, setVisible] = useState(true);
-  window.setTimeout(() => setVisible(false), 3000);
 
+  useEffect(() => {
+    const id = window.setTimeout(() => setVisible(false), 3000);
+    return () => {
+      window.clearTimeout(id);
+    };
+    // Array de dependencias vacío: el efecto corre solo al montar; la limpieza, al desmontar.
+  }, []);
+
+  // En base a la variable visible, react decidirá qué pintar. Si es true, pinta el aviso; si es false, no pinta nada.
   return visible ? <p role="status">AVISO: Proyecto Demo</p> : null;
 }
 
@@ -415,28 +429,33 @@ export function AvisoDemo() {
 
 // 14) Predice: `Aviso` se monta y pasan 3 segundos sin que el usuario toque nada.
 //     Escribe los registros en orden, contados como en producción.
-export const respuesta14: string[] = [];
+export const respuesta14: string[] = ["pinta", "efecto", "se acaba el tiempo", "pinta"];
 // ¿Por qué no aparece "limpieza"?
-//
+// Porque el componente sigue montado y el efecto tiene [] como array de dependencias. El cambio de visible provoca un nuevo render,
+// pero no vuelve a ejecutar el efecto ni su limpieza.
 
 // 15) `AvisoConLikes` — el aviso tiene que irse a los 3 segundos de aparecer, pulse
 //     el usuario lo que pulse. Hoy, cada clic en "Me gusta" le da 3 segundos más.
 export function AvisoConLikes() {
+  // El aviso aparece en true, o sea que el primer render pinta AVISO
   const [visible, setVisible] = useState(true);
+  // Seteamos la cantidad de likes en 0
   const [likes, setLikes] = useState(0);
 
   useEffect(() => {
+    // Después de que el componente se monta, se programa un temporizador que cambiará el estado visible a false después de 3 segundos.
     const id = window.setTimeout(() => setVisible(false), 3000);
+    // La función de limpieza cancela el temporizador si el componente se desmonta antes de que se cumplan los 3 segundos.
     return () => {
       window.clearTimeout(id);
     };
-  });
+  }, []);
 
   return (
     <div>
       {visible && <p role="status">AVISO: Proyecto Demo</p>}
       <button type="button" onClick={() => setLikes(likes + 1)}>
-        Me gusta ({likes})
+        Me gusta {likes} {likes === 1 ? "like" : "likes"}
       </button>
     </div>
   );
@@ -446,16 +465,19 @@ export function AvisoConLikes() {
 
 // 16) Predice: `Aviso` se monta y, al segundo 1, el usuario se va a otra sección:
 //     el aviso se desmonta. Escribe los registros hasta el segundo 5.
-export const respuesta16: string[] = [];
+export const respuesta16: string[] = ["pinta", "efecto", "limpieza"];
 
 // 17) Predice: lo mismo que en el 16, pero con un `Aviso` cuya limpieza se olvida
 //     de cancelar el temporizador:
 //        return () => {
 //          registrar("limpieza");
 //        };
-export const respuesta17: string[] = [];
+export const respuesta17: string[] = ["pinta", "efecto", "limpieza", "se acaba el tiempo"];
 // ¿Por qué?
-//
+// Porque la limpieza no cancela el temporizador. Cuando se cumplen
+// los 3 segundos, su función todavía se ejecuta y registra
+// "se acaba el tiempo". Sin embargo, el componente ya está desmontado,
+// por lo que no se produce un nuevo render suyo.
 
 // 18) `AvisoConLimpieza` — si el usuario se va antes de los 3 segundos, el
 //     temporizador se queda pendiente, como en el 17. Al desmontarse, cancélalo.
@@ -463,10 +485,13 @@ export function AvisoConLimpieza() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    window.setTimeout(() => setVisible(false), 3000);
+    const id = window.setTimeout(() => setVisible(false), 3000);
+    return () => {
+      window.clearTimeout(id);
+    };
   }, []);
 
-  return visible ? <p role="status">AVISO: Proyecto Demo</p> : null;
+  return <>{visible ? <p role="status">AVISO: Proyecto Demo</p> : <p>Aviso cerrado</p>}</>;
 }
 
 // ── FASE 4 · el array: si cambia, la limpieza corre antes de repetir ──────────
@@ -483,7 +508,14 @@ export function AvisoConLimpieza() {
 //          }, [texto]);
 //          return visible ? <p role="status">{texto}</p> : null;
 //        }
-export const respuesta19: number = 0;
+export const respuesta19: number = 5;
+
+// EXPLICACIÓN:
+// - Seg 0 (Montaje): Se recibe texto="Enviado" y se programa el 1er timeout para el Seg 3.
+// - Seg 2 (Update): Cambia a texto="Reenviado". Se ejecuta el cleanup (clearTimeout),
+//   cancelando el timeout del Seg 3, y se inicia un nuevo timeout de 3 segundos.
+// - Seg 5 (Desenlace): El nuevo timeout (iniciado en el Seg 2) se cumple (2 + 3 = 5),
+//   ejecutando setVisible(false) y haciendo desaparecer el aviso.
 
 // 20) Predice: el efecto de tu `PortfolioItem` de Projex, tal cual, con dos
 //     `registrar`. El usuario pulsa "Ver detalle" y pasan 3 segundos. Escribe los
@@ -498,9 +530,9 @@ export const respuesta19: number = 0;
 //            clearTimeout(id);
 //          };
 //        }, [showDemoMessage]);
-export const respuesta20: string[] = [];
+export const respuesta20: string[] = ["programa", "limpieza"];
 // ¿Por qué aparece "limpieza", si el componente no se desmonta?
-//
+// Porque el efecto se repite al cambiar `showDemoMessage`. Cuando el usuario pulsa "Ver detalle", `showDemoMessage` pasa a `true`, lo que ejecuta el efecto y programa el temporizador. Después de 3 segundos, el temporizador llama a `setShowDemoMessage(false)`, lo que provoca un re-render y hace que el efecto se ejecute de nuevo. Antes de ejecutar el nuevo efecto, React llama a la limpieza del efecto anterior, registrando "limpieza".
 
 // 21) `AvisoProyectoDemo` — tu `PortfolioItem` desde cero, solo con el aviso. Al
 //     pulsar "Ver detalle", "AVISO: Proyecto Demo" aparece y se va a los 3
@@ -508,6 +540,15 @@ export const respuesta20: string[] = [];
 //     pulsar, y si se desmonta antes de tiempo, el temporizador se cancela.
 export function AvisoProyectoDemo() {
   const [showDemoMessage, setShowDemoMessage] = useState(false);
+
+  useEffect(() => {
+    if (!showDemoMessage) return;
+
+    const id = window.setTimeout(() => setShowDemoMessage(false), 3000);
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [showDemoMessage]);
 
   return (
     <div>

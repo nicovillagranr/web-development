@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ContactoConMapa, TarjetaProyecto } from "../exercises/12-custom-hooks/exercise-00";
 import { EnfocarCerrar, BloqueoScroll, TituloMapa } from "../exercises/12-custom-hooks/exercise-01";
 import {
   ModalSinScroll,
@@ -21,7 +22,7 @@ import {
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
- * carpeta se AÑADE aquí debajo.
+ * carpeta se AÑADE aquí, en el orden de su número (el 00 va antes que el 01).
  *
  * De cada archivo, solo los drills que pintan algo: las predicciones no se montan.
  * Lo que pasa al abrir o al cerrar el mapa va dentro de una demo con su botón, como
@@ -31,6 +32,23 @@ import { Seccion, Tarjeta } from "./piezas";
  * también cuando abres con el ratón). Lo usan todas las demos donde el foco salta. */
 const ANILLO =
   "flex flex-col items-start gap-4 [&_button:focus]:outline-2 [&_button:focus]:outline-offset-4 [&_button:focus]:outline-[#ff9f0a] [&_[role=region]]:rounded-xl [&_[role=region]]:bg-white/4 [&_[role=region]]:px-4 [&_[role=region]]:py-3 [&_[role=region]:focus]:outline-2 [&_[role=region]:focus]:outline-offset-4 [&_[role=region]:focus]:outline-[#ff9f0a]";
+
+/* 00 · drill 8: el padre le cambia el título a la MISMA tarjeta, sin desmontarla,
+ * como el `rerender` del test. */
+const PROYECTOS = ["Projex", "Smart Cooler", "Store Pulse"];
+
+function DemoDestacado() {
+  const [indice, setIndice] = useState(0);
+
+  return (
+    <>
+      <button type="button" onClick={() => setIndice((indice + 1) % PROYECTOS.length)}>
+        Siguiente proyecto
+      </button>
+      <TarjetaProyecto titulo={PROYECTOS[indice] ?? "Projex"} />
+    </>
+  );
+}
 
 /* 01 · drill 1: el diálogo solo existe mientras está abierto, como el MapModal de
  * Projex. El anillo tiene que saltar de "Abrir mapa" a la ✕. */
@@ -237,9 +255,10 @@ export function Bloque12() {
           <span className="font-mono">MapModal</span>.
         </p>
         <p className="mt-6 max-w-xl text-[15px] leading-normal text-[#6e6e73]">
-          El <span className="font-mono">exercise-01</span> está cerrado (6/6). El{" "}
-          <span className="font-mono">02</span> y el <span className="font-mono">03</span>, montados
-          y sin resolver.
+          El <span className="font-mono">exercise-00</span>, el ciclo de vida, va debajo de todo
+          lo demás. El <span className="font-mono">01</span> está cerrado (6/6); el{" "}
+          <span className="font-mono">02</span> y el <span className="font-mono">03</span>, en pausa
+          hasta cerrar el <span className="font-mono">00</span>.
         </p>
       </header>
 
@@ -251,6 +270,31 @@ export function Bloque12() {
         estado="demo"
       >
         <PruebaZoom />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-00"
+        titulo="Montar, actualizar, desmontar: las tres etapas de un componente."
+      />
+
+      <Tarjeta
+        n={6}
+        nombre="ContactoConMapa"
+        mirar="Abre el mapa, pulsa Zoom un par de veces, ciérralo y vuelve a abrirlo: el zoom tiene que seguir donde lo dejaste. Con el starter vuelve a Zoom 1, porque el mapa que aparece es uno nuevo."
+        campos="botón Abrir/Cerrar mapa · al abrir: un diálogo con el botón Zoom n"
+        estado="resuelto"
+      >
+        <ContactoConMapa />
+      </Tarjeta>
+
+      <Tarjeta
+        n={8}
+        nombre="TarjetaProyecto"
+        mirar="Pulsa Siguiente proyecto: el título tiene que cambiar cada vez. Con el starter se queda en Proyecto: Projex, porque la tarjeta no se desmonta y su estado guarda el primero."
+        campos="botón Siguiente proyecto (de la demo) · un <h3> Proyecto: …"
+        estado="resuelto"
+      >
+        <DemoDestacado />
       </Tarjeta>
 
       <Seccion
@@ -338,6 +382,7 @@ export function Bloque12() {
         nombre="AvisoDemo"
         mirar="El aviso aparece y se va a los 3 segundos; Volver a montar lo repite. Con el starter en pantalla se ve igual: lo que falla es que deja otro temporizador programado, y eso lo cuenta el test."
         campos="botón Volver a montar (de la demo) · un <p role=status> con el aviso"
+        estado="resuelto"
       >
         <DemoAvisoDemo />
       </Tarjeta>
@@ -346,7 +391,8 @@ export function Bloque12() {
         n={15}
         nombre="AvisoConLikes"
         mirar="Pulsa Me gusta varias veces antes de que pasen 3 segundos. Con el starter, el aviso no se va mientras sigas pulsando; resuelto, se va a los 3 segundos del montaje."
-        campos="botón Volver a montar (de la demo) · un <p role=status> con el aviso · botón Me gusta (n)"
+        campos="botón Volver a montar (de la demo) · un <p role=status> con el aviso · botón Me gusta n like(s)"
+        estado="resuelto"
       >
         <DemoLikes />
       </Tarjeta>
@@ -355,7 +401,8 @@ export function Bloque12() {
         n={18}
         nombre="AvisoConLimpieza"
         mirar="Pulsa Ir a otra sección antes de 3 segundos. Lo que falla no se ve aquí: con el starter el temporizador sigue pendiente aunque el aviso ya no esté, y eso lo cuenta el test."
-        campos="botón Ir a otra sección/Volver (de la demo) · un <p role=status> con el aviso"
+        campos="botón Ir a otra sección/Volver (de la demo) · un <p role=status> con el aviso · un <p> Aviso cerrado"
+        estado="resuelto"
       >
         <DemoIrseAntes />
       </Tarjeta>
@@ -365,6 +412,7 @@ export function Bloque12() {
         nombre="AvisoProyectoDemo"
         mirar="Pulsa Ver detalle: el aviso tiene que irse a los 3 segundos aunque pulses Repintar el padre entre medias. Con el starter no se va nunca."
         campos="botón Repintar el padre (de la demo) · botón Ver detalle · al pulsar: un <p role=status> con el aviso"
+        estado="resuelto"
       >
         <DemoProyectoDemo />
       </Tarjeta>
