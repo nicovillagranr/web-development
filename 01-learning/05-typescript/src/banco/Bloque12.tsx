@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ContactoConMapa, TarjetaProyecto } from "../exercises/12-custom-hooks/exercise-00";
+import { PortfolioConQuitar, ProyectoDestacado } from "../exercises/12-custom-hooks/exercise-00b";
 import { EnfocarCerrar, BloqueoScroll, TituloMapa } from "../exercises/12-custom-hooks/exercise-01";
 import {
   ModalSinScroll,
@@ -255,10 +256,12 @@ export function Bloque12() {
           <span className="font-mono">MapModal</span>.
         </p>
         <p className="mt-6 max-w-xl text-[15px] leading-normal text-[#6e6e73]">
-          El <span className="font-mono">exercise-00</span>, el ciclo de vida, va debajo de todo
-          lo demás. El <span className="font-mono">01</span> está cerrado (6/6); el{" "}
-          <span className="font-mono">02</span> y el <span className="font-mono">03</span>, en pausa
-          hasta cerrar el <span className="font-mono">00</span>.
+          El <span className="font-mono">00</span> y el <span className="font-mono">00b</span>, el
+          ciclo de vida y la identidad, son la base de todo lo demás. Cerrados el{" "}
+          <span className="font-mono">00</span> (9/9), el <span className="font-mono">01</span>{" "}
+          (6/6) y el <span className="font-mono">02</span> (21/21); el{" "}
+          <span className="font-mono">03</span>, en pausa hasta cerrar el{" "}
+          <span className="font-mono">00b</span>.
         </p>
       </header>
 
@@ -295,6 +298,29 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoDestacado />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-00b"
+        titulo="Mismo tipo, mismo sitio y misma key: para React, es el mismo componente."
+      />
+
+      <Tarjeta
+        n={6}
+        nombre="PortfolioConQuitar"
+        mirar="Pulsa Ver detalle en Projex y, antes de 3 segundos, Quitar el primero: el aviso tiene que irse con Projex. Con el starter salta a Smart Cooler, que nadie ha tocado, porque la key es el índice."
+        campos="botón Quitar el primero · una tarjeta por proyecto con su <h3>, Ver detalle y el aviso"
+      >
+        <PortfolioConQuitar />
+      </Tarjeta>
+
+      <Tarjeta
+        n={9}
+        nombre="ProyectoDestacado"
+        mirar="Pulsa Ver detalle y, antes de 3 segundos, Siguiente proyecto: el proyecto nuevo tiene que llegar sin aviso. Con el starter el aviso de Projex aparece en Smart Cooler, porque la tarjeta es la misma y solo cambia su título."
+        campos="botón Siguiente proyecto · una tarjeta con su <h3>, Ver detalle y el aviso"
+      >
+        <ProyectoDestacado />
       </Tarjeta>
 
       <Seccion

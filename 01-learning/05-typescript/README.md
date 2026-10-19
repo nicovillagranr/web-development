@@ -1740,3 +1740,29 @@ producción", y en el 9 le añadió un `registrar` al código de lectura que dup
 - Restaurar el bloque de lectura del 9 (ofrecido, sin respuesta).
 - El `exercise-00b` (identidad, `key` y el ciclo completo) sin montar, y el `exercise-03`, del 6
   al 13.
+
+## Sesión 19 oct 2026 (tarde) — el `00` cerrado (9/9) y el `00b` montado (0/9)
+
+### Qué se cerró
+
+- **`exercise-00`, drill 3**: el último pendiente. Su porqué: no cambia nada porque `Info` no
+  depende de ningún estado ni prop que cambie. Se le añadió el eslabón: misma descripción →
+  React no toca la página (render sí, commit no). El 00 queda **cerrado, 9/9**.
+
+### Qué se montó
+
+**`exercise-00b` — la identidad** (lo eligió él: cerrar el 3 y montar el 00b antes de volver
+al 03). Tres teorías: tipo y sitio, la `key`, y el ciclo completo (pinta el nuevo → limpieza
+del viejo → efecto del nuevo). Los drills salen de su código: su `PortfolioItem` real,
+recortado, lo comparten el 5, el 6 y el 9, y la cabecera recuerda sus dos `key` de Projex
+(la de `Routes` y la del `.map` del Portfolio). 7 predicciones y 2 de código (6 y 9, en el
+banco). Verificado en copia: soluciones 9/9, código de lectura ejecutado, starters 9 rojos,
+typecheck y lint a 0. 281 líneas, sobre el techo, por el código de lectura.
+
+**El 3 es predicción y no código a propósito**: un componente definido dentro de otro hace
+saltar `react-hooks/static-components` en el lint del cuaderno, y un starter no puede romper
+el lint.
+
+### Pendiente
+
+- El `00b`, desde el drill 1. El `03`, del 6 al 13, sigue en pausa hasta cerrarlo.

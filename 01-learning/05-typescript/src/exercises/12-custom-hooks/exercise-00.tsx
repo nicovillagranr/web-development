@@ -111,8 +111,7 @@ export const respuesta2: number = 0;
 //        }
 export const respuesta3: number = 2;
 // ¿Cambia algo de lo que ves dentro de `Info`? ¿Por qué?
-// La primera vez que se monta 'Contacto' ocurre el primer registro de "pinta info" con ese primer render.
-// La segunda vez ocurre cuando el usuario pulsa "Abrir mapa", lo que provoca un re-render de 'Contacto' y, por ende, un segundo registro de "pinta info".
+// No cambia nada dentro de `Info` porque su contenido es estático y no depende de ningún estado o prop que cambie. Sin embargo, se registra "pinta Info" dos veces porque `Contacto` se renderiza dos veces: una al montarse inicialmente y otra cuando el usuario pulsa "Abrir mapa", lo que provoca un re-render de `Contacto` y, por ende, un segundo render de `Info` aunque su contenido no cambie.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — montar y desmontar
