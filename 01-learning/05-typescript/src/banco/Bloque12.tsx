@@ -310,6 +310,7 @@ export function Bloque12() {
         nombre="PortfolioConQuitar"
         mirar="Pulsa Ver detalle en Projex y, antes de 3 segundos, Quitar el primero: el aviso tiene que irse con Projex. Con el starter salta a Smart Cooler, que nadie ha tocado, porque la key es el índice."
         campos="botón Quitar el primero · una tarjeta por proyecto con su <h3>, Ver detalle y el aviso"
+        estado="resuelto"
       >
         <PortfolioConQuitar />
       </Tarjeta>
@@ -319,6 +320,7 @@ export function Bloque12() {
         nombre="ProyectoDestacado"
         mirar="Pulsa Ver detalle y, antes de 3 segundos, Siguiente proyecto: el proyecto nuevo tiene que llegar sin aviso. Con el starter el aviso de Projex aparece en Smart Cooler, porque la tarjeta es la misma y solo cambia su título."
         campos="botón Siguiente proyecto · una tarjeta con su <h3>, Ver detalle y el aviso"
+        estado="resuelto"
       >
         <ProyectoDestacado />
       </Tarjeta>

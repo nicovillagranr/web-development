@@ -1766,3 +1766,36 @@ el lint.
 ### Pendiente
 
 - El `00b`, desde el drill 1. El `03`, del 6 al 13, sigue en pausa hasta cerrarlo.
+
+## Sesión 19 oct 2026 (noche) — el `00b` cerrado (9/9)
+
+### Qué se cerró
+
+- **`exercise-00b`, la identidad: 9/9**, typecheck y lint a 0. Con el `00` (9/9), los dos
+  archivos del ciclo de vida quedan cerrados en dos días. Tarjetas 6 y 9 del banco → resueltas.
+
+### Decisiones
+
+**El 1 salió rojo y lo arregló él.** Escribió la TRAMPA de la Teoría 1 casi literal ("es un
+componente diferente, aunque del mismo tipo"): trataba la prop `etiqueta` como identidad. Con
+su frase al lado de la DEFINICIÓN lo corrigió, aunque primero dejó la constante sin cambiar.
+
+**El 2 y el 3 se aprobaron con el porqué incompleto**, por decisión suya de seguir. En el 2 le
+faltó el sitio (dijo la misma frase que en el 1, ahora verdadera, sin el motivo). El 3 costó
+cinco rondas: entendía el desmontaje del `Campo`, pero no que con el `<input>` se va el foco y
+las teclas siguientes no llegan. Se le ofreció la demo viva en el banco (necesitaría desactivar
+`react-hooks/static-components` en esa tarjeta), sin respuesta.
+
+**Del 4 al 9, casi todo a la primera.** El 4 explica el "Volver a montar" que el 16 oct no
+entendía. El 6, "de una". En el 7 puso la limpieza vieja antes de pintar la nueva y un
+"desconecta sur" copiado del 02; lo reordenó con el plano y el obrero del 00, y sin caer en la
+trampa de su drill 17 del 02 (un solo "pinta norte"). El porqué del 8 separa por fin "el efecto
+se repite" de "el componente es nuevo", aunque dejó la constante en 0 hasta el final.
+
+**Preguntó por qué React pinta antes de limpiar.** Se le dio la secuencia render → comparar →
+tocar la página → limpiezas → efectos, y el extra de que un render se puede descartar.
+
+### Pendiente
+
+- El `exercise-03`, del 6 al 13: lo siguiente.
+- Ofrecido y sin respuesta: corregir los comentarios del 2 (el sitio) y del 3 (el foco).

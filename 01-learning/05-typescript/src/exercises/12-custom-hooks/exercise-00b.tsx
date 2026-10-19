@@ -69,29 +69,47 @@ import { useEffect, useState } from "react";
 
 // 1) Predice: el usuario escribe "Nicolás" en el campo y pulsa "Soy empresa".
 //    ¿Qué pasa con "Nicolás"?
+
 //        function Campo({ etiqueta }: { etiqueta: string }) {
 //          const [texto, setTexto] = useState("");
-//          return <label>{etiqueta} <input value={texto} onChange={(e) => setTexto(e.target.value)} /></label>;
+//          return(
+//            <label>
+//              {etiqueta}
+//              <input value={texto} onChange={(e) => setTexto(e.target.value)} />
+//            </label>
+//          );
 //        }
+
 //        function Contacto() {
 //          const [empresa, setEmpresa] = useState(false);
 //          return (
 //            <section>
 //              <button onClick={() => setEmpresa(true)}>Soy empresa</button>
-//              {empresa ? <Campo etiqueta="Empresa" /> : <Campo etiqueta="Nombre" />}
+
+//               Aquí está la parte importante
+//              {empresa
+//                  ? <Campo etiqueta="Empresa" />
+//                  : <Campo etiqueta="Nombre" />}
+//            Por más que cambie `empresa` de false a true, en ambos casos estás renderizando el mismo tipo de componente: <Campo />
 //            </section>
 //          );
 //        }
+
+// ¿Qué pasa?
+// Nicolás en el input persiste, porque React considera que es el mismo componente <Campo /> y mantiene su estado interno.
+// Porque React no destruye y vuelve a crear todos los componentes en cada render. React intenta reutilizar los componentes que ya existen.
+// Aunque cambie empresa de false a true, en ambos casos estás renderizando el mismo tipo de componente: <Campo />
+
 export type Queda = "se conserva" | "se borra";
-export const respuesta1: Queda = "se borra";
+export const respuesta1: Queda = "se conserva";
 
 // 2) Predice: el mismo `Contacto`, con el ternario partido en dos `&&`. Mismos
 //    pasos: ¿qué pasa con "Nicolás"?
-//              {empresa && <Campo etiqueta="Empresa" />}
-//              {!empresa && <Campo etiqueta="Nombre" />}
-export const respuesta2: Queda = "se conserva";
+//           {empresa && <Campo etiqueta="Empresa" />} Si el estado de empresa se monta con true, se renderiza el componente <Campo /> con la "Empresa"
+//           {!empresa && <Campo etiqueta="Nombre" />} Si el estado de empresa se monta con false, se renderiza el componente <Campo /> con la "Nombre"
+export const respuesta2: Queda = "se borra";
 // ¿Por qué, si es el mismo `Campo` que en el 1?
-//
+// Porque React considera que son dos componentes distintos, aunque sean del mismo tipo. Al cambiar el estado de empresa, React desmonta el componente <Campo /> con la "Nombre" y monta un nuevo componente <Campo /> con la "Empresa", perdiendo así el estado interno del primer componente y borrando el texto "Nicolás".
 
 // 3) Predice: `Campo` ahora está definido DENTRO de `Formulario`, y el texto vive
 //    en el padre. El usuario hace clic en el campo y teclea "Hola". ¿Qué queda escrito?
@@ -102,9 +120,10 @@ export const respuesta2: Queda = "se conserva";
 //          }
 //          return <Campo />;
 //        }
-export const respuesta3: string = "Hola";
+export const respuesta3: string = "H";
+// Respuesta: "H".
 // ¿Por qué?
-//
+// Porque el componente Campo se define dentro de Formulario, lo que significa que cada vez que Formulario se renderiza, se crea una nueva instancia de Campo. Cuando el usuario hace clic en el campo y teclea "Hola", el estado texto se actualiza y provoca un re-render de Formulario, lo que a su vez crea una nueva instancia de Campo. Sin embargo, el valor del input sigue siendo "H" porque el estado texto se mantiene entre renders y no se pierde al crear una nueva instancia de Campo.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — la key
@@ -139,16 +158,23 @@ export const respuesta3: string = "Hola";
 //        const [vez, setVez] = useState(0);
 //        <button onClick={() => setVez(vez + 1)}>Volver a montar</button>
 //        <MeGusta key={vez} />
-export const respuesta4: number = 2;
+export const respuesta4: number = 0;
 // ¿Por qué, si `MeGusta` sigue en el mismo sitio?
-//
+// Porque al cambiar la key, React desmonta el componente viejo y monta uno nuevo, reiniciando su estado interno.
 
 // Tu `PortfolioItem`, recortado. Lo usan los drills 5, 6 y 9, y no se toca.
 function PortfolioItem({ titulo }: { titulo: string }) {
+  // Seteamos el mostrar el mensaje en false para que no se muestre al inicio
   const [showDemoMessage, setShowDemoMessage] = useState(false);
-
+  // Al montarse el componente, osea el primer render ->
+  // Si showDemoMessage sigue en false, no hacemos nada.
+  // Si showDemoMessage cambia a true, seteamos un timeout de 3 segundos para que vuelva a false.
+  // Luego de esos 3 segundos, showDemoMessage vuelve a false y ejecutamos la limpieza del timeout
   useEffect(() => {
-    if (!showDemoMessage) return;
+    if (!showDemoMessage) {
+      return; // Si showDemoMessage es false, no hacemos nada
+    }
+    // Si showDemoMessage pasa a true, seteamos un timeout de 3 segundos para que vuelva a false
     const id = setTimeout(() => setShowDemoMessage(false), 3000);
     return () => clearTimeout(id);
   }, [showDemoMessage]);
@@ -163,6 +189,7 @@ function PortfolioItem({ titulo }: { titulo: string }) {
       >
         Ver detalle
       </button>
+      {/* Cuando showDemoMessage se setea en true, se renderiza el <p> con el aviso */}
       {showDemoMessage && <p role="status">AVISO: Proyecto Demo</p>}
     </article>
   );
@@ -172,14 +199,18 @@ function PortfolioItem({ titulo }: { titulo: string }) {
 //    como key. El usuario pulsa "Ver detalle" en Projex y, antes de los 3 segundos,
 //    "Quitar el primero". ¿En qué tarjeta se ve el aviso?
 export type DondeAviso = "Smart Cooler" | "Store Pulse" | "en ninguna";
-export const respuesta5: DondeAviso = "en ninguna";
+export const respuesta5: DondeAviso = "Smart Cooler";
 // ¿Por qué?
-//
+// La key que estamos utilizando es una key genérica basada en el índice del array, por lo que al quitar el primer elemento, el segundo elemento pasa a ocupar la posición del primero y hereda el estado del componente anterior, incluyendo el aviso que estaba mostrando. Por eso, el aviso se ve en la tarjeta de "Smart Cooler".
+// Para arreglar esto, el PortfolioItem debería tener key={proyecto.id}, en vez de key={i}, para que cada tarjeta tenga su propia identidad y no herede el estado del componente anterior al quitar un proyecto.
 
 // 6) `PortfolioConQuitar` — al quitar un proyecto, su aviso salta a la tarjeta que
 //    ocupa su lugar, que el usuario ni ha tocado. Haz que cada aviso se quede con su
 //    proyecto y se vaya con él.
-type Proyecto = { id: number; titulo: string };
+type Proyecto = {
+  id: number;
+  titulo: string;
+};
 
 const PROYECTOS: Proyecto[] = [
   { id: 1, titulo: "Projex" },
@@ -195,8 +226,9 @@ export function PortfolioConQuitar() {
       <button type="button" onClick={() => setProyectos(proyectos.slice(1))}>
         Quitar el primero
       </button>
-      {proyectos.map((proyecto, i) => (
-        <PortfolioItem key={i} titulo={proyecto.titulo} />
+      {proyectos.map((proyecto) => (
+        // Para que cada aviso se quede con su proyecto y se vaya con él, usamos `proyecto.id` como key en vez de `i`.
+        <PortfolioItem key={proyecto.id} titulo={proyecto.titulo} />
       ))}
     </section>
   );
@@ -228,9 +260,10 @@ export function PortfolioConQuitar() {
  *    lo llama: de él solo corren las limpiezas.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 7) Predice: la `Sala` del drill 4 del 02, con key y registrando cuándo pinta. Se
-//    monta con "norte" y el usuario pulsa "Ir al sur". Escribe los registros en
-//    orden, contados como en producción.
+// 7) Predice: la `Sala` del drill 4 del 02, con key y registrando cuándo pinta.
+//      - Se monta con "norte" y el usuario pulsa "Ir al sur"
+//     Escribe los registros en orden, tal como los verías en la consola.
+
 //        function Sala({ nombre, registrar }: { nombre: string; registrar: (texto: string) => void }) {
 //          registrar(`pinta ${nombre}`);
 //          useEffect(() => {
@@ -241,11 +274,21 @@ export function PortfolioConQuitar() {
 //        }
 //        // en el padre:
 //        <Sala key={nombre} nombre={nombre} registrar={registrar} />
-export const respuesta7: string[] = [];
 
-// 8) Predice: la misma `Sala`, ahora SIN key y con un contador. El usuario pulsa
-//    "Enviar" dos veces en la sala norte y después "Ir al sur". ¿Qué número
-//    muestra el contador en la sala sur?
+export const respuesta7: string[] = [
+  "pinta norte",
+  "conecta norte",
+  "pinta sur",
+  "desconecta norte",
+  "conecta sur",
+  // Si más adelante se desmonta Sala con nombre "sur":
+  // "desconecta sur",
+];
+
+// 8) Predice: la misma `Sala`, ahora SIN key y con un contador.
+//  - El usuario pulsa "Enviar" dos veces en la sala norte y después "Ir al sur".
+//  ¿Qué número muestra el contador en la sala sur?
+
 //        function Sala({ nombre, registrar }: { nombre: string; registrar: (texto: string) => void }) {
 //          const [mensajes, setMensajes] = useState(0);
 //          useEffect(() => {
@@ -256,25 +299,36 @@ export const respuesta7: string[] = [];
 //        }
 //        // en el padre, ahora sin key:
 //        <Sala nombre={nombre} registrar={registrar} />
-export const respuesta8: number = 0;
-// ¿Por qué? Al cambiar de sala el efecto se repite: ¿no es eso volver a montar?
-//
+
+export const respuesta8: number = 2;
+// ¿Por qué, si el efecto se repite, no vuelve a montar la Sala?
+// Porque cambiar nombre modifica una dependencia del useEffect,
+// pero no cambia la identidad del componente.
+// Como Sala conserva el mismo tipo, sitio y key (no tiene una key explícita),
+// React mantiene su estado interno: mensajes sigue valiendo 2.
+// El efecto ejecuta la limpieza de "norte" y después conecta "sur",
+// pero eso no reinicia el contador.
 
 // 9) `ProyectoDestacado` — enseña un proyecto cada vez. Si el usuario pulsa "Ver
 //    detalle" y pasa al siguiente antes de los 3 segundos, el aviso aparece en el
 //    proyecto nuevo, que nadie ha pedido ver. Cada proyecto tiene que llegar con su
 //    tarjeta limpia, y el temporizador del anterior no puede quedarse pendiente.
 export function ProyectoDestacado() {
+  // Seteamos el índice del proyecto que se va a mostrar, empezando por 0
   const [indice, setIndice] = useState(0);
+  // Obtenemos el proyecto actual según el índice
   const proyecto = PROYECTOS[indice];
-  if (!proyecto) return null;
+  // Si no hay proyecto, no renderizamos nada
+  if (!proyecto) {
+    return null;
+  }
 
   return (
     <section>
       <button type="button" onClick={() => setIndice((indice + 1) % PROYECTOS.length)}>
         Siguiente proyecto
       </button>
-      <PortfolioItem titulo={proyecto.titulo} />
+      <PortfolioItem key={proyecto.id} titulo={proyecto.titulo} />
     </section>
   );
 }
