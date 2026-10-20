@@ -1799,3 +1799,57 @@ tocar la página → limpiezas → efectos, y el extra de que un render se puede
 
 - El `exercise-03`, del 6 al 13: lo siguiente.
 - Ofrecido y sin respuesta: corregir los comentarios del 2 (el sitio) y del 3 (el foco).
+
+## Sesión 19-20 oct 2026 — el `03` cerrado (17/17), con una escalera 2 de refuerzo
+
+### Qué se cerró
+
+- **`exercise-03`, del 6 al 13.** El 6 salió al 2º intento: creía que la ✕ ya estaba en el
+  DOM cuando corre el manejador. El 7, el 8, el 10, el 11 y el 12 salieron a la primera. El 8 es
+  el mismo hecho del foco que en el 3 del 00b costó cinco rondas. El porqué del 9 lo contestó en
+  el chat ("no hay forma de saberlo"). El 13 llevó cuatro intentos y, ya en verde, lo frenó él:
+  a "¿por qué ya no hace falta la bandera?" contestó *"No sé. Tengo que reforzar eso"*.
+- **Escalera 2, del 14 al 17** (ver abajo). El 14 salió al 2º intento (`enfoca: 1`). En el 15
+  el porqué se saltaba el `else` de la 2ª pasada, y Claude corrigió solo esa frase porque él lo
+  pidió. El 16 se aprobó con el porqué "más simple" y el eslabón dicho: la pasada que frena la
+  bandera tampoco iba a hacer nada. El 17, a la primera. Pregunta de cierre contestada: en
+  producción hay una sola pasada y se la come la bandera.
+- **El 03 queda cerrado en 17/17**, con typecheck y lint a 0. Tarjetas 7, 12, 13 y 17 del banco
+  → resueltas.
+
+### Qué se montó
+
+**Escalera 2, "la libreta y la foto"** (drills 14-17, debajo de su 13 y a petición suya). La
+teoría: que un efecto corra no quiere decir que haga algo. El `if (abierto)` mira la foto, que
+es igual en las dos pasadas de StrictMode. La bandera es una libreta que la 1ª pasada le cambia
+a la 2ª. 14, 15 y 16 son predicciones sobre su 13 y su versión vieja. El 17 es código: un mapa
+que nace abierto, como su `MapModal` real, donde la bandera deja la ✕ sin foco en producción
+(es el 10 al revés). Verificado en copia: soluciones 17/17, código de lectura ejecutado, y las
+alternativas `else` e "ida en el manejador" en rojo. 538 líneas, aceptadas por ser escalera.
+
+**Banco:** en la tarjeta 17 están los dos mapas lado a lado, `true` y `false`, como pidió él.
+En `pnpm dev` el starter se ve igual que la solución. Se le ofreció una copia fuera de
+StrictMode para ver el fallo de producción, y no la pidió.
+
+### Decisiones
+
+**Su diagnóstico: los flujos los entiende y lo que le confunde son los términos** (bandera,
+montaje, render, re-render). Los archivos le dan la razón: las predicciones salen bien, y el
+fallo está en la prosa ("el efecto no se ejecuta" cuando corre y es el `if` el que no deja
+pasar). Se le dio un glosario con una sola analogía, la casa: el plano, la obra, el vigilante y
+su libreta.
+
+**Dos fallos del material, de Claude.** La tarjeta 7 del banco daba la respuesta del 8, y se
+quitó antes de que la viera. En el 13, una tabla decía que sus dos líneas nuevas "no servían
+de mucho"; la del manejador de la ✕ estaba en el sitio bueno con el ref equivocado. La borró
+por esa frase, y eso le costó una ronda.
+
+**Hueco conocido del test del 17:** dejar la bandera arrancando en `useRef(!abiertoAlInicio)`
+también pasa. Si aparece, se le pregunta.
+
+### Pendiente
+
+- Siguiente según el plan de la 12: montar el `exercise-04` (eventos nativos: `KeyboardEvent`,
+  `target` vs `currentTarget`).
+- Ofrecidos y sin respuesta: la copia del 17 fuera de StrictMode, y corregir los comentarios
+  del 2 y del 3 del 00b.

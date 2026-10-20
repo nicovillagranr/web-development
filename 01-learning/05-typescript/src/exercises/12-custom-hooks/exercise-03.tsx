@@ -26,18 +26,19 @@ import { useEffect, useRef, useState } from "react";
  *   TEORÍA 1 · qué es un ref y cómo se tipa      →  drills 1 a 3
  *   TEORÍA 2 · cuándo `.current` vale `null`      →  drills 4 y 5
  *   ESCALERA · ¿en el manejador o en un efecto?   →  drills 6 a 13
+ *   ESCALERA 2 · la libreta y la foto             →  drills 14 a 17
  *
- * ▸ EJERCICIO — 13 drills, en orden. ❌ Prohibido `any` y `as`.
+ * ▸ EJERCICIO — 17 drills, en orden. ❌ Prohibido `any` y `as`.
  *     pnpm test:run src/exercises/12-custom-hooks/exercise-03.test.tsx
  *     pnpm typecheck
  *
- *   Todos los starters están rotos a propósito. Compilan 12 de 13: el que no, lo
- *   verás en el typecheck. Y 1 de los 13 puede pasar el test con un error de tipos
- *   dentro: corre siempre los dos comandos. Las predicciones son la 3, 5, 6 y de la
- *   8 a la 11; todas menos la 8 llevan un `// ¿Por qué?` que reviso yo.
+ *   Todos los starters están rotos a propósito. Compilan 16 de 17: el que no, lo
+ *   verás en el typecheck. Y 1 de los 17 puede pasar el test con un error de tipos
+ *   dentro: corre siempre los dos comandos. Predicciones: 3, 5, 6, 8-11 y 14-16;
+ *   todas menos la 8 y la 14 llevan un `// ¿Por qué?` que reviso yo.
  *   ¿Atascado? Las pistas están en `exercise-03.pistas.md`, de una en una.
  *
- * 👁️ Los componentes de los drills 1, 2, 4, 7, 12 y 13 están montados en el banco (pestaña 12).
+ * 👁️ Los componentes de los drills 1, 2, 4, 7, 12, 13 y 17 están montados en el banco (pestaña 12).
  * ===========================================================================*/
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -241,16 +242,25 @@ export const respuesta5: ContenidoPanel = "null";
 //        }}
 //    ¿Qué imprime el `console.log`?
 export type ContenidoCerrar = "null" | "el botón ✕";
-export const respuesta6: ContenidoCerrar = "el botón ✕";
+export const respuesta6: ContenidoCerrar = "null";
 // ¿Por qué?
-//
+// Al ejecutar el manejador, primero se llama a setAbierto(true), lo que solicita un renderizado del componente. Sin embargo, este renderizado no ocurre de inmediato; React programa la actualización y continúa ejecutando el código en el manejador. Por lo tanto, cuando se llega al console.log, el mapa aún no se ha pintado y cerrarRef.current sigue siendo null, ya que el botón ✕ todavía no existe en el DOM.
 
 // 7) `MapaSoloIda` — la mitad de ida del 13: al abrir el mapa, el foco tiene que
 //    caer en la ✕. Hoy el manejador lo intenta justo después de `setAbierto(true)`,
 //    y el foco se queda en "Abrir mapa".
 export function MapaSoloIda() {
+  // Seteamos el estado inicial del mapa como cerrado (false)
   const [abierto, setAbierto] = useState(false);
+  // Creamos un ref para el botón de cerrar, que es el que queremos enfocar al abrir el mapa
   const cerrarRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (abierto) {
+      // Si el mapa está abierto, enfocamos el botón de cerrar
+      cerrarRef.current?.focus();
+    }
+  }, [abierto]);
 
   return (
     <div>
@@ -258,7 +268,6 @@ export function MapaSoloIda() {
         type="button"
         onClick={() => {
           setAbierto(true);
-          cerrarRef.current?.focus();
         }}
       >
         Abrir mapa
@@ -284,7 +293,7 @@ export function MapaSoloIda() {
 // 8) Predice: en `MapaSoloIda`, el foco está en la ✕ y la pulsas. La ✕ desaparece
 //    con el mapa, y nadie mueve el foco. ¿Dónde queda?
 export type DondeQueda = "en Abrir mapa" | "en ninguna parte: vuelve al <body>";
-export const respuesta8: DondeQueda = "en Abrir mapa";
+export const respuesta8: DondeQueda = "en ninguna parte: vuelve al <body>";
 
 // 9) Predice: un efecto que vigila `abierto` y apunta cada vez que corre:
 //        useEffect(() => {
@@ -292,9 +301,10 @@ export const respuesta8: DondeQueda = "en Abrir mapa";
 //        }, [abierto]);
 //    El mapa se monta cerrado, el usuario lo abre y después lo cierra. Escribe los
 //    registros en orden, contados como en producción.
-export const respuesta9: string[] = [];
-// ¿Por qué? Desde dentro del efecto, ¿en qué se diferencian el primero y el último?
-//
+export const respuesta9: string[] = ["efecto con false", "efecto con true", "efecto con false"];
+// ¿Por qué? No hay forma de saber si el efecto está en false por el montaje o por el cierre que le haga el usuario.
+// Desde dentro del efecto, ¿en qué se diferencian el primero y el último?
+// Si hablamos desde dentro del efecto, podemos pensar en un useState que inicia en false. Cuando el componente se monta, el efecto se ejecuta y registra "efecto con false". Luego, cuando el usuario abre el mapa, setAbierto(true) se llama, lo que provoca un re-render y el efecto se ejecuta nuevamente, registrando "efecto con true". Finalmente, cuando el usuario cierra el mapa, setAbierto(false) se llama, lo que provoca otro re-render y el efecto se ejecuta una vez más, registrando "efecto con false". Por lo tanto, los registros reflejan los cambios en el estado de abierto a lo largo del tiempo.
 
 // 10) Predice: una forma de esquivar el montaje, con un ref que guarda un booleano:
 //        const primeraVezRef = useRef(true);
@@ -303,13 +313,15 @@ export const respuesta9: string[] = [];
 //            primeraVezRef.current = false;
 //            return;
 //          }
-//          if (!abierto) abrirRef.current?.focus();
+//          if (!abierto){
+//          abrirRef.current?.focus();
+//          }
 //        }, [abierto]);
 //     En `pnpm dev`, con StrictMode, ¿le roba el foco a la página al montarse?
 export type Robo = "sí, lo roba" | "no, lo deja donde estaba";
-export const respuesta10: Robo = "no, lo deja donde estaba";
+export const respuesta10: Robo = "sí, lo roba";
 // ¿Por qué?
-//
+// En StrictMode, React renderiza los componentes dos veces en desarrollo para ayudar a identificar efectos secundarios y problemas de estado. Esto significa que el efecto se ejecuta dos veces durante el montaje inicial. En la primera ejecución, primeraVezRef.current es true, por lo que se establece en false y se retorna, evitando que se ejecute el código que enfoca el botón. Sin embargo, en la segunda ejecución del efecto (que ocurre inmediatamente después), primeraVezRef.current ya es false, por lo que el código que enfoca el botón se ejecuta, robando el foco a la página al montarse.
 
 // 11) Clasifica: ¿dónde va cada trabajo, en el manejador del clic o en un efecto?
 //        a · enfocar la ✕, que acaba de aparecer al abrir el mapa
@@ -318,26 +330,22 @@ export const respuesta10: Robo = "no, lo deja donde estaba";
 //        d · llevar el foco al panel al pulsar "Ir al mapa" (tu drill 4)
 export type Sitio = "manejador" | "efecto";
 export const respuesta11: Record<"a" | "b" | "c" | "d", Sitio> = {
-  a: "manejador",
-  b: "efecto",
-  c: "manejador",
-  d: "efecto",
+  a: "efecto",
+  b: "manejador",
+  c: "efecto",
+  d: "manejador",
 };
 // ¿Por qué la d puede ir en el manejador y la a no?
-//
+// La d puede ir en el manejador porque el usuario está interactuando directamente con la interfaz al pulsar "Ir al mapa", lo que significa que el cambio de foco debe ocurrir inmediatamente en respuesta a esa acción. En cambio, la a no puede ir en el manejador porque el botón de cerrar (✕) aún no existe en el DOM en el momento en que se ejecuta el manejador; por lo tanto, debemos esperar a que React renderice el componente y luego usar un efecto para enfocar la ✕ una vez que esté presente en la página.
 
 // 12) `LimpiarBusqueda` — "Limpiar" vacía el campo y deja el foco en él, listo para
 //     escribir otra ciudad. Hoy lo hace un efecto, y al montarse el buscador le roba
 //     el foco a la página. Tiene que pasar solo al pulsar "Limpiar".
 export function LimpiarBusqueda() {
+  // Seteamos el estado inicial del campo de texto como vacío
   const [texto, setTexto] = useState("");
+  // Creamos un ref para el campo de texto, que es el que queremos enfocar al limpiar la búsqueda
   const campoRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (texto === "") {
-      campoRef.current?.focus();
-    }
-  }, [texto]);
 
   return (
     <div>
@@ -346,8 +354,17 @@ export function LimpiarBusqueda() {
         aria-label="Ciudad"
         value={texto}
         onChange={(event) => setTexto(event.target.value)}
+        placeholder="Escribe una ciudad"
       />
-      <button type="button" onClick={() => setTexto("")}>
+      <button
+        type="button"
+        onClick={() => {
+          // Al pulsar "Limpiar", vaciamos el campo de texto
+          setTexto("");
+          // Después de limpiar el campo, enfocamos el input para que el usuario pueda escribir otra ciudad sin tener que hacer clic en él.
+          campoRef.current?.focus();
+        }}
+      >
         Limpiar
       </button>
     </div>
@@ -358,27 +375,162 @@ export function LimpiarBusqueda() {
 //    mapa, el foco cae en la ✕; al cerrarlo con la ✕, vuelve a "Abrir mapa", para
 //    que quien usa teclado siga donde estaba. Un ref para cada botón.
 //    Sin `autoFocus` ni `getElementById`: aquí se entrena el ref.
+
 export function MapaConRetorno() {
-  // El el mapa inicialmente está cerrado, así que abierto empieza en false.
+  // El mapa empieza cerrado.
   const [abierto, setAbierto] = useState(false);
+
+  // Referencias a los dos botones.
   const abrirRef = useRef<HTMLButtonElement>(null);
   const cerrarRef = useRef<HTMLButtonElement>(null);
 
-  const montajeInicialRef = useRef(true);
-  // Indica si todavía estamos en la primera ejecución del efecto.
-
+  // Al abrir, esperamos a que React monte el botón ✕.
   useEffect(() => {
-    if (montajeInicialRef.current) {
-      montajeInicialRef.current = false;
-      return; // Omite el enfoque durante la primera ejecución del efecto.
-    }
-
     if (abierto) {
       cerrarRef.current?.focus();
-    } else {
-      abrirRef.current?.focus();
     }
   }, [abierto]);
+
+  // Al cerrar, devolvemos el foco al botón que ya existe.
+  function handleCerrar() {
+    setAbierto(false);
+    abrirRef.current?.focus();
+  }
+
+  return (
+    <div>
+      <button
+        ref={abrirRef}
+        type="button"
+        onClick={() => {
+          setAbierto(true);
+        }}
+      >
+        Abrir mapa
+      </button>
+
+      {abierto && (
+        <div role="dialog" aria-label="Mapa de ubicación">
+          <button ref={cerrarRef} type="button" aria-label="Cerrar mapa" onClick={handleCerrar}>
+            ×
+          </button>
+
+          <p>Aquí iría el mapa.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA 2 — la libreta y la foto (drills 14 a 17)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * LA IDEA
+ *   Que un efecto corra no quiere decir que haga algo: eso lo deciden los `if` de
+ *   dentro. Y un `if` puede mirar dos cosas muy distintas:
+ *     · la foto: el estado o las props de ESTE render (`abierto`). Si el efecto
+ *       corre dos veces con la misma foto, hace lo mismo las dos veces.
+ *     · la libreta: un ref que el propio efecto escribe (`primeraVezRef`). Cada
+ *       pasada le deja algo distinto a la siguiente, así que el resultado depende
+ *       de cuántas veces corra: dos en `pnpm dev`, una en producción.
+ *
+ *   Una guardia existe para frenar un trabajo concreto. Antes de poner una,
+ *   pregúntate cuál.
+ *
+ * 🧠 ANALOGÍA — el vigilante del 01. Con la foto decide por lo que ve: si la puerta
+ *    está cerrada, no hace nada, dé las rondas que dé. Con la libreta ("la primera
+ *    ronda no cuenta") decide por cuántas rondas lleva, y el ensayo de StrictMode
+ *    le hace dar una de más.
+ *
+ * 🗣️ LAS PIEZAS
+ *     `if (abierto) …` → guardia que lee el estado
+ *     `primeraVezRef` → bandera: un ref que no es del DOM y que escribe el efecto
+ *
+ * ⚠️ TRAMPA — creer que la bandera "se salta el montaje". Se salta la PRIMERA
+ *    pasada del efecto, traiga lo que traiga, y cuántas pasadas hay al montarse
+ *    depende de si estás en `pnpm dev` o en producción.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// 14) Predice: tu `MapaConRetorno` del 13, tal como lo dejaste. Su efecto, resumido:
+//        useEffect(() => {
+//          if (abierto) cerrarRef.current?.focus();
+//        }, [abierto]);
+//     Se monta cerrado, en `pnpm dev` con StrictMode. ¿Cuántas veces corre el
+//     efecto al montarse, y en cuántas de ellas mueve el foco?
+export type Cuenta = { corre: number; enfoca: number };
+export const respuesta14: Cuenta = { corre: 2, enfoca: 0 };
+
+// 15) Predice: tu versión vieja del 13, la de la bandera, en el mismo montaje:
+
+//        Definimos el valor inicial de la bandera como true
+//        const primeraVezRef = useRef(true);
+//        useEffect(() => {
+//          Si primeraVezRef sigue siendo true, la cambiamos a false y salimos del efecto
+//          if (primeraVezRef.current) {
+//            primeraVezRef.current = false;
+//            return;
+//          }
+//          if (abierto){
+//            cerrarRef.current?.focus();
+//          }
+//          else{
+//           abrirRef.current?.focus();
+//          }
+//        }, [abierto]);
+//     Apunta lo que lee cada pasada justo al empezar, en orden: la libreta
+//     (`primeraVezRef.current`) y la foto (`abierto`).
+
+// Primera pasada:
+// primeraVezRef.current = true, abierto = false
+// Segunda pasada:
+// primeraVezRef.current = false, abierto = false
+export type Lecturas = { libreta: boolean[]; foto: boolean[] };
+export const respuesta15: Lecturas = { libreta: [true, false], foto: [false, false] };
+// ¿Por qué?
+// Al estar en StrictMode, el efecto se ejecuta dos veces al montarse. En la primera pasada, primeraVezRef.current es true y abierto es false, por lo que la guardia detiene la ejecución del efecto antes de que se intente enfocar cualquier elemento. En la segunda pasada, primeraVezRef.current ya es false, así que la guardia ya no la detiene; y como abierto sigue siendo false, entra al else y enfoca "Abrir mapa", robándole el foco a la página. Por lo tanto, la libreta cambia de true a false entre las dos pasadas, mientras que la foto permanece en false en ambas pasadas.
+// Entre la 1ª pasada y la 2ª, ¿quién cambió la libreta? ¿Y la foto?
+// Entre la primera y segunda, quien cambió la libreta fue el propio efecto, no el usuario ni React. La foto (abierto) no cambió entre las dos pasadas, ya que el estado del componente no se modificó durante el montaje inicial.
+
+// 16) Predice: dos versiones del 13, montadas cerradas en `pnpm dev`:
+//        A · la bandera del 15 y, debajo, solo el `if (abierto)` de la ida
+//        B · solo el `if (abierto)` de la ida, sin bandera (tu 13)
+//     ¿Cuál le roba el foco a la página al montarse?
+export type CualRoba = "A" | "B" | "las dos" | "ninguna";
+export const respuesta16: CualRoba = "ninguna";
+// ¿Por qué?
+// A: La bandera frena la primera pasada del efecto con return.
+// B: Si abierto es false, el if no se ejecuta.
+// En ninguna versión se enfoca "Abrir mapa" al montarse.
+
+// 17) `MapaQueNaceAbierto` — tu `MapModal` de verdad no espera a ningún clic: se
+//     monta ya abierto, y en ese momento el foco tiene que caer en la ✕. Este mapa
+//     empieza como diga `abiertoAlInicio`. Hoy, si nace abierto, la ✕ se queda sin
+//     foco en producción (en `pnpm dev`, de casualidad, sí lo recibe). Tiene que
+//     funcionar naciendo abierto y naciendo cerrado, en los dos modos, y sin robar
+//     el foco cuando nace cerrado.
+//     Sin `autoFocus`: en producción valdría, pero aquí se entrena el efecto.
+//     💡 `abiertoAlInicio` solo cuenta al nacer, por eso puede ir a `useState`: es
+//        el valor inicial, no una copia que haya que mantener al día (drill 8 del 00).
+
+export function MapaQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: boolean }) {
+  // El mapa nace abierto o cerrado según la prop.
+  const [abierto, setAbierto] = useState(abiertoAlInicio);
+  const abrirRef = useRef<HTMLButtonElement>(null);
+  const cerrarRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    // Si el mapa está abierto, ponemos el foco en la ✕.
+    // Si está cerrado, no hacemos nada.
+    if (abierto) {
+      cerrarRef.current?.focus();
+    }
+  }, [abierto]);
+
+  function cerrar() {
+    setAbierto(false);
+    // Al cerrar el mapa, devolvemos el foco al botón para abrirlo.
+    abrirRef.current?.focus();
+  }
 
   return (
     <div>
@@ -388,18 +540,15 @@ export function MapaConRetorno() {
 
       {abierto && (
         <div role="dialog" aria-label="Mapa de ubicación">
-          <button
-            ref={cerrarRef}
-            type="button"
-            aria-label="Cerrar mapa"
-            onClick={() => setAbierto(false)}
-          >
+          <button ref={cerrarRef} type="button" aria-label="Cerrar mapa" onClick={cerrar}>
             ×
           </button>
+
           <p>Aquí iría el mapa.</p>
         </div>
       )}
     </div>
   );
 }
-// <EnfocarConRef />  ·  <CampoCiudad />  ·  <PanelEnfocable />  ·  <MapaSoloIda />  ·  <LimpiarBusqueda />  ·  <MapaConRetorno />
+
+// <EnfocarConRef />  ·  <CampoCiudad />  ·  <PanelEnfocable />  ·  <MapaSoloIda />  ·  <LimpiarBusqueda />  ·  <MapaConRetorno />  ·  <MapaQueNaceAbierto abiertoAlInicio />

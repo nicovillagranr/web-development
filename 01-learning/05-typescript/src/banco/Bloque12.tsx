@@ -19,6 +19,7 @@ import {
   MapaSoloIda,
   LimpiarBusqueda,
   MapaConRetorno,
+  MapaQueNaceAbierto,
 } from "../exercises/12-custom-hooks/exercise-03";
 import { Seccion, Tarjeta } from "./piezas";
 
@@ -219,6 +220,34 @@ function DemoCampo() {
       </button>
       {abierto && <CampoCiudad />}
     </>
+  );
+}
+
+/* 03 · drill 17: dos mapas lado a lado, uno con `abiertoAlInicio` en true y otro en
+ * false, para ver el contraste. No existen hasta que pulsas "Montar los dos", y entonces
+ * nacen a la vez: si nacieran al cargar la pestaña, el abierto le robaría el foco a la
+ * página. Pulsarlo otra vez cambia la `key`: los desmonta y los monta de nuevo. */
+function DemoNaceAbierto() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Montar los dos
+      </button>
+      {vez > 0 && (
+        <div className="flex flex-wrap gap-10">
+          <div className="flex flex-col items-start gap-3">
+            <p>abiertoAlInicio = true</p>
+            <MapaQueNaceAbierto key={vez} abiertoAlInicio />
+          </div>
+          <div className="flex flex-col items-start gap-3">
+            <p>abiertoAlInicio = false</p>
+            <MapaQueNaceAbierto key={vez} abiertoAlInicio={false} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -485,8 +514,9 @@ export function Bloque12() {
       <Tarjeta
         n={7}
         nombre="MapaSoloIda"
-        mirar="Pulsa Abrir mapa: el anillo tiene que saltar a la ✕; con el starter se queda en Abrir mapa. Después pulsa la ✕: el anillo desaparece porque el foco vuelve al <body>, que es tu predicción del 8."
+        mirar="Pulsa Abrir mapa: el anillo tiene que saltar a la ✕; con el starter se queda en Abrir mapa. Después pulsa la ✕ y mira dónde queda el anillo: es tu predicción del 8."
         campos="botón Abrir mapa · al abrir: un diálogo con la ✕ y un <p>"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <MapaSoloIda />
@@ -498,6 +528,7 @@ export function Bloque12() {
         nombre="LimpiarBusqueda"
         mirar="Escribe una ciudad y pulsa Limpiar: el campo se vacía y el cursor queda dentro. Con el starter, además, el buscador roba el foco al montarse: entra en la pestaña 12 con las flechas del teclado y mira dónde acaba el foco."
         campos="un <input> Ciudad · botón Limpiar"
+        estado="resuelto"
       >
         <LimpiarBusqueda />
       </Tarjeta>
@@ -507,10 +538,21 @@ export function Bloque12() {
         nombre="MapaConRetorno"
         mirar="Pulsa Abrir mapa: el anillo salta a la ✕. Pulsa la ✕: el mapa se cierra y el anillo vuelve a Abrir mapa. Y al entrar en la pestaña 12, el foco no tiene que saltar solo a este Abrir mapa."
         campos="botón Abrir mapa · al abrir: un diálogo con la ✕ y un <p>"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <MapaConRetorno />
         </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={17}
+        nombre="MapaQueNaceAbierto"
+        mirar="Pulsa Montar los dos: nacen a la vez, uno abierto (true) y otro cerrado (false). El anillo tiene que caer en la ✕ del abierto, y el cerrado no te lo quita. Pulsa esa ✕ y el foco vuelve a su Abrir mapa. Ojo: el banco corre en pnpm dev, con StrictMode, y ahí el starter también lo consigue, de casualidad. El fallo de producción solo lo ve el test."
+        campos="botón Montar los dos (de la demo) · cada mapa: botón Abrir mapa · un diálogo con la ✕ y un <p>"
+        estado="resuelto"
+      >
+        <DemoNaceAbierto />
       </Tarjeta>
     </>
   );

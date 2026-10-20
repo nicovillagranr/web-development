@@ -613,3 +613,185 @@ mapa" no desaparece nunca. Tu `MapModal` hace lo mismo de otra manera: guarda
 hace falta saber qué botón lo abrió.
 
 </details>
+
+---
+
+## Drill 14 — cuántas veces corre el efecto de tu 13, y cuántas enfoca
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Son dos preguntas distintas. Cuántas veces corre el efecto lo decide React. Qué hace
+cada una de esas veces lo decide el `if` de dentro.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Con StrictMode, React ensaya el montaje: efecto, limpieza y efecto otra vez (el drill
+5 del 02). Y entre las dos pasadas nadie ha llamado a `setAbierto`.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+En las dos pasadas, el `if` lee `abierto` y vale `false`.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export const respuesta14: Cuenta = { corre: 2, enfoca: 0 };
+```
+
+El efecto corre dos veces porque StrictMode ensaya el montaje. Pero en las dos
+`abierto` vale `false`, así que el `if` no deja pasar a nadie y el foco no se mueve.
+Correr no es lo mismo que hacer algo: tu 13 corre al montarse y no toca nada.
+
+</details>
+
+---
+
+## Drill 15 — lo que leen la libreta y la foto en cada pasada
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Sigue la libreta línea a línea por la 1ª pasada: ¿qué vale al entrar, y qué le deja
+escrito a la siguiente?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El ensayo vuelve a montar el MISMO componente, con los mismos refs (tu drill 10). La
+foto, en cambio, la pone React con el estado del render, y nadie llamó al setter.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Las dos pasadas leen la misma foto. La libreta, no.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export const respuesta15: Lecturas = { libreta: [true, false], foto: [false, false] };
+```
+
+La 1ª pasada lee la libreta en `true`, escribe `false` y sale. La 2ª lee el `false`
+que le dejó la 1ª. La foto es `false` las dos veces porque el estado no cambió. Por
+eso la 2ª pasada se porta distinto: no porque haya cambiado nada en pantalla, sino
+porque la 1ª le cambió la libreta. Y con la libreta en `false` y la foto en `false`, la
+2ª pasada entra al `else` y roba el foco (tu drill 10).
+
+</details>
+
+---
+
+## Drill 16 — qué versión roba el foco al montarse
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Olvídate de la bandera un momento y mira solo el `if (abierto)`: ¿qué hace cuando
+`abierto` es `false`?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+En tu versión vieja, lo que robaba el foco era el `else`. Mira si alguna de las dos
+lo tiene.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Con `abierto` en `false`, el `if (abierto)` no hace nada en ninguna pasada, haya
+bandera o no.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+export const respuesta16: CualRoba = "ninguna";
+```
+
+La bandera de la A no frena nada: se come una pasada que tampoco iba a hacer nada.
+Estaba ahí para frenar al `else`, y el `else` ya no está. Por eso en tu 13 la pudiste
+borrar sin que nada cambiara. Pero que no frene nada no quiere decir que sea
+inofensiva: el 17 es el caso en el que la primera pasada SÍ tiene trabajo.
+
+</details>
+
+---
+
+## Drill 17 — `MapaQueNaceAbierto`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Cuenta las pasadas del efecto al montarse naciendo abierto: cuántas hay en `pnpm dev`
+y cuántas en producción. ¿Cuál de ellas enfoca la ✕?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+La bandera se come la 1ª pasada, traiga lo que traiga. En producción no hay 2ª. Y tu
+drill 16 ya te dijo qué protege esa bandera cuando el mapa nace cerrado.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+Montado sin StrictMode y naciendo abierto:
+
+```
+Expected element with focus:
+  <button
+  aria-label="Cerrar mapa"
+  type="button"
+>
+  ×
+</button>
+Received element with focus:
+  <body>
+```
+
+La ✕ está en la página, pero nadie la enfocó: la única pasada del efecto se la comió
+la bandera.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function MapaQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: boolean }) {
+  const [abierto, setAbierto] = useState(abiertoAlInicio);
+  const abrirRef = useRef<HTMLButtonElement>(null);
+  const cerrarRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (abierto) {
+      cerrarRef.current?.focus();
+    }
+  }, [abierto]);
+
+  function cerrar() {
+    setAbierto(false);
+    abrirRef.current?.focus();
+  }
+
+  // el JSX, igual que el starter
+}
+```
+
+Sobra la bandera, y nada más. El `if (abierto)` ya decide por la foto: si nace
+abierto, enfoca la ✕ en la primera pasada que haya, sea una o sean dos; si nace
+cerrado, no hace nada en ninguna. La bandera decidía por cuántas pasadas llevaba, y
+por eso en `pnpm dev` funcionaba de casualidad y en producción no. Tu `MapModal` real
+es este caso: nace abierto, y su efecto enfoca la ✕ sin ninguna bandera.
+
+</details>

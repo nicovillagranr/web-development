@@ -16,6 +16,10 @@ import {
   respuesta11,
   LimpiarBusqueda,
   MapaConRetorno,
+  respuesta14,
+  respuesta15,
+  respuesta16,
+  MapaQueNaceAbierto,
 } from "./exercise-03";
 
 /* El drill 4 comprueba que pulsar "Ir al mapa" con el panel cerrado no lanza
@@ -34,9 +38,12 @@ afterEach(() => {
   errores.length = 0;
 });
 
-/* Los drills 12 y 13 comprueban que el componente NO le roba el foco a la página al
- * montarse. Para eso, antes de montarlo, el foco se deja en un campo de fuera, y el
- * componente se monta dentro de `StrictMode`, como en `pnpm dev`. */
+/* Los drills 12, 13 y 17 comprueban que el componente NO le roba el foco a la página
+ * al montarse. Para eso, antes de montarlo, el foco se deja en un campo de fuera, y el
+ * componente se monta dentro de `StrictMode`, como en `pnpm dev`.
+ *
+ * El 17 se monta además una vez SIN `StrictMode`: así se comporta en producción, con
+ * una sola pasada del efecto al montarse. */
 function focoFuera() {
   const fuera = document.createElement("input");
   fuera.setAttribute("aria-label", "Campo de fuera");
@@ -139,5 +146,39 @@ describe("12-custom-hooks / exercise-03 — useRef: tu propia agarradera a un el
 
     await user.click(screen.getByRole("button", { name: "Cerrar mapa" }));
     expect(screen.getByRole("button", { name: "Abrir mapa" })).toHaveFocus();
+  });
+
+  it("14) respuesta14 — cuántas veces corre el efecto de tu 13 al montarse, y cuántas enfoca", () => {
+    expect(respuesta14).toEqual({ corre: 2, enfoca: 0 });
+  });
+
+  it("15) respuesta15 — lo que leen la libreta y la foto en cada pasada", () => {
+    expect(respuesta15).toEqual({ libreta: [true, false], foto: [false, false] });
+  });
+
+  it("16) respuesta16 — qué versión roba el foco al montarse", () => {
+    expect(respuesta16).toBe("ninguna");
+  });
+
+  it("17) MapaQueNaceAbierto — naciendo abierto, la ✕ recibe el foco también en producción; naciendo cerrado, no roba el foco", async () => {
+    const user = userEvent.setup();
+
+    // Producción: sin StrictMode, nace abierto.
+    const produccion = render(<MapaQueNaceAbierto abiertoAlInicio />);
+    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Cerrar mapa" }));
+    expect(screen.getByRole("button", { name: "Abrir mapa" })).toHaveFocus();
+    produccion.unmount();
+
+    // `pnpm dev`: con StrictMode, nace cerrado.
+    const fuera = focoFuera();
+    render(
+      <StrictMode>
+        <MapaQueNaceAbierto abiertoAlInicio={false} />
+      </StrictMode>,
+    );
+    expect(fuera).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Abrir mapa" }));
+    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
   });
 });
