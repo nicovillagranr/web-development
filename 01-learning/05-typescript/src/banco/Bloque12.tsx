@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { createRoot, type Root } from "react-dom/client";
 import { ContactoConMapa, TarjetaProyecto } from "../exercises/12-custom-hooks/exercise-00";
 import { PortfolioConQuitar, ProyectoDestacado } from "../exercises/12-custom-hooks/exercise-00b";
 import { EnfocarCerrar, BloqueoScroll, TituloMapa } from "../exercises/12-custom-hooks/exercise-01";
@@ -21,6 +22,21 @@ import {
   MapaConRetorno,
   MapaQueNaceAbierto,
 } from "../exercises/12-custom-hooks/exercise-03";
+import {
+  EmpezarContacto,
+  EscribirMensaje,
+  CorregirCorreo,
+  MeGusta,
+  FormularioQueNaceEnfocado,
+  NotaRapida,
+  FiltrosConVuelta,
+  MenuQueRobaAlNacer,
+  MenuConBandera,
+  ContactoQueNaceAbierto,
+  ConfirmarEnvio,
+  AvisoDescartable,
+  BuscadorQueNaceAbierto,
+} from "../exercises/12-custom-hooks/exercise-04";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
@@ -244,6 +260,139 @@ function DemoNaceAbierto() {
           <div className="flex flex-col items-start gap-3">
             <p>abiertoAlInicio = false</p>
             <MapaQueNaceAbierto key={vez} abiertoAlInicio={false} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* 04 · drill 4: el padre se repinta sin tocar el `MeGusta`. Ese render nuevo del hijo
+ * vuelve a leer la caja, y por eso el número salta de golpe con el starter. */
+function DemoMeGusta() {
+  const [repintados, setRepintados] = useState(0);
+
+  return (
+    <>
+      <MeGusta />
+      <button type="button" onClick={() => setRepintados(repintados + 1)}>
+        Repintar el padre ({repintados})
+      </button>
+    </>
+  );
+}
+
+/* 04 · drills 5 y 12: no existen hasta que pulsas el botón, y pulsarlo otra vez cambia la
+ * `key`: los desmonta y los monta de nuevo. Así el montaje se puede repetir, y el del 12
+ * no te roba el foco al entrar en la pestaña. */
+function DemoFormulario() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Montar el formulario
+      </button>
+      {vez > 0 && <FormularioQueNaceEnfocado key={vez} />}
+    </div>
+  );
+}
+
+function DemoAviso() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Montar el aviso
+      </button>
+      {vez > 0 && <AvisoDescartable key={vez} />}
+    </div>
+  );
+}
+
+/* 04 · escalera (8 y 11): lo mismo que `DemoFormulario`, para cualquier componente. El
+ * `Fragment` con `key` hace de envoltorio: al cambiarle la `key`, React desmonta lo que
+ * lleva dentro y lo monta de nuevo. */
+function MontarAlPulsar({ texto, children }: { texto: string; children: ReactNode }) {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        {texto}
+      </button>
+      {vez > 0 && <Fragment key={vez}>{children}</Fragment>}
+    </div>
+  );
+}
+
+/* 04 · drills 9 y 10: el mismo componente, montado de dos maneras.
+ *   · "en pnpm dev" lo monta aquí dentro, con el StrictMode de toda la página: al
+ *     nacer, el efecto da dos pasadas.
+ *   · "como en producción" lo monta en una raíz de React aparte, sin StrictMode: una
+ *     sola pasada, como en el sitio publicado.
+ * La raíz aparte se crea en el manejador del clic y no en un efecto, para que el
+ * StrictMode de la página no la duplique. */
+function DosMontajes({ children }: { children: ReactNode }) {
+  const [vez, setVez] = useState(0);
+  const cajaRef = useRef<HTMLDivElement>(null);
+  const raizRef = useRef<Root | null>(null);
+
+  function desmontarProduccion() {
+    raizRef.current?.unmount();
+    raizRef.current = null;
+  }
+
+  function montarEnDev() {
+    desmontarProduccion();
+    setVez(vez + 1);
+  }
+
+  function montarComoEnProduccion() {
+    setVez(0);
+    desmontarProduccion();
+    if (!cajaRef.current) return;
+    raizRef.current = createRoot(cajaRef.current);
+    raizRef.current.render(children);
+  }
+
+  return (
+    <div className={ANILLO}>
+      <div>
+        <button type="button" onClick={montarEnDev}>
+          Montar en pnpm dev
+        </button>
+        <button type="button" onClick={montarComoEnProduccion}>
+          Montar como en producción
+        </button>
+      </div>
+      {vez > 0 && <Fragment key={vez}>{children}</Fragment>}
+      <div ref={cajaRef} />
+    </div>
+  );
+}
+
+/* 04 · drill 13: lo mismo que la demo del 17, con el buscador. Aquí el starter sí se
+ * ve roto en `pnpm dev`: el abierto nace sin el cursor en el campo, y el cerrado le
+ * roba el foco a la página. */
+function DemoBuscadorNaceAbierto() {
+  const [vez, setVez] = useState(0);
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setVez(vez + 1)}>
+        Montar los dos
+      </button>
+      {vez > 0 && (
+        <div className="flex flex-wrap gap-10">
+          <div className="flex flex-col items-start gap-3">
+            <p>abiertoAlInicio = true</p>
+            <BuscadorQueNaceAbierto key={vez} abiertoAlInicio />
+          </div>
+          <div className="flex flex-col items-start gap-3">
+            <p>abiertoAlInicio = false</p>
+            <BuscadorQueNaceAbierto key={vez} abiertoAlInicio={false} />
           </div>
         </div>
       )}
@@ -553,6 +702,152 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoNaceAbierto />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-04"
+        titulo="Un ref es una caja: lo que importa es qué hay dentro, y cuándo."
+      />
+
+      <Tarjeta
+        n={1}
+        nombre="EmpezarContacto"
+        mirar="Pulsa Empezar: el cursor tiene que saltar al campo Nombre. Con el starter no pasa nada, y la consola (F12) muestra un TypeError."
+        campos="botón Empezar · un <input> Nombre"
+        estado="resuelto"
+      >
+        <div className={ANILLO}>
+          <EmpezarContacto />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="EscribirMensaje"
+        mirar="Pulsa Escribir mensaje: el cursor salta al campo Mensaje. Aquí funciona ya con el starter: el fallo no se ve en el navegador, solo en pnpm typecheck."
+        campos="botón Escribir mensaje · un <textarea> Mensaje"
+        estado="resuelto"
+      >
+        <div className={ANILLO}>
+          <EscribirMensaje />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="CorregirCorreo"
+        mirar="Pulsa Corregir el correo: el cursor tiene que caer en el campo Correo, el de abajo. Con el starter cae en Nombre."
+        campos="un <p> · los <input> Nombre y Correo · botón Corregir el correo"
+        estado="resuelto"
+      >
+        <div className={ANILLO}>
+          <CorregirCorreo />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="MeGusta"
+        mirar="Pulsa Me gusta varias veces: el número tiene que subir con cada clic. Con el starter se queda quieto, y cuando pulsas Repintar el padre salta de golpe a todos los clics que llevabas. Ya resuelto, Repintar el padre solo sube su propio contador: el número ya estaba al día y no tiene nada que añadir."
+        campos="botón n me gusta · botón Repintar el padre (de la demo)"
+        estado="resuelto"
+      >
+        <DemoMeGusta />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="FormularioQueNaceEnfocado"
+        mirar="Pulsa Montar el formulario: tiene que nacer con el cursor en Nombre. Luego haz clic en Correo y escribe: el cursor se queda en Correo. Con el starter nace sin cursor, y al escribir la primera letra en Correo, el cursor salta a Nombre."
+        campos="botón Montar el formulario (de la demo) · los <input> Nombre y Correo"
+        estado="resuelto"
+      >
+        <DemoFormulario />
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="NotaRapida"
+        mirar="Pulsa Añadir nota: el panel aparece y el cursor tiene que caer en el campo Nota. Con el starter el anillo se queda en Añadir nota."
+        campos="botón Añadir nota · al abrir: un panel con el <textarea> Nota y el botón Guardar nota"
+        estado="resuelto"
+      >
+        <div className={ANILLO}>
+          <NotaRapida />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={7}
+        nombre="FiltrosConVuelta"
+        mirar="Pulsa Filtrar proyectos y luego Aplicar: el panel se cierra y el anillo tiene que volver a Filtrar proyectos. Con el starter el anillo desaparece: el foco se pierde con el botón Aplicar."
+        campos="botón Filtrar proyectos · al abrir: un panel con un <p> y el botón Aplicar"
+      >
+        <div className={ANILLO}>
+          <FiltrosConVuelta />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={8}
+        nombre="MenuQueRobaAlNacer"
+        mirar="Pulsa Montar el menú: el anillo tiene que quedarse en Montar el menú. Abre el menú y ciérralo: el anillo vuelve a Abrir menú. Con el starter, al montarse, el anillo salta solo a Abrir menú. Con la traza descomentada, mira la consola (F12) al montarlo."
+        campos="botón Montar el menú (de la demo) · botón Abrir menú · al abrir: un <nav> con un <p> y el botón Cerrar menú"
+      >
+        <MontarAlPulsar texto="Montar el menú">
+          <MenuQueRobaAlNacer />
+        </MontarAlPulsar>
+      </Tarjeta>
+
+      <Tarjeta
+        n={9}
+        nombre="MenuConBandera"
+        mirar="Pulsa Montar como en producción: el anillo se queda en el botón. Pulsa Montar en pnpm dev: con el starter, el anillo salta solo a Abrir menú. Resuelto, ninguno de los dos te quita el foco, y al cerrar el menú el anillo vuelve a Abrir menú. Con la traza descomentada, compara en la consola (F12) las pasadas de cada montaje."
+        campos="botones Montar en pnpm dev y Montar como en producción (de la demo) · el menú del 8"
+      >
+        <DosMontajes>
+          <MenuConBandera />
+        </DosMontajes>
+      </Tarjeta>
+
+      <Tarjeta
+        n={10}
+        nombre="ContactoQueNaceAbierto"
+        mirar="Los dos montajes nacen abiertos. Pulsa Montar en pnpm dev: el cursor cae en Nombre. Pulsa Montar como en producción: con el starter, el cursor no llega. Resuelto, llega en los dos."
+        campos="botones Montar en pnpm dev y Montar como en producción (de la demo) · botón Escribirnos · un <input> Nombre"
+      >
+        <DosMontajes>
+          <ContactoQueNaceAbierto abiertoAlInicio />
+        </DosMontajes>
+      </Tarjeta>
+
+      <Tarjeta
+        n={11}
+        nombre="ConfirmarEnvio"
+        mirar="Pulsa Montar la confirmación: el anillo tiene que quedarse en el botón. Pulsa Enviar: el anillo cae en Confirmar. Pulsa Volver a editar: vuelve a Enviar. Con el starter, al montarse, el anillo salta solo a Enviar, y al pulsar Enviar no llega a Confirmar."
+        campos="botón Montar la confirmación (de la demo) · botón Enviar · al pulsarlo: un <p>, el botón Confirmar y el botón Volver a editar"
+      >
+        <MontarAlPulsar texto="Montar la confirmación">
+          <ConfirmarEnvio />
+        </MontarAlPulsar>
+      </Tarjeta>
+
+      <Tarjeta
+        n={12}
+        nombre="AvisoDescartable"
+        mirar="Pulsa Montar el aviso: el anillo tiene que quedarse en Montar el aviso. Pulsa Ver aviso y luego Descartar: el anillo vuelve a Ver aviso. Con el starter, al montarse, el anillo salta solo a Ver aviso."
+        campos="botón Montar el aviso (de la demo) · botón Ver aviso · al abrir: un <p role=status> y el botón Descartar"
+      >
+        <DemoAviso />
+      </Tarjeta>
+
+      <Tarjeta
+        n={13}
+        nombre="BuscadorQueNaceAbierto"
+        mirar="Pulsa Montar los dos: el abierto (true) tiene que nacer con el cursor en Ciudad, y el cerrado (false) no te quita el foco. Pulsa Cerrar buscador y el anillo vuelve a su Abrir buscador. Con el starter se ve roto aquí mismo: el abierto nace sin cursor y el anillo salta al Abrir buscador del cerrado."
+        campos="botón Montar los dos (de la demo) · cada buscador: botón Abrir buscador · al abrir: un <input> Ciudad y un botón Cerrar buscador"
+      >
+        <DemoBuscadorNaceAbierto />
       </Tarjeta>
     </>
   );

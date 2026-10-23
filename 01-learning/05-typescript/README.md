@@ -1853,3 +1853,130 @@ también pasa. Si aparece, se le pregunta.
   `target` vs `currentTarget`).
 - Ofrecidos y sin respuesta: la copia del 17 fuera de StrictMode, y corregir los comentarios
   del 2 y del 3 del 00b.
+
+## Sesión 20 oct 2026 (cierre) — el `04` montado (0/8): el `MapaQueNaceAbierto`, pieza a pieza
+
+### Qué se montó
+
+**`exercise-04` — el 17 del 03, desarmado.** Lo pidió él porque le pareció el componente más
+complejo de la 12, y dejó a criterio de Claude cuántos archivos montar. Se montó uno. Tres
+teorías: cuándo corre cada línea (render, efecto o manejador, con la casa de la sesión
+anterior), la película entera (render → página → efectos, el manejador fuera de la cadena, y
+StrictMode separado en doble render y ensayo de efectos) y armarlo tú (tres preguntas por cada
+trabajo). 7 predicciones sobre su propio 17, una de ellas con un `MapaConRegistros` de lectura,
+y un drill de código: `BuscadorQueNaceAbierto`, con las tres piezas del 17 mal puestas.
+Verificado en copia: 8/8 con soluciones, lecturas ejecutadas, y cuatro soluciones a medias del
+8 en rojo. Starters 8 rojos, typecheck y lint a 0. 271 líneas, cabecera 40.
+
+**Banco:** sección 04 con la tarjeta 8, con los dos casos (`true` y `false`) lado a lado. A
+diferencia del 17, este starter sí se ve roto en `pnpm dev`.
+
+### Decisiones
+
+**Nació como `03b` y se renombró a `04`.** Claude lo separó por su cuenta, para no meter dos
+conceptos en un archivo, cuando él había pedido que el siguiente archivo empezara con la
+escalera. Él esperaba el 04, y eligió renombrarlo. **Plan renumerado:** 05 eventos nativos ·
+06 focus trap · 07 su `useMediaPreferences` · 🏁 el `MapModal`.
+
+### Pendiente
+
+- El `exercise-04`, desde la Teoría 1. Sin commitear.
+
+## Sesión 21 oct 2026 — el `04` rehecho: de predicciones a drills de código
+
+### Qué pasó
+
+Empezó la versión de predicciones. **Drill 1 aprobado** al 2º intento: a, b y c bien a la
+primera; la d la puso como "manejador" (confundió *instalar* el `onClick={cerrar}` con que
+*suene*), y al 2º la dejó en render con un comentario por línea correcto. Preguntó **quién**
+evalúa el `abierto &&`: JavaScript, cuando React llama a la función (se corrigió la Solución
+de las pistas, que decía "React la evalúa"). **Drill 2 en verde** ("sigue abierto") con un
+porqué que describía el qué sin el mecanismo. Al pedirle el eslabón:
+
+> "No me están sirviendo este tipo de drills. No estoy entendiendo."
+
+> "Podrían ser drills de código como siempre lo hemos hecho. [...] Aprendo viendo el código
+> correr y entendiendo qué pasa en cada etapa. Me imagino un drill con código roto,
+> arreglarlo y explicar abajo el por qué."
+
+Y pidió drills iniciales de `.current` y `focus()`. La evidencia ya estaba: el concepto del
+drill 2 (`useState(prop)` ignora la prop nueva) lo había resuelto en código en el drill 8 del
+00, y en predicción se atascó.
+
+**Sus respuestas a la versión de predicciones**, para que no se pierdan:
+- 1 · `{ a: "render", b: "efecto", c: "manejador", d: "render" }` (aprobado). Su comentario de
+  la d: *"se ejecuta durante el render, pero el botón solo se renderiza si abierto es true, y
+  su manejador onClick se ejecutará cuando el usuario haga clic en él"*.
+- 2 · `"sigue abierto"` (verde, sin aprobar): *"el estado interno del mapa no se actualiza
+  automáticamente con la nueva prop"*. Eslabón explicado sin pregunta: `useState` solo mira su
+  argumento con el cajón vacío.
+- 3 · a medias, sin entregar: `{ a: "la ✕", b: "la ✕", c: "null" }`.
+
+### Qué se montó
+
+**`exercise-04` — `.current` y `focus()`, viéndolos correr** (0/8). Ocho drills de código,
+cada uno con su `// ¿Por qué?` debajo y trazas `console.log` comentadas en render, efecto y
+manejador. Teoría 1, el ref es una caja: 1 `EmpezarContacto` (`nombreRef.focus()` sin abrir la
+caja) · 2 `EscribirMensaje` (`.current.focus()` sin `?.`; `!` prohibido y declarado) · 3
+`CorregirCorreo` (ref enganchado al campo equivocado) · 4 `MeGusta` (contador en un ref; en el
+banco salta al repintar el padre). Teoría 2, cuándo hay algo dentro: 5
+`FormularioQueNaceEnfocado` (`focus()` suelto en el render: nace sin cursor y lo roba al
+escribir en Correo) · 6 `NotaRapida` (`focus()` tras el setter en el manejador) · 7
+`AvisoDescartable` (la vuelta en el efecto roba el foco al montarse). Armarlo tú: 8
+`BuscadorQueNaceAbierto`, el mismo de antes.
+
+Verificado en copia: 8/8 con soluciones, typecheck y lint a 0. Soluciones a medias en rojo:
+el 5 sin array, el 6 con `[]` y el 7 con bandera (el 6 sin `if` pasa, y la Solución lo
+explica). Starters: 7 rojos + el 2 en verde con `TS18047`; tipos en el 1 y el 2; lint
+(`react-hooks/refs`) en el 4 y el 5. Cabecera 40, 327 líneas (por encima del techo: son 8
+componentes con JSX). **Banco:** 8 tarjetas en la sección 04, con demos para el 4 (Repintar
+el padre), el 5 y el 7 (montar con `key`); comprobado que cada starter enseña su fallo.
+
+### Pendiente
+
+- El `exercise-04` nuevo, desde la Teoría 1. Sin commitear (el 04, el banco y este README).
+
+## Sesión 22 oct 2026 — del 1 al 6 del `04`, y una escalera para el 7 y el 8
+
+### Qué pasó
+
+Aprobados del 1 al 6 (6/13 con la numeración nueva). Lo que costó, drill a drill:
+- 2 · arregló con `!` (prohibido en el enunciado) aunque su propio comentario explicaba que
+  `!` solo calla y `?.` comprueba. Al tercer intento, `?.`.
+- 3 · su porqué describía el arreglo, no el fallo; una pregunta con el código de antes al lado
+  y lo contestó bien en el chat: *"el atributo ref={correoRef} estaba en el input de Nombre"*.
+- 4 · `useState` bien, pero con un ref espejo copiado en un efecto (dos casilleros con el mismo
+  número). Su "Repintar el padre no hace nada" era el arreglo funcionando: la demo solo enseña
+  algo con el starter. Tarjeta aclarada.
+- 5 · `ref={inputRef}` en los dos campos (la caja se quedó con Correo). Arreglado al segundo.
+- 6 · dejó el `focus()` del starter en el manejador y no sabía por qué fallaba. Explicado sin
+  pregunta: la ref no estaba mal, el **momento** sí (línea de tiempo con el buzón). Cerró él:
+  *"Por eso se usa el useEffect con referencia a abierta. Para que todo vaya en orden"*. El
+  porqué lo escribió Claude a petición suya.
+- 7 · lo intentó con una bandera (la misma del starter del 8), rojo por StrictMode. Su frase:
+  *"Con el 7 toqué el techo"*, y pidió drills para hacer el 7 y el 8 por su cuenta, en el
+  mismo archivo.
+
+Patrón de la sesión: el porqué describe el arreglo, no el fallo (4 de 6 drills).
+
+### Qué se montó
+
+**Escalera "el efecto también corre al nacer"**, drills 7 a 11, con su bloque de teoría (el
+vigilante: la ronda al nacer, la foto y la libreta). 7 `FiltrosConVuelta` (la vuelta en el
+manejador, sin efecto) · 8 `MenuQueRobaAlNacer` (la vuelta en un efecto con `if (!abierto)`
+roba al nacer) · 9 `MenuConBandera` (con bandera: en producción funciona, en `pnpm dev` roba)
+· 10 `ContactoQueNaceAbierto` (la ida con bandera: naciendo abierto falla en producción) · 11
+`ConfirmarEnvio` (ida y vuelta en el sitio cambiado). Su 7 y su 8 pasan a ser el **12 y el
+13**, dentro de "ARMARLO TÚ"; su intento del 12 se movió sin tocarlo.
+
+Verificado en copia (`src/__verif__`, borrada): 13/13 con soluciones, typecheck y lint a 0.
+Los 5 starters nuevos, rojos con su mensaje; compilan y el lint calla. Cabecera 40, 599
+líneas (muy por encima del techo, pero lo pidió en el mismo archivo). **Banco:** 5 tarjetas
+nuevas; `MontarAlPulsar` (Fragment con `key`) para el 8 y el 11, y `DosMontajes` para el 9 y
+el 10: monta el componente en `pnpm dev` o en una raíz de React aparte sin StrictMode, "como
+en producción". Comprobado en Chrome que cada starter enseña su fallo y que al cargar la
+pestaña nadie roba el foco.
+
+### Pendiente
+
+- La escalera, desde el 7. Luego el 12 y el 13. Sin commitear (el 04, el banco y este README).
