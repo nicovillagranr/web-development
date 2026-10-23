@@ -782,6 +782,7 @@ export function Bloque12() {
         nombre="FiltrosConVuelta"
         mirar="Pulsa Filtrar proyectos y luego Aplicar: el panel se cierra y el anillo tiene que volver a Filtrar proyectos. Con el starter el anillo desaparece: el foco se pierde con el botón Aplicar."
         campos="botón Filtrar proyectos · al abrir: un panel con un <p> y el botón Aplicar"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <FiltrosConVuelta />
@@ -793,6 +794,7 @@ export function Bloque12() {
         nombre="MenuQueRobaAlNacer"
         mirar="Pulsa Montar el menú: el anillo tiene que quedarse en Montar el menú. Abre el menú y ciérralo: el anillo vuelve a Abrir menú. Con el starter, al montarse, el anillo salta solo a Abrir menú. Con la traza descomentada, mira la consola (F12) al montarlo."
         campos="botón Montar el menú (de la demo) · botón Abrir menú · al abrir: un <nav> con un <p> y el botón Cerrar menú"
+        estado="resuelto"
       >
         <MontarAlPulsar texto="Montar el menú">
           <MenuQueRobaAlNacer />
@@ -804,6 +806,7 @@ export function Bloque12() {
         nombre="MenuConBandera"
         mirar="Pulsa Montar como en producción: el anillo se queda en el botón. Pulsa Montar en pnpm dev: con el starter, el anillo salta solo a Abrir menú. Resuelto, ninguno de los dos te quita el foco, y al cerrar el menú el anillo vuelve a Abrir menú. Con la traza descomentada, compara en la consola (F12) las pasadas de cada montaje."
         campos="botones Montar en pnpm dev y Montar como en producción (de la demo) · el menú del 8"
+        estado="resuelto"
       >
         <DosMontajes>
           <MenuConBandera />
@@ -815,6 +818,7 @@ export function Bloque12() {
         nombre="ContactoQueNaceAbierto"
         mirar="Los dos montajes nacen abiertos. Pulsa Montar en pnpm dev: el cursor cae en Nombre. Pulsa Montar como en producción: con el starter, el cursor no llega. Resuelto, llega en los dos."
         campos="botones Montar en pnpm dev y Montar como en producción (de la demo) · botón Escribirnos · un <input> Nombre"
+        estado="resuelto"
       >
         <DosMontajes>
           <ContactoQueNaceAbierto abiertoAlInicio />
@@ -826,6 +830,7 @@ export function Bloque12() {
         nombre="ConfirmarEnvio"
         mirar="Pulsa Montar la confirmación: el anillo tiene que quedarse en el botón. Pulsa Enviar: el anillo cae en Confirmar. Pulsa Volver a editar: vuelve a Enviar. Con el starter, al montarse, el anillo salta solo a Enviar, y al pulsar Enviar no llega a Confirmar."
         campos="botón Montar la confirmación (de la demo) · botón Enviar · al pulsarlo: un <p>, el botón Confirmar y el botón Volver a editar"
+        estado="resuelto"
       >
         <MontarAlPulsar texto="Montar la confirmación">
           <ConfirmarEnvio />
@@ -837,6 +842,7 @@ export function Bloque12() {
         nombre="AvisoDescartable"
         mirar="Pulsa Montar el aviso: el anillo tiene que quedarse en Montar el aviso. Pulsa Ver aviso y luego Descartar: el anillo vuelve a Ver aviso. Con el starter, al montarse, el anillo salta solo a Ver aviso."
         campos="botón Montar el aviso (de la demo) · botón Ver aviso · al abrir: un <p role=status> y el botón Descartar"
+        estado="resuelto"
       >
         <DemoAviso />
       </Tarjeta>
@@ -846,6 +852,7 @@ export function Bloque12() {
         nombre="BuscadorQueNaceAbierto"
         mirar="Pulsa Montar los dos: el abierto (true) tiene que nacer con el cursor en Ciudad, y el cerrado (false) no te quita el foco. Pulsa Cerrar buscador y el anillo vuelve a su Abrir buscador. Con el starter se ve roto aquí mismo: el abierto nace sin cursor y el anillo salta al Abrir buscador del cerrado."
         campos="botón Montar los dos (de la demo) · cada buscador: botón Abrir buscador · al abrir: un <input> Ciudad y un botón Cerrar buscador"
+        estado="resuelto"
       >
         <DemoBuscadorNaceAbierto />
       </Tarjeta>

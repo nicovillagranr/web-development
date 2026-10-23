@@ -307,18 +307,32 @@ export function NotaRapida() {
 //    y el foco se pierde: tiene que volver a "Filtrar proyectos".
 //    Sin `useEffect`: el efecto llega en el siguiente.
 export function FiltrosConVuelta() {
+  // Seteamos el estado inicial de abierto con useState, indicando que el panel de filtros no está abierto al inicio
   const [abierto, setAbierto] = useState(false);
+  // Hacemos una referencia al botón "Filtrar proyectos" usando useRef, inicializándola con null
   const filtrarRef = useRef<HTMLButtonElement>(null);
+
+  // No podemos usar useEffect, por lo tanto:
+  // - Creamos la función aplicarFiltros que se ejecuta al hacer click en el botón "Aplicar"
+  // 1. Solicitamos cerrar el panel cambiando abierto a false.
+  // 2. Enfocamos "Filtrar proyectos", que sigue montado en el DOM.
+  // 3. React procesa el cambio de estado y elimina el panel, incluido el botón "Aplicar".
+  function aplicarFiltros() {
+    setAbierto(false);
+    filtrarRef.current?.focus();
+  }
 
   return (
     <div>
       <button ref={filtrarRef} type="button" onClick={() => setAbierto(true)}>
         Filtrar proyectos
       </button>
+      {/* Cuando el estado de abierto pasa a true, renderizamos el panel de filtros */}
       {abierto && (
         <div role="region" aria-label="Filtros">
+          {/* Datos mock, esto debería venir de una fuente de datos real */}
           <p>React · TypeScript · Tailwind</p>
-          <button type="button" onClick={() => setAbierto(false)}>
+          <button type="button" onClick={aplicarFiltros}>
             Aplicar
           </button>
         </div>
@@ -328,7 +342,7 @@ export function FiltrosConVuelta() {
 }
 // <FiltrosConVuelta />
 // ¿Por qué? En el 6, el `focus()` del manejador no hacía nada. ¿Por qué aquí sí?
-//
+// Porque el botón "Filtrar proyectos" sigue montado en el DOM cuando se ejecuta el manejador aplicarFiltros, mientras que en el drill 6, el textarea aún no estaba montado cuando se intentaba enfocar. Aquí, al cerrar el panel, el botón "Filtrar proyectos" todavía existe y puede recibir el foco correctamente.
 
 // 8) `MenuQueRobaAlNacer` — el menú móvil de Projex. Al pulsar "Cerrar menú", el
 //    foco tiene que volver a "Abrir menú". Y al montarse no le quita el foco a
@@ -336,25 +350,43 @@ export function FiltrosConVuelta() {
 //    👀 Descomenta la traza y pulsa "Montar el menú" en el banco: mira cuántas veces
 //       corre el efecto al nacer, y con qué `abierto`.
 export function MenuQueRobaAlNacer() {
+  // Seteamos el estado inicial de abierto con useState, indicando que el menú no está abierto al inicio
   const [abierto, setAbierto] = useState(false);
+  // Hacemos una referencia al botón "Abrir menú" usando useRef, inicializándola con null
   const abrirRef = useRef<HTMLButtonElement>(null);
+  // Hacemos una referencia al botón "Cerrar menú" usando useRef, inicializándola con null
+  const cerrarRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    // console.log("efecto · abierto =", abierto);
-    if (!abierto) {
-      abrirRef.current?.focus();
+    console.log("efecto · abierto =", abierto);
+    if (abierto) {
+      cerrarRef.current?.focus();
     }
   }, [abierto]);
 
   return (
     <div>
-      <button ref={abrirRef} type="button" onClick={() => setAbierto(true)}>
+      <button
+        ref={abrirRef}
+        type="button"
+        onClick={() => {
+          setAbierto(true);
+        }}
+      >
         Abrir menú
       </button>
+
       {abierto && (
         <nav aria-label="Menú">
           <p>Inicio · Proyectos · Contacto</p>
-          <button type="button" onClick={() => setAbierto(false)}>
+          <button
+            ref={cerrarRef}
+            type="button"
+            onClick={() => {
+              setAbierto(false);
+              abrirRef.current?.focus();
+            }}
+          >
             Cerrar menú
           </button>
         </nav>
@@ -364,7 +396,7 @@ export function MenuQueRobaAlNacer() {
 }
 // <MenuQueRobaAlNacer />
 // ¿Por qué? ¿Por qué el efecto del starter no podía saber si el menú acababa de cerrarse?
-//
+// Porque el efecto solo ve el estado de abierto en el render actual. No sabe si el menú se cerró por primera vez o si simplemente está en su estado inicial. Al nacer, el efecto corre con abierto = false, y al cerrarse, también corre con abierto = false, sin distinguir entre ambos casos.
 
 // 9) `MenuConBandera` — el mismo menú, con el arreglo que se le ocurre a casi todo el
 //    mundo: una bandera para saltarse el montaje. En producción funciona, pero en
@@ -372,30 +404,44 @@ export function MenuQueRobaAlNacer() {
 //    👀 Descomenta la traza y, en el banco, monta el menú de las dos maneras: mira
 //       cuántas pasadas da el efecto al nacer en cada una, y qué lee en cada pasada.
 export function MenuConBandera() {
+  // Seteamos el estado inicial de abierto con useState, indicando que el menú no está abierto al inicio
   const [abierto, setAbierto] = useState(false);
+  // Creamos una referencia al botón "Abrir menú" usando useRef, inicializándola con null
   const abrirRef = useRef<HTMLButtonElement>(null);
-  const primeraVezRef = useRef(true);
+  // Creamos una referencia al botón "Cerrar menú" usando useRef, inicializándola con null
+  const cerrarRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    // console.log("efecto · bandera =", primeraVezRef.current, "· abierto =", abierto);
-    if (primeraVezRef.current) {
-      primeraVezRef.current = false;
-      return;
-    }
-    if (!abierto) {
-      abrirRef.current?.focus();
+    // Al abrir el menú, enfoca el botón de cerrar.
+    if (abierto) {
+      cerrarRef.current?.focus();
     }
   }, [abierto]);
 
   return (
     <div>
-      <button ref={abrirRef} type="button" onClick={() => setAbierto(true)}>
+      <button
+        ref={abrirRef}
+        type="button"
+        onClick={() => {
+          setAbierto(true);
+        }}
+      >
         Abrir menú
       </button>
+
       {abierto && (
         <nav aria-label="Menú">
           <p>Inicio · Proyectos · Contacto</p>
-          <button type="button" onClick={() => setAbierto(false)}>
+
+          <button
+            ref={cerrarRef}
+            type="button"
+            onClick={() => {
+              setAbierto(false);
+              abrirRef.current?.focus();
+            }}
+          >
             Cerrar menú
           </button>
         </nav>
@@ -405,7 +451,13 @@ export function MenuConBandera() {
 }
 // <MenuConBandera />
 // ¿Por qué? Si la bandera no se saltaba el montaje, ¿qué se saltaba?
-//
+// Se saltaba la PRIMERA PASADA del efecto, no el montaje. La bandera solo sabe "¿ya corrí
+// alguna vez?": cuenta pasadas, no montajes. En producción el menú nace con una sola pasada,
+// la bandera se la come y por eso parece que se salta el montaje. En `pnpm dev`, StrictMode
+// da dos pasadas al nacer: la bandera se come la primera, y la segunda (bandera = false,
+// abierto = false) llegaba al `if (!abierto)` y robaba el foco.
+// Con la vuelta en el manejador de "Cerrar menú" no hay nada que saltarse: al nacer nadie
+// pulsa nada, así que la bandera sobra.
 
 // 10) `ContactoQueNaceAbierto` — si el visitante llega a Projex con `#contacto` en la
 //     dirección, el formulario nace abierto. Cuando aparece, naciendo abierto o al
@@ -414,16 +466,15 @@ export function MenuConBandera() {
 //     (en `pnpm dev`, de casualidad, sí).
 //     👀 En el banco, monta el abierto "como en producción" y luego "en pnpm dev".
 export function ContactoQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: boolean }) {
+  // Seteamos el estado inicial de abierto con useState, indicando si el formulario de contacto está abierto al inicio según la prop abiertoAlInicio
   const [abierto, setAbierto] = useState(abiertoAlInicio);
+  // Creamos una referencia al input de nombre usando useRef, inicializándola con null
   const nombreRef = useRef<HTMLInputElement>(null);
-  const primeraVezRef = useRef(true);
 
+  // La cosa es simple:
+  // Si la prop que recibe el componente dice que nace abierto, el efecto corre con `abierto = true` y mete el foco en el input de nombre.
+  // Si la prop dice que nace cerrado, el efecto corre con `abierto = false` y no hace nada.
   useEffect(() => {
-    // console.log("efecto · bandera =", primeraVezRef.current, "· abierto =", abierto);
-    if (primeraVezRef.current) {
-      primeraVezRef.current = false;
-      return;
-    }
     if (abierto) {
       nombreRef.current?.focus();
     }
@@ -431,7 +482,12 @@ export function ContactoQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: b
 
   return (
     <div>
-      <button type="button" onClick={() => setAbierto(true)}>
+      <button
+        type="button"
+        onClick={() => {
+          setAbierto(true);
+        }}
+      >
         Escribirnos
       </button>
       {abierto && (
@@ -444,21 +500,27 @@ export function ContactoQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: b
 }
 // <ContactoQueNaceAbierto abiertoAlInicio />
 // ¿Por qué? Naciendo abierto, ¿por qué funcionaba en `pnpm dev` y en producción no?
-//
+// Porque al pasar la prop abiertoAlInicio = true, el efecto corre con abierto = true y mete el foco en el input de nombre. En `pnpm dev`, StrictMode da dos pasadas al nacer, y en la segunda pasada abierto sigue siendo true, así que el foco se coloca correctamente. En producción, solo hay una pasada al nacer, y si abierto es false en esa pasada, el efecto no hace nada y el foco no llega al input de nombre.
 
-// 11) `ConfirmarEnvio` — antes de enviar tu formulario de contacto, Projex pregunta
-//     "¿Enviamos tu mensaje?". Cuando aparece la pregunta, el foco tiene que caer en
+// 11) `ConfirmarEnvio`
+//  - Antes de enviar tu formulario de contacto, Projex pregunta
+//  - "¿Enviamos tu mensaje?". Cuando aparece la pregunta, el foco tiene que caer en
 //     "Confirmar"; al pulsar "Volver a editar", vuelve a "Enviar". Y al montarse no
 //     le roba el foco a nadie. Hoy lo roba al nacer, y el foco no llega a "Confirmar".
 //     ("Confirmar" todavía no envía nada: aquí solo cuenta el foco.)
 export function ConfirmarEnvio() {
+  // Seteamos el estado inicial de confirmando con useState, indicando que la confirmación no está activa al inicio
   const [confirmando, setConfirmando] = useState(false);
+  // Creamos una referencia al botón "Enviar" usando useRef, inicializándola con null
   const enviarRef = useRef<HTMLButtonElement>(null);
+  // Creamos una referencia al botón "Confirmar" usando useRef, inicializándola con null
   const confirmarRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!confirmando) {
-      enviarRef.current?.focus();
+    // El efecto comienza a correr cuando el componente se monta y cada vez que cambia el estado de confirmando.
+    // Si confirmando cambia a true, el efecto enfoca el botón "Confirmar" usando la referencia confirmarRef.
+    if (confirmando) {
+      confirmarRef.current?.focus();
     }
   }, [confirmando]);
 
@@ -469,18 +531,33 @@ export function ConfirmarEnvio() {
         type="button"
         onClick={() => {
           setConfirmando(true);
-          confirmarRef.current?.focus();
         }}
       >
         Enviar
       </button>
+
       {confirmando && (
         <div role="region" aria-label="Confirmar envío">
           <p>¿Enviamos tu mensaje?</p>
-          <button ref={confirmarRef} type="button">
+
+          <button
+            ref={confirmarRef}
+            type="button"
+            onClick={() => {
+              setConfirmando(false);
+              enviarRef.current?.focus();
+            }}
+          >
             Confirmar
           </button>
-          <button type="button" onClick={() => setConfirmando(false)}>
+
+          <button
+            type="button"
+            onClick={() => {
+              setConfirmando(false);
+              enviarRef.current?.focus();
+            }}
+          >
             Volver a editar
           </button>
         </div>
@@ -490,7 +567,7 @@ export function ConfirmarEnvio() {
 }
 // <ConfirmarEnvio />
 // ¿Por qué? ¿Por qué la ida va en un sitio y la vuelta en otro?
-//
+// Porque la ida (al pulsar "Enviar") se maneja con un efecto que corre después del render, mientras que la vuelta (al pulsar "Volver a editar") se maneja en el manejador del botón, que se ejecuta inmediatamente al hacer clic. El efecto asegura que el foco se coloque en "Confirmar" solo cuando el componente de confirmación está montado, mientras que el manejador devuelve el foco a "Enviar" cuando se cierra la confirmación.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ARMARLO TÚ — las piezas de la escalera, juntas
@@ -511,32 +588,38 @@ export function AvisoDescartable() {
   const [visible, setVisible] = useState(false);
   // Creamos una referencia al botón "Ver aviso" usando useRef, inicializándola con null
   const verRef = useRef<HTMLButtonElement>(null);
-
-  // Bandera
-  const primeraVezRef = useRef(true);
+  // Creamos una referencia al botón "Descartar" usando useRef, inicializándola con null
+  const descarteRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    // Primera ejecución: no enfocamos nada.
-    if (primeraVezRef.current) {
-      primeraVezRef.current = false;
-      return;
-    }
-
-    // Si el aviso acaba de cerrarse, devolvemos el foco.
-    if (!visible) {
-      verRef.current?.focus();
+    if (visible) {
+      descarteRef.current?.focus();
     }
   }, [visible]);
 
   return (
     <div>
-      <button ref={verRef} type="button" onClick={() => setVisible(true)}>
+      <button
+        ref={verRef}
+        type="button"
+        onClick={() => {
+          setVisible(true);
+        }}
+      >
         Ver aviso
       </button>
+
       {visible && (
         <div>
           <p role="status">Tu mensaje se envió.</p>
-          <button type="button" onClick={() => setVisible(false)}>
+          <button
+            ref={descarteRef}
+            type="button"
+            onClick={() => {
+              setVisible(false);
+              verRef.current?.focus();
+            }}
+          >
             Descartar
           </button>
         </div>
@@ -546,7 +629,13 @@ export function AvisoDescartable() {
 }
 // <AvisoDescartable />
 // ¿Por qué?
-//
+// Mi versión con bandera robaba por las 2 veces que pasa el efecto al nacer en `pnpm dev`
+// (StrictMode). La bandera solo se come la PRIMERA pasada (el `return`); la segunda llega con
+// la bandera ya en false, pasa al `if (!visible)` con visible = false y enfocaba "Ver aviso"
+// sin que nadie hubiera pulsado nada. Es el mismo fallo que el starter del 9.
+// Arreglo: la vuelta va en el manejador de "Descartar", porque "Ver aviso" está fuera del
+// `visible &&` y ya existe al pulsar. La ida a "Descartar" sí va en el efecto, porque ese
+// botón aparece con el render; y al nacer, con visible = false, el `if` no deja pasar.
 
 // 13) `BuscadorQueNaceAbierto` — el buscador del drill 2 del 03, ahora como tu
 //     `MapModal`: puede nacer abierto. Cuando aparece, el cursor tiene que quedar en
@@ -555,18 +644,16 @@ export function AvisoDescartable() {
 //     abrirlo, y al montarse cerrado en `pnpm dev`.
 //     Sin `autoFocus`: en producción valdría, pero aquí se entrena armarlo tú.
 export function BuscadorQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: boolean }) {
+  // El estado de abierto va a depender de la prop abiertoAlInicio, que indica si el buscador debe estar abierto al inicio o no.
   const [abierto, setAbierto] = useState(abiertoAlInicio);
+  // Creamos una referencia al botón "Abrir buscador" usando useRef, inicializándola con null
   const abrirRef = useRef<HTMLButtonElement>(null);
+  // Creamos una referencia al input del campo de búsqueda usando useRef, inicializándola con null
   const campoRef = useRef<HTMLInputElement>(null);
-  const primeraVezRef = useRef(true);
 
   useEffect(() => {
-    if (primeraVezRef.current) {
-      primeraVezRef.current = false;
-      return;
-    }
-    if (!abierto) {
-      abrirRef.current?.focus();
+    if (abierto) {
+      campoRef.current?.focus();
     }
   }, [abierto]);
 
@@ -577,7 +664,6 @@ export function BuscadorQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: b
         type="button"
         onClick={() => {
           setAbierto(true);
-          campoRef.current?.focus();
         }}
       >
         Abrir buscador
@@ -586,7 +672,13 @@ export function BuscadorQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: b
       {abierto && (
         <div role="search" aria-label="Buscador de ciudades">
           <input ref={campoRef} aria-label="Ciudad" />
-          <button type="button" onClick={() => setAbierto(false)}>
+          <button
+            type="button"
+            onClick={() => {
+              setAbierto(false);
+              abrirRef.current?.focus();
+            }}
+          >
             Cerrar buscador
           </button>
         </div>
@@ -596,4 +688,4 @@ export function BuscadorQueNaceAbierto({ abiertoAlInicio }: { abiertoAlInicio: b
 }
 // <BuscadorQueNaceAbierto abiertoAlInicio />
 // ¿Por qué?
-//
+// Al nacer abierto, el efecto corre con abierto = true y enfoca el input de búsqueda correctamente. Al abrirlo desde cerrado, el efecto también corre con abierto = true y coloca el foco en el input. Al cerrar el buscador, el manejador del botón "Cerrar buscador" devuelve el foco al botón "Abrir buscador", que sigue montado en el DOM. En `pnpm dev`, StrictMode da dos pasadas al nacer, pero la lógica del efecto y del manejador asegura que el foco se maneje correctamente en todas las situaciones.

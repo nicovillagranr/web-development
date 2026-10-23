@@ -1980,3 +1980,42 @@ pestaña nadie roba el foco.
 ### Pendiente
 
 - La escalera, desde el 7. Luego el 12 y el 13. Sin commitear (el 04, el banco y este README).
+
+## Sesión 23 oct 2026 — la escalera del `04` y sus dos drills: `exercise-04` CERRADO (13/13)
+
+### Qué pasó
+
+Del 7 al 13 en una sesión. Typecheck y lint a 0 en todo el archivo.
+- 7 · código a la primera. Su primer comentario decía que el foco se movía "después de cerrar
+  el panel" (el setter como si fuera inmediato); lo corrigió con el buzón del 6. Se quejó, con
+  razón, de que la pregunta comparaba con el starter del 6, que ya no estaba en el archivo:
+  *"Me estás pidiendo que explique algo en base a una respuesta lista y una pieza que debería
+  recordar"*. Desde ahí, el código roto se le pone delante en el chat al pedirle el porqué.
+- 8 · a la primera, código y porqué: *"al nacer, el efecto corre con abierto = false, y al
+  cerrarse, también"*. En el 9 del 03 esa idea le costó una ronda.
+- 9 · dejó la bandera (muerta: frenaba una pasada que no iba a hacer nada); al quitarla, el
+  porqué no le salía. Explicado con montaje (1 vez) frente a pasada del efecto (1 en
+  producción, 2 en `pnpm dev`). El porqué lo escribió Claude a petición suya.
+- 10 · código a la primera. Su porqué culpaba a `abierto` (*"si abierto es false en esa
+  pasada"*); con el starter numerado lo cerró él: *"no se llega porque lo corta el return del
+  primer if"*. Ya explica por la bandera.
+- 11 · tres intentos en rojo (la vuelta sin poner; luego en el `else` del efecto = el bug del
+  8). *"Ya me quemé"*, pero quiso seguir. Lo desatascaron **pasos de uno en uno mirando el
+  banco**: montar → ¿dónde queda el anillo? → quitar el `else` → … Siete pasos, todos
+  contestados a la primera.
+- 12 · bandera fuera y vuelta en el manejador; el efecto enfocaba el botón recién pulsado (no
+  hacía nada) y lo cambió por una ida a "Descartar". Porqué con su frase, anotado por Claude.
+- 13 · **a la primera**. Solo sobraba una línea muerta del starter en el `onClick` de "Abrir".
+  Su porqué recorre los cuatro casos de su versión.
+
+Evidencia: ayer *"con el 7 toqué el techo"* y pidió la escalera para hacer el 12 y el 13 solo.
+Hoy los hizo, el 13 sin ayuda.
+
+### Qué se montó
+
+Nada nuevo. Banco: chips del 7 al 13 → `resuelto`.
+
+### Pendiente
+
+- Planificar y montar el `05` (eventos nativos: `KeyboardEvent`, `target` vs `currentTarget`),
+  el `06` (focus trap) y el `07` (su `useMediaPreferences`), y después el 🏁 MapModal.
