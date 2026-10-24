@@ -37,6 +37,15 @@ import {
   AvisoDescartable,
   BuscadorQueNaceAbierto,
 } from "../exercises/12-custom-hooks/exercise-04";
+import {
+  IrAlPanel,
+  PrimerResultado,
+  UltimoResultado,
+  MapaConVuelta,
+  MapaEnLosDosSentidos,
+  MapaSinAtascos,
+  MapaDeProjex,
+} from "../exercises/12-custom-hooks/exercise-05";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
@@ -400,6 +409,50 @@ function DemoBuscadorNaceAbierto() {
   );
 }
 
+/* 05 · el anillo también en los enlaces, y los paneles del mapa (role="dialog") con fondo,
+ * para ver dónde empieza y dónde acaba cada trampa. */
+const ANILLO_TRAMPA = `${ANILLO} [&_a]:underline [&_a:focus]:outline-2 [&_a:focus]:outline-offset-4 [&_a:focus]:outline-[#ff9f0a] [&_[role=dialog]]:flex [&_[role=dialog]]:flex-wrap [&_[role=dialog]]:items-center [&_[role=dialog]]:gap-4 [&_[role=dialog]]:rounded-xl [&_[role=dialog]]:bg-white/4 [&_[role=dialog]]:px-4 [&_[role=dialog]]:py-3`;
+
+/* 05 · drills 2 y 3: el mismo buscador, con resultados y sin ellos, lado a lado. */
+const CIUDADES = ["Santiago", "Valparaíso", "Concepción"];
+
+function ConYSinResultados({ Buscador }: { Buscador: (props: { ciudades: string[] }) => ReactNode }) {
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <div className="flex flex-wrap gap-10">
+        <div className="flex flex-col items-start gap-3">
+          <p>con resultados</p>
+          <Buscador ciudades={CIUDADES} />
+        </div>
+        <div className="flex flex-col items-start gap-3">
+          <p>sin resultados</p>
+          <Buscador ciudades={[]} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* 05 · drill 7: el modal solo existe mientras está abierto, como en Projex. Mientras
+ * está montado, su trampa es de toda la página: el Tab de cualquier sitio entra en él.
+ * Se cierra con la ✕ o con Escape. */
+function DemoMapaDeProjex() {
+  const [abierto, setAbierto] = useState(false);
+
+  function cerrar() {
+    setAbierto(false);
+  }
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Abrir mapa
+      </button>
+      {abierto && <MapaDeProjex onClose={cerrar} />}
+    </div>
+  );
+}
+
 /* 🧪 PRUEBA TEMPORAL (12 oct) — tu `useEffect` tal cual, con un `zoom` propio para que
  * exista. No es ningún drill: se borra cuando termines de mirarlo. */
 function PruebaZoom() {
@@ -435,11 +488,10 @@ export function Bloque12() {
         </p>
         <p className="mt-6 max-w-xl text-[15px] leading-normal text-[#6e6e73]">
           El <span className="font-mono">00</span> y el <span className="font-mono">00b</span>, el
-          ciclo de vida y la identidad, son la base de todo lo demás. Cerrados el{" "}
-          <span className="font-mono">00</span> (9/9), el <span className="font-mono">01</span>{" "}
-          (6/6) y el <span className="font-mono">02</span> (21/21); el{" "}
-          <span className="font-mono">03</span>, en pausa hasta cerrar el{" "}
-          <span className="font-mono">00b</span>.
+          ciclo de vida y la identidad, son la base de todo lo demás. Cerrados del{" "}
+          <span className="font-mono">00</span> al <span className="font-mono">04</span>; en curso,
+          el <span className="font-mono">05</span>, el focus trap de tu{" "}
+          <span className="font-mono">MapModal</span>.
         </p>
       </header>
 
@@ -855,6 +907,88 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoBuscadorNaceAbierto />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-05"
+        titulo="El focus trap: el Tab da la vuelta dentro del modal, sin escaparse."
+      />
+
+      <Tarjeta
+        n={1}
+        nombre="IrAlPanel"
+        mirar="Pulsa Ir al panel: el anillo salta a Ver en Google Maps. Aquí funciona ya con el starter: el fallo no se ve en el navegador, solo en pnpm typecheck."
+        campos="botón Ir al panel · un panel con el enlace Ver en Google Maps y el botón Copiar dirección"
+        estado="resuelto"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <IrAlPanel />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="PrimerResultado"
+        mirar="Pulsa Ir al primero en los dos: con resultados, el anillo cae en Santiago; sin resultados, no pasa nada. Con el starter, el de sin resultados tira un TypeError en la consola (F12)."
+        campos="dos buscadores (de la demo): con tres ciudades y sin ninguna · cada uno: botón Ir al primero y un botón por ciudad"
+        estado="resuelto"
+      >
+        <ConYSinResultados Buscador={PrimerResultado} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="UltimoResultado"
+        mirar="Pulsa Ir al último en los dos: con resultados, el anillo cae en Concepción; sin resultados, no pasa nada. Aquí funciona ya con el starter: el fallo solo está en pnpm typecheck."
+        campos="dos buscadores (de la demo): con tres ciudades y sin ninguna · cada uno: botón Ir al último y un botón por ciudad"
+        estado="resuelto"
+      >
+        <ConYSinResultados Buscador={UltimoResultado} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="MapaConVuelta"
+        mirar="Haz clic en la ✕ y pulsa Tab: el anillo tiene que volver a Ver en Google Maps. Con el starter, el anillo acaba en Copiar dirección (comprobado en Chrome)."
+        campos="un panel con el enlace Ver en Google Maps, el botón Copiar dirección y la ✕"
+        estado="resuelto"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <MapaConVuelta />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="MapaEnLosDosSentidos"
+        mirar="Haz clic en Ver en Google Maps y pulsa Shift+Tab: el anillo tiene que ir a la ✕. Pulsa Shift+Tab otra vez: retrocede a Copiar dirección. Con el starter, el primero se escapa del panel hacia atrás, y desde la ✕ salta al enlace."
+        campos="el mismo panel: Ver en Google Maps, Copiar dirección y la ✕"
+        estado="resuelto"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <MapaEnLosDosSentidos />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="MapaSinAtascos"
+        mirar="Haz clic en Ver en Google Maps y pulsa Tab varias veces: el anillo recorre el panel y da la vuelta. Con el starter, en medio no avanza: el anillo se queda quieto."
+        campos="el mismo panel: Ver en Google Maps, Copiar dirección y la ✕"
+        estado="resuelto"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <MapaSinAtascos />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={7}
+        nombre="MapaDeProjex"
+        mirar="Pulsa Abrir mapa y luego Tab: como en Projex, el foco entra en el modal y ya no sale, ni con Tab ni con Shift+Tab. Escape o la ✕ lo cierran. Con el starter, el Tab se va del modal al resto de la página. Al cerrar, el foco se pierde: eso es el 06."
+        campos="botón Abrir mapa (de la demo) · el modal: la ✕, el enlace Abrir en Google Maps y el botón Copiar dirección"
+      >
+        <DemoMapaDeProjex />
       </Tarjeta>
     </>
   );

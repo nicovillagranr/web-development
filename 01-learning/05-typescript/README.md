@@ -2019,3 +2019,79 @@ Nada nuevo. Banco: chips del 7 al 13 → `resuelto`.
 
 - Planificar y montar el `05` (eventos nativos: `KeyboardEvent`, `target` vs `currentTarget`),
   el `06` (focus trap) y el `07` (su `useMediaPreferences`), y después el 🏁 MapModal.
+
+## Sesión 23 oct 2026 (tarde) — plan nuevo hasta Projex, y el `05` montado (0/7)
+
+### Qué pasó
+
+Al planificar lo que queda se revisaron su `MapModal` y su `useMediaPreferences`, y se buscó
+en el cuaderno qué tiene ya visto. El "05 · eventos nativos" del plan sobraba: el
+`target === currentTarget` del fondo es literalmente el 10/07 (línea 199), los dos
+`KeyboardEvent` son el 10/03, el listener en `document` el 12/02, y `preventDefault` y
+`shiftKey` salen en el 10. **Plan nuevo, aprobado por él:** 05 · el focus trap (los 3
+`TS18048` de Projex) · 06 · el modal que nace abierto (guardar `document.activeElement` y
+devolverlo en la limpieza; ahí la vuelta va en el efecto, al revés que en el 04) · 07 · su
+custom hook, `useMediaPreferences`, con el `.d.ts` de `Navigator` dentro (los 3 `TS2339`) ·
+🏁 el `MapModal` reescrito por él. Projex tiene hoy 6 errores de tipos.
+
+### Qué se montó
+
+**`exercise-05` · el focus trap.** TEORÍA 1 la lista de enfocables → 1 `IrAlPanel` (sin el
+genérico de `querySelectorAll`: `TS2339`, verde de mentira) · 2 `PrimerResultado` (`lista[0]`
+sin proteger: `TS2532` + `TypeError` sin resultados) · 3 `UltimoResultado` (comprueba
+`length` y TypeScript sigue avisando: el `TS18048` de su Projex, verde de mentira). TEORÍA 2
+dar la vuelta (la pista de atletismo; trampa: Shift+Tab es la misma tecla) → 4
+`MapaConVuelta` (sin `preventDefault`) · 5 `MapaEnLosDosSentidos` (el starter es la solución
+del 4: no mira `shiftKey`) · 6 `MapaSinAtascos` (`preventDefault` arriba del todo). ARMARLO
+TÚ → 7 `MapaDeProjex` (su `MapModal` con el Escape y la trampa en blanco, incluida la rama
+del foco que anda fuera).
+
+Verificado en copia (`src/__verif__`, borrada): solución 7/7, typecheck y lint a 0; cuatro
+versiones a medias del 7 (sin `contains`, `preventDefault` arriba, sin `!shiftKey`, sin la
+rama de Shift) salen rojas. La de sin `!shiftKey` pasaba: se añadió al test el Shift+Tab desde
+el último. Starters: 5 rojos, 3 errores de tipos (1, 2 y 3), lint 0; cuadra con la cabecera.
+360 líneas (sobre el techo: el 4, el 5 y el 6 repiten el mismo listener). Las preguntas del
+`¿Por qué?` se responden con el código ya arreglado delante. **Banco:** sección 05, 7
+tarjetas; comprobado en Chrome que se pinta sin errores y que el starter del 4 deja el foco
+en "Copiar dirección".
+
+### Pendiente
+
+- El `05` desde la Teoría 1. Sin commitear (el 05, el banco y esta entrada).
+
+## Sesión 24 oct 2026 — el `05`, del 1 al 7: seis aprobados y el 7 en verde (7/7 tests)
+
+### Qué pasó
+
+Typecheck y lint a 0 desde el drill 3. El código de los siete le salió sin abrir las pistas;
+lo que costó fueron los porqués.
+- 1 · el genérico `querySelectorAll<HTMLElement>`, solo: la misma forma que el
+  `useRef<HTMLDivElement>` de la línea de arriba, que aprendió en el 03.
+- 2 · porqué con el arreglo (*"faltaba preguntar si esa posición existía"*), sin nombrar
+  `undefined`; aprobado con la tabla de los dos avisos (TypeScript antes, el navegador al pulsar).
+- 3 · *"en TypeScript sí se puede colar un undefined"*: mezclaba lo que cree TypeScript con lo
+  que pasa en el navegador. Con la tabla de los dos mundos lo cerró él: el `?.` protege **a
+  TypeScript**.
+- 4 · el orden bien (el Tab del navegador va después del `focus()`), pero decía que el foco
+  salía del panel; el eslabón: el navegador mueve desde donde **esté** el foco, por eso acababa
+  en "Copiar dirección".
+- 5 y 6 · los dos primeros porqués eran el del 4 con otras palabras (en el 6, que el starter
+  no tenía `preventDefault`, cuando lo tenía arriba). Los dos se desatascaron con el starter
+  numerado ①②③ y una pregunta.
+- 7 · el 1º intento era el manejador del 6 pegado, con su `!contains → return`: el foco de
+  fuera no entraba. Al 2º, la rama del foco de fuera antes de los bordes: 7/7.
+
+Los desajustes de sus porqués del 3, 4, 5 y 6 los corrigió Claude a petición suya, tocando
+solo esas frases.
+
+### Qué se montó
+
+Nada nuevo. Banco: chips del 1 al 6 → `resuelto`.
+
+### Pendiente
+
+- Cerrar el 7: su porqué cuenta qué hace el código, no por qué un modal recupera el foco y el
+  panel del banco no. Y dos comentarios del JSX con el orden cambiado (la × es el primero).
+- Marcado sin tocar: el comentario del 4 que dice que el efecto corre "al montar y desmontar"
+  (al desmontar corre la limpieza).
+- Después, montar el `06` (el modal que nace abierto).
