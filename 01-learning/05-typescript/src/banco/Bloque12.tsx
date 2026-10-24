@@ -987,6 +987,7 @@ export function Bloque12() {
         nombre="MapaDeProjex"
         mirar="Pulsa Abrir mapa y luego Tab: como en Projex, el foco entra en el modal y ya no sale, ni con Tab ni con Shift+Tab. Escape o la ✕ lo cierran. Con el starter, el Tab se va del modal al resto de la página. Al cerrar, el foco se pierde: eso es el 06."
         campos="botón Abrir mapa (de la demo) · el modal: la ✕, el enlace Abrir en Google Maps y el botón Copiar dirección"
+        estado="resuelto"
       >
         <DemoMapaDeProjex />
       </Tarjeta>

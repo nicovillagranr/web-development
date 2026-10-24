@@ -500,15 +500,15 @@ export function MapaDeProjex({ onClose }: { onClose: () => void }) {
   return (
     // Este div es el contenedor del modal al que apunta modalRef.
     <div ref={modalRef} role="dialog" aria-modal="true" aria-label="Mapa de ubicación">
-      {/* Botón que cierra el modal. */}
+      {/* Botón que cierra el modal. Es el primer elemento enfocable del modal. */}
       <button type="button" onClick={onClose} aria-label="Cerrar mapa">
         &times;
       </button>
 
-      {/* Primer elemento enfocable del modal. */}
+      {/* Elemento enfocable intermedio. */}
       <a href="#mapa">Abrir en Google Maps</a>
 
-      {/* Elemento enfocable intermedio. */}
+      {/* Último elemento enfocable del modal. */}
       <button type="button">Copiar dirección</button>
     </div>
   );
@@ -518,3 +518,5 @@ export function MapaDeProjex({ onClose }: { onClose: () => void }) {
 // ¿Por qué? En los drills 4 a 6, si el foco estaba fuera del panel, la trampa no hacía
 // nada. ¿Por qué aquí lo mete dentro?
 // Porque antes, el manejador solo miraba si el elemento activo estaba dentro del panel. Aquí, si no está dentro, cancelamos el comportamiento por defecto y lo llevamos al primer elemento del modal.
+// El panel del banco está entre otras tarjetas: si el foco sale, se sigue viendo y la página se sigue usando. El modal de Projex tapa la página con el fondo oscuro: si el foco anda fuera, desaparece detrás y quien navega con teclado no sabe dónde está.
+// Por eso aquí el foco no puede andar fuera del modal, y no viene de serie: lo consigue la rama del `contains`. Sin ella, el Shift+Tab desde fuera acababa en <body>.

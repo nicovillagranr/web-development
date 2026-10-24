@@ -2059,7 +2059,7 @@ en "Copiar dirección".
 
 - El `05` desde la Teoría 1. Sin commitear (el 05, el banco y esta entrada).
 
-## Sesión 24 oct 2026 — el `05`, del 1 al 7: seis aprobados y el 7 en verde (7/7 tests)
+## Sesión 24 oct 2026 — el focus trap del 1 al 7: `exercise-05` CERRADO (7/7)
 
 ### Qué pasó
 
@@ -2079,19 +2079,25 @@ lo que costó fueron los porqués.
   no tenía `preventDefault`, cuando lo tenía arriba). Los dos se desatascaron con el starter
   numerado ①②③ y una pregunta.
 - 7 · el 1º intento era el manejador del 6 pegado, con su `!contains → return`: el foco de
-  fuera no entraba. Al 2º, la rama del foco de fuera antes de los bordes: 7/7.
+  fuera no entraba. Al 2º, la rama del foco de fuera antes de los bordes: 7/7. El porqué
+  contaba qué hacía el código; no sabía qué era "el panel del banco" (explicado con el dibujo
+  de las tarjetas) y lo cerró él: *"no puede andar fuera del modal, desaparecería"*. Eslabón:
+  eso no viene de serie, lo consigue la rama del `contains`.
+
+**`exercise-05` CERRADO (7/7)**, typecheck y lint a 0; `verificar-ejercicio` pasada (único
+aviso: 522 líneas, por sus comentarios). Projex ya tiene en este archivo la trampa que le quita
+sus tres `TS18048`.
 
 Los desajustes de sus porqués del 3, 4, 5 y 6 los corrigió Claude a petición suya, tocando
 solo esas frases.
 
 ### Qué se montó
 
-Nada nuevo. Banco: chips del 1 al 6 → `resuelto`.
+Nada nuevo. Banco: chips del 1 al 7 → `resuelto`. El porqué del 7 y dos comentarios de su JSX
+(tenían el orden cambiado: la × es el primero) los escribió Claude a petición suya.
 
 ### Pendiente
 
-- Cerrar el 7: su porqué cuenta qué hace el código, no por qué un modal recupera el foco y el
-  panel del banco no. Y dos comentarios del JSX con el orden cambiado (la × es el primero).
 - Marcado sin tocar: el comentario del 4 que dice que el efecto corre "al montar y desmontar"
   (al desmontar corre la limpieza).
 - Después, montar el `06` (el modal que nace abierto).
