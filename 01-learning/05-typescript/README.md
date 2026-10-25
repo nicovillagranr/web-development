@@ -2101,3 +2101,59 @@ Nada nuevo. Banco: chips del 1 al 7 → `resuelto`. El porqué del 7 y dos comen
 - Marcado sin tocar: el comentario del 4 que dice que el efecto corre "al montar y desmontar"
   (al desmontar corre la limpieza).
 - Después, montar el `06` (el modal que nace abierto).
+
+## Sesión 24 oct 2026 (tarde) — el `06` y el `07` montados (0/6 y 0/4)
+
+### Qué pasó
+
+Pidió "los siguientes archivos": se montaron los dos que permite el contrato, el `06` y el
+`07`. El 🏁 no se monta, porque es reescribir su `MapModal` en Projex. Para diseñarlos se
+releyeron su `Contact.tsx` y su `useMediaPreferences.ts`: Projex sigue en 6 errores de tipos,
+los tres `TS18048` del focus trap (ya resueltos en el `05`) y los tres `TS2339` de `navigator`.
+
+### Qué se montó
+
+**`exercise-06` · el modal que nace abierto.** TEORÍA 1 `instanceof` (cumple el 🔭 del 10/07)
+→ 1 `devolverFoco` (`elemento.focus()` con `Element | null`: `TS18047` + `TS2339` + `TypeError`
+con `null`) · 2 `MenuQueSeCierraFuera` (`contains(event.target)`: `TS2345`, verde de mentira).
+TEORÍA 2 nacer abierto, morir cerrado (el marcapáginas; trampa: copiar el 04 y poner la vuelta
+en un manejador) → 3 `ContactoConDosEntradas` (la vuelta en el padre, copiada del 04; "Cómo
+llegar" vive en `Pie`, como su `ContactInfo`; el test monta además el modal suelto, así que la
+vuelta tiene que hacerla el modal) · 4 `MapaConMarcapaginas` (anota el foco después de la ida)
+· 5 `MapaSobreElMenu` (devuelve el `overflow` a `""` con un menú que ya lo bloqueaba).
+ARMARLO TÚ → 6 `MapModalDeProjex` (su modal: ida, vuelta y `overflow`, con tres salidas).
+313 líneas.
+
+**`exercise-07` · su custom hook.** TEORÍA 1 un custom hook (la receta) → 1
+`prefiereMenosMovimiento` (sin `use`: solo lo marca el lint, `rules-of-hooks`) · 2
+`FondoDelContacto` (una copia vieja sin limpieza: usar el hook). TEORÍA 2 contarle a
+TypeScript lo que falta (`declare global` + fusión de interfaces; ejemplo con `deviceMemory`)
+→ 3 `ahorraDatos` (`navigator.connection.saveData`: `TS2339` + `TypeError` sin `connection`).
+ARMARLO TÚ → 4 `useMediaPreferences` (su hook tal cual: los tres `TS2339` de Projex, y el
+primer render siempre `false`, que pinta el vídeo un instante). 224 líneas.
+
+Verificado en copia (`src/exercises/__verif__`, borrada): soluciones 6/6 y 4/4, typecheck y
+lint a 0. Starters: 06 con 5 rojos y 3 errores de tipos; 07 con 3 rojos, 4 errores de tipos y
+2 de lint. Cuadra con las dos cabeceras. Se probaron nueve soluciones a medias (el padre que
+anota quién abrió, un ref devuelto en la ✕, el `overflow` a `""`, el marcapáginas tarde, la
+declaración sin `?`, el valor inicial sin el ahorro de datos…), y todas salen rojas.
+
+Tres cosas aprendidas al montar:
+- **`declare global` es de todo el proyecto.** La copia resuelta del 07 tapaba los errores del
+  starter: hubo que apartarla para ver los `TS2339` de verdad.
+- **El lint del cuaderno NO marca el `updatePreferences()` de su hook** (la memoria decía que
+  sí). Lo que sí falla es el primer render, y eso lo mira el test.
+- **Cerrar el modal con un clic en el fondo deja el foco en `<body>`**, aunque la limpieza lo
+  devuelva: el `mousedown` del navegador lo mueve después. Comprobado en jsdom y en Chrome. Por
+  eso el test del 6 no mira el foco tras el fondo, y la solución de las pistas lo explica.
+
+**Banco:** secciones 06 (tarjetas 2-6) y 07 (1-4), con el `overflow` del body en vivo y, en el
+4 del 07, lo que devolvió el hook en su primer render. Probadas en Chrome: el starter del 3 del
+06 devuelve el foco a "Ver mapa", el 5 deja el `overflow` vacío con el menú abierto, y la
+solución del 6 (montada un momento en el banco) vuelve con Escape y se queda en `<body>` con el
+fondo.
+
+### Pendiente
+
+- El `06` desde la Teoría 1, y después el `07`. Sin commitear (el 06, el 07, el banco y esta
+  entrada).

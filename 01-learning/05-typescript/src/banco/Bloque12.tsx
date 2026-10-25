@@ -46,6 +46,19 @@ import {
   MapaSinAtascos,
   MapaDeProjex,
 } from "../exercises/12-custom-hooks/exercise-05";
+import {
+  MenuQueSeCierraFuera,
+  ContactoConDosEntradas,
+  MapaConMarcapaginas,
+  MapaSobreElMenu,
+  MapModalDeProjex,
+} from "../exercises/12-custom-hooks/exercise-06";
+import {
+  HeroDeProjex,
+  FondoDelContacto,
+  ahorraDatos,
+  useMediaPreferences,
+} from "../exercises/12-custom-hooks/exercise-07";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
@@ -453,6 +466,117 @@ function DemoMapaDeProjex() {
   );
 }
 
+/* 06 · el `overflow` del body, en vivo. No es de ningún drill: lo lee cada medio
+ * segundo para que se vea qué deja el modal al nacer y al morir. */
+function OverflowEnVivo() {
+  const [overflow, setOverflow] = useState(document.body.style.overflow);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setOverflow(document.body.style.overflow), 500);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <p className="font-mono text-[13px] text-[#86868b]">
+      overflow del body: "{overflow}"
+    </p>
+  );
+}
+
+/* 06 · drills 4 y 6: dos botones abren el mismo modal, como el test. El modal no
+ * tiene ningún ref a ellos: si el anillo vuelve al bueno, es que anotó quién lo abrió. */
+function DemoDosEntradas({ Modal }: { Modal: (props: { onClose: () => void }) => ReactNode }) {
+  const [abierto, setAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <div>
+        <button type="button" onClick={() => setAbierto(true)}>
+          Ver mapa
+        </button>
+        <button type="button" onClick={() => setAbierto(true)}>
+          Cómo llegar
+        </button>
+      </div>
+      {abierto && <Modal onClose={() => setAbierto(false)} />}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 06 · drill 5: un menú del móvil que bloquea el scroll por su cuenta (y lo devuelve
+ * como estaba), y desde dentro se abre el mapa. */
+function MenuMovil({ onClose }: { onClose: () => void }) {
+  const [mapaAbierto, setMapaAbierto] = useState(false);
+
+  useEffect(() => {
+    const anterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = anterior;
+    };
+  }, []);
+
+  return (
+    <div role="region" aria-label="Menú del móvil">
+      <button type="button" onClick={() => setMapaAbierto(true)}>
+        Ver mapa
+      </button>
+      <button type="button" onClick={onClose}>
+        Cerrar menú
+      </button>
+      {mapaAbierto && <MapaSobreElMenu onClose={() => setMapaAbierto(false)} />}
+    </div>
+  );
+}
+
+/* 07 · drill 3: la pregunta va en un manejador y no en el render. Con el starter, en
+ * un navegador sin `navigator.connection` el error se queda en la consola en vez de
+ * tirar la página entera. */
+function DemoAhorraDatos() {
+  const [respuesta, setRespuesta] = useState("sin preguntar");
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={() => setRespuesta(ahorraDatos() ? "sí" : "no")}>
+        ¿Ahorra datos?
+      </button>
+      <p>Respuesta: {respuesta}</p>
+    </div>
+  );
+}
+
+/* 07 · drill 4: lo que devuelve el hook ahora, y lo que devolvió en el primer render
+ * (el `useState` se queda con el valor de ese primer render). Con menos movimiento
+ * pedido, el starter enseña la diferencia: el primer render dijo "vídeo". */
+function DemoHeroConPreferencias() {
+  const estatico = useMediaPreferences();
+  const [enElPrimerRender] = useState(estatico);
+
+  return (
+    <div className={ANILLO}>
+      <p>Hero: {estatico ? "imagen fija" : "vídeo"}</p>
+      <p className="font-mono text-[13px] text-[#86868b]">
+        en el primer render: "{enElPrimerRender ? "imagen fija" : "vídeo"}"
+      </p>
+    </div>
+  );
+}
+
+function DemoMenuMovil() {
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setMenuAbierto(true)}>
+        Abrir menú
+      </button>
+      {menuAbierto && <MenuMovil onClose={() => setMenuAbierto(false)} />}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
 /* 🧪 PRUEBA TEMPORAL (12 oct) — tu `useEffect` tal cual, con un `zoom` propio para que
  * exista. No es ningún drill: se borra cuando termines de mirarlo. */
 function PruebaZoom() {
@@ -489,9 +613,9 @@ export function Bloque12() {
         <p className="mt-6 max-w-xl text-[15px] leading-normal text-[#6e6e73]">
           El <span className="font-mono">00</span> y el <span className="font-mono">00b</span>, el
           ciclo de vida y la identidad, son la base de todo lo demás. Cerrados del{" "}
-          <span className="font-mono">00</span> al <span className="font-mono">04</span>; en curso,
-          el <span className="font-mono">05</span>, el focus trap de tu{" "}
-          <span className="font-mono">MapModal</span>.
+          <span className="font-mono">00</span> al <span className="font-mono">05</span>; en curso,
+          el <span className="font-mono">06</span>, el modal que nace abierto, y el{" "}
+          <span className="font-mono">07</span>, tu custom hook.
         </p>
       </header>
 
@@ -990,6 +1114,101 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoMapaDeProjex />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-06"
+        titulo="El modal que nace abierto: anota quién tenía el foco y se lo devuelve al morir."
+      />
+
+      <Tarjeta
+        n={2}
+        nombre="MenuQueSeCierraFuera"
+        mirar="Pulsa Compartir y luego Copiar enlace: el menú sigue abierto. Haz clic en Fuera del menú, o en cualquier otro sitio de la página: se cierra. Aquí funciona ya con el starter: el fallo solo está en pnpm typecheck."
+        campos="botón Compartir · al abrir: los botones Copiar enlace y Enviar por correo · el texto Fuera del menú"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <MenuQueSeCierraFuera />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="ContactoConDosEntradas"
+        mirar="Pulsa Cómo llegar: el anillo salta a la ×. Ciérralo con la ×: el anillo tiene que volver a Cómo llegar. Con el starter vuelve siempre a Ver mapa, lo abras desde donde lo abras."
+        campos="botón Ver mapa · el pie, con el botón Cómo llegar · al abrir: la × y el enlace Abrir en Google Maps"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <ContactoConDosEntradas />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="MapaConMarcapaginas"
+        mirar="Pulsa Cómo llegar y ciérralo con la ×: el anillo tiene que volver a Cómo llegar. Con el starter el anillo desaparece: el foco se pierde en la página."
+        campos="botones Ver mapa y Cómo llegar (de la demo) · al abrir: la × y el enlace Abrir en Google Maps"
+      >
+        <DemoDosEntradas Modal={MapaConMarcapaginas} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="MapaSobreElMenu"
+        mirar="Pulsa Abrir menú: el overflow pasa a hidden. Dentro, pulsa Ver mapa y ciérralo con la ×: con el menú todavía abierto, el overflow tiene que seguir en hidden. Con el starter vuelve a vacío, y la página se mueve detrás del menú."
+        campos="botón Abrir menú (de la demo) · el menú: Ver mapa y Cerrar menú · al abrir el mapa: la × y el enlace · el overflow del body, en vivo"
+      >
+        <DemoMenuMovil />
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="MapModalDeProjex"
+        mirar="Pulsa Ver mapa o Cómo llegar: el anillo salta a la × y el overflow pasa a hidden. Ciérralo con Escape o con la ×: el anillo vuelve al botón que lo abrió, y el overflow, a como estaba. Con el starter solo funciona el Escape. Si lo cierras con un clic en el fondo, el foco no vuelve ni resuelto: el ratón lo mueve después."
+        campos="botones Ver mapa y Cómo llegar (de la demo) · el modal: el fondo, la × y el enlace Abrir en Google Maps · el overflow del body, en vivo"
+      >
+        <DemoDosEntradas Modal={MapModalDeProjex} />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-07"
+        titulo="Tu custom hook: useMediaPreferences sin errores, y bien desde el primer render."
+      />
+
+      <Tarjeta
+        n={1}
+        nombre="prefiereMenosMovimiento"
+        mirar="Cámbialo sin recargar: DevTools → ⋮ → More tools → Rendering → Emulate CSS media feature prefers-reduced-motion. Con reduce, el Hero pasa a imagen fija. Aquí funciona ya con el starter: el fallo solo está en pnpm lint."
+        campos="el texto del Hero: imagen fija o vídeo"
+      >
+        <HeroDeProjex />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="FondoDelContacto"
+        mirar="Con la misma emulación de prefers-reduced-motion, el fondo pasa a quieto. Lo que falla no se ve aquí: al desmontarse se queda escuchando, y eso lo mira el test."
+        campos="el texto del fondo: quieto o animado"
+      >
+        <FondoDelContacto />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="ahorraDatos"
+        mirar="Pulsa ¿Ahorra datos?: en Chrome responde no, salvo que tengas activado Ahorrar datos. Chrome sí tiene navigator.connection; en Safari o Firefox, con el starter, el botón tiraría un error en la consola."
+        campos="botón ¿Ahorra datos? (de la demo) · la respuesta"
+      >
+        <DemoAhorraDatos />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="useMediaPreferences"
+        mirar="Emula prefers-reduced-motion: reduce y recarga la página. Resuelto, las dos líneas dicen imagen fija. Con el starter, la segunda dice vídeo: es el instante en que tu Hero pinta el vídeo antes de que corra el efecto."
+        campos="lo que devuelve el hook ahora · lo que devolvió en el primer render (de la demo)"
+      >
+        <DemoHeroConPreferencias />
       </Tarjeta>
     </>
   );
