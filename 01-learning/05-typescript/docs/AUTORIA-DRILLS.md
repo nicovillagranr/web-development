@@ -1,9 +1,13 @@
-# Autoría de drills — especificación v3
+# Autoría de drills — especificación v4
 
-> **Vigente desde el 11 ago 2026.** Sustituye a la "especificación de estilo v2"
-> (`README.md`, sección `10-eventos-formularios`), que queda como histórico.
+> **Vigente desde el 25 oct 2026.** La v4 es la v3 con el **formato compacto** que el
+> alumno escribió a mano sobre el `12-custom-hooks/exercise-06.tsx` (§1 y §5). Todo lo
+> demás (la frontera, lo prohibido, las pistas, la verificación) sigue igual que en la v3,
+> vigente desde el 11 ago 2026. La v2 (`README.md`, sección `10-eventos-formularios`)
+> queda como histórico.
 > Esta es la **fuente de verdad única** para montar y revisar ejercicios. El `README`
-> es la bitácora: cuenta qué pasó, no cómo se escribe.
+> es la bitácora: cuenta qué pasó, no cómo se escribe. **El modelo vivo del formato es el
+> `12-custom-hooks/exercise-06.tsx`**: ante la duda, se copia de ahí.
 
 ---
 
@@ -29,24 +33,38 @@ Cuatro cosas, en este orden, **ninguna etiquetada**. El orden lo da la prosa.
 3. **Resultado esperado** — el comportamiento observable, en prosa.
 4. **Restricciones** — solo si son reales. Línea aparte, en seco.
 
+El enunciado va en un bloque `/* */` **encima** del código, y el `¿Por qué?` va dentro
+del mismo bloque, con una línea libre debajo para la respuesta. Las trace lines siguen
+**debajo** de la función, con `//`.
+
 ```ts
-// 4) `BotonConIdRecibeManejador`
-//    Un manejador reutilizable no puede saber sobre CUÁL de los botones se pulsó:
-//    ese dato solo lo tiene el hijo. Por eso el que llega por props aquí pide dos
-//    cosas —el evento y un id—, y el hijo tiene que apañárselas para darle las dos.
-//    Monta un <button> "Avisar" que lleve ese id como atributo y que al pulsarlo
-//    ejecute el manejador con la información completa.
+/* 4) BotonConIdRecibeManejador — un manejador reutilizable no puede saber sobre
+ * cuál de los botones se pulsó: ese dato solo lo tiene el hijo. Monta un <button>
+ * «Avisar» que lleve ese id como atributo y que al pulsarlo ejecute el manejador
+ * con el evento y el id.
+ * ¿Por qué? ¿Por qué el id tiene que ponerlo el hijo, y no el padre?
+ *
+ */
+export function BotonConIdRecibeManejador(/* … */) { /* … */ }
+// <BotonConIdRecibeManejador id="a" onAvisar={console.log} />
 ```
 
 **Techo: 3-7 líneas.** Si pasa de 7, o el drill mezcla dos conceptos, o el enunciado
 está explicando de más. Las dos cosas se arreglan partiendo, no recortando prosa.
 
-No hace falta usar las cuatro. Un drill fácil son dos frases:
+No hace falta usar las cuatro. Un drill fácil son dos frases, y sin `¿Por qué?` el
+bloque cabe en una línea:
 
 ```ts
-// 1) `Marco` — recibe `children` y lo pinta dentro de un <article className="marco">,
-//    tal cual llega.
+/* 1) Marco — recibe children y lo pinta dentro de un <article className="marco">. */
 ```
+
+**El `¿Por qué?` se lee antes de resolver**, porque está encima del código. No puede
+nombrar el arreglo: "¿A quién había guardado anterior en el starter?" sí; "¿a quién
+había guardado si se declaraba después de focus()?" no, eso es la solución del drill.
+
+**En un archivo ya resuelto**, la respuesta del alumno sube a la línea libre de su
+`¿Por qué?` **palabra por palabra**: ni se recorta ni se reescribe, aunque sea larga.
 
 ---
 
@@ -114,8 +132,8 @@ drill, que hacía **tres** trabajos a la vez. Se reparten así:
 
 | Trabajo que hacía el `🔧` | Dónde va ahora |
 |---|---|
-| "aquí hay algo roto a propósito" | **Cabecera, una vez:** *"Todos los starters de este archivo están rotos a propósito."* Desaparece de los drills. |
-| "este drill pasa el test con el fallo dentro" | **Cabecera, en número y sin nombrar drills:** *"2 de los 6 pasan el test con el fallo dentro — corre siempre los dos comandos."* |
+| "aquí hay algo roto a propósito" | **Cabecera, una vez:** *"Los starters están rotos a propósito, …"* Desaparece de los drills. |
+| "este drill pasa el test con el fallo dentro" | **Cabecera, en número y sin nombrar drills:** *"…, y uno pasa el test con el fallo dentro: ejecuta ambos comandos."* |
 | el error literal de `tsc` | **Pista 3** del `.pistas.md`. |
 
 Se conserva la ventaja de diseño de siempre: **los starters USAN sus parámetros**, así
@@ -123,28 +141,90 @@ que no hay `no-unused-vars` que silenciar ni una sola línea de `eslint-disable`
 
 ---
 
-## 5. Anatomía del archivo
+## 5. Anatomía del archivo — formato compacto
 
-Lo que sigue **igual que en la v2** — funciona, el problema estaba en el enunciado:
+**Cabecera, techo 40 líneas** (el modelo tiene 29), sin el segundo separador `=====`
+bajo el título y sin sangría dentro del comentario:
 
-**Cabecera, techo 40 líneas**, en este orden:
+```ts
+/* =============================================================================
+ * EJERCICIO 06 — el modal que nace abierto: el foco vuelve al morir · bloque 12
+ *
+ * 📌 RECORDATORIO — como con typeof, instanceof estrecha el tipo dentro del if.
+ * En el ejercicio 04, la vuelta del foco iba en el manejador de cerrar. …
+ *
+ * 🎯 OBJETIVOS
+ * · Estrechar tipos con instanceof.
+ * · Guardar y devolver el foco al montar/desmontar.
+ *
+ * 🟢 CONTEXTO — MapModal se monta con {isMapOpen && <MapModal />}. …
+ *
+ * 🗺️ MAPA
+ * TEORÍA 1 · instanceof → drills 1–2
+ * TEORÍA 2 · montaje y limpieza → drills 3–5
+ * ARMARLO TÚ → drill 6
+ *
+ * ▸ 6 drills en orden. Prohibidos any, as y el ! de «confía en mí» (x!).
+ * pnpm test:run src/exercises/12-custom-hooks/exercise-06.test.tsx
+ * pnpm typecheck · pnpm lint
+ *
+ * Los starters están rotos a propósito, y uno pasa el test con el fallo dentro:
+ * ejecuta ambos comandos. Contesta cada ¿Por qué? en la línea libre de debajo.
+ * Pistas: exercise-06.pistas.md. Drills 2–6: banco, pestaña 12.
+ * ============================================================================= */
+```
 
-1. `📌 RECORDATORIO` (≤16 líneas, solo lo que ese archivo usa; si manipula un objeto,
-   su FORMA dibujada con valores de ejemplo reales y un `(recortada, trae ~25 campos)`
-   que diga la verdad).
-2. `🎯 AL TERMINAR SABRÁS` — 2-4 viñetas comprobables, en infinitivo.
-3. `🟢 ¿POR QUÉ ESTE ARCHIVO?` — 2-4 frases, segunda persona.
-4. `🗺️ MAPA DEL ARCHIVO` — `TEORÍA 1 → drills 1-3 · TEORÍA 2 → drills 4-6`.
-5. `▸ EJERCICIO` — prohibido `any`/`as`, comandos de test y typecheck, la frase de los
-   starters rotos (§4), el recuento de verdes de mentira (§4) y **una sola línea**
-   diciendo que existe `exercise-NN.pistas.md` y que se abre cuando uno se atasca.
+1. `📌 RECORDATORIO —` (opcional) — 1-3 líneas en prosa, solo lo que ese archivo usa.
+   Si manipula un objeto, su forma con valores reales puede ir debajo, recortada.
+2. `🎯 OBJETIVOS` — 2-4 viñetas `·`, en infinitivo, con punto final.
+3. `🟢 CONTEXTO —` — 2-3 frases: por qué existe el archivo.
+4. `🗺️ MAPA` — una línea por teoría o sección, con `→` y rangos con `–`.
+5. `▸ N drills en orden.` — lo prohibido **de ese archivo** (en los archivos viejos ya
+   resueltos se conserva su lista original, para no prohibir a posteriori algo que su
+   solución usa), los comandos, la frase de los starters rotos con el recuento de verdes
+   de mentira (§4), cómo contestar los `¿Por qué?`, y una línea con las pistas y el banco.
+   La línea de las pistas solo si el archivo las tiene.
 
-**Bloques de teoría intercalados**, 2-3 por archivo, ~20-25 líneas, cada uno pegado a
-sus drills. Estructura fija: `DEFINICIÓN` (una frase, en términos técnicos) ·
-`SINTAXIS` (la forma escrita, con las piezas señaladas) · `EJEMPLO` (código mínimo
-ejecutable y su resultado) · `🧠 ANALOGÍA` (una, **de apoyo — no sustituye a la
-definición**) · `🗣️ LAS PIEZAS` (pieza → nombre técnico) · `⚠️ TRAMPA` (el error
-concreto que va a cometer, y por qué).
+**Bloques de teoría intercalados**, pegados a sus drills:
+
+```ts
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 1 — instanceof: de Element a HTMLElement
+ *
+ * DEFINICIÓN
+ * x instanceof Clase comprueba en ejecución si x pertenece a esa clase. …
+ *
+ * SINTAXIS
+ * const anterior = document.activeElement; // Element | null
+ * if (anterior instanceof HTMLElement) {
+ *   anterior.focus(); // aquí TypeScript sabe que es HTMLElement
+ * }
+ *
+ * 🧠 ANALOGÍA — as es decir «soy del staff»; instanceof es enseñar la credencial.
+ *
+ * 🗣️ LAS PIEZAS
+ * Element     → elemento HTML o SVG; no incluye nodos de texto. Sin focus().
+ * HTMLElement → elemento HTML, como button, input, a o div. Con focus().
+ *
+ * ⚠️ TRAMPA — ?. evita el acceso cuando el valor es null, pero no estrecha …
+ * ───────────────────────────────────────────────────────────────────────────── */
+```
+
+`DEFINICIÓN` (1-3 líneas, en términos técnicos) · `SINTAXIS` (el código, sin sangría
+extra; lo anidado a 2 espacios) · `Ejemplos:` (opcional, `expresión → resultado`) ·
+`🧠 ANALOGÍA —` (una o dos líneas, **de apoyo, no sustituye a la definición**) ·
+`🗣️ LAS PIEZAS` (pieza → qué es, alineadas; las ordenadas de más amplia a más concreta
+cuando son tipos) · `⚠️ TRAMPA —` (el error concreto que va a cometer) · `💡` (opcional).
+Si una pieza es la que necesita un drill o una pista, **no se recorta**.
+
+**Separadores de sección** sin teoría (escaleras, bloques de drills): el mismo marco
+`─────` con solo la línea `▸ TÍTULO`, o una sola línea `/* ▸ BLOQUE A — título */`
+cuando el archivo tiene muchos.
+
+**Estilo de los comentarios:** sin backticks (el código se nombra tal cual: instanceof,
+event.target); los textos de la interfaz entre «»; frases cortas, con punto. El código
+**no** entra en el formato: un retoque de formato no cambia ni una línea de código, y se
+comprueba (§8).
 
 **Otras invariantes:** un concepto por archivo · techo ~230 líneas · trace lines
 comentadas bajo cada función · los recordatorios de un `type` van **junto al drill que

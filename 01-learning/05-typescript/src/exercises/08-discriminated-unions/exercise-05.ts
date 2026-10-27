@@ -1,82 +1,89 @@
 /* =============================================================================
- * EJERCICIO 05 — El discriminante puede ser un booleano: el tipo `Resultado<T>`
- * =============================================================================
+ * EJERCICIO 05 — el discriminante puede ser un booleano: Resultado<T> · bloque 08
  *
- * ▸ EXPLICACIÓN — el "tag" no tiene por qué llamarse "tipo" ni ser un string
- * ----------------------------------------------------------------------------
- * Hasta ahora el discriminante era un string ("circulo", "exito"…) en un campo
- * llamado `tipo` o `estado`. Pero la regla real es más amplia: el discriminante
- * es CUALQUIER campo común cuyo valor sea un LITERAL distinto en cada variante.
- * Y `true` y `false` son literales perfectamente válidos.
+ * 🎯 OBJETIVOS
+ * · Usar un booleano literal (true / false) como discriminante.
+ * · Leer un Resultado<T> estrechando con if (r.ok).
+ * · Devolver errores como dato, sin excepciones, y transformar el valor de éxito.
  *
- * El patrón más famoso que explota esto es `Resultado<T>` (en otros lenguajes
- * lo llaman `Result`, `Either`): representa "salió bien con un valor" o "salió
- * mal con un error", usando un booleano `ok` como etiqueta:
+ * 🟢 CONTEXTO — hasta ahora el discriminante era un string ("circulo", "exito"…)
+ * en un campo llamado tipo o estado. Pero la regla real es más amplia, y el patrón
+ * más famoso que lo aprovecha, Resultado<T>, vuelve en el 06 y en toda la FASE 2.
  *
- *   type Resultado<T> =
- *     | { ok: true;  valor: T }
- *     | { ok: false; error: string };
+ * 🗺️ MAPA
+ * TEORÍA · un booleano como etiqueta: Resultado<T> → base de todo el archivo
+ * BLOQUE A · leer un Resultado → drills 1–3
+ * BLOQUE B · producir y transformar Resultados → drills 4–5
  *
- * Como `ok` es `true` en una variante y `false` en la otra, basta `if (r.ok)`
- * para que TS sepa que ahí dentro existe `r.valor` (y en el `else`, `r.error`):
+ * ▸ 5 drills en escalera, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/08-discriminated-unions/exercise-05.test.ts
+ * pnpm typecheck
+ * ============================================================================= */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA — el «tag» no tiene por qué llamarse tipo ni ser un string
  *
- *   function mostrar(r: Resultado<number>): string {
- *     if (r.ok) return `Valor: ${r.valor}`;   // r es { ok: true; valor }
- *     return `Error: ${r.error}`;             // r es { ok: false; error }
- *   }
+ * DEFINICIÓN
+ * El discriminante es cualquier campo común cuyo valor sea un literal distinto en
+ * cada variante, y true y false son literales perfectamente válidos. Resultado<T>
+ * (en otros lenguajes, Result o Either) representa «salió bien con un valor» o
+ * «salió mal con un error», con un booleano ok como etiqueta.
  *
+ * SINTAXIS
+ * type Resultado<T> =
+ *   | { ok: true;  valor: T }
+ *   | { ok: false; error: string };
  *
- * ▸ ANALOGÍA — el sobre con sello de "PAGADO" o "DEVUELTO"
- * ----------------------------------------------------------------------------
- * Un sobre del banco trae un sello: verde "PAGADO" (dentro, el comprobante con
- * el importe) o rojo "DEVUELTO" (dentro, el motivo del rechazo). El sello
- * booleano —pagado sí/no— te dice de antemano qué papel vas a encontrar. Nunca
- * encuentras importe Y motivo a la vez: el sello manda.
+ * function mostrar(r: Resultado<number>): string {
+ *   if (r.ok) return `Valor: ${r.valor}`; // r es { ok: true; valor }
+ *   return `Error: ${r.error}`;           // r es { ok: false; error }
+ * }
  *
+ * 🧠 ANALOGÍA — el sobre del banco con sello: verde «pagado» (dentro, el
+ * comprobante con el importe) o rojo «devuelto» (dentro, el motivo del rechazo). El
+ * sello te dice qué papel vas a encontrar; nunca hay importe y motivo a la vez.
  *
- * ▸ CUÁNDO USAR
- * ----------------------------------------------------------------------------
- *   - Cuando una operación puede fallar y quieres OBLIGAR a quien la usa a
- *     contemplar el fallo, sin lanzar excepciones. Lo profundizamos en el 06.
- *
- *
- * ▸ EJERCICIO — drills en escalera. EN ORDEN. ❌ nada de `any` ni `as`.
- *     pnpm test:run src/exercises/08-discriminated-unions/exercise-05.test.ts
- * ===========================================================================*/
+ * 💡 Cuándo usarlo: cuando una operación puede fallar y quieres obligar a quien la
+ * usa a contemplar el fallo, sin lanzar excepciones. Lo profundizas en el 06.
+ * ───────────────────────────────────────────────────────────────────────────── */
 
 export type Resultado<T> = { ok: true; valor: T } | { ok: false; error: string };
 
-/* ── BLOQUE A — leer un Resultado ──────────────────────────────────────────── */
+/* ▸ BLOQUE A — leer un Resultado */
 
-// 1) `esExito` — ¿salió bien? Pista: el propio campo discriminante ES la
-//    respuesta. (No necesitas if/else.)
-//    esExito({ ok: true, valor: 5 }) → true
+/* 1) esExito — ¿salió bien? Pista: el propio campo discriminante es la
+ * respuesta. (No necesitas if/else.)
+ * esExito({ ok: true, valor: 5 }) → true
+ */
 export function esExito<T>(r: Resultado<T>): boolean {
   return r.ok;
 }
 
-// 2) `valorODefecto` — el valor si salió bien; si no, el `porDefecto` que te pasan.
-//    valorODefecto({ ok: true, valor: 5 }, 0) → 5
-//    valorODefecto({ ok: false, error: "x" }, 0) → 0
+/* 2) valorODefecto — el valor si salió bien; si no, el porDefecto que te pasan.
+ * valorODefecto({ ok: true, valor: 5 }, 0) → 5
+ * valorODefecto({ ok: false, error: "x" }, 0) → 0
+ */
 export function valorODefecto<T>(r: Resultado<T>, porDefecto: T): T {
   // r.ok es true? en ese caso retorna r.valor, en caso de ser false retorna porDefecto
   return r.ok ? r.valor : porDefecto;
 }
 
-// 3) `mensajeError` — el error si salió mal; si salió bien, null.
-//    mensajeError({ ok: false, error: "boom" }) → "boom"
-//    mensajeError({ ok: true, valor: 5 }) → null
+/* 3) mensajeError — el error si salió mal; si salió bien, null.
+ * mensajeError({ ok: false, error: "boom" }) → "boom"
+ * mensajeError({ ok: true, valor: 5 }) → null
+ */
 export function mensajeError<T>(r: Resultado<T>): string | null {
   // r.ok es true? en ese caso retorna null, en caso de ser false retorna r.error
   return r.ok ? null : r.error;
 }
 
-/* ── BLOQUE B — producir y transformar Resultados ──────────────────────────── */
+/* ▸ BLOQUE B — producir y transformar Resultados */
 
-// 4) `dividir` — devuelve un Resultado<number>: si `b` es 0, error
-//    "división por cero"; si no, ok con a/b. (Errores como DATO, no excepción.)
-//    dividir(6, 2) → { ok: true, valor: 3 }
-//    dividir(1, 0) → { ok: false, error: "división por cero" }
+/* 4) dividir — devuelve un Resultado<number>: si b es 0, error
+ * "división por cero"; si no, ok con a/b. (Errores como dato, no excepción.)
+ * dividir(6, 2) → { ok: true, valor: 3 }
+ * dividir(1, 0) → { ok: false, error: "división por cero" }
+ */
 export function dividir(a: number, b: number): Resultado<number> {
   if (b != 0) {
     return { ok: true, valor: a / b };
@@ -84,11 +91,12 @@ export function dividir(a: number, b: number): Resultado<number> {
   return { ok: false, error: "división por cero" };
 }
 
-// 5) CAPSTONE `mapResultado` — transforma el valor de éxito con `f`, dejando el
-//    error intacto. Si era ok, devuelve ok con `f(valor)`; si era error, lo
-//    deja pasar tal cual.
-//    mapResultado({ ok: true, valor: 4 }, (n) => n * 10) → { ok: true, valor: 40 }
-//    mapResultado({ ok: false, error: "x" }, (n) => n * 10) → { ok: false, error: "x" }
+/* 5) Capstone mapResultado — transforma el valor de éxito con f, dejando el
+ * error intacto. Si era ok, devuelve ok con f(valor); si era error, lo
+ * deja pasar tal cual.
+ * mapResultado({ ok: true, valor: 4 }, (n) => n * 10) → { ok: true, valor: 40 }
+ * mapResultado({ ok: false, error: "x" }, (n) => n * 10) → { ok: false, error: "x" }
+ */
 export function mapResultado<T, U>(r: Resultado<T>, f: (valor: T) => U): Resultado<U> {
   if (r.ok) {
     return { ok: true, valor: f(r.valor) };

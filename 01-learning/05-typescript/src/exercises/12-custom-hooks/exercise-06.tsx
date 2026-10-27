@@ -63,10 +63,14 @@ import { useEffect, useRef, useState } from "react";
 
 /* 1) devolverFoco — devuelve el foco al elemento anterior, si es HTML.
  * ¿Por qué? ¿Por qué ?. no bastaba y instanceof sí?
- *
+ * Porque ?. solo evita errores al intentar acceder a propiedades de null o undefined, pero no cambia el tipo del elemento. Por eso necesitamos instanceof para asegurarnos de que podemos llamar a focus() de manera segura.
  */
 export function devolverFoco(elemento: Element | null) {
-  elemento.focus();
+  // Qué significa instanceof HTMLElement?
+  // instanceof HTMLElement comprueba en tiempo de ejecución si el elemento es una instancia de HTMLElement, osea si es un elemento HTML válido que puede recibir foco. Esto es necesario porque document.activeElement puede devolver un Element que no sea un HTMLElement (por ejemplo, un SVGElement o null). El operador ?. solo evita errores al intentar acceder a propiedades de null o undefined, pero no cambia el tipo del elemento. Por eso necesitamos instanceof para asegurarnos de que podemos llamar a focus() de manera segura.
+  if (elemento instanceof HTMLElement) {
+    elemento.focus();
+  }
 }
 // devolverFoco(document.activeElement);
 
@@ -74,22 +78,32 @@ export function devolverFoco(elemento: Element | null) {
  * ya funciona, pero el typecheck no lo deja pasar.
  * ¿Por qué? En el navegador, event.target siempre era algo de la página.
  * ¿Por qué TypeScript no se lo creía?
- *
+ * Porque event.target puede ser de tipo EventTarget, que no tiene la propiedad contains. Por eso necesitamos usar instanceof para asegurarnos de que event.target es un Node antes de llamar a contains.
  */
 export function MenuQueSeCierraFuera() {
+  // Seteamos en false el estado inicial del menú
   const [abierto, setAbierto] = useState(false);
+  // Hacemos referencia al div del menú para poder comprobar si el clic fue dentro o fuera de él
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto:
   useEffect(() => {
+    // Definimos la función que se ejecutará al pulsar en cualquier parte del documento
     const alPulsar = (event: MouseEvent) => {
-      if (!menuRef.current?.contains(event.target)) {
+      // Comprobamos si el menú está abierto y si el clic fue fuera del menú
+      if (
+        abierto && // Si el menú está abierto
+        event.target instanceof Node && // Y el objeto del evento es un nodo(para poder usar contains): El evento fue hecho sobre un nodo de la página (Node)
+        !menuRef.current?.contains(event.target) // El click no fue dentro del menú (contains devuelve true si el nodo está dentro del menú, y false si no lo está)
+      ) {
+        // Si es así, cerramos el menú
         setAbierto(false);
       }
     };
 
     document.addEventListener("mousedown", alPulsar);
     return () => document.removeEventListener("mousedown", alPulsar);
-  }, []);
+  }, [abierto]);
 
   return (
     <div>

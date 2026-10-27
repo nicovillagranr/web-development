@@ -1,78 +1,82 @@
 import { useEffect, useRef } from "react";
 
 /* =============================================================================
- * EJERCICIO 05 — el focus trap: el Tab no sale del modal   ·  bloque 12
- * =============================================================================
+ * EJERCICIO 05 — el focus trap: el Tab no sale del modal · bloque 12
  *
- * 📌 RECORDATORIO — un listener del teclado en `document` (el drill 2 del 02):
- *     useEffect(() => {
- *       const alPulsar = (event: KeyboardEvent) => {   // el del navegador: sin <T>
- *         if (event.key === "Escape") cerrar();
- *       };
- *       document.addEventListener("keydown", alPulsar);
- *       return () => document.removeEventListener("keydown", alPulsar);
- *     }, [cerrar]);
- *   `event.preventDefault()` cancela lo que el navegador iba a hacer (el 08 del 10).
+ * 📌 RECORDATORIO — un listener del teclado en document (el drill 2 del 02):
+ * useEffect(() => {
+ *   const alPulsar = (event: KeyboardEvent) => { // el del navegador: sin <T>
+ *     if (event.key === "Escape") cerrar();
+ *   };
+ *   document.addEventListener("keydown", alPulsar);
+ *   return () => document.removeEventListener("keydown", alPulsar);
+ * }, [cerrar]);
+ * event.preventDefault() cancela lo que el navegador iba a hacer (el 08 del 10).
  *
- * 🎯 AL TERMINAR SABRÁS
- *   · sacar los elementos enfocables de un panel con `querySelectorAll<HTMLElement>`
- *   · usar el primero y el último de esa lista sin que TypeScript se queje
- *   · hacer que Tab y Shift+Tab den la vuelta dentro de un panel sin atascarse
+ * 🎯 OBJETIVOS
+ * · Sacar los elementos enfocables de un panel con querySelectorAll<HTMLElement>.
+ * · Usar el primero y el último de esa lista sin que TypeScript se queje.
+ * · Hacer que Tab y Shift+Tab den la vuelta dentro de un panel sin atascarse.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * Tu `MapModal` atrapa el Tab: si el foco se le escapa, quien navega con teclado
- * acaba detrás del fondo oscuro, en una página que no ve. Es la parte con más
- * lógica del modal, y la que le deja a Projex tres errores de tipos.
+ * 🟢 CONTEXTO — tu MapModal atrapa el Tab: si el foco se le escapa, quien navega
+ * con teclado acaba detrás del fondo oscuro, en una página que no ve. Es la parte
+ * con más lógica del modal, y la que le deja a Projex tres errores de tipos.
  *
- * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · la lista de enfocables     →  drills 1 a 3
- *   TEORÍA 2 · dar la vuelta              →  drills 4 a 6
- *   ARMARLO TÚ                            →  drill 7
+ * 🗺️ MAPA
+ * TEORÍA 1 · la lista de enfocables → drills 1–3
+ * TEORÍA 2 · dar la vuelta → drills 4–6
+ * ARMARLO TÚ → drill 7
  *
- * ▸ EJERCICIO — 7 drills, en orden. ❌ Prohibido `any`, `as` y el `!` de "confía en mí".
- *     pnpm test:run src/exercises/12-custom-hooks/exercise-05.test.tsx
- *     pnpm typecheck  ·  pnpm lint
- *   Todos los starters están rotos a propósito. Compilan 4 de 7, y 2 pasan el test
- *   con un error de tipos dentro: corre los dos comandos.
- *   Debajo de cada drill, un `// ¿Por qué?` que reviso yo.
- *   ¿Atascado? Las pistas, en `exercise-05.pistas.md`. 👁️ Los 7, en el banco (pestaña 12).
- * ===========================================================================*/
+ * ▸ 7 drills en orden. Prohibidos any, as y el ! de «confía en mí» (x!).
+ * pnpm test:run src/exercises/12-custom-hooks/exercise-05.test.tsx
+ * pnpm typecheck · pnpm lint
+ *
+ * Los starters están rotos a propósito: compilan 4 de 7, y dos pasan el test con
+ * un error de tipos dentro: ejecuta ambos comandos. Contesta cada ¿Por qué? en la
+ * línea libre de debajo. Pistas: exercise-05.pistas.md. Drills 1–7: banco,
+ * pestaña 12.
+ * ============================================================================= */
 
-// Lo que cuenta como enfocable: el mismo selector que usa tu `MapModal`.
+/* Lo que cuenta como enfocable: el mismo selector que usa tu MapModal. */
 const ENFOCABLES =
   'button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"])';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — la lista de enfocables
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   `querySelectorAll(selector)` busca dentro de un elemento todos los que cumplen
- *   un selector CSS, y te los da en una lista, un `NodeList`, en el orden en que
- *   están en la página. Es el mismo orden que sigue Tab.
+ * querySelectorAll(selector) busca dentro de un elemento todos los que cumplen un
+ * selector CSS, y te los da en una lista, un NodeList, en el orden en que están en
+ * la página. Es el mismo orden que sigue Tab.
  *
  * SINTAXIS
- *     const lista = panel.querySelectorAll<HTMLElement>(ENFOCABLES);
- *     lista.length               // cuántos hay: puede ser 0
- *     lista[0]                   // el primero
- *     lista[lista.length - 1]    // el último
+ * const lista = panel.querySelectorAll<HTMLElement>(ENFOCABLES);
+ * lista.length // cuántos hay: puede ser 0
+ * lista[0] // el primero
+ * lista[lista.length - 1] // el último
  *
- * 🧠 ANALOGÍA — la lista de pasajeros de un vuelo: puedes pedir "el primero de la
- *    lista", pero hay vuelos que salen vacíos. TypeScript te obliga a contar con
- *    ellos: por eso `lista[0]` es `HTMLElement | undefined`.
+ * 🧠 ANALOGÍA — la lista de pasajeros de un vuelo: puedes pedir «el primero de la
+ * lista», pero hay vuelos que salen vacíos. TypeScript te obliga a contar con
+ * ellos: por eso lista[0] es HTMLElement | undefined.
  *
  * 🗣️ LAS PIEZAS
- *     `<HTMLElement>`  →  el tipo de lo que hay en la lista. Sin él, cada pieza es
- *                         un `Element`, que puede ser hasta un dibujo SVG, y un
- *                         `Element` no tiene `focus()`
- *     `NodeList`       →  la lista: tiene `length` e índices, como un array
+ * <HTMLElement> → el tipo de lo que hay en la lista. Sin él, cada pieza es un
+ *                 Element, que puede ser hasta un dibujo SVG, y un Element no
+ *                 tiene focus().
+ * NodeList      → la lista: tiene length e índices, como un array.
  *
- * ⚠️ TRAMPA — el `!` detrás de `lista[0]`. Calla a TypeScript como un `as`, pero
- *    no comprueba nada: si la lista está vacía, rompe igual en el navegador.
+ * ⚠️ TRAMPA — el ! detrás de lista[0]. Calla a TypeScript como un as, pero no
+ * comprueba nada: si la lista está vacía, rompe igual en el navegador.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `IrAlPanel` — en tu sección de contacto, "Ir al panel" lleva el foco al primer
-//    elemento del panel del mapa, sea cual sea. En el navegador ya funciona, pero el
-//    typecheck no lo deja pasar.
+/* 1) IrAlPanel — en tu sección de contacto, "Ir al panel" lleva el foco al primer
+ * elemento del panel del mapa, sea cual sea. En el navegador ya funciona, pero el
+ * typecheck no lo deja pasar.
+ * ¿Por qué? El navegador sí enfocaba el enlace. ¿Por qué TypeScript no te dejaba
+ * llamar a focus()?
+ * Porque sin <HTMLElement>, querySelectorAll devuelve un NodeList<Element>, y un Element no tiene focus().
+ * Con <HTMLElement>, querySelectorAll devuelve un NodeList<HTMLElement>, y un HTMLElement sí tiene focus().
+ */
 export function IrAlPanel() {
   // Hacemos referencia a un div que contiene el panel del mapa. Mientras no haya un div, `panelRef.current` es `null`. Por eso el tipo es `HTMLDivElement | null`.
   const panelRef = useRef<HTMLDivElement>(null);
@@ -111,14 +115,13 @@ export function IrAlPanel() {
   );
 }
 // <IrAlPanel />
-// ¿Por qué? El navegador sí enfocaba el enlace. ¿Por qué TypeScript no te dejaba
-// llamar a `focus()`?
-// Porque sin <HTMLElement>, `querySelectorAll` devuelve un `NodeList<Element>`, y un `Element` no tiene `focus()`.
-// Con <HTMLElement>, `querySelectorAll` devuelve un `NodeList<HTMLElement>`, y un `HTMLElement` sí tiene `focus()`.
 
-// 2) `PrimerResultado` — el buscador de ciudades enseña sus resultados como botones,
-//    y "Ir al primero" lleva el foco al primero. Sin resultados, el botón no tiene
-//    que hacer nada; hoy, sin resultados, la consola muestra un error.
+/* 2) PrimerResultado — el buscador de ciudades enseña sus resultados como botones,
+ * y "Ir al primero" lleva el foco al primero. Sin resultados, el botón no tiene
+ * que hacer nada; hoy, sin resultados, la consola muestra un error.
+ * ¿Por qué? Sin resultados, ¿qué había en lista[0]?
+ * Faltaba preguntar si esa posición existía antes de llamar a focus(). Con ?.focus(), si no existe, no hace nada.
+ */
 export function PrimerResultado({ ciudades }: { ciudades: string[] }) {
   // Hacemos referencia a un div que contiene los resultados.
   // Mientras no haya un div, `resultadosRef.current` será null, por eso el tipo es `HTMLDivElement | null`
@@ -151,12 +154,15 @@ export function PrimerResultado({ ciudades }: { ciudades: string[] }) {
   );
 }
 // <PrimerResultado ciudades={["Santiago", "Valparaíso"]} />
-// ¿Por qué? Sin resultados, ¿qué había en `lista[0]`?
-// Faltaba preguntar si esa posición existía antes de llamar a `focus()`. Con `?.focus()`, si no existe, no hace nada.
 
-// 3) `UltimoResultado` — lo mismo con "Ir al último". Este ya no rompe sin
-//    resultados, porque mira antes cuántos hay. Pero el typecheck sigue sin dejarlo
-//    pasar.
+/* 3) UltimoResultado — lo mismo con "Ir al último". Este ya no rompe sin
+ * resultados, porque mira antes cuántos hay. Pero el typecheck sigue sin dejarlo
+ * pasar.
+ * ¿Por qué? Si la línea de lista.length === 0 ya impedía llegar con la lista vacía,
+ * ¿por qué TypeScript seguía avisando?
+ * Porque TypeScript no relaciona la línea del length con las posiciones de la lista: para él, lista[lista.length - 1] siempre puede ser undefined, aunque arriba ya hayamos comprobado que la lista no está vacía.
+ * En el navegador, ultimo nunca llega a focus() siendo undefined: con la lista vacía, el return corta antes. El ?. no protege al navegador, protege a TypeScript.
+ */
 export function UltimoResultado({ ciudades }: { ciudades: string[] }) {
   // Hacemos referencia a un div que contiene los resultados.
   // Mientras no haya un div, `resultadosRef.current` será null, por eso el tipo es `HTMLDivElement | null`
@@ -193,42 +199,41 @@ export function UltimoResultado({ ciudades }: { ciudades: string[] }) {
   );
 }
 // <UltimoResultado ciudades={["Santiago", "Valparaíso"]} />
-// ¿Por qué? Si la línea de `lista.length === 0` ya impedía llegar con la lista vacía,
-// ¿por qué TypeScript seguía avisando?
-// Porque TypeScript no relaciona la línea del `length` con las posiciones de la lista: para él, `lista[lista.length - 1]` siempre puede ser `undefined`, aunque arriba ya hayamos comprobado que la lista no está vacía.
-// En el navegador, `ultimo` nunca llega a `focus()` siendo `undefined`: con la lista vacía, el `return` corta antes. El `?.` no protege al navegador, protege a TypeScript.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — dar la vuelta
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Tab lleva el foco al siguiente enfocable de la página, y Shift+Tab al anterior.
- *   Lo mueve el navegador DESPUÉS de tu `keydown`, salvo que lo canceles con
- *   `event.preventDefault()`. Un focus trap solo actúa en los dos bordes del panel:
- *   cancela el Tab y lleva él el foco al otro extremo. En medio no toca nada.
+ * Tab lleva el foco al siguiente enfocable de la página, y Shift+Tab al anterior.
+ * Lo mueve el navegador después de tu keydown, salvo que lo canceles con
+ * event.preventDefault(). Un focus trap solo actúa en los dos bordes del panel:
+ * cancela el Tab y lleva él el foco al otro extremo. En medio no toca nada.
  *
  * SINTAXIS
- *     event.key === "Tab"          // la tecla
- *     event.shiftKey               // true si Shift está pulsada a la vez
- *     document.activeElement       // quién tiene el foco ahora mismo (o null)
- *     panel.contains(elemento)     // ¿está ese elemento dentro del panel?
+ * event.key === "Tab" // la tecla
+ * event.shiftKey // true si Shift está pulsada a la vez
+ * document.activeElement // quién tiene el foco ahora mismo (o null)
+ * panel.contains(elemento) // ¿está ese elemento dentro del panel?
  *
  * 🧠 ANALOGÍA — una pista de atletismo: el navegador corre en línea recta y, al
- *    llegar al final, se sale. La trampa no corre por él: solo pone una curva en
- *    cada extremo.
+ * llegar al final, se sale. La trampa no corre por él: solo pone una curva en cada
+ * extremo.
  *
- * ⚠️ TRAMPA — creer que Shift+Tab es otra tecla. Es el mismo `keydown`, con
- *    `key === "Tab"`: si solo miras la tecla, tu código hace lo mismo en los dos
- *    sentidos. Lo que cambia es `event.shiftKey`.
+ * ⚠️ TRAMPA — creer que Shift+Tab es otra tecla. Es el mismo keydown, con
+ * key === "Tab": si solo miras la tecla, tu código hace lo mismo en los dos
+ * sentidos. Lo que cambia es event.shiftKey.
  *
- *   En los drills 4 a 6, la primera línea del manejador deja en paz los Tab que
- *   pasan fuera del panel: el banco es una página que sigues usando.
+ * En los drills 4 a 6, la primera línea del manejador deja en paz los Tab que
+ * pasan fuera del panel: el banco es una página que sigues usando.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `MapaConVuelta` — el panel del mapa tiene tres paradas, y la última es la ✕.
-//    Con el foco en la ✕, Tab tiene que volver a "Ver en Google Maps", sin salir del
-//    panel. Hoy el `focus()` sí corre, y aun así el foco acaba en otro sitio.
-//    👀 En el banco, haz clic en la ✕ y pulsa Tab.
+/* 4) MapaConVuelta — el panel del mapa tiene tres paradas, y la última es la ✕.
+ * Con el foco en la ✕, Tab tiene que volver a "Ver en Google Maps", sin salir del
+ * panel. Hoy el focus() sí corre, y aun así el foco acaba en otro sitio.
+ * 👀 En el banco, haz clic en la ✕ y pulsa Tab.
+ * ¿Por qué? Tu focus() ya llevaba el foco al enlace. ¿Por qué acababa en otro sitio?
+ * Porque el comportamiento por defecto del navegador es mover el foco al siguiente elemento enfocable desde donde esté, y eso ocurría después de tu focus(): el foco ya estaba en el enlace, así que lo llevaba a "Copiar dirección". Con event.preventDefault(), cancelas ese comportamiento y el foco se queda donde tú lo pusiste.
+ */
 export function MapaConVuelta() {
   // Hacemos referencia a un div que contiene el panel del mapa.
   // Mientras no haya un div, `panelRef.current` será null, por eso el tipo es `HTMLDivElement | null`.
@@ -285,12 +290,13 @@ export function MapaConVuelta() {
   );
 }
 // <MapaConVuelta />
-// ¿Por qué? Tu `focus()` ya llevaba el foco al enlace. ¿Por qué acababa en otro sitio?
-// Porque el comportamiento por defecto del navegador es mover el foco al siguiente elemento enfocable desde donde esté, y eso ocurría después de tu `focus()`: el foco ya estaba en el enlace, así que lo llevaba a "Copiar dirección". Con `event.preventDefault()`, cancelas ese comportamiento y el foco se queda donde tú lo pusiste.
 
-// 5) `MapaEnLosDosSentidos` — el mismo panel, que ya da la vuelta con Tab. Ahora,
-//    también hacia atrás: en "Ver en Google Maps", Shift+Tab va a la ✕. Y en la ✕,
-//    Shift+Tab retrocede normal, a "Copiar dirección". Hoy las dos cosas fallan.
+/* 5) MapaEnLosDosSentidos — el mismo panel, que ya da la vuelta con Tab. Ahora,
+ * también hacia atrás: en "Ver en Google Maps", Shift+Tab va a la ✕. Y en la ✕,
+ * Shift+Tab retrocede normal, a "Copiar dirección". Hoy las dos cosas fallan.
+ * ¿Por qué? Antes, ¿por qué Shift+Tab en la ✕ te mandaba al enlace?
+ * Porque antes, el manejador solo miraba si el elemento activo era el último de la lista. Con Shift+Tab, el último de la lista es la ✕, así que el foco volvía al primero, que es el enlace. Ahora, con la condición de event.shiftKey, solo se mueve al último si estás en el primero y pulsas Shift+Tab. En la ✕, Shift+Tab retrocede normal, a "Copiar dirección".
+ */
 export function MapaEnLosDosSentidos() {
   // Hacemos referencia a un div que contiene el panel del mapa.
   // Mientras no haya un div, `panelRef.current` será null, por eso el tipo es `HTMLDivElement | null`.
@@ -342,12 +348,14 @@ export function MapaEnLosDosSentidos() {
   );
 }
 // <MapaEnLosDosSentidos />
-// ¿Por qué? Antes, ¿por qué Shift+Tab en la ✕ te mandaba al enlace?
-// Porque antes, el manejador solo miraba si el elemento activo era el último de la lista. Con Shift+Tab, el último de la lista es la ✕, así que el foco volvía al primero, que es el enlace. Ahora, con la condición de `event.shiftKey`, solo se mueve al último si estás en el primero y pulsas Shift+Tab. En la ✕, Shift+Tab retrocede normal, a "Copiar dirección".
 
-// 6) `MapaSinAtascos` — alguien ordenó este manejador para no repetir líneas. En los
-//    bordes, el foco sigue dando la vuelta; pero en medio del panel, Tab ya no avanza.
-//    Tiene que avanzar, y los bordes seguir como están.
+/* 6) MapaSinAtascos — alguien ordenó este manejador para no repetir líneas. En los
+ * bordes, el foco sigue dando la vuelta; pero en medio del panel, Tab ya no avanza.
+ * Tiene que avanzar, y los bordes seguir como están.
+ * ¿Por qué? En medio del panel, ningún borde movía el foco. ¿Por qué el navegador
+ * tampoco?
+ * Porque en el drill 5 el event.preventDefault() estaba dentro de los if de los bordes. Si no se cumplía ninguno, el navegador avanzaba solo, y en el starter de este drill no lo hacía: el preventDefault() estaba fuera de los if, así que cancelaba el comportamiento por defecto aunque no se moviera el foco.
+ */
 export function MapaSinAtascos() {
   // Hacemos referencia a un div que contiene el panel del mapa.
   // Mientras no haya un div, `panelRef.current` será null, por eso el tipo es `HTMLDivElement | null`.
@@ -399,26 +407,27 @@ export function MapaSinAtascos() {
   );
 }
 // <MapaSinAtascos />
-// ¿Por qué? En medio del panel, ningún borde movía el foco. ¿Por qué el navegador
-// tampoco?
-// Porque en el drill 5 el event.preventDefault() estaba dentro de los if de los bordes. Si no se cumplía ninguno, el navegador avanzaba solo, y en el starter de este drill no lo hacía: el preventDefault() estaba fuera de los if, así que cancelaba el comportamiento por defecto aunque no se moviera el foco.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ARMARLO TÚ — la trampa entera
- * ─────────────────────────────────────────────────────────────────────────────
- *   la lista            →  `querySelectorAll<HTMLElement>`, y el primero y el
- *                          último comprobados antes de usarlos
- *   los bordes          →  Tab en el último y Shift+Tab en el primero: cancelas y
- *                          mueves tú
- *   en medio            →  no tocas nada: el navegador avanza solo
+ *
+ * la lista → querySelectorAll<HTMLElement>, y el primero y el último comprobados
+ *            antes de usarlos
+ * los bordes → Tab en el último y Shift+Tab en el primero: cancelas y mueves tú
+ * en medio  → no tocas nada: el navegador avanza solo
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 7) `MapaDeProjex` — tu `MapModal`, recortado (el iframe va cambiado por un enlace).
-//    El Escape ya funciona; la trampa del Tab no existe. Escríbela: Tab en el último
-//    vuelve al primero, Shift+Tab en el primero va al último, en medio no se atasca,
-//    y si el foco anda fuera del modal, Tab o Shift+Tab lo meten en el primero.
-//    En verde y sin errores de tipos, es lo que le falta al `Contact.tsx` de Projex.
-
+/* 7) MapaDeProjex — tu MapModal, recortado (el iframe va cambiado por un enlace).
+ * El Escape ya funciona; la trampa del Tab no existe. Escríbela: Tab en el último
+ * vuelve al primero, Shift+Tab en el primero va al último, en medio no se atasca,
+ * y si el foco anda fuera del modal, Tab o Shift+Tab lo meten en el primero.
+ * En verde y sin errores de tipos, es lo que le falta al Contact.tsx de Projex.
+ * ¿Por qué? En los drills 4 a 6, si el foco estaba fuera del panel, la trampa no hacía
+ * nada. ¿Por qué aquí lo mete dentro?
+ * Porque antes, el manejador solo miraba si el elemento activo estaba dentro del panel. Aquí, si no está dentro, cancelamos el comportamiento por defecto y lo llevamos al primer elemento del modal.
+ * El panel del banco está entre otras tarjetas: si el foco sale, se sigue viendo y la página se sigue usando. El modal de Projex tapa la página con el fondo oscuro: si el foco anda fuera, desaparece detrás y quien navega con teclado no sabe dónde está.
+ * Por eso aquí el foco no puede andar fuera del modal, y no viene de serie: lo consigue la rama del contains. Sin ella, el Shift+Tab desde fuera acababa en <body>.
+ */
 export function MapaDeProjex({ onClose }: { onClose: () => void }) {
   // Creamos una referencia al div que contiene todo el modal.
   // Mientras el div no exista, modalRef.current será null.
@@ -515,8 +524,3 @@ export function MapaDeProjex({ onClose }: { onClose: () => void }) {
 }
 
 // <MapaDeProjex onClose={() => {}} />
-// ¿Por qué? En los drills 4 a 6, si el foco estaba fuera del panel, la trampa no hacía
-// nada. ¿Por qué aquí lo mete dentro?
-// Porque antes, el manejador solo miraba si el elemento activo estaba dentro del panel. Aquí, si no está dentro, cancelamos el comportamiento por defecto y lo llevamos al primer elemento del modal.
-// El panel del banco está entre otras tarjetas: si el foco sale, se sigue viendo y la página se sigue usando. El modal de Projex tapa la página con el fondo oscuro: si el foco anda fuera, desaparece detrás y quien navega con teclado no sabe dónde está.
-// Por eso aquí el foco no puede andar fuera del modal, y no viene de serie: lo consigue la rama del `contains`. Sin ella, el Shift+Tab desde fuera acababa en <body>.

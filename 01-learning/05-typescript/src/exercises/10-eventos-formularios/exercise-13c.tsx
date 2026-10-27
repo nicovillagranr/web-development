@@ -1,50 +1,41 @@
-/* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — el panel y su momento delicado
- *
- *     type EstadoGuardado = "idle" | "guardando" | "guardado"
- *
- *     idle       abierto y quieto, o recién abierto
- *     guardando  pulsó Guardar y la respuesta todavía no ha vuelto
- *     guardado   volvió, y volvió bien
- *
- * Cerrar el panel borra lo escrito. Hacerlo en mitad del guardado es perder el trabajo
- * a medio mandar, y por eso hay una regla que decide cuándo se puede cerrar.
- * ───────────────────────────────────────────────────────────────────────────── */
-
 import { useState } from "react";
 import type { ChangeEvent, KeyboardEvent } from "react";
 
 /* =============================================================================
- * 13c · UNA ACCIÓN, VARIAS PUERTAS
- * =============================================================================
+ * EJERCICIO 13c — una acción, varias puertas · refuerzo del 13
  *
- * 🎯 AL TERMINAR SABRÁS
- * ----------------------------------------------------------------------------
- *   · contar cuántos caminos llevan a una misma acción antes de ponerle un freno
- *   · juntar esos caminos en una función y frenar ahí, en vez de en cada botón
- *   · reconocer el camino que se salta ese punto de encuentro, con la guarda bien puesta
+ * 📌 RECORDATORIO — el panel y su momento delicado:
+ * type EstadoGuardado = "idle" | "guardando" | "guardado"
+ * idle      → abierto y quieto, o recién abierto.
+ * guardando → pulsó Guardar y la respuesta todavía no ha vuelto.
+ * guardado  → volvió, y volvió bien.
+ * Cerrar el panel borra lo escrito. Hacerlo en mitad del guardado es perder el
+ * trabajo a medio mandar, y por eso hay una regla que decide cuándo se puede cerrar.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * ----------------------------------------------------------------------------
- * En el `13b` cerraste el drill 5 con la guarda dentro de `alLimpiar`. Aquí se ve para
- * qué sirve de verdad: un panel tiene más puertas que un formulario, apagar botones no
- * llega a todas, y la misma línea de guarda cubre lo que entre por cualquiera.
+ * 🎯 OBJETIVOS
+ * · Contar cuántos caminos llevan a una misma acción antes de ponerle un freno.
+ * · Juntar esos caminos en una función y frenar ahí, en vez de en cada botón.
+ * · Reconocer el camino que se salta ese punto de encuentro, con la guarda bien
+ *   puesta.
  *
- * 🗺️ MAPA DEL ARCHIVO
- * ----------------------------------------------------------------------------
- * Cero teoría nueva; lo que haga falta está en el `13b`.
- *   drill 1 · dos salidas que hacen cada una lo suyo → juntarlas
- *   drill 2 · una tercera salida que no se puede apagar: la tecla
- *   drill 3 · la guarda bien escrita, y una salida que no pasa por ella
+ * 🟢 CONTEXTO — en el 13b cerraste el drill 5 con la guarda dentro de alLimpiar.
+ * Aquí se ve para qué sirve de verdad: un panel tiene más puertas que un
+ * formulario, apagar botones no llega a todas, y la misma línea de guarda cubre lo
+ * que entre por cualquiera.
  *
- * ▸ EJERCICIO — 3 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/10-eventos-formularios/exercise-13c.test.tsx
- *     pnpm typecheck
+ * 🗺️ MAPA — cero teoría nueva; lo que haga falta está en el 13b.
+ * drill 1 · dos salidas que hacen cada una lo suyo → juntarlas
+ * drill 2 · una tercera salida que no se puede apagar: la tecla
+ * drill 3 · la guarda bien escrita, y una salida que no pasa por ella
  *
- *   Todos los starters están rotos a propósito, y ninguno tiene un tipo mal puesto: aquí
- *   `pnpm typecheck` no va a decirte nada y toda la señal está en el test.
- *   ¿Atascado? Las pistas están en `exercise-13c.pistas.md`, de una en una.
- * ===========================================================================*/
+ * ▸ 3 drills, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/10-eventos-formularios/exercise-13c.test.tsx
+ * pnpm typecheck
+ *
+ * Los starters están rotos a propósito, y ninguno tiene un tipo mal puesto: aquí
+ * pnpm typecheck no va a decirte nada y toda la señal está en el test.
+ * Pistas: exercise-13c.pistas.md.
+ * ============================================================================= */
 
 type EstadoGuardado = "idle" | "guardando" | "guardado";
 
@@ -53,17 +44,18 @@ function guardarEnServidor(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 1000));
 }
 
-/* La regla, ya escrita y ya probada en el `13b`. Aquí no se toca: se le pregunta. */
+/* La regla, ya escrita y ya probada en el 13b. Aquí no se toca: se le pregunta. */
 function puedeCerrar(estado: EstadoGuardado): boolean {
   return estado !== "guardando";
 }
 
 // type EstadoGuardado = "idle" | "guardando" | "guardado";
 
-// 1) `PanelConDosSalidas` — del panel se sale por dos sitios, el botón "Cancelar" y la ✕
-//    de la esquina, y salir tiene que dejarlo como estaba: cerrado y sin la nota de
-//    antes. Hoy cada botón se lo monta por su cuenta y no dejan lo mismo detrás.
-//    Consigue que las dos salidas cierren igual.
+/* 1) PanelConDosSalidas — del panel se sale por dos sitios, el botón «Cancelar» y la ✕
+ * de la esquina, y salir tiene que dejarlo como estaba: cerrado y sin la nota de
+ * antes. Hoy cada botón se lo monta por su cuenta y no dejan lo mismo detrás.
+ * Consigue que las dos salidas cierren igual.
+ */
 export function PanelConDosSalidas() {
   const [abierto, setAbierto] = useState(false);
   const [nota, setNota] = useState("");
@@ -100,10 +92,11 @@ export function PanelConDosSalidas() {
 }
 // <PanelConDosSalidas />
 
-// 2) `PanelQueEscuchaEscape` — el mismo panel, ahora con una regla: en mitad del guardado
-//    no se cierra, porque cerrarlo borra justo lo que se está mandando. "Cancelar" ya la
-//    respeta y aun así el panel se cierra mientras dura el guardado. Consigue que la
-//    regla se cumpla entre por donde entre, y que con el panel quieto se siga cerrando.
+/* 2) PanelQueEscuchaEscape — el mismo panel, ahora con una regla: en mitad del guardado
+ * no se cierra, porque cerrarlo borra justo lo que se está mandando. «Cancelar» ya la
+ * respeta y aun así el panel se cierra mientras dura el guardado. Consigue que la
+ * regla se cumpla entre por donde entre, y que con el panel quieto se siga cerrando.
+ */
 export function PanelQueEscuchaEscape() {
   const [abierto, setAbierto] = useState(false);
   const [nota, setNota] = useState("");
@@ -158,10 +151,11 @@ export function PanelQueEscuchaEscape() {
 }
 // <PanelQueEscuchaEscape />
 
-// 3) `PanelConTresSalidas` — la ✕ de la esquina no se apaga nunca: es la salida de
-//    emergencia y el diseño la quiere siempre encendida. La guarda de `cerrar` está bien
-//    escrita, y aun así el panel se cierra en mitad del guardado. Encuentra por dónde se
-//    está colando y tápalo.
+/* 3) PanelConTresSalidas — la ✕ de la esquina no se apaga nunca: es la salida de
+ * emergencia y el diseño la quiere siempre encendida. La guarda de cerrar está bien
+ * escrita, y aun así el panel se cierra en mitad del guardado. Encuentra por dónde se
+ * está colando y tápalo.
+ */
 export function PanelConTresSalidas() {
   const [abierto, setAbierto] = useState(false);
   const [nota, setNota] = useState("");
@@ -220,7 +214,7 @@ export function PanelConTresSalidas() {
 // <PanelConTresSalidas />
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * En el `13b` la guarda ya estaba escrita y tú le pusiste la condición. Aquí el trabajo
- * es el de antes de eso: mirar una acción y contar por cuántas puertas se entra. El
- * freno se escribe una vez, en el sitio por donde pasan todas.
+ * En el 13b la guarda ya estaba escrita y tú le pusiste la condición. Aquí el
+ * trabajo es el de antes de eso: mirar una acción y contar por cuántas puertas se
+ * entra. El freno se escribe una vez, en el sitio por donde pasan todas.
  * ───────────────────────────────────────────────────────────────────────────── */

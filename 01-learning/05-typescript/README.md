@@ -2157,3 +2157,52 @@ fondo.
 
 - El `06` desde la Teoría 1, y después el `07`. Sin commitear (el 06, el 07, el banco y esta
   entrada).
+
+## Sesiones 25–26 oct 2026 — todo el cuaderno al formato compacto (spec v4)
+
+### Qué pasó
+
+El 25 oct compactaste a mano el `12/exercise-06` («se ve más profesional») y pediste replicar
+esa estructura en todo el cuaderno, también en lo ya terminado. La spec subió a v4
+(`docs/AUTORIA-DRILLS.md` §1 y §5). En tres sesiones se convirtieron los bloques del `01` al
+`12`: 134 archivos de ejercicio. El `11/exercise-10` no se tocó: es tu formulario completo, sin
+drills, y sus comentarios son tuyos.
+
+### Qué se hizo
+
+- **Cabecera v4** en cada archivo: título `· bloque NN`, 📌 si toca, 🎯, 🟢, 🗺️ y `▸` con las
+  prohibiciones **originales** de cada uno. Techo de 40 líneas.
+- **Enunciados:** cada `// N)` pasó a un `/* */` encima de su código. Las trace lines y tus
+  notas siguen como `//`, en su sitio (las que iban sangradas se protegieron a mano).
+- **FASE 1 (bloques 01–08, otra generación):** la teoría vivía entera en la cabecera
+  (EXPLICACIÓN, ANALOGÍA, EJEMPLO, CUÁNDO USAR, 🔧, 💼, OJO). Se repartió en bloques
+  `▸ TEORÍA` pegados a sus drills, con DEFINICIÓN, SINTAXIS, 🧠, ⚠️ TRAMPA y 💡, y los
+  diagramas de flechas pasaron a `pieza → qué es`. Las escaleras de refuerzo conservan su
+  nombre (C1, R1, E1…), porque los drills las citan así.
+- **Ni una línea de código cambiada.** Cada archivo pasó un verificador que compara con `HEAD`
+  el código (el AST sin comentarios) y comprueba que tus `//` sigan palabra por palabra en los
+  comentarios nuevos.
+
+### Correcciones de paso
+
+- **`05/exercise-07`:** la teoría vieja decía que, sin `x is string`, el `filter` deja
+  `(string | null)[]`. Con TS 6.0.3 ya no es así: desde TS 5.5 el predicado se deduce solo.
+  Ahora explica cuándo se rompe esa deducción (`(x): boolean`, `filter(Boolean)`).
+- Las MAYÚSCULAS de énfasis de los enunciados pasaron a minúscula (el formato v4 no las usa),
+  salvo siglas e identificadores.
+
+### Resultado
+
+- Verificador: 131/134 en verde. Los 3 avisos son intencionados: `11/08` («en el banco» en vez
+  de «en el App.tsx»), `12/07` (la pregunta del drill 1, reescrita) y `12/06` (tu código en
+  curso).
+- `pnpm test:run`: 1271/1278. Los 7 rojos son del `12/06` (drills 3–6) y del `12/07`, sin
+  resolver. `pnpm typecheck` y `pnpm lint`: solo fallan en el `12/07`, por lo mismo.
+- Los `eslint-disable-next-line` del bloque 01 siguen pegados a su línea.
+
+### Pendiente
+
+- Sin commitear desde `0c2f9`: toda la migración y esta entrada.
+- El 📌 de Pick/Omit del bloque 09 va entero (10 líneas) del 01 al 06 y en versión de 3 líneas
+  del 07 al 10, porque en el 07 la cabecera pasaba de 40. Se puede unificar.
+- El `12/06` desde el drill 3, y después el `12/07`.

@@ -1,93 +1,80 @@
 import { useReducer } from "react";
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — esto lo escribiste en el `08-discriminated-unions/exercise-07`:
- *
- *     type Accion =
- *       | { tipo: "incrementar" }
- *       | { tipo: "sumar"; cantidad: number }
- *
- *     function aplicar(estado: number, accion: Accion): number {
- *       switch (accion.tipo) { … default: { const _: never = accion; return _ } }
- *     }
- *
- * Aquel archivo terminaba diciendo que lo reusarías tal cual en el bloque 11.
- * Esto es el bloque 11: el reducer no cambia, solo se enchufa.
- * ───────────────────────────────────────────────────────────────────────────── */
-
 /* =============================================================================
- * EJERCICIO 03 — `useReducer`: el reducer que ya sabes, enchufado   ·  3/3 del bloque
- * =============================================================================
+ * EJERCICIO 03 — useReducer: el reducer que ya sabes, enchufado · bloque 11
  *
- * 🎯 AL TERMINAR SABRÁS
- * ----------------------------------------------------------------------------
- *   · nombrar las cuatro piezas de `useReducer` y decir cuál escribe React
- *   · pedir una acción con datos y otra sin ellos
- *   · decir por qué un reducer no puede tocar el estado que recibe
+ * 📌 RECORDATORIO — esto lo escribiste en el 08-discriminated-unions/exercise-07:
+ * type Accion =
+ *   | { tipo: "incrementar" }
+ *   | { tipo: "sumar"; cantidad: number }
+ * function aplicar(estado: number, accion: Accion): number {
+ *   switch (accion.tipo) { … default: { const _: never = accion; return _ } }
+ * }
+ * Aquel archivo terminaba diciendo que lo reusarías tal cual en el bloque 11. Esto
+ * es el bloque 11: el reducer no cambia, solo se enchufa.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * ----------------------------------------------------------------------------
- * El `01` y el `02` fueron `useState`: un valor y su setter. Cuando los cambios
- * dejan de ser "pon esto" y pasan a ser "ha ocurrido esto, recalcula", el setter
- * se queda corto. Lo que falta no es un hook nuevo: es el reducer que ya
- * escribiste en el `08`, con React llamándolo por ti.
+ * 🎯 OBJETIVOS
+ * · Nombrar las cuatro piezas de useReducer y decir cuál escribe React.
+ * · Pedir una acción con datos y otra sin ellos.
+ * · Decir por qué un reducer no puede tocar el estado que recibe.
  *
- * 🗺️ MAPA DEL ARCHIVO
- * ----------------------------------------------------------------------------
- *   TEORÍA 1 · las piezas y quién llama a quién   →  drills 1, 2
- *   TEORÍA 2 · acciones con datos y estado objeto →  drills 3, 4, 5
+ * 🟢 CONTEXTO — el 01 y el 02 fueron useState: un valor y su setter. Cuando los
+ * cambios dejan de ser «pon esto» y pasan a ser «ha ocurrido esto, recalcula», el
+ * setter se queda corto. Lo que falta no es un hook nuevo: es el reducer que ya
+ * escribiste en el 08, con React llamándolo por ti.
  *
- * ▸ EJERCICIO — 5 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/11-useState-useReducer/exercise-03.test.tsx
- *     pnpm typecheck
+ * 🗺️ MAPA
+ * TEORÍA 1 · las piezas y quién llama a quién → drills 1–2
+ * TEORÍA 2 · acciones con datos y estado objeto → drills 3–5
  *
- *   Todos los starters están rotos a propósito y los cinco caen en el test. Tres
- *   además no compilan: esos te los dice `pnpm typecheck` antes de correr nada.
- *   ¿Atascado? Las pistas están en `exercise-03.pistas.md`, de una en una.
+ * ▸ 5 drills en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/11-useState-useReducer/exercise-03.test.tsx
+ * pnpm typecheck
  *
- * 👁️ Los componentes están montados en `src/App.tsx`: aquí el fallo se ve pulsando.
- * ===========================================================================*/
+ * Los starters están rotos a propósito y los cinco caen en el test. Tres además
+ * no compilan: esos te los dice pnpm typecheck antes de correr nada.
+ * Pistas: exercise-03.pistas.md. Banco, pestaña 11: aquí el fallo se ve pulsando.
+ * ============================================================================= */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — las cuatro piezas, y quién llama a cada una
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   `useReducer` recibe DOS cosas —el reducer y el estado inicial— y devuelve un
- *   par: el estado de este render y `pedir`. Tú nunca llamas al reducer: le
- *   entregas una acción a `pedir` y React se encarga de llamarlo con el
- *   estado más reciente.
+ * useReducer recibe dos cosas, el reducer y el estado inicial, y devuelve un par:
+ * el estado de este render y pedir. Tú nunca llamas al reducer: le entregas una
+ * acción a pedir y React se encarga de llamarlo con el estado más reciente.
  *
  * SINTAXIS
- *     const [estado, pedir] = useReducer(contarReducer, 0)
- *            ▲        ▲                   ▲              ▲
- *            │        │                   │              └─ estado inicial
- *            │        │                   └─ la función que TÚ escribes
- *            │        └─ con esto pides un cambio: pedir({ tipo: "incrementar" })
- *            └─ el estado de ESTE render, igual que con useState
+ * const [estado, pedir] = useReducer(contarReducer, 0)
+ * estado        → el estado de este render, igual que con useState
+ * pedir         → con esto pides un cambio: pedir({ tipo: "incrementar" })
+ * contarReducer → la función que tú escribes
+ * 0             → el estado inicial
  *
  * EJEMPLO — el mismo gesto que ya conoces, con otro nombre:
- *     setNumero((anterior) => anterior + 1)   // useState: entregas la regla
- *     pedir({ tipo: "incrementar" })          // useReducer: entregas QUÉ pasó
+ * setNumero((anterior) => anterior + 1) // useState: entregas la regla
+ * pedir({ tipo: "incrementar" }) // useReducer: entregas qué pasó
  *
- * 🧠 ANALOGÍA (de apoyo) — el cajero automático del `08`. El saldo es el estado,
- *    y tú no metes la mano: pulsas una opción del menú. `pedir` es pulsar la
- *    opción; el cajero (el reducer) es quien calcula el saldo nuevo.
+ * 🧠 ANALOGÍA — el cajero automático del 08. El saldo es el estado, y tú no metes
+ * la mano: pulsas una opción del menú. pedir es pulsar la opción; el cajero (el
+ * reducer) es quien calcula el saldo nuevo.
  *
  * 🗣️ LAS PIEZAS
- *     reducer    → `(estado, accion) => estadoNuevo`. La escribes tú, la llama React
- *     pedir      → la función que recibes. Le entregas una acción, no un valor (en código ajeno: `dispatch`)
- *     acción     → un objeto con su `tipo`. Es una unión discriminada del `08`
- *     estado     → el de este render. Constante, igual que en useState
+ * reducer → (estado, accion) => estadoNuevo. La escribes tú, la llama React.
+ * pedir   → la función que recibes. Le entregas una acción, no un valor (en
+ *           código ajeno: dispatch).
+ * acción  → un objeto con su tipo. Es una unión discriminada del 08.
+ * estado  → el de este render. Constante, igual que en useState.
  *
- * ⚠️ TRAMPA — `pedir("incrementar")` con el texto suelto. La acción es un
- *    OBJETO con la propiedad `tipo`; el texto solo es su etiqueta. Es la
- *    diferencia entre pulsar el botón y gritarle el nombre al cajero.
+ * ⚠️ TRAMPA — pedir("incrementar") con el texto suelto. La acción es un objeto con
+ * la propiedad tipo; el texto solo es su etiqueta. Es la diferencia entre pulsar el
+ * botón y gritarle el nombre al cajero.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 export type Accion =
   { tipo: "incrementar" } | { tipo: "reiniciar" } | { tipo: "sumar"; cantidad: number };
 
-// El reducer del drill 1 viene dado, para que ahí solo tengas que enchufarlo.
+/* El reducer del drill 1 viene dado, para que ahí solo tengas que enchufarlo. */
 function reducerDado(estado: number, accion: Accion): number {
   switch (accion.tipo) {
     case "incrementar":
@@ -102,8 +89,9 @@ function reducerDado(estado: number, accion: Accion): number {
   }
 }
 
-// 1) `ContadorConReducer` — un <p> con el número y dos botones, "Sumar" y
-//    "Reiniciar". El reducer ya está escrito arriba y no se toca.
+/* 1) ContadorConReducer — un <p> con el número y dos botones, "Sumar" y
+ * "Reiniciar". El reducer ya está escrito arriba y no se toca.
+ */
 export function ContadorConReducer() {
   // 0 es el estado inicial.
   // reducerDado contiene la lógica para calcular el nuevo estado
@@ -120,10 +108,11 @@ export function ContadorConReducer() {
 }
 // <ContadorConReducer />
 
-// 2) `contarReducer` — ahora el reducer lo escribes tú, y es una función pura:
-//    no toca nada de fuera y devuelve el estado siguiente. `incrementar` sube
-//    uno, `reiniciar` vuelve a cero y `sumar` añade lo que traiga la acción.
-//    Ciérralo con el `default` exhaustivo del `08`.
+/* 2) contarReducer — ahora el reducer lo escribes tú, y es una función pura:
+ * no toca nada de fuera y devuelve el estado siguiente. incrementar sube
+ * uno, reiniciar vuelve a cero y sumar añade lo que traiga la acción.
+ * Ciérralo con el default exhaustivo del 08.
+ */
 export function contarReducer(estado: number, accion: Accion): number {
   switch (accion.tipo) {
     case "incrementar":
@@ -144,39 +133,37 @@ export function contarReducer(estado: number, accion: Accion): number {
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — acciones que traen datos, y estado que es un objeto
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Una acción puede llevar datos además de su `tipo`, y solo existen dentro de
- *   su `case`. Y el estado puede ser un objeto: entonces el reducer devuelve uno
- *   NUEVO en cada transición, nunca el mismo retocado.
+ * Una acción puede llevar datos además de su tipo, y solo existen dentro de su
+ * case. Y el estado puede ser un objeto: entonces el reducer devuelve uno nuevo en
+ * cada transición, nunca el mismo retocado.
  *
  * SINTAXIS
- *     pedir({ tipo: "sumar", cantidad: 3 })
- *                              └── el dato viaja CON la acción ──┘
- *
- *     case "sumar": return estado + accion.cantidad
- *                                   └─ `cantidad` solo existe en este case
+ * pedir({ tipo: "sumar", cantidad: 3 }) // el dato viaja con la acción
+ * case "sumar": return estado + accion.cantidad // cantidad solo existe en este case
  *
  * EJEMPLO — devolver uno nuevo, no retocar el que llega:
- *     return { ...estado, contador: estado.contador + 1 }   // ✅
- *     estado.contador += 1; return estado                   // ❌ misma referencia
+ * return { ...estado, contador: estado.contador + 1 } // ✅
+ * estado.contador += 1; return estado // ❌ misma referencia
  *
- * 🧠 ANALOGÍA (de apoyo) — el extracto del banco. Cada movimiento genera una
- *    línea nueva; no se tacha el saldo anterior. El reducer hace eso: produce el
- *    estado siguiente y deja el anterior intacto.
+ * 🧠 ANALOGÍA — el extracto del banco. Cada movimiento genera una línea nueva; no
+ * se tacha el saldo anterior. El reducer hace eso: produce el estado siguiente y
+ * deja el anterior intacto.
  *
  * 🗣️ LAS PIEZAS
- *     `{ tipo: "sumar"; cantidad: number }` → una acción CON datos
- *     `accion.cantidad`                     → solo accesible tras estrechar por `tipo`
- *     función pura                          → mismo argumento, mismo resultado, sin efectos
+ * { tipo: "sumar"; cantidad: number } → una acción con datos.
+ * accion.cantidad                     → solo accesible tras estrechar por tipo.
+ * función pura                        → mismo argumento, mismo resultado, sin efectos.
  *
- * ⚠️ TRAMPA — la de siempre con un array dentro del estado: `historial.push(...)`
- *    devuelve un número y muta la lista. React recibe la misma referencia y no
- *    repinta. Es el `ListaTareas` del `exercise-01`, ahora dentro de un reducer.
+ * ⚠️ TRAMPA — la de siempre con un array dentro del estado: historial.push(...)
+ * devuelve un número y muta la lista. React recibe la misma referencia y no
+ * repinta. Es el ListaTareas del exercise-01, ahora dentro de un reducer.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 3) `ContadorConPaso` — un <p> con el número y un botón "Sumar 5" que sube de
-//    cinco en cinco. Usa `contarReducer`, el del drill 2, sin tocarlo.
+/* 3) ContadorConPaso — un <p> con el número y un botón "Sumar 5" que sube de
+ * cinco en cinco. Usa contarReducer, el del drill 2, sin tocarlo.
+ */
 export function ContadorConPaso() {
   const [numero, pedir] = useReducer(contarReducer, 0);
 
@@ -198,13 +185,14 @@ React hace:    contarReducer( 0 , { tipo: "sumar", cantidad: 5 })
 }
 // <ContadorConPaso />
 
-// 📌 El estado de los dos últimos drills: un número y la lista de lo que pasó.
+/* 📌 El estado de los dos últimos drills: un número y la lista de lo que pasó. */
 export type EstadoPanel = { contador: number; historial: string[] };
 
-// 4) `panelReducer` — el mismo contador, pero el estado es un objeto y además
-//    guarda el historial. Cada acción suma su etiqueta al final de la lista:
-//    "incrementar", "reiniciar" o "sumar". `reiniciar` pone el contador a 0 y
-//    conserva el historial.
+/* 4) panelReducer — el mismo contador, pero el estado es un objeto y además
+ * guarda el historial. Cada acción suma su etiqueta al final de la lista:
+ * "incrementar", "reiniciar" o "sumar". reiniciar pone el contador a 0 y
+ * conserva el historial.
+ */
 export function panelReducer(estado: EstadoPanel, accion: Accion): EstadoPanel {
   // Creamos un nuevo historial agregando la acción actual sin mutar el original
   const nuevoHistorial = [...estado.historial, accion.tipo];
@@ -237,8 +225,9 @@ export function panelReducer(estado: EstadoPanel, accion: Accion): EstadoPanel {
 // panelReducer({ contador: 0, historial: [] }, { tipo: "incrementar" })
 //   -> { contador: 1, historial: ["incrementar"] }
 
-// 5) `PanelConHistorial` — un <p> con el contador, un <li> por cada entrada del
-//    historial y dos botones: "Sumar 2" y "Reiniciar". Usa `panelReducer`.
+/* 5) PanelConHistorial — un <p> con el contador, un <li> por cada entrada del
+ * historial y dos botones: "Sumar 2" y "Reiniciar". Usa panelReducer.
+ */
 export function PanelConHistorial() {
   const [estado, pedir] = useReducer(panelReducer, { contador: 0, historial: [] });
 
@@ -257,9 +246,8 @@ export function PanelConHistorial() {
 }
 // <PanelConHistorial />
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * Con esto el bloque 11 queda cerrado: el estado y su tipo, el setter y lo que no
+/* ▸ Con esto el bloque 11 queda cerrado: el estado y su tipo, el setter y lo que no
  * te da, y el reducer cuando los cambios tienen reglas. Lo que has escrito aquí es
- * el `exercise-07` del `08` con un cable a React — el reducer nunca supo que
- * estaba en un componente, y esa es justo la gracia.
- * ───────────────────────────────────────────────────────────────────────────── */
+ * el exercise-07 del 08 con un cable a React: el reducer nunca supo que estaba en
+ * un componente, y esa es justo la gracia.
+ */

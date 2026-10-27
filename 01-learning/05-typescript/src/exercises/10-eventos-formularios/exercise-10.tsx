@@ -1,53 +1,41 @@
-/* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — los tipos de este archivo. Están escritos abajo, en código:
- *
- *   type Prioridad = 'baja' | 'media' | 'alta'
- *   type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
- *
- *   Una `Tarea` NACE en el gestor, no en el formulario: el formulario no sabe
- *   inventar ids ni decidir si algo está hecho. Entrega lo que el usuario escribió
- *   y ya. Ese reparto es la mitad del ejercicio.
- * ───────────────────────────────────────────────────────────────────────────── */
-
 /* =============================================================================
- * EJERCICIO 10 — CAPSTONE: el formulario entero              ·  10/10 del bloque
- * =============================================================================
+ * EJERCICIO 10 — capstone: el formulario entero · bloque 10
  *
- * 🎯 AL TERMINAR SABRÁS
- * ----------------------------------------------------------------------------
- *   · montar una feature completa repartida en componentes con fronteras limpias
- *   · tipar el estado de una lista y cambiarlo sin romperlo
- *   · reconocer, en tu propio código, los nueve conceptos del bloque funcionando
+ * 📌 RECORDATORIO — los tipos de este archivo, que están escritos abajo, en código:
+ * type Prioridad = 'baja' | 'media' | 'alta'
+ * type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
+ * Una Tarea nace en el gestor, no en el formulario: el formulario no sabe inventar
+ * ids ni decidir si algo está hecho. Entrega lo que el usuario escribió y ya. Ese
+ * reparto es la mitad del ejercicio.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * ----------------------------------------------------------------------------
- * Los nueve anteriores te enseñaron piezas sueltas contra componentes de juguete.
- * Aquí construyes UNA cosa que funciona de arriba abajo: un gestor de tareas con
- * su formulario, su lista, su marcar y su borrar. Nada nuevo que aprender — todo
- * lo que hace falta ya lo has escrito antes, repartido en nueve archivos.
+ * 🎯 OBJETIVOS
+ * · Montar una feature completa repartida en componentes con fronteras limpias.
+ * · Tipar el estado de una lista y cambiarlo sin romperlo.
+ * · Reconocer, en tu propio código, los nueve conceptos del bloque funcionando.
  *
- * 🗺️ MAPA DEL ARCHIVO — se construye de abajo arriba, como en un proyecto real
- * ----------------------------------------------------------------------------
- *   TEORÍA 1 · el reparto de responsabilidades  →  drills 1, 2, 3
- *   TEORÍA 2 · el estado que es una lista       →  drills 4, 5, 6
- *   ESCALERA E · el estado vive arriba  →  E1-E6, al final del archivo
- *                (si el drill 3 se te atraganta, baja ahí y vuelve)
- *   ESCALERA F · cambiar una lista es construir otra  →  F1-F6, después de la E
- *                (para el drill 6. Los tres primeros peldaños no llevan React)
+ * 🟢 CONTEXTO — los nueve anteriores te enseñaron piezas sueltas contra
+ * componentes de juguete. Aquí construyes una cosa que funciona de arriba abajo:
+ * un gestor de tareas con su formulario, su lista, su marcar y su borrar. Nada
+ * nuevo que aprender: todo lo que hace falta ya lo has escrito antes, repartido en
+ * nueve archivos. Se construye de abajo arriba, como en un proyecto real.
  *
- * ▸ EJERCICIO — 6 drills en escalera, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/10-eventos-formularios/exercise-10.test.tsx
- *     pnpm typecheck
+ * 🗺️ MAPA
+ * TEORÍA 1 · el reparto de responsabilidades → drills 1–3
+ * TEORÍA 2 · el estado que es una lista → drills 4–6
+ * ESCALERA E · el estado vive arriba → E1–E6, al final del archivo
+ * (si el drill 3 se te atraganta, baja ahí y vuelve)
+ * ESCALERA F · cambiar una lista es construir otra → F1–F6, después de la E
+ * (para el drill 6; los tres primeros peldaños no llevan React)
  *
- *   Todos los starters de este archivo están rotos a propósito.
- *   ¿Atascado? Las pistas están en `exercise-10.pistas.md`, de una en una.
+ * ▸ 6 drills en escalera, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/10-eventos-formularios/exercise-10.test.tsx
+ * pnpm typecheck
  *
- * ⚠️ 1 de los 6 pasa el test con el fallo dentro y 2 fallan sin que typecheck diga
- *    una palabra. Corre siempre los dos comandos.
- *
- * 📝 Las traces van comentadas: en `.tsx` escribir `<Componente />` solo fabrica
- *    un objeto que lo describe, no lo ejecuta.
- * ===========================================================================*/
+ * Los starters están rotos a propósito: 1 de los 6 pasa el test con el fallo
+ * dentro y 2 fallan sin que typecheck diga una palabra. Corre siempre los dos
+ * comandos. Pistas: exercise-10.pistas.md. Las traces van comentadas: en .tsx
+ * escribir <Componente /> solo fabrica un objeto que lo describe, no lo ejecuta.
+ * ============================================================================= */
 
 import { useState } from "react";
 type Prioridad = "baja" | "media" | "alta";
@@ -60,38 +48,39 @@ type Tarea = {
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — el reparto de responsabilidades
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   En una feature repartida en componentes, cada uno hace UNA cosa y le pasa al
- *   de arriba lo que ha averiguado. Los de abajo son tontos a propósito: no tienen
- *   estado ni saben qué se hará con lo que entregan. El de arriba —el que sí tiene
- *   el estado— es el único que decide. A eso se le llama elevar el estado.
+ * En una feature repartida en componentes, cada uno hace una cosa y le pasa al de
+ * arriba lo que ha averiguado. Los de abajo son tontos a propósito: no tienen
+ * estado ni saben qué se hará con lo que entregan. El de arriba, el que sí tiene
+ * el estado, es el único que decide. A eso se le llama elevar el estado.
  *
  * SINTAXIS — la misma frontera del 09, ahora entre tres pisos:
- *     <CampoTexto texto={texto} alEscribir={setTexto} />
- *                 └ lo que debe pintar   └ a quién avisa de lo tecleado
+ * <CampoTexto texto={texto} alEscribir={setTexto} />
+ * texto es lo que debe pintar; alEscribir, a quién avisa de lo tecleado.
  *
- * EJEMPLO — quién sabe qué, en este archivo:
- *     CampoTexto        → sabe pintar un <input>. Nada más
- *     FormularioTarea   → junta lo escrito y lo entrega cuando se envía
- *     GestorDeTareas    → tiene la lista, y es el único que la cambia
+ * Ejemplos — quién sabe qué, en este archivo:
+ * CampoTexto      → sabe pintar un <input>. Nada más.
+ * FormularioTarea → junta lo escrito y lo entrega cuando se envía.
+ * GestorDeTareas  → tiene la lista, y es el único que la cambia.
  *
- * 🧠 ANALOGÍA (de apoyo) — la comanda otra vez, con la cocina montada. El camarero
- *    apunta y canta el pedido; no decide el menú ni cobra. Cada uno hace lo suyo y
- *    pasa el papel al siguiente.
+ * 🧠 ANALOGÍA — la comanda otra vez, con la cocina montada. El camarero apunta y
+ * canta el pedido; no decide el menú ni cobra. Cada uno hace lo suyo y pasa el
+ * papel al siguiente.
  *
  * 🗣️ LAS PIEZAS
- *     elevar el estado  → ponerlo en el componente de arriba, no en cada hijo
- *     componente tonto  → el que solo pinta y avisa; no guarda nada
+ * elevar el estado  → ponerlo en el componente de arriba, no en cada hijo.
+ * componente tonto  → el que solo pinta y avisa; no guarda nada.
  *
- * ⚠️ TRAMPA — un hijo controlado necesita las DOS props: la que le dice qué pintar
- *    y la que usa para avisar. Con una sola parece que funciona a medias, que es
- *    la peor forma de fallar. Ya te pasó en el 06, con el `value` y el `onChange`.
+ * ⚠️ TRAMPA — un hijo controlado necesita las dos props: la que le dice qué pintar
+ * y la que usa para avisar. Con una sola parece que funciona a medias, que es la
+ * peor forma de fallar. Ya te pasó en el 06, con el value y el onChange.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `CampoTexto` — un <input> controlado DESDE FUERA: pinta el `texto` que le
-//    llega y avisa por `alEscribir` de lo que se teclea. No tiene estado propio.
-//    El starter entrega el manejador sin traducir.
+/* 1) CampoTexto — un <input> controlado desde fuera: pinta el texto que le
+ * llega y avisa por alEscribir de lo que se teclea. No tiene estado propio.
+ * El starter entrega el manejador sin traducir.
+ */
 export function CampoTexto({
   texto,
   alEscribir,
@@ -107,10 +96,11 @@ export function CampoTexto({
 }
 // <CampoTexto texto="hola" alEscribir={(v) => console.log(v)} />   // "hola"
 
-// 2) `SelectorPrioridad` — un <select> con las tres prioridades, controlado igual
-//    que el campo: pinta la que le llega y avisa de la elegida.
-//    `alElegir` pide una `Prioridad`, y el DOM no sabe nada de ese tipo.
-//    Restricción: sin `as`.
+/* 2) SelectorPrioridad — un <select> con las tres prioridades, controlado igual
+ * que el campo: pinta la que le llega y avisa de la elegida.
+ * alElegir pide una Prioridad, y el DOM no sabe nada de ese tipo.
+ * Restricción: sin as.
+ */
 export function SelectorPrioridad({
   prioridad,
   alElegir,
@@ -143,11 +133,12 @@ export function SelectorPrioridad({
 }
 // <SelectorPrioridad prioridad="media" alElegir={(p) => console.log(p)} />
 
-// 3) `FormularioTarea` — junta los dos de arriba, guarda lo que se va escribiendo
-//    y, al enviarse, entrega el texto y la prioridad de una pieza. Después se
-//    queda limpio: campo vacío y prioridad de vuelta en "media".
-//    Con el campo vacío no entrega nada. Y no recarga la página, claro.
-//    Fíjate en lo que `alAñadir` pide: ni `id` ni `hecha`. Eso no es cosa suya.
+/* 3) FormularioTarea — junta los dos de arriba, guarda lo que se va escribiendo
+ * y, al enviarse, entrega el texto y la prioridad de una pieza. Después se
+ * queda limpio: campo vacío y prioridad de vuelta en "media".
+ * Con el campo vacío no entrega nada. Y no recarga la página, claro.
+ * Fíjate en lo que alAñadir pide: ni id ni hecha. Eso no es cosa suya.
+ */
 export function FormularioTarea({
   alAñadir,
 }: {
@@ -176,39 +167,40 @@ export function FormularioTarea({
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el estado que es una lista
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Cuando el estado es un array, cambiarlo no es meterle cosas dentro: es
- *   construir un array NUEVO y guardarlo. React compara lo que le das con lo que
- *   tenía, y si es el mismo array —aunque le hayas añadido elementos— entiende que
- *   no ha cambiado nada y no vuelve a pintar.
+ * Cuando el estado es un array, cambiarlo no es meterle cosas dentro: es
+ * construir un array nuevo y guardarlo. React compara lo que le das con lo que
+ * tenía, y si es el mismo array, aunque le hayas añadido elementos, entiende que
+ * no ha cambiado nada y no vuelve a pintar.
  *
  * SINTAXIS — las tres operaciones, y ninguna toca el array original:
- *     setTareas([...tareas, nueva])                    ← añadir
- *     setTareas(tareas.filter((t) => t.id !== id))     ← quitar
- *     setTareas(tareas.map((t) => …))                  ← cambiar una
+ * setTareas([...tareas, nueva]) // añadir
+ * setTareas(tareas.filter((t) => t.id !== id)) // quitar
+ * setTareas(tareas.map((t) => …)) // cambiar una
  *
- * EJEMPLO — la diferencia que decide si se repinta o no:
- *     tareas.push(nueva)      → el array es el MISMO. React no ve el cambio
- *     [...tareas, nueva]      → array nuevo. React repinta
+ * Ejemplos — la diferencia que decide si se repinta o no:
+ * tareas.push(nueva) → el array es el mismo. React no ve el cambio.
+ * [...tareas, nueva] → array nuevo. React repinta.
  *
- * 🧠 ANALOGÍA (de apoyo) — la lista de la compra pasada a limpio. No tachas sobre
- *    el papel viejo: copias la lista entera con el cambio hecho y tiras la anterior.
- *    Cuesta más papel y a cambio siempre sabes cuál es la buena.
+ * 🧠 ANALOGÍA — la lista de la compra pasada a limpio. No tachas sobre el papel
+ * viejo: copias la lista entera con el cambio hecho y tiras la anterior. Cuesta
+ * más papel y a cambio siempre sabes cuál es la buena.
  *
  * 🗣️ LAS PIEZAS
- *     useState<Tarea[]>([])  → estado tipado: una lista de tareas, vacía al inicio
- *     mutar                  → cambiar el array que ya tenías. Aquí, nunca
- *     `[...tareas, nueva]`   → copia con uno más al final
+ * useState<Tarea[]>([]) → estado tipado: una lista de tareas, vacía al inicio.
+ * mutar                 → cambiar el array que ya tenías. Aquí, nunca.
+ * [...tareas, nueva]    → copia con uno más al final.
  *
  * ⚠️ TRAMPA — mutar no da error de tipos ni error en consola: simplemente la
- *    pantalla no se entera. Es el fallo más silencioso de todo el bloque.
+ * pantalla no se entera. Es el fallo más silencioso de todo el bloque.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `FilaTarea` — una <li> con la tarea: una casilla que dice si está hecha, el
-//    texto y un botón "Borrar". La casilla avisa por `alMarcar` con el id y el
-//    nuevo estado; el botón avisa por `alBorrar` con el id.
-//    Los dos datos que hay que entregar ya los tienes en las props.
+/* 4) FilaTarea — una <li> con la tarea: una casilla que dice si está hecha, el
+ * texto y un botón «Borrar». La casilla avisa por alMarcar con el id y el
+ * nuevo estado; el botón avisa por alBorrar con el id.
+ * Los dos datos que hay que entregar ya los tienes en las props.
+ */
 
 // type Prioridad = 'baja' | 'media' | 'alta'
 // type Tarea = { id: string; texto: string; prioridad: Prioridad; hecha: boolean }
@@ -238,10 +230,11 @@ export function FilaTarea({
 }
 // <FilaTarea tarea={…} alMarcar={…} alBorrar={…} />
 
-// 5) `ListaTareas` — pinta una <ul> con una `FilaTarea` por cada tarea, y le pasa
-//    a cada una lo que necesita para avisar hacia arriba.
-//    Este componente no decide nada: solo reparte.
-//    Restricción: `key` va en el elemento que devuelve el map, y sale de la tarea.
+/* 5) ListaTareas — pinta una <ul> con una FilaTarea por cada tarea, y le pasa
+ * a cada una lo que necesita para avisar hacia arriba.
+ * Este componente no decide nada: solo reparte.
+ * Restricción: key va en el elemento que devuelve el map, y sale de la tarea.
+ */
 export function ListaTareas({
   tareas,
   alMarcar,
@@ -261,12 +254,13 @@ export function ListaTareas({
 }
 // <ListaTareas tareas={[]} alMarcar={…} alBorrar={…} />
 
-// 6) `GestorDeTareas` — el de arriba del todo, y el único con la lista. Recibe del
-//    formulario el texto y la prioridad, y es él quien convierte eso en una `Tarea`
-//    completa: le pone el `id` (usa `crypto.randomUUID()`) y la marca sin hacer.
-//    `marcar` y `borrar` ya están escritos: léelos antes de escribir `añadir`,
-//    porque los tres tienen la misma forma.
-//    El starter añade la tarea de la manera que parece obvia y no funciona.
+/* 6) GestorDeTareas — el de arriba del todo, y el único con la lista. Recibe del
+ * formulario el texto y la prioridad, y es él quien convierte eso en una Tarea
+ * completa: le pone el id (usa crypto.randomUUID()) y la marca sin hacer.
+ * marcar y borrar ya están escritos: léelos antes de escribir añadir,
+ * porque los tres tienen la misma forma.
+ * El starter añade la tarea de la manera que parece obvia y no funciona.
+ */
 
 // type Prioridad = "baja" | "media" | "alta";
 
@@ -305,28 +299,27 @@ export function GestorDeTareas() {
 /* ─────────────────────────────────────────────────────────────────────────────
  * Cuando los 6 estén en verde has terminado el bloque, y lo que tienes delante no
  * es un ejercicio: es una feature con la misma forma que las de un proyecto de
- * verdad. Repásala y búscale los nueve archivos dentro — están todos.
+ * verdad. Repásala y búscale los nueve archivos dentro: están todos.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA E — el estado vive arriba
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * Seis peldaños para desmontar el drill 3 en sus tres piezas. La frase entera es
- * esta, y cada peldaño añade una palabra:
+ * esta, y cada peldaño añade una palabra: el estado vive en el padre; el hijo lo
+ * pinta y avisa, y no guarda nada.
+ * E1–E2 · qué hace un hijo tonto: pintar lo que le dan, avisar de lo que pasa.
+ * E3–E4 · el circuito: el padre le entrega su propia función de cambiar.
+ * E5–E6 · dos estados a la vez, y cómo se juntan al enviar.
  *
- *   **El estado vive en el padre. El hijo lo PINTA y AVISA, y no guarda nada.**
- *
- *   E1-E2 · qué hace un hijo tonto: pintar lo que le dan, avisar de lo que pasa
- *   E3-E4 · el circuito: el padre le entrega su propia función de cambiar
- *   E5-E6 · dos estados a la vez, y cómo se juntan al enviar
- *
- * 👀 En estos peldaños los padres pintan un `<p>` con lo que llevan guardado. No
- *    es decoración: es la única forma de VER desde fuera si el dato subió o no.
+ * 👀 En estos peldaños los padres pintan un <p> con lo que llevan guardado. No es
+ * decoración: es la única forma de ver desde fuera si el dato subió o no.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// E1) `EtiquetaTexto` — un hijo que solo pinta: recibe `texto` y lo muestra en un
-//     <p>. Si el padre le cambia el texto, tiene que cambiar lo que se ve.
-//     El starter se hace una copia del texto al nacer y se queda con ella.
+/* E1) EtiquetaTexto — un hijo que solo pinta: recibe texto y lo muestra en un
+ * <p>. Si el padre le cambia el texto, tiene que cambiar lo que se ve.
+ * El starter se hace una copia del texto al nacer y se queda con ella.
+ */
 export function EtiquetaTexto({ texto }: { texto: string }) {
   // Creamos una variable que guarde una copia del texto
   // En el primer render se crea con el texto que le llega
@@ -335,18 +328,20 @@ export function EtiquetaTexto({ texto }: { texto: string }) {
 }
 // <EtiquetaTexto texto="hola" />
 
-// E2) `BotonQueAvisa` — un hijo que solo avisa: al pulsarlo llama a `alPulsar`.
-//     Ojo con lo que le entregas al hueco: entregar una función y llamarla no es
-//     lo mismo, y es el primer concepto de esta carpeta.
+/* E2) BotonQueAvisa — un hijo que solo avisa: al pulsarlo llama a alPulsar.
+ * Ojo con lo que le entregas al hueco: entregar una función y llamarla no es
+ * lo mismo, y es el primer concepto de esta carpeta.
+ */
 export function BotonQueAvisa({ alPulsar }: { alPulsar: () => void }) {
   return <button onClick={alPulsar}>Pulsa</button>;
 }
 // <BotonQueAvisa alPulsar={() => {}} />
 
-// E3) `PadreQueGuarda` — el padre tiene el estado y el `<p>` que lo pinta; el hijo
-//     `CajaQueAvisa` ya está escrito y avisa bien de cada tecla. Tecleas "hola" y
-//     el <p> del padre tiene que decir "hola".
-//     El padre está ignorando lo que el hijo le cuenta.
+/* E3) PadreQueGuarda — el padre tiene el estado y el <p> que lo pinta; el hijo
+ * CajaQueAvisa ya está escrito y avisa bien de cada tecla. Tecleas "hola" y
+ * el <p> del padre tiene que decir "hola".
+ * El padre está ignorando lo que el hijo le cuenta.
+ */
 function CajaQueAvisa({ alEscribir }: { alEscribir: (valor: string) => void }) {
   return <input onChange={(e) => alEscribir(e.target.value)} />;
 }
@@ -362,10 +357,11 @@ export function PadreQueGuarda() {
 }
 // <PadreQueGuarda />
 
-// E4) `PadreQueLimpia` — el mismo circuito, y ahora el padre tiene un botón que
-//     vacía el estado. Al pulsarlo, el campo tiene que quedarse vacío también.
-//     Ahora el campo se queda con lo escrito, porque va por libre.
-//     El starter monta la caja del peldaño anterior, que solo sabe avisar.
+/* E4) PadreQueLimpia — el mismo circuito, y ahora el padre tiene un botón que
+ * vacía el estado. Al pulsarlo, el campo tiene que quedarse vacío también.
+ * Ahora el campo se queda con lo escrito, porque va por libre.
+ * El starter monta la caja del peldaño anterior, que solo sabe avisar.
+ */
 function CajaControlada({
   texto,
   alEscribir,
@@ -390,10 +386,11 @@ export function PadreQueLimpia() {
 }
 // <PadreQueLimpia />
 
-// E5) `PadreConDosCajas` — dos estados independientes en el mismo padre, cada uno
-//     con su caja. Escribes en la primera y el <p> de arriba lo dice; escribes en
-//     la segunda y el de abajo, sin que se pisen.
-//     El starter tiene los cables cruzados: cada caja avisa al estado del otro.
+/* E5) PadreConDosCajas — dos estados independientes en el mismo padre, cada uno
+ * con su caja. Escribes en la primera y el <p> de arriba lo dice; escribes en
+ * la segunda y el de abajo, sin que se pisen.
+ * El starter tiene los cables cruzados: cada caja avisa al estado del otro.
+ */
 export function PadreConDosCajas() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
@@ -408,10 +405,11 @@ export function PadreConDosCajas() {
 }
 // <PadreConDosCajas />
 
-// E6) `PadreQueEntregaLosDos` — el cierre, y es la línea del drill 3. Al pulsar
-//     "Enviar", `alEnviar` recibe los dos datos JUNTOS, en un objeto con las
-//     claves `nombre` y `email`.
-//     Lee la firma de `alEnviar`: pide una cosa, no dos.
+/* E6) PadreQueEntregaLosDos — el cierre, y es la línea del drill 3. Al pulsar
+ * «Enviar», alEnviar recibe los dos datos juntos, en un objeto con las
+ * claves nombre y email.
+ * Lee la firma de alEnviar: pide una cosa, no dos.
+ */
 export function PadreQueEntregaLosDos({
   alEnviar,
 }: {
@@ -433,77 +431,77 @@ export function PadreQueEntregaLosDos({
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Con los seis en verde, el drill 3 se lee entero:
+ * texto y prioridad viven en FormularioTarea             → E3.
+ * los hijos los pintan (texto=, prioridad=)              → E4.
+ * y avisan con el setter que el padre les entregó        → E3.
+ * son dos estados independientes                         → E5.
+ * y al enviar se juntan en un objeto                     → E6.
  *
- *   texto y prioridad viven en FormularioTarea          ← E3
- *   los hijos los pintan (`texto=`, `prioridad=`)        ← E4
- *   y avisan con el setter que el padre les entregó      ← E3
- *   son dos estados independientes                       ← E5
- *   y al enviar se juntan en un objeto                   ← E6
- *
- * Y la pieza que no está en ningún peldaño —`{ texto, prioridad }` sin `id` ni
- * `hecha`— es la del 09: la frontera entrega datos del dominio, no lo que le
- * sobra a quien los tiene.
+ * Y la pieza que no está en ningún peldaño, { texto, prioridad } sin id ni hecha,
+ * es la del 09: la frontera entrega datos del dominio, no lo que le sobra a quien
+ * los tiene.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA F — cambiar una lista es construir otra
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * Seis peldaños para desmontar el drill 6. La frase entera es esta, y cada
- * peldaño añade una pieza:
- *
- *   **Para cambiar un array de estado construyes uno NUEVO y lo guardas.
- *     El que ya tenías no se toca nunca.**
- *
- *   F1-F3 · las tres operaciones en JavaScript pelado, sin React encima
- *   F4-F5 · las mismas dentro de un componente, donde el fallo se ve en pantalla
- *   F6    · las tres juntas: el drill 6 en miniatura
+ * peldaño añade una pieza: para cambiar un array de estado construyes uno nuevo y
+ * lo guardas; el que ya tenías no se toca nunca.
+ * F1–F3 · las tres operaciones en JavaScript pelado, sin React encima.
+ * F4–F5 · las mismas dentro de un componente, donde el fallo se ve en pantalla.
+ * F6    · las tres juntas: el drill 6 en miniatura.
  *
  * 👀 Los tres primeros no son componentes: son funciones que reciben un array y
- *    devuelven otro. Sin hooks, sin JSX. El concepto es de JavaScript, y verlo
- *    sin React delante es la mitad del trabajo.
+ * devuelven otro. Sin hooks, sin JSX. El concepto es de JavaScript, y verlo sin
+ * React delante es la mitad del trabajo.
  *
- * ⚠️ EN ESTA ESCALERA EL TYPECHECK NO TE CUBRE, en ninguno de los seis. Mutar un
- *    array es código válido, así que el compilador se calla en los seis starters y
- *    el único que los caza es el test. Es a propósito: ese silencio ES el tema.
+ * ⚠️ En esta escalera el typecheck no te cubre, en ninguno de los seis. Mutar un
+ * array es código válido, así que el compilador se calla en los seis starters y
+ * el único que los caza es el test. Es a propósito: ese silencio es el tema.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// F1) `conUnoMas` — recibe una lista de textos y devuelve OTRA con el nuevo al
-//     final. La lista que te dan tiene que quedarse exactamente como estaba.
-//     El starter usa el método que todo el mundo usa para añadir, y es justo el
-//     que aquí no sirve. Mira lo que devuelve ese método, además de lo que hace.
-//     → conUnoMas(["a"], "b")   →   ["a", "b"],  y la original sigue siendo ["a"]
+/* F1) conUnoMas — recibe una lista de textos y devuelve otra con el nuevo al
+ * final. La lista que te dan tiene que quedarse exactamente como estaba.
+ * El starter usa el método que todo el mundo usa para añadir, y es justo el
+ * que aquí no sirve. Mira lo que devuelve ese método, además de lo que hace.
+ * → conUnoMas(["a"], "b") → ["a", "b"], y la original sigue siendo ["a"]
+ */
 export function conUnoMas(lista: string[], nuevo: string): string[] {
   return [...lista, nuevo];
 }
 // conUnoMas(["a"], "b") -> ["a", "b"]
 
-// F2) `sinElQueSea` — devuelve otra lista sin el texto que te digan. La original,
-//     intacta. Si el texto no está, sale una copia igual.
-//     El starter recorre y va sacando del array que le pasaron.
-//     → sinElQueSea(["a", "b"], "a")   →   ["b"]
+/* F2) sinElQueSea — devuelve otra lista sin el texto que te digan. La original,
+ * intacta. Si el texto no está, sale una copia igual.
+ * El starter recorre y va sacando del array que le pasaron.
+ * → sinElQueSea(["a", "b"], "a") → ["b"]
+ */
 export function sinElQueSea(lista: string[], quitar: string): string[] {
   return lista.filter((t) => t !== quitar); // Todo el que sea diferente a quitar quedará en la copia
 }
 // sinElQueSea(["a", "b"], "a")
 
-// F3) `conUnoCambiado` — devuelve otra lista con uno de los textos sustituido por
-//     otro. Los demás, igual. Y la original sin tocar.
-//     El starter escribe directamente en la posición.
-//     → conUnoCambiado(["a", "b"], "a", "z")   →   ["z", "b"]
+/* F3) conUnoCambiado — devuelve otra lista con uno de los textos sustituido por
+ * otro. Los demás, igual. Y la original sin tocar.
+ * El starter escribe directamente en la posición.
+ * → conUnoCambiado(["a", "b"], "a", "z") → ["z", "b"]
+ */
 export function conUnoCambiado(lista: string[], viejo: string, nuevo: string): string[] {
   // Se mapea cada elemento del array, si el elemento es igual al viejo, lo sustituye por el nuevo, sino lo deja igual
   return lista.map((elemento) => (elemento === viejo ? nuevo : elemento));
 }
 // conUnoCambiado(["a", "b"], "a", "z")
 
-/* Los tres de arriba son las tres líneas de la TEORÍA 2, sin React. Si los tienes
- * en verde, lo que viene es exactamente lo mismo con un `useState` alrededor. */
+/* Los tres de arriba son las tres líneas de la teoría 2, sin React. Si los tienes
+ * en verde, lo que viene es exactamente lo mismo con un useState alrededor. */
 
-// F4) `ListaQueCrece` — un botón "Añadir" y una <ul> con un <li> por texto. Cada
-//     pulsación mete uno nuevo: "item 1", "item 2"… según cuántos haya ya.
-//     Aquí es donde el fallo se hace visible: el starter guarda bien el dato y la
-//     pantalla no se entera. Compara lo que le entregas al setter con lo que él
-//     tenía guardado antes, y pregúntate en qué se diferencian.
+/* F4) ListaQueCrece — un botón «Añadir» y una <ul> con un <li> por texto. Cada
+ * pulsación mete uno nuevo: "item 1", "item 2"… según cuántos haya ya.
+ * Aquí es donde el fallo se hace visible: el starter guarda bien el dato y la
+ * pantalla no se entera. Compara lo que le entregas al setter con lo que él
+ * tenía guardado antes, y pregúntate en qué se diferencian.
+ */
 export function ListaQueCrece() {
   const [items, setItems] = useState<string[]>([]);
 
@@ -526,9 +524,10 @@ export function ListaQueCrece() {
 }
 // <ListaQueCrece />
 
-// F5) `ListaQueMengua` — arranca con tres items ya puestos y cada uno tiene su
-//     botón "Quitar". Al pulsarlo, ese item desaparece y los otros se quedan.
-//     El starter tiene el mismo problema del F4 con la operación del F2.
+/* F5) ListaQueMengua — arranca con tres items ya puestos y cada uno tiene su
+ * botón «Quitar». Al pulsarlo, ese item desaparece y los otros se quedan.
+ * El starter tiene el mismo problema del F4 con la operación del F2.
+ */
 export function ListaQueMengua() {
   const [items, setItems] = useState<string[]>(["uno", "dos", "tres"]);
 
@@ -551,11 +550,12 @@ export function ListaQueMengua() {
 }
 // <ListaQueMengua />
 
-// F6) `MiniGestor` — el drill 6 sin formulario ni componentes hijos: un botón que
-//     añade, y cada item con su casilla para marcarlo y su botón para borrarlo.
-//     Un item marcado se pinta con <s> alrededor del texto.
-//     Las tres operaciones a la vez. Si los cinco anteriores están en verde, este
-//     no tiene nada nuevo: es copiarlas al sitio que toca.
+/* F6) MiniGestor — el drill 6 sin formulario ni componentes hijos: un botón que
+ * añade, y cada item con su casilla para marcarlo y su botón para borrarlo.
+ * Un item marcado se pinta con <s> alrededor del texto.
+ * Las tres operaciones a la vez. Si los cinco anteriores están en verde, este
+ * no tiene nada nuevo: es copiarlas al sitio que toca.
+ */
 type ItemMini = { id: string; texto: string; hecho: boolean };
 
 export function MiniGestor() {
@@ -611,13 +611,12 @@ export function MiniGestor() {
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Con los seis en verde, el drill 6 se lee entero:
+ * la Tarea completa la arma el gestor, no el formulario → ya lo tenías.
+ * añadir es devolver otra lista con uno más             → F1, F4.
+ * borrar es devolver otra sin ese                       → F2, F5.
+ * marcar es devolver otra con ese cambiado              → F3, F6.
  *
- *   la Tarea completa la arma el gestor, no el formulario   ← ya lo tenías
- *   añadir es devolver otra lista con uno más               ← F1, F4
- *   borrar es devolver otra sin ese                         ← F2, F5
- *   marcar es devolver otra con ese cambiado                ← F3, F6
- *
- * Y la pieza que hace que todo esto importe: React no mira DENTRO del array para
- * ver si cambió. Solo comprueba si es el mismo de antes. Por eso `push` te deja
- * el dato guardado y la pantalla igual — el fallo más silencioso del bloque.
+ * Y la pieza que hace que todo esto importe: React no mira dentro del array para
+ * ver si cambió. Solo comprueba si es el mismo de antes. Por eso push te deja el
+ * dato guardado y la pantalla igual: el fallo más silencioso del bloque.
  * ───────────────────────────────────────────────────────────────────────────── */

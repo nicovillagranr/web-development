@@ -1,75 +1,72 @@
 import { useReducer } from "react";
 
 /* =============================================================================
- * EJERCICIO 06 — una regla dentro de la copia   ·  bloque 11
- * =============================================================================
+ * EJERCICIO 06 — una regla dentro de la copia · bloque 11
  *
- * 🎯 AL TERMINAR SABRÁS
- *   · escribir una regla como pregunta sobre el valor que ENTRA
- *   · devolver lo mismo que recibiste cuando la regla dice "no", y por qué
- *   · cambiar un dato y, en el mismo `return`, el campo que ese cambio arrastra
+ * 🎯 OBJETIVOS
+ * · Escribir una regla como pregunta sobre el valor que entra.
+ * · Devolver lo mismo que recibiste cuando la regla dice «no», y por qué.
+ * · Cambiar un dato y, en el mismo return, el campo que ese cambio arrastra.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * En el `05` copiabas sin condiciones. En un reducer casi nunca es así: cada
- * cambio depende de cómo venía el estado. Aquí las reglas son las de una tienda,
- * y cada escalón añade una sola cosa al anterior.
+ * 🟢 CONTEXTO — en el 05 copiabas sin condiciones. En un reducer casi nunca es así:
+ * cada cambio depende de cómo venía el estado. Aquí las reglas son las de una
+ * tienda, y cada escalón añade una sola cosa al anterior.
  *
- * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · la regla pregunta por lo que entra      →  drills 1, 2
- *   TEORÍA 2 · cuando la regla dice "no"               →  drills 3 a 5
- *   TEORÍA 3 · cuando un cambio arrastra a otro campo  →  drills 6 a 9
+ * 🗺️ MAPA
+ * TEORÍA 1 · la regla pregunta por lo que entra → drills 1–2
+ * TEORÍA 2 · cuando la regla dice «no» → drills 3–5
+ * TEORÍA 3 · cuando un cambio arrastra a otro campo → drills 6–9
  *
- * ▸ EJERCICIO — 9 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/11-useState-useReducer/exercise-06.test.tsx
- *     pnpm typecheck
+ * ▸ 9 drills en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/11-useState-useReducer/exercise-06.test.tsx
+ * pnpm typecheck
  *
- *   Todos los starters están rotos a propósito, y los 9 compilan: toda la señal
- *   está en el test. El drill 5 lleva una línea `// ¿Por qué?` que reviso yo.
- *   ¿Atascado? Las pistas están en `exercise-06.pistas.md`, de una en una.
- *
- * 👁️ `TiendaPedido` (drills 8 y 9) está montado en `src/App.tsx`.
- * ===========================================================================*/
+ * Los starters están rotos a propósito, y los 9 compilan: toda la señal está en el
+ * test. El drill 5 lleva un ¿Por qué?: contéstalo en la línea libre de debajo.
+ * Pistas: exercise-06.pistas.md. TiendaPedido (drills 8 y 9): banco, pestaña 11.
+ * ============================================================================= */
 
-// El pedido de todo el archivo. No se toca.
+/* El pedido de todo el archivo. No se toca. */
 export type FasePedido = "carrito" | "pagado" | "enviado";
 export type Pedido = { producto: string; cantidad: number; fase: FasePedido };
 
 export const pedidoInicial: Pedido = { producto: "Café", cantidad: 1, fase: "carrito" };
 
 /* 📌 LAS REGLAS DE LA TIENDA — todos los drills salen de aquí:
- *   · la cantidad solo se cambia en "carrito"
- *   · se paga solo desde "carrito", y se envía solo desde "pagado"
- *   · el producto se cambia en "carrito" y en "pagado"; si estaba "pagado",
- *     el pedido vuelve a "carrito": el cobro anterior se anula y el cliente
- *     paga de nuevo, ya por el producto nuevo
- *   · en "enviado" ya no se cambia nada
+ * · la cantidad solo se cambia en "carrito"
+ * · se paga solo desde "carrito", y se envía solo desde "pagado"
+ * · el producto se cambia en "carrito" y en "pagado"; si estaba "pagado", el
+ *   pedido vuelve a "carrito": el cobro anterior se anula y el cliente paga de
+ *   nuevo, ya por el producto nuevo
+ * · en "enviado" ya no se cambia nada
  *
- * ⚠️ SIMPLIFICACIÓN: el pedido no guarda precios ni dinero. Devolver el cobro
- *    anulado es trabajo de la pasarela de pagos, fuera del reducer, y este
- *    archivo no lo cubre. */
+ * ⚠️ Simplificación: el pedido no guarda precios ni dinero. Devolver el cobro
+ * anulado es trabajo de la pasarela de pagos, fuera del reducer, y este archivo no
+ * lo cubre. */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — la regla pregunta por lo que entra
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Una regla es una pregunta sobre el valor que RECIBE la función, hecha antes
- *   de decidir qué devolver. Se escribe con un `if`, un ternario o un `switch`.
+ * Una regla es una pregunta sobre el valor que recibe la función, hecha antes de
+ * decidir qué devolver. Se escribe con un if, un ternario o un switch.
  *
  * EJEMPLO — la luz de un semáforo:
- *     function siguienteLuz(luz: Luz): Luz {
- *       if (luz === "verde") return "ámbar";
- *       if (luz === "ámbar") return "rojo";
- *       return "verde";
- *     }
+ * function siguienteLuz(luz: Luz): Luz {
+ *   if (luz === "verde") return "ámbar";
+ *   if (luz === "ámbar") return "rojo";
+ *   return "verde";
+ * }
  *
  * 🧠 ANALOGÍA — el guardia de la entrada mira tu pulsera al llegar, no al salir.
  *
- * ⚠️ TRAMPA — olvidar el último caso. Si la regla no dice qué pasa con la fase
- *    que no cambia, esa fase también tiene que tener su respuesta.
+ * ⚠️ TRAMPA — olvidar el último caso. Si la regla no dice qué pasa con la fase que
+ * no cambia, esa fase también tiene que tener su respuesta.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `siguienteFase` — la fase que viene después: de "carrito" a "pagado", de
-//    "pagado" a "enviado". "enviado" es la última y se queda donde está.
+/* 1) siguienteFase — la fase que viene después: de "carrito" a "pagado", de
+ * "pagado" a "enviado". "enviado" es la última y se queda donde está.
+ */
 
 //   1. fase === "carrito" ? "pagado"
 //      👉 ¿La fase que entra es "carrito"?
@@ -90,8 +87,9 @@ export function siguienteFase(fase: FasePedido): FasePedido {
 }
 // siguienteFase("carrito")
 
-// 2) `puedeCambiarCantidad` — `true` si en esa fase la tienda deja cambiar la
-//    cantidad, `false` si no. Mira las reglas de arriba.
+/* 2) puedeCambiarCantidad — true si en esa fase la tienda deja cambiar la
+ * cantidad, false si no. Mira las reglas de arriba.
+ */
 export function puedeCambiarCantidad(fase: FasePedido): boolean {
   return fase === "carrito";
 }
@@ -99,27 +97,28 @@ export function puedeCambiarCantidad(fase: FasePedido): boolean {
 // puedeCambiarCantidad("carrito") // true
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ▸ TEORÍA 2 — cuando la regla dice "no"
- * ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA 2 — cuando la regla dice «no»
+ *
  * DEFINICIÓN
- *   Si la regla no deja hacer el cambio, se devuelve EL MISMO objeto que llegó.
- *   Para React, "el mismo" significa "no pasó nada": no repinta. Un objeto
- *   nuevo, aunque sea idéntico, significa "algo cambió".
+ * Si la regla no deja hacer el cambio, se devuelve el mismo objeto que llegó. Para
+ * React, «el mismo» significa «no pasó nada»: no repinta. Un objeto nuevo, aunque
+ * sea idéntico, significa «algo cambió».
  *
  * SINTAXIS
- *     if (no se puede) return pedido;          // la misma ficha
- *     return { ...pedido, clave: valor };      // ficha nueva
+ * if (no se puede) return pedido; // la misma ficha
+ * return { ...pedido, clave: valor }; // ficha nueva
  *
- * 🧠 ANALOGÍA — el botón del ascensor en el piso en el que ya estás: si está
- *    bien hecho, no hace nada. `{ ...pedido }` es un ascensor que abre y cierra
- *    la puerta igual, para nada.
+ * 🧠 ANALOGÍA — el botón del ascensor en el piso en el que ya estás: si está bien
+ * hecho, no hace nada. { ...pedido } es un ascensor que abre y cierra la puerta
+ * igual, para nada.
  *
- * ⚠️ TRAMPA — `return { ...pedido }` "deja todo igual" a la vista, pero no es
- *    lo mismo: es una fotocopia, y el test del 3 y del 4 lo nota con `toBe`.
+ * ⚠️ TRAMPA — return { ...pedido } «deja todo igual» a la vista, pero no es lo
+ * mismo: es una fotocopia, y el test del 3 y del 4 lo nota con toBe.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 3) `cambiarCantidad` — devuelve una copia con la cantidad nueva, pero solo si la
-//    tienda lo permite en la fase del pedido. Si no, no ha pasado nada.
+/* 3) cambiarCantidad — devuelve una copia con la cantidad nueva, pero solo si la
+ * tienda lo permite en la fase del pedido. Si no, no ha pasado nada.
+ */
 export function cambiarCantidad(pedido: Pedido, cantidad: number): Pedido {
   // Si está en el carrito:
   if (pedido.fase === "carrito") {
@@ -131,7 +130,7 @@ export function cambiarCantidad(pedido: Pedido, cantidad: number): Pedido {
 // cambiarCantidad({ ...pedidoInicial, fase: "pagado" }, 5) -> { producto: "Café", cantidad: 1, fase: "pagado" } -> No cambia
 // cambiarCantidad({ ...pedidoInicial, fase: "carrito" }, 5) -> { producto: "Café", cantidad: 5, fase: "carrito" } -> Cambia
 
-// 4) `pagar` — pasa el pedido a "pagado", si se puede pagar desde donde está.
+/* 4) pagar — pasa el pedido a "pagado", si se puede pagar desde donde está. */
 export function pagar(pedido: Pedido): Pedido {
   if (pedido.fase !== "carrito") {
     return pedido;
@@ -140,45 +139,48 @@ export function pagar(pedido: Pedido): Pedido {
 }
 // pagar(pedidoInicial)
 
-// 5) Predice: un reducer recibe "sumar" con el pedido ya "enviado", y en vez de
-//    `return estado` hace `return { ...estado }`. En pantalla nada cambia. ¿React
-//    vuelve a pintar el componente, o no?
+/* 5) Predice: un reducer recibe "sumar" con el pedido ya "enviado", y en vez de
+ * return estado hace return { ...estado }. En pantalla nada cambia. ¿React
+ * vuelve a pintar el componente, o no?
+ * ¿Por qué? Porque React compara la referencia del objeto anterior con la nueva. Si son iguales (mismo objeto), no repinta. Si es un objeto nuevo (aunque tenga los mismos valores), React lo considera un cambio y repinta. En este caso, al hacer return { ...estado }, se crea un nuevo objeto, por lo que React repintaría el componente.
+ */
 export type Repinta = "repinta" | "no repinta";
 export const respuesta5: Repinta = "repinta";
-// ¿Por qué? Porque React compara la referencia del objeto anterior con la nueva. Si son iguales (mismo objeto), no repinta. Si es un objeto nuevo (aunque tenga los mismos valores), React lo considera un cambio y repinta. En este caso, al hacer `return { ...estado }`, se crea un nuevo objeto, por lo que React repintaría el componente.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — cuando un cambio arrastra a otro campo
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   A veces cambiar un dato obliga a cambiar otro campo. Los dos cambios van en
- *   el MISMO objeto que devuelves, y el del campo arrastrado lleva su regla.
+ * A veces cambiar un dato obliga a cambiar otro campo. Los dos cambios van en el
+ * mismo objeto que devuelves, y el del campo arrastrado lleva su regla.
  *
  * SINTAXIS
- *     return {
- *       ...ficha,
- *       dato: nuevo,                                         // lo que pediste
- *       fase: ficha.fase === "x" ? "y" : ficha.fase,         // lo que arrastra
- *     };
+ * return {
+ *   ...ficha,
+ *   dato: nuevo, // lo que pediste
+ *   fase: ficha.fase === "x" ? "y" : ficha.fase, // lo que arrastra
+ * };
  *
  * 🧠 ANALOGÍA — cambiar la fecha de un pasaje ya pagado: el pasaje cambia, y el
- *    pago se anula. Nadie te pide las dos cosas; la segunda viene con la primera.
+ * pago se anula. Nadie te pide las dos cosas; la segunda viene con la primera.
  *
- * ⚠️ TRAMPA — es el drill 2 del `04`: cambias el dato y el spread copia la fase
- *    tal cual, así que el campo arrastrado nunca se entera.
+ * ⚠️ TRAMPA — es el drill 2 del 04: cambias el dato y el spread copia la fase tal
+ * cual, así que el campo arrastrado nunca se entera.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 6) `faseTrasCambiarProducto` — solo la regla, sin objeto: la fase en la que
-//    queda el pedido después de cambiarle el producto (sin contar "enviado", que
-//    llega al 7). Si venía "pagado", vuelve a "carrito"; si no, se queda igual.
+/* 6) faseTrasCambiarProducto — solo la regla, sin objeto: la fase en la que
+ * queda el pedido después de cambiarle el producto (sin contar "enviado", que
+ * llega al 7). Si venía "pagado", vuelve a "carrito"; si no, se queda igual.
+ */
 export function faseTrasCambiarProducto(fase: FasePedido): FasePedido {
   // Si la fase está en "carrito" la dejamos igual, y si está en "pagado" la cambiamos a "carrito". En "enviado" no se puede cambiar el producto, así que no hace falta contemplarlo aquí.
   return fase === "pagado" ? "carrito" : fase;
 }
 // faseTrasCambiarProducto("pagado")
 
-// 7) `cambiarProducto` — la regla entera del producto: el producto nuevo y la
-//    fase que arrastra, en un solo `return`. Y en "enviado", no ha pasado nada.
+/* 7) cambiarProducto — la regla entera del producto: el producto nuevo y la
+ * fase que arrastra, en un solo return. Y en "enviado", no ha pasado nada.
+ */
 
 // export type FasePedido = "carrito" | "pagado" | "enviado";
 // export type Pedido = { producto: string; cantidad: number; fase: FasePedido };
@@ -205,10 +207,11 @@ export type AccionPedido =
   | { tipo: "cambiarProducto"; producto: string }
   | { tipo: "enviar" };
 
-// 8) y 9) — dos `case` de `pedidoReducer` que se saltan las reglas de la tienda.
-//    Los otros dos ya están bien. `TiendaPedido`, justo debajo, no se toca.
-// 8) "sumar" — añade una unidad, pero solo donde la tienda lo permite.
-// 9) "enviar" — pasa a "enviado", pero solo desde donde se puede enviar.
+/* 8) y 9) — dos case de pedidoReducer que se saltan las reglas de la tienda.
+ * Los otros dos ya están bien. TiendaPedido, justo debajo, no se toca.
+ * 8) "sumar" — añade una unidad, pero solo donde la tienda lo permite.
+ * 9) "enviar" — pasa a "enviado", pero solo desde donde se puede enviar.
+ */
 export function pedidoReducer(estado: Pedido, accion: AccionPedido): Pedido {
   switch (accion.tipo) {
     case "sumar":

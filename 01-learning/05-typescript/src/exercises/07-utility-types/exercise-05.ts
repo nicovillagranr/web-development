@@ -1,103 +1,103 @@
 /* =============================================================================
- * EJERCICIO 05 — REFUERZO del drill 5 de exercise-04:
- *                "aplicar una LISTA de parches parciales, en orden"
- * =============================================================================
+ * EJERCICIO 05 — aplicar una lista de parches parciales, en orden · refuerzo del 04
  *
- * 🟢 POR QUÉ ESTE ARCHIVO
- * ----------------------------------------------------------------------------
- * El drill 5 (`aplicarCambios`) junta DOS cosas a la vez y por eso marea:
- *   (1) una LISTA de parches `Partial<T>[]` que se aplican uno tras otro, y
- *   (2) hacerlo con `reduce`.
- * Aquí las separamos y subimos en escalera. Empezamos por lo MÁS concreto
- * (aplicar parches a mano, sin bucle), luego con un `for` (que ya dominas), y
- * SOLO al final con `reduce`. Mismo problema, resuelto 3 veces.
+ * 🎯 OBJETIVOS
+ * · Leer la firma parches: Partial<Punto>[] pieza a pieza.
+ * · Aplicar parches sobre una base a mano, con un for y con reduce.
  *
+ * 🟢 CONTEXTO — el drill 5 del 04 (aplicarCambios) junta dos cosas a la vez, y por
+ * eso marea: una lista de parches Partial<T>[] que se aplican uno tras otro, y
+ * hacerlo con reduce. Aquí se separan: primero a mano, sin bucle; luego con un
+ * for, que ya dominas; y solo al final con reduce. Mismo problema, tres veces.
  *
- * ▸ RECORDATORIO DE VOCABULARIO (tu duda de hoy)
- * ----------------------------------------------------------------------------
- *   parches: Partial<Punto>[]
- *   ▲        ▲              ▲▲
- *   │        │              │└─ los `[]` = "una LISTA de"
- *   │        │              └── `Partial<Punto>` = el TIPO de cada elemento
- *   │        └───────────────── utility type `Partial` aplicado a `Punto`
- *   └────────────────────────── el PARÁMETRO (su nombre)
+ * 🗺️ MAPA
+ * TEORÍA · acumular sobre una base → base de todo el archivo
+ * BLOQUE A · el merge encadenado, sin bucle → drill 1
+ * BLOQUE B · N parches con un bucle for → drills 2–3
+ * BLOQUE C · el mismo problema con reduce → drills 4–5
+ * BLOQUE D · capstone: el gemelo del drill 5 del 04 → drill 6
  *
- * Se lee: "`parches` es una lista de parches parciales de Punto".
- * Cada elemento es un objeto con ALGUNAS propiedades de Punto (puede traer
- * solo `x`, solo `y`, las dos, o ninguna). NO puede traer llaves nuevas.
+ * ▸ 6 drills en escalera, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/07-utility-types/exercise-05.test.ts
+ * pnpm typecheck
  *
+ * Cada starter va mal a propósito (tipo demasiado estricto + cuerpo que ignora los
+ * parches): typecheck y test en rojo. Arregla las dos cosas y corre el test tras
+ * cada drill.
+ * ============================================================================= */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ TEORÍA — acumular sobre una base
  *
- * ▸ LA IDEA DE FONDO — "acumular sobre una base"
- * ----------------------------------------------------------------------------
- * Tienes un objeto BASE y una lista de PARCHES. Quieres aplicar los parches uno
- * encima de otro, en orden, sobre la base. Cada parche pisa lo que toca; lo que
- * no toca, se queda como estaba. Si dos parches tocan la misma propiedad, gana
- * el ÚLTIMO (es el orden del spread: lo que va después pisa).
+ * DEFINICIÓN
+ * Tienes un objeto base y una lista de parches, y los aplicas uno encima de otro,
+ * en orden. Cada parche pisa lo que toca; lo que no toca se queda como estaba. Si
+ * dos parches tocan la misma propiedad, gana el último: es el orden del spread.
  *
- *     base = { x: 0, y: 0 }
- *     parches = [ {x: 5}, {y: 9} ]
+ * Ejemplos, con base { x: 0, y: 0 } y parches [{ x: 5 }, { y: 9 }]:
+ * paso 0, la base         → { x: 0, y: 0 }
+ * paso 1, aplico { x: 5 } → { x: 5, y: 0 }: x pisada, y intacta
+ * paso 2, aplico { y: 9 } → { x: 5, y: 9 }: y pisada, x se mantiene
  *
- *     paso 0 (base):        { x: 0, y: 0 }
- *     paso 1 (aplico {x:5}): { x: 5, y: 0 }   ← x pisada, y intacta
- *     paso 2 (aplico {y:9}): { x: 5, y: 9 }   ← y pisada, x se mantiene
- *     resultado:             { x: 5, y: 9 }
+ * Hay un objeto «que va quedando» y se va pisando vuelta a vuelta. Esa cosa que
+ * sobrevive de un paso al siguiente es el acumulador.
  *
- * La clave: hay UN objeto "que va quedando" y se va pisando vuelta a vuelta.
- * Esa cosa que SOBREVIVE de un paso al siguiente es el ACUMULADOR.
+ * 🗣️ LAS PIEZAS — parches: Partial<Punto>[] se lee «parches es una lista de
+ * parches parciales de Punto»:
+ * parches        → el parámetro (su nombre)
+ * Partial        → el utility type, aplicado a Punto
+ * Partial<Punto> → el tipo de cada elemento
+ * []             → «una lista de»
  *
- *
- * ▸ EJERCICIO — drills en escalera, EN ORDEN. ❌ Prohibido `any` y `as`.
- * ----------------------------------------------------------------------------
- * Cada starter va MAL a propósito (tipo demasiado estricto + cuerpo que ignora
- * los parches) → typecheck Y test ROJOS. Arregla las DOS cosas. Corre el test
- * tras cada drill:
- *     pnpm test:run src/exercises/07-utility-types/exercise-05.test.ts
- * ===========================================================================*/
+ * Cada elemento trae algunas propiedades de Punto (solo x, solo y, las dos o
+ * ninguna). No puede traer llaves nuevas.
+ * ───────────────────────────────────────────────────────────────────────────── */
 
 type Punto = { x: number; y: number };
 
-/* ---------------------------------------------------------------------------
- * BLOQUE A — entender el MERGE encadenado (sin bucle todavía)
- * ---------------------------------------------------------------------------
- * Antes de meter listas y bucles, mira el merge a pelo: aplicar DOS parches a
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE A — entender el merge encadenado (sin bucle todavía)
+ *
+ * Antes de meter listas y bucles, mira el merge a pelo: aplicar dos parches a
  * mano, uno tras otro. Aquí no hay magia: es spread sobre spread.
- * -------------------------------------------------------------------------- */
+ * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `aplicarDosParches` — recibe una base y DOS parches sueltos. Devuelve la
-//    base con `p1` encima y `p2` encima de eso (p2 gana si chocan).
-//    👉 Dos arreglos: el tipo de `p1`/`p2` (ahora exigen un Punto ENTERO) y el
-//       cuerpo (ahora devuelve la base sin tocar). Recuerda: lo que va DESPUÉS pisa.
-//      aplicarDosParches({x:0,y:0}, {x:5}, {y:9}) → {x:5,y:9}
-//      aplicarDosParches({x:0,y:0}, {x:1}, {x:2}) → {x:2,y:0}  (gana el último)
+/* 1) aplicarDosParches — recibe una base y dos parches sueltos. Devuelve la
+ * base con p1 encima y p2 encima de eso (p2 gana si chocan).
+ * 👉 Dos arreglos: el tipo de p1/p2 (ahora exigen un Punto entero) y el
+ *    cuerpo (ahora devuelve la base sin tocar). Recuerda: lo que va después pisa.
+ *   aplicarDosParches({x:0,y:0}, {x:5}, {y:9}) → {x:5,y:9}
+ *   aplicarDosParches({x:0,y:0}, {x:1}, {x:2}) → {x:2,y:0}  (gana el último)
+ */
 export function aplicarDosParches(base: Punto, p1: Partial<Punto>, p2: Partial<Punto>): Punto {
   return { ...base, ...p1, ...p2 };
 }
 aplicarDosParches({ x: 0, y: 0 }, { x: 5 }, { y: 9 }); // {x:5,y:9}
 
-/* ---------------------------------------------------------------------------
- * BLOQUE B — generalizar a N parches con un bucle `for`
- * ------------------------------------------------------------------------3---
- * Con 2 parches los escribes a mano (`...p1, ...p2`). Pero si la lista trae 5,
- * o no sabes cuántos, NO puedes escribirlos uno a uno → necesitas un bucle.
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE B — generalizar a N parches con un bucle for
  *
- * El patrón con `for...of` (lo que ya dominas de exercise-03):
+ * Con 2 parches los escribes a mano (...p1, ...p2). Pero si la lista trae 5, o no
+ * sabes cuántos, no puedes escribirlos uno a uno: necesitas un bucle.
  *
- *     let resultado = base                 // arranca en la base
- *     for (const parche of parches) {      // recorre cada parche
- *       resultado = { ...resultado, ...parche }   // pisa lo que va quedando
- *     }
- *     return resultado                     // FUERA del bucle: se devuelve 1 vez
+ * SINTAXIS — el patrón con for...of, el del 03:
+ * let resultado = base // arranca en la base
+ * for (const parche of parches) {
+ *   resultado = { ...resultado, ...parche } // pisa lo que va quedando
+ * }
+ * return resultado // fuera del bucle: se devuelve una vez
  *
- * `resultado` es la variable que SOBREVIVE de una vuelta a la siguiente.
- * -------------------------------------------------------------------------- */
+ * resultado es la variable que sobrevive de una vuelta a la siguiente.
+ * ───────────────────────────────────────────────────────────────────────────── */
 
-// 2) `fusionarConFor` — aplica TODA la lista de parches sobre la base, con un
-//    bucle `for`. Lista vacía → la base tal cual.
-//    👉 Dos arreglos: el tipo de `parches` (ahora exige Puntos ENTEROS) y el
-//       cuerpo (ahora devuelve la base sin recorrer nada).
-//      fusionarConFor({x:0,y:0}, [{x:5},{y:9}]) → {x:5,y:9}
-//      fusionarConFor({x:1,y:1}, [])            → {x:1,y:1}
-//      fusionarConFor({x:0,y:0}, [{x:1},{x:2}]) → {x:2,y:0}  (gana el último)
+/* 2) fusionarConFor — aplica toda la lista de parches sobre la base, con un
+ * bucle for. Lista vacía → la base tal cual.
+ * 👉 Dos arreglos: el tipo de parches (ahora exige Puntos enteros) y el
+ *    cuerpo (ahora devuelve la base sin recorrer nada).
+ *   fusionarConFor({x:0,y:0}, [{x:5},{y:9}]) → {x:5,y:9}
+ *   fusionarConFor({x:1,y:1}, [])            → {x:1,y:1}
+ *   fusionarConFor({x:0,y:0}, [{x:1},{x:2}]) → {x:2,y:0}  (gana el último)
+ */
 export function fusionarConFor(base: Punto, parches: Partial<Punto>[]): Punto {
   let resultado = base;
   for (const parche of parches) {
@@ -109,10 +109,11 @@ fusionarConFor({ x: 0, y: 0 }, [{ x: 5 }, { y: 9 }, { x: 1 }, { x: 2 }, { x: 3 }
 
 type Caja = { ancho: number; alto: number; color: string };
 
-// 3) `fusionarCajasConFor` — el MISMO patrón, otro tipo (refuerzo). Fíjate en
-//    el caso de dos parches que tocan `color`: gana el segundo.
-//      fusionarCajasConFor({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}]) → {ancho:10,alto:8,color:"azul"}
-//      fusionarCajasConFor(caja, [{color:"rojo"},{color:"azul"}]) → color "azul"
+/* 3) fusionarCajasConFor — el mismo patrón, otro tipo (refuerzo). Fíjate en
+ * el caso de dos parches que tocan color: gana el segundo.
+ *   fusionarCajasConFor({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}]) → {ancho:10,alto:8,color:"azul"}
+ *   fusionarCajasConFor(caja, [{color:"rojo"},{color:"azul"}]) → color "azul"
+ */
 export function fusionarCajasConFor(base: Caja, parches: Partial<Caja>[]): Caja {
   let resultado = base;
   for (const parche of parches) {
@@ -128,59 +129,64 @@ fusionarCajasConFor({ ancho: 10, alto: 10, color: "Azul" }, [
   { color: "Verde" },
 ]);
 
-/* ---------------------------------------------------------------------------
- * BLOQUE C — el MISMO problema con `reduce`
- * ---------------------------------------------------------------------------
- * `reduce` es el bucle `for` de arriba EMPAQUETADO. La traducción pieza a pieza:
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE C — el mismo problema con reduce
  *
- *     let resultado = base            →   ...el valor INICIAL del reduce (2º arg)
- *     for (const parche of parches)   →   reduce recorre la lista por ti
- *     resultado = {...resultado,...p} →   lo que DEVUELVES en el callback
- *     return resultado                →   lo que reduce te entrega al final
+ * reduce es el bucle for de arriba, empaquetado.
  *
- *     parches.reduce<Punto>((acum, parche) => ({ ...acum, ...parche }), base)
- *             ▲             ▲                   ▲                        ▲
- *             │             │                   │                        └─ inicial = base
- *             │             │                   └─ DEVUELVE el acum del turno siguiente
- *             │             └─ acum = lo que va quedando; parche = el de esta vuelta
- *             └─ <Punto>: el array es Partial<Punto>, pero el acum debe ser Punto.
- *                Como NO coinciden, hay que forzar el tipo a mano (regla del campeón).
- * -------------------------------------------------------------------------- */
+ * 🗣️ LAS PIEZAS — la traducción, pieza a pieza:
+ * let resultado = base               → el valor inicial del reduce (2º argumento)
+ * for (const parche of parches)      → reduce recorre la lista por ti
+ * resultado = { ...resultado, ...p } → lo que devuelves en el callback
+ * return resultado                   → lo que reduce te entrega al final
+ *
+ * SINTAXIS
+ * parches.reduce<Punto>((acum, parche) => ({ ...acum, ...parche }), base)
+ *
+ * acum es lo que va quedando; parche, el de esta vuelta; base, el inicial. Lo que
+ * el callback devuelve es el acum del turno siguiente.
+ *
+ * ⚠️ TRAMPA — el <Punto>: el array es Partial<Punto>, pero el acum debe ser Punto.
+ * Como no coinciden, hay que forzar el tipo a mano (la regla del campeón).
+ * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `fusionarConReduce` — IDÉNTICO al drill 2, pero con `reduce` en vez de `for`.
-//    👉 Tres arreglos: el tipo de `parches`, el cuerpo (usa `reduce`), y NO
-//       olvides el VALOR INICIAL (`base`) ni el `<Punto>` explícito.
-//      fusionarConReduce({x:0,y:0}, [{x:5},{y:9}]) → {x:5,y:9}
-//      fusionarConReduce({x:1,y:1}, [])            → {x:1,y:1}
+/* 4) fusionarConReduce — idéntico al drill 2, pero con reduce en vez de for.
+ * 👉 Tres arreglos: el tipo de parches, el cuerpo (usa reduce), y no
+ *    olvides el valor inicial (base) ni el <Punto> explícito.
+ *   fusionarConReduce({x:0,y:0}, [{x:5},{y:9}]) → {x:5,y:9}
+ *   fusionarConReduce({x:1,y:1}, [])            → {x:1,y:1}
+ */
 export function fusionarConReduce(base: Punto, parches: Partial<Punto>[]): Punto {
   return parches.reduce<Punto>((acum, parche) => ({ ...acum, ...parche }), base);
 }
 // Resultado: {x:69,y:9}
 fusionarConReduce({ x: 0, y: 0 }, [{ x: 5 }, { x: 9 }, { x: 69 }, { y: 9 }]);
 
-// 5) `fusionarCajasConReduce` — el gemelo del drill 3, ahora con `reduce`.
-//      fusionarCajasConReduce({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}])
-//        → {ancho:10,alto:8,color:"azul"}
+/* 5) fusionarCajasConReduce — el gemelo del drill 3, ahora con reduce.
+ * fusionarCajasConReduce({ancho:10,alto:5,color:"rojo"}, [{alto:8},{color:"azul"}])
+ *   → {ancho:10,alto:8,color:"azul"}
+ */
 export function fusionarCajasConReduce(base: Caja, parches: Partial<Caja>[]): Caja {
   return parches.reduce<Caja>((acum, parche) => ({ ...acum, ...parche }), base);
 }
 // Resultado: {ancho: 10, alto: 8, color: "azul"}
 fusionarCajasConReduce({ ancho: 10, alto: 5, color: "rojo" }, [{ alto: 8 }, { color: "azul" }]);
 
-/* ---------------------------------------------------------------------------
- * BLOQUE D — CAPSTONE: el gemelo EXACTO del drill 5 de exercise-04
- * ---------------------------------------------------------------------------
- * Mismo cuerpo que el drill 4, otro tipo. Si este te sale solo, el drill 5 de
- * exercise-04 ya lo entiendes (es palabra por palabra lo mismo).
- * -------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE D — capstone: el gemelo exacto del drill 5 del 04
+ *
+ * Mismo cuerpo que el drill 4, otro tipo. Si este te sale solo, el drill 5 del 04
+ * ya lo entiendes: es palabra por palabra lo mismo.
+ * ───────────────────────────────────────────────────────────────────────────── */
 
 type Usuario = { id: number; nombre: string; email: string };
 
-// 6) `aplicarParches` — parte de un usuario y aplica EN ORDEN una lista de
-//    parches parciales, cada uno encima del resultado anterior.
-//      aplicarParches({id:1,nombre:"Ana",email:"a@a.com"}, [{nombre:"Ani"},{email:"x@x.com"}])
-//        → {id:1,nombre:"Ani",email:"x@x.com"}
-//      aplicarParches(u, []) → u (sin cambios)
+/* 6) aplicarParches — parte de un usuario y aplica en orden una lista de
+ * parches parciales, cada uno encima del resultado anterior.
+ *   aplicarParches({id:1,nombre:"Ana",email:"a@a.com"}, [{nombre:"Ani"},{email:"x@x.com"}])
+ *     → {id:1,nombre:"Ani",email:"x@x.com"}
+ *   aplicarParches(u, []) → u (sin cambios)
+ */
 export function aplicarParches(usuario: Usuario, parches: Partial<Usuario>[]): Usuario {
   return parches.reduce<Usuario>((acum, parche) => ({ ...acum, ...parche }), usuario);
 }

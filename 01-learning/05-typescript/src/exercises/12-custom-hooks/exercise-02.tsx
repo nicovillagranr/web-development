@@ -1,82 +1,80 @@
 import { useEffect, useState } from "react";
 
 /* =============================================================================
- * EJERCICIO 02 — la limpieza de un efecto   ·  bloque 12
- * =============================================================================
+ * EJERCICIO 02 — la limpieza de un efecto · bloque 12
  *
- * 📌 RECORDATORIO — el final del efecto de tu `MapModal`, recortado:
- *     useEffect(() => {
- *       document.body.style.overflow = "hidden";
- *       document.addEventListener("keydown", handleKeyDown);
- *       return () => {                                          // ← la limpieza
- *         document.removeEventListener("keydown", handleKeyDown);
- *         document.body.style.overflow = previousOverflow;
- *       };
- *     }, [onClose]);
+ * 📌 RECORDATORIO — el final del efecto de tu MapModal, recortado:
+ * useEffect(() => {
+ *   document.body.style.overflow = "hidden";
+ *   document.addEventListener("keydown", handleKeyDown);
+ *   return () => { // ← la limpieza
+ *     document.removeEventListener("keydown", handleKeyDown);
+ *     document.body.style.overflow = previousOverflow;
+ *   };
+ * }, [onClose]);
  *
- * 🎯 AL TERMINAR SABRÁS
- *   · escribir la limpieza de un efecto y decir cuándo la llama React
- *   · quitar un listener con la misma función con la que lo pusiste
- *   · explicar por qué en `pnpm dev` cada efecto se monta dos veces
- *   · cancelar con la limpieza el temporizador que un efecto dejó programado
+ * 🎯 OBJETIVOS
+ * · Escribir la limpieza de un efecto y decir cuándo la llama React.
+ * · Quitar un listener con la misma función con la que lo pusiste.
+ * · Explicar por qué en pnpm dev cada efecto se monta dos veces.
+ * · Cancelar con la limpieza el temporizador que un efecto dejó programado.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * Haz la prueba en el banco: abre el mapa del drill 4 del 01 y cambia a la pestaña
- * 11. El componente ya no está, pero el fondo sigue bloqueado. Todo lo que un efecto
- * deja puesto fuera de React, alguien tiene que quitarlo: ese alguien es la limpieza.
+ * 🟢 CONTEXTO — haz la prueba en el banco: abre el mapa del drill 4 del 01 y cambia
+ * a la pestaña 11. El componente ya no está, pero el fondo sigue bloqueado. Lo que
+ * un efecto deja puesto fuera de React, alguien tiene que quitarlo: la limpieza.
  *
- * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · qué es la limpieza y cuándo corre              →  drills 1 a 3
- *   TEORÍA 2 · la limpieza antes de repetir, y el doble montaje →  drills 4 y 5
- *   ESCALERA · quitar con la misma función, paso a paso       →  drills 6 a 11
- *   ESCALERA 2 · un temporizador, de principio a fin          →  drills 12 a 21
+ * 🗺️ MAPA
+ * TEORÍA 1 · qué es la limpieza y cuándo corre → drills 1–3
+ * TEORÍA 2 · la limpieza antes de repetir, y el doble montaje → drills 4–5
+ * ESCALERA · quitar con la misma función, paso a paso → drills 6–11
+ * ESCALERA 2 · un temporizador, de principio a fin → drills 12–21
  *
- * ▸ EJERCICIO — 21 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/12-custom-hooks/exercise-02.test.tsx
- *     pnpm typecheck
+ * ▸ 21 drills en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/12-custom-hooks/exercise-02.test.tsx
+ * pnpm typecheck
  *
- *   Todos los starters están rotos a propósito y los 21 compilan: la señal está en
- *   el test. Las predicciones (3-6, 12, 14, 16, 17, 19 y 20) se leen sin ejecutar,
- *   y las 3, 5, 14, 17 y 20 llevan un `// ¿Por qué?` que reviso yo. ¿Atascado? Las
- *   pistas están en `exercise-02.pistas.md`, de una en una.
- * 👁️ Los drills 1, 2, 9, 11, 13, 15, 18 y 21 están montados en el banco (pestaña 12).
- * ===========================================================================*/
+ * Los starters están rotos a propósito y los 21 compilan: la señal está en el test.
+ * Las predicciones (3–6, 12, 14, 16, 17, 19 y 20) se leen sin ejecutar. Contesta
+ * cada ¿Por qué? en la línea libre de debajo. Pistas: exercise-02.pistas.md.
+ * Drills 1, 2, 9, 11, 13, 15, 18 y 21: banco, pestaña 12.
+ * ============================================================================= */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — qué es la limpieza y cuándo corre
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   La limpieza es la función que DEVUELVE un efecto. React la guarda y la llama
- *   cuando el componente desaparece de la página (se desmonta), para deshacer lo
- *   que el efecto dejó puesto fuera de React.
+ * La limpieza es la función que devuelve un efecto. React la guarda y la llama
+ * cuando el componente desaparece de la página (se desmonta), para deshacer lo que
+ * el efecto dejó puesto fuera de React.
  *
  * SINTAXIS — con un ejemplo inventado, algo que escucha el tamaño de la ventana:
- *     useEffect(() => {
- *       const medir = () => console.log(window.innerWidth);
- *       window.addEventListener("resize", medir);        // el efecto pone algo
- *       return () => {                                   // la limpieza, con llaves
- *         window.removeEventListener("resize", medir);   // quita ESO MISMO
- *       };
- *     }, []);
+ * useEffect(() => {
+ *   const medir = () => console.log(window.innerWidth);
+ *   window.addEventListener("resize", medir); // el efecto pone algo
+ *   return () => { // la limpieza, con llaves
+ *     window.removeEventListener("resize", medir); // quita eso mismo
+ *   };
+ * }, []);
  *
- *   `removeEventListener` busca la función exacta que le pasas: tiene que ser la
- *   misma que recibió `addEventListener`, no otra escrita igual.
+ * removeEventListener busca la función exacta que le pasas: tiene que ser la misma
+ * que recibió addEventListener, no otra escrita igual.
  *
  * 🧠 ANALOGÍA — una habitación de hotel: al entrar enciendes la luz y abres la
- *    ventana; al irte, el hotel no apaga nada por ti. La limpieza es el repaso
- *    antes de devolver la llave.
+ * ventana; al irte, el hotel no apaga nada por ti. La limpieza es el repaso antes
+ * de devolver la llave.
  *
  * 🗣️ LAS PIEZAS
- *     la función del `return` → función de limpieza (cleanup)  ·  desmontarse →
- *     que el componente deje de pintarse
+ * la función del return → función de limpieza (cleanup).
+ * desmontarse           → que el componente deje de pintarse.
  *
- * ⚠️ TRAMPA — no escribir la limpieza. Mientras el componente está en pantalla
- *    todo funciona; el fallo sale DESPUÉS de cerrarlo, y por eso cuesta verlo.
+ * ⚠️ TRAMPA — no escribir la limpieza. Mientras el componente está en pantalla todo
+ * funciona; el fallo sale después de cerrarlo, y por eso cuesta verlo.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `ModalSinScroll` — tu `MapModal` recortado a su primera línea: mientras está
-//    abierto, el fondo no se mueve. Hoy, al cerrarlo, el fondo se queda bloqueado.
-//    Al desmontarse, el `overflow` del `body` tiene que volver a `""`.
+/* 1) ModalSinScroll — tu MapModal recortado a su primera línea: mientras está
+ * abierto, el fondo no se mueve. Hoy, al cerrarlo, el fondo se queda bloqueado.
+ * Al desmontarse, el overflow del body tiene que volver a "".
+ */
 export function ModalSinScroll() {
   useEffect(() => {
     // 1. EFECTO: bloquear el scroll del fondo
@@ -96,11 +94,12 @@ export function ModalSinScroll() {
   );
 }
 
-// 2) `CerrarConEscape` — Escape cierra el mapa, como en tu `MapModal`. El listener
-//    ya está escrito y funciona; lo que falla es lo de después: con el mapa ya
-//    cerrado, cada Escape vuelve a llamar a `onClose`. Al desmontarse, el
-//    listener tiene que irse.
-//    💡 Aquí `KeyboardEvent` es el del navegador, no el de React: eso es el 04.
+/* 2) CerrarConEscape — Escape cierra el mapa, como en tu MapModal. El listener
+ * ya está escrito y funciona; lo que falla es lo de después: con el mapa ya
+ * cerrado, cada Escape vuelve a llamar a onClose. Al desmontarse, el
+ * listener tiene que irse.
+ * 💡 Aquí KeyboardEvent es el del navegador, no el de React: eso es el 04.
+ */
 export function CerrarConEscape({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     // 1. EFECTO: escuchar Escape
@@ -123,72 +122,74 @@ export function CerrarConEscape({ onClose }: { onClose: () => void }) {
   );
 }
 
-// 3) Predice: esta versión sí escribe la limpieza. Se monta, se desmonta, y después
-//    el usuario pulsa Escape. ¿Se llama a `onClose`?
-//        useEffect(() => {
-//          document.addEventListener("keydown", (event) => {
-//            if (event.key === "Escape"){
-//              onClose();
-//            }
-//          });
-//          return () => {
-//            document.removeEventListener("keydown", (event) => {
-//              if (event.key === "Escape"){
-//                onClose();
-//              }
-//            });
-//          };
-//        }, [onClose]);
-
+/* 3) Predice: esta versión sí escribe la limpieza. Se monta, se desmonta, y después
+ * el usuario pulsa Escape. ¿Se llama a onClose?
+ *   useEffect(() => {
+ *     document.addEventListener("keydown", (event) => {
+ *       if (event.key === "Escape"){
+ *         onClose();
+ *       }
+ *     });
+ *     return () => {
+ *       document.removeEventListener("keydown", (event) => {
+ *         if (event.key === "Escape"){
+ *           onClose();
+ *         }
+ *       });
+ *     };
+ *   }, [onClose]);
+ *
+ * ¿Por qué?
+ * Porque addEventListener y removeEventListener reciben funciones distintas,
+ * aunque tengan el mismo código. Como removeEventListener necesita la misma
+ * referencia de función que se registró, no logra eliminar el listener original.
+ * Por eso, al presionar Escape después del desmontaje, todavía se ejecuta onClose().
+ */
 export type Llamada = "sí, se llama" | "no, ya no se llama";
 export const respuesta3: Llamada = "sí, se llama";
-// ¿Por qué?
-// Porque `addEventListener` y `removeEventListener` reciben funciones distintas,
-// aunque tengan el mismo código. Como `removeEventListener` necesita la misma
-// referencia de función que se registró, no logra eliminar el listener original.
-// Por eso, al presionar Escape después del desmontaje, todavía se ejecuta `onClose()`.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — la limpieza antes de repetir, y el doble montaje
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Cuando un efecto se repite porque cambió algo de su array, React llama
- *   primero a la limpieza del efecto ANTERIOR y después corre el nuevo. Cada
- *   limpieza ve los valores del render en el que nació su efecto.
+ * Cuando un efecto se repite porque cambió algo de su array, React llama primero a
+ * la limpieza del efecto anterior y después corre el nuevo. Cada limpieza ve los
+ * valores del render en el que nació su efecto.
  *
- *     montaje            →  efecto
- *     cambia el array    →  limpieza del anterior  ·  efecto nuevo
- *     desmontaje         →  limpieza
+ * montaje         → efecto
+ * cambia el array → limpieza del anterior · efecto nuevo
+ * desmontaje      → limpieza
  *
- *   En desarrollo, `StrictMode` hace además un ensayo: nada más montar cada
- *   componente, lo desmonta y lo vuelve a montar. Si tu limpieza deshace bien lo
- *   que hace el efecto, el ensayo no se nota; si falta, se nota. En producción
- *   el ensayo no existe.
+ * En desarrollo, StrictMode hace además un ensayo: nada más montar cada
+ * componente, lo desmonta y lo vuelve a montar. Si tu limpieza deshace bien lo que
+ * hace el efecto, el ensayo no se nota; si falta, se nota. En producción el ensayo
+ * no existe.
  *
  * 🧠 ANALOGÍA — el simulacro de incendio: antes de abrir, el edificio desaloja y
- *    vuelve a entrar. Si la salida funciona, nadie se entera; si no, lo descubres
- *    en el simulacro y no el día del incendio.
+ * vuelve a entrar. Si la salida funciona, nadie se entera; si no, lo descubres en
+ * el simulacro y no el día del incendio.
  *
  * 🗣️ LAS PIEZAS
- *     `<StrictMode>` en `main.tsx` → el modo estricto, solo en desarrollo
+ * <StrictMode> en main.tsx → el modo estricto, solo en desarrollo.
  *
- * ⚠️ TRAMPA — creer que la limpieza solo corre al cerrar. Con un array que
- *    cambia, corre en cada repetición; si no está, cada repetición deja un
- *    listener más encima del anterior.
+ * ⚠️ TRAMPA — creer que la limpieza solo corre al cerrar. Con un array que cambia,
+ * corre en cada repetición; si no está, cada repetición deja un listener más
+ * encima del anterior.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) Predice: `Sala` registra cuándo se conecta y cuándo se desconecta. Se monta
-//    con "norte", el padre la cambia a "sur", y después se desmonta. Escribe los
-//    registros en orden, contados como en producción.
-//        function Sala({ nombre, registrar }: { nombre: string; registrar: (texto: string) => void }) {
-//          useEffect(() => {
-//            registrar(`conecta ${nombre}`);
-//            return () => {
-//              registrar(`desconecta ${nombre}`);
-//            };
-//          }, [nombre]);
-//          return <p>Sala {nombre}</p>;
-//        }
+/* 4) Predice: Sala registra cuándo se conecta y cuándo se desconecta. Se monta
+ * con "norte", el padre la cambia a "sur", y después se desmonta. Escribe los
+ * registros en orden, contados como en producción.
+ *   function Sala({ nombre, registrar }: { nombre: string; registrar: (texto: string) => void }) {
+ *     useEffect(() => {
+ *       registrar(`conecta ${nombre}`);
+ *       return () => {
+ *         registrar(`desconecta ${nombre}`);
+ *       };
+ *     }, [nombre]);
+ *     return <p>Sala {nombre}</p>;
+ *   }
+ */
 export const respuesta4: string[] = [
   "conecta norte",
   "desconecta norte",
@@ -196,51 +197,54 @@ export const respuesta4: string[] = [
   "desconecta sur",
 ];
 
-// 5) Predice: el `CerrarConEscape` del starter, SIN limpieza, en `pnpm dev`. Abres
-//    el mapa una vez y pulsas Escape una vez. ¿Cuántas veces se llama a `onClose`?
+/* 5) Predice: el CerrarConEscape del starter, sin limpieza, en pnpm dev. Abres
+ * el mapa una vez y pulsas Escape una vez. ¿Cuántas veces se llama a onClose?
+ * ¿Por qué?
+ * En desarrollo, StrictMode hace un ensayo adicional:
+ * ejecuta el efecto, hace la limpieza y vuelve a ejecutarlo.
+ * Si no existe limpieza, los listeners del primer efecto
+ * no se eliminan y se acumulan.
+ * Por eso, una pulsación de Escape llama dos veces
+ * a onClose. En producción no ocurre ese ensayo adicional.
+ */
 export const respuesta5: number = 2;
-// ¿Por qué?
-// En desarrollo, StrictMode hace un ensayo adicional:
-// ejecuta el efecto, hace la limpieza y vuelve a ejecutarlo.
-// Si no existe limpieza, los listeners del primer efecto
-// no se eliminan y se acumulan.
-// Por eso, una pulsación de Escape llama dos veces
-// a onClose. En producción no ocurre ese ensayo adicional.
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA — quitar con la misma función, paso a paso (drills 6 a 11)
- * ─────────────────────────────────────────────────────────────────────────────
- * LA IDEA QUE SOSTIENE TODA LA ESCALERA
- *   Una función es un valor, como un objeto. Cada vez que se evalúa una flecha
- *   nace una función NUEVA, aunque su código sea idéntico. Para usar la MISMA
- *   función en dos sitios, guárdala en una constante y usa su nombre.
  *
- *     const a = () => "hola";
- *     const b = () => "hola";
- *     a === b      // false: son dos funciones, aunque se escriban igual
- *     a === a      // true: es la misma
+ * LA IDEA QUE SOSTIENE TODA LA ESCALERA
+ * Una función es un valor, como un objeto. Cada vez que se evalúa una flecha nace
+ * una función nueva, aunque su código sea idéntico. Para usar la misma función en
+ * dos sitios, guárdala en una constante y usa su nombre.
+ *
+ * const a = () => "hola";
+ * const b = () => "hola";
+ * a === b // false: son dos funciones, aunque se escriban igual
+ * a === a // true: es la misma
  *
  * 🧠 ANALOGÍA — el guardarropa: al dejar el abrigo te dan un ticket. Para
- *    recuperarlo no basta con describir un abrigo igual: te piden ESE ticket.
- *    La constante es el ticket. Una flecha nueva es un abrigo idéntico, pero no
- *    es el tuyo.
+ * recuperarlo no basta con describir un abrigo igual: te piden ese ticket. La
+ * constante es el ticket. Una flecha nueva es un abrigo idéntico, pero no es el
+ * tuyo.
  *
  * 🗣️ LAS PIEZAS
- *     "la misma función" → la misma referencia  ·  `===` entre funciones →
- *     compara si son la misma, no si hacen lo mismo
+ * «la misma función»    → la misma referencia.
+ * === entre funciones → compara si son la misma, no si hacen lo mismo.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// 6) Predice: ¿qué da la última línea?
-//        const avisar = () => "hola";
-//        const copia = avisar;
-//        copia === avisar
+/* 6) Predice: ¿qué da la última línea?
+ *   const avisar = () => "hola";
+ *   const copia = avisar;
+ *   copia === avisar
+ * ¿Por qué?
+ * Porque copia es una referencia a la misma función que avisar. No se crea una nueva función, sino que ambas variables apuntan al mismo objeto en memoria. Por eso, la comparación con === devuelve true.
+ */
 export const respuesta6: boolean = true;
-// ¿Por qué?
-// Porque `copia` es una referencia a la misma función que `avisar`. No se crea una nueva función, sino que ambas variables apuntan al mismo objeto en memoria. Por eso, la comparación con `===` devuelve `true`.
 
-// Un tablón de avisos de mentira. Funciona como `addEventListener` y
-// `removeEventListener`, y además sabe contar cuántos avisos tiene colgados.
-// No hay que tocarlo.
+/* Un tablón de avisos de mentira. Funciona como addEventListener y
+ * removeEventListener, y además sabe contar cuántos avisos tiene colgados.
+ * No hay que tocarlo.
+ */
 export type Tablon = {
   colgar: (aviso: () => void) => void;
   quitar: (aviso: () => void) => void;
@@ -260,8 +264,9 @@ export function crearTablon(): Tablon {
   };
 }
 
-// 7) `colgarYQuitar` — cuelga un aviso en el tablón y después quítalo: al
-//    terminar, el tablón tiene que quedar vacío. Hoy se queda con 1 colgado.
+/* 7) colgarYQuitar — cuelga un aviso en el tablón y después quítalo: al
+ * terminar, el tablón tiene que quedar vacío. Hoy se queda con 1 colgado.
+ */
 export function colgarYQuitar(tablon: Tablon) {
   const colgarAviso = () => {};
   tablon.colgar(colgarAviso);
@@ -269,9 +274,10 @@ export function colgarYQuitar(tablon: Tablon) {
 }
 // Ahí sí funcionaría: colgarYQuitar(crearTablon())
 
-// 8) `colgarYQuitarClic` — lo mismo con el `document` de verdad, todavía sin
-//    React: cuelga un listener de "click" que llame a `alHacerClic` y quítalo
-//    justo después. Al terminar, un clic en la página no llama a nadie.
+/* 8) colgarYQuitarClic — lo mismo con el document de verdad, todavía sin
+ * React: cuelga un listener de "click" que llame a alHacerClic y quítalo
+ * justo después. Al terminar, un clic en la página no llama a nadie.
+ */
 export function colgarYQuitarClic(alHacerClic: () => void) {
   const listener = () => alHacerClic();
   document.addEventListener("click", listener);
@@ -279,9 +285,10 @@ export function colgarYQuitarClic(alHacerClic: () => void) {
 }
 // colgarYQuitarClic(() => console.log("clic"))
 
-// 9) `AvisarClics` — y ahora dentro de un efecto, como en el drill 2: mientras
-//    está montado, cada clic en la página llama a `alHacerClic`; al desmontarse,
-//    deja de hacerlo. Hoy la limpieza no suelta nada.
+/* 9) AvisarClics — y ahora dentro de un efecto, como en el drill 2: mientras
+ * está montado, cada clic en la página llama a alHacerClic; al desmontarse,
+ * deja de hacerlo. Hoy la limpieza no suelta nada.
+ */
 export function AvisarClics({ alHacerClic }: { alHacerClic: () => void }) {
   useEffect(() => {
     // Guardamos la función para reutilizar la misma referencia al poner y al quitar el listener.
@@ -296,10 +303,11 @@ export function AvisarClics({ alHacerClic }: { alHacerClic: () => void }) {
   return <p>Contando los clics de la página…</p>;
 }
 
-// 10) `pideMenosMovimiento` — la consulta del drill 11, por dentro.
-//     `window.matchMedia("(prefers-reduced-motion: reduce)")` devuelve un objeto
-//     con `.matches`: `true` si el sistema pide reducir animaciones AHORA.
-//     Devuelve ese valor.
+/* 10) pideMenosMovimiento — la consulta del drill 11, por dentro.
+ * window.matchMedia("(prefers-reduced-motion: reduce)") devuelve un objeto
+ * con .matches: true si el sistema pide reducir animaciones ahora.
+ * Devuelve ese valor.
+ */
 export function pideMenosMovimiento(): boolean {
   // window.matchMedia: Devuelve un objeto MediaQueryList
   // (prefers-reduced-motion: reduce) es una consulta de medios que indica si el usuario ha configurado su sistema para reducir el movimiento.
@@ -308,14 +316,15 @@ export function pideMenosMovimiento(): boolean {
 }
 // pideMenosMovimiento()
 
-// 11) `PreferenciaMovimiento` — la mitad de tu `useMediaPreferences`: si el sistema
-//    pide reducir animaciones, el Hero usa la imagen estática. Pinta "Animaciones:
-//    reducidas" o "Animaciones: normales" y cambia en cuanto el usuario cambia la
-//    preferencia, sin recargar. Eso ya funciona; lo que falla es que, al
-//    desmontarse, deja la consulta escuchando. No toques el `useState`.
-//    💡 `.matches` dice si la consulta se cumple AHORA, y la consulta emite "change"
-//       cuando cambia. El valor inicial va en el `useState` porque el linter no
-//       deja llamar al setter nada más empezar un efecto.
+/* 11) PreferenciaMovimiento — la mitad de tu useMediaPreferences: si el sistema
+ * pide reducir animaciones, el Hero usa la imagen estática. Pinta "Animaciones:
+ * reducidas" o "Animaciones: normales" y cambia en cuanto el usuario cambia la
+ * preferencia, sin recargar. Eso ya funciona; lo que falla es que, al
+ * desmontarse, deja la consulta escuchando. No toques el useState.
+ * 💡 .matches dice si la consulta se cumple ahora, y la consulta emite "change"
+ * cuando cambia. El valor inicial va en el useState porque el linter no
+ * deja llamar al setter nada más empezar un efecto.
+ */
 export function PreferenciaMovimiento() {
   // Estado inicial: reducidas parte con lo que diga `.matches` al montar (en mi PC, false según mi configuración).
   const [reducidas, setReducidas] = useState(
@@ -349,66 +358,70 @@ export function PreferenciaMovimiento() {
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ESCALERA 2 — un temporizador, de principio a fin (drills 12 a 21)
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   `window.setTimeout` deja una tarea programada fuera de React y devuelve un
- *   número: el id del temporizador. `window.clearTimeout(id)` cancela esa tarea
- *   si todavía no ha corrido. El efecto la programa; la limpieza la cancela.
+ * window.setTimeout deja una tarea programada fuera de React y devuelve un número:
+ * el id del temporizador. window.clearTimeout(id) cancela esa tarea si todavía no
+ * ha corrido. El efecto la programa; la limpieza la cancela.
  *
- * SINTAXIS — el aviso "Proyecto Demo" de tu `PortfolioItem`, simplificado a `[]`:
- *     useEffect(() => {
- *       const id = window.setTimeout(() => setVisible(false), 3000); // programa y guarda el id
- *       return () => {
- *         window.clearTimeout(id);                                   // cancela ESE
- *       };
- *     }, []);
+ * SINTAXIS — el aviso «Proyecto Demo» de tu PortfolioItem, simplificado a []:
+ * useEffect(() => {
+ *   const id = window.setTimeout(() => setVisible(false), 3000); // programa y guarda el id
+ *   return () => {
+ *     window.clearTimeout(id); // cancela ese
+ *   };
+ * }, []);
  *
- *     segundo 0   se monta     →  pinta  ·  efecto: programa el temporizador
- *     segundo 3   el temporizador llama a setVisible(false)  →  pinta otra vez
- *     después     se desmonta  →  limpieza: cancela el temporizador si sigue pendiente
+ * segundo 0 · se monta → pinta · efecto: programa el temporizador
+ * segundo 3 · el temporizador llama a setVisible(false) → pinta otra vez
+ * después · se desmonta → limpieza: cancela el temporizador si sigue pendiente
  *
  * 🧠 ANALOGÍA — el hotel de la Teoría 1: pides que te despierten a las 7 y en
- *    recepción te dan un número de reserva (el id). Si te vas antes, cancelas con
- *    ESE número; si no, el teléfono suena en una habitación vacía.
+ * recepción te dan un número de reserva (el id). Si te vas antes, cancelas con ese
+ * número; si no, el teléfono suena en una habitación vacía.
  *
  * 🗣️ LAS PIEZAS
- *     `setTimeout(fn, ms)` → programar  ·  el número que devuelve → id del temporizador
- *     `clearTimeout(id)` → cancelar
+ * setTimeout(fn, ms)     → programar.
+ * el número que devuelve → id del temporizador.
+ * clearTimeout(id)       → cancelar.
  *
  * ⚠️ TRAMPA — creer que la limpieza es lo que esconde el aviso. Lo esconde
- *    `setVisible(false)`; la limpieza solo cancela lo que quede pendiente.
+ * setVisible(false); la limpieza solo cancela lo que quede pendiente.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// ── FASE 1 · el montaje: el efecto deja una tarea programada ──────────────────
+/* ▸ FASE 1 · el montaje: el efecto deja una tarea programada */
 
-// 📌 El `Aviso` de los drills 12, 14, 16 y 17. `registrar` apunta cada paso:
-//        function Aviso({ registrar }: { registrar: (texto: string) => void }) {
-//          const [visible, setVisible] = useState(true);
-//          registrar("pinta");
-//          useEffect(() => {
-//            registrar("efecto");
-//            const id = window.setTimeout(() => {
-//              registrar("se acaba el tiempo");
-//              setVisible(false);
-//            }, 3000);
-//            return () => {
-//              registrar("limpieza");
-//              window.clearTimeout(id);
-//            };
-//          }, []);
-//          return <p>{visible ? "AVISO: Proyecto Demo" : "Aviso cerrado"}</p>;
-//        }
-// Mientras `visible` sea `true`, pinta el aviso; si es `false`, pinta "Aviso cerrado".
-// El primer render pinta "AVISO: Proyecto Demo", y después de 3 segundos, el temporizador llama a `setVisible(false)`, lo que provoca un re-render y muestra "Aviso cerrado".
+/* 📌 El Aviso de los drills 12, 14, 16 y 17. registrar apunta cada paso:
+ *   function Aviso({ registrar }: { registrar: (texto: string) => void }) {
+ *     const [visible, setVisible] = useState(true);
+ *     registrar("pinta");
+ *     useEffect(() => {
+ *       registrar("efecto");
+ *       const id = window.setTimeout(() => {
+ *         registrar("se acaba el tiempo");
+ *         setVisible(false);
+ *       }, 3000);
+ *       return () => {
+ *         registrar("limpieza");
+ *         window.clearTimeout(id);
+ *       };
+ *     }, []);
+ *     return <p>{visible ? "AVISO: Proyecto Demo" : "Aviso cerrado"}</p>;
+ *   }
+ * Mientras visible sea true, pinta el aviso; si es false, pinta "Aviso cerrado".
+ * El primer render pinta "AVISO: Proyecto Demo", y después de 3 segundos, el temporizador llama a setVisible(false), lo que provoca un re-render y muestra "Aviso cerrado".
+ */
 
-// 12) Predice: `Aviso` se monta y pasa 1 segundo. Escribe los registros en orden,
-//     contados como en producción.
+/* 12) Predice: Aviso se monta y pasa 1 segundo. Escribe los registros en orden,
+ * contados como en producción.
+ */
 export const respuesta12: string[] = ["pinta", "efecto"];
 
-// 13) `AvisoDemo` — el aviso de tu `PortfolioItem`: aparece al montarse y se va a
-//     los 3 segundos. En pantalla funciona, pero el temporizador se programa en el
-//     cuerpo del componente, que corre en cada render. Tiene que programarse una
-//     sola vez, al montarse.
+/* 13) AvisoDemo — el aviso de tu PortfolioItem: aparece al montarse y se va a
+ * los 3 segundos. En pantalla funciona, pero el temporizador se programa en el
+ * cuerpo del componente, que corre en cada render. Tiene que programarse una
+ * sola vez, al montarse.
+ */
 export function AvisoDemo() {
   // El aviso aparece en true, o sea que el primer render pinta AVISO
   const [visible, setVisible] = useState(true);
@@ -425,17 +438,19 @@ export function AvisoDemo() {
   return visible ? <p role="status">AVISO: Proyecto Demo</p> : null;
 }
 
-// ── FASE 2 · sigue montado: un render nuevo no repite el efecto ───────────────
+/* ▸ FASE 2 · sigue montado: un render nuevo no repite el efecto */
 
-// 14) Predice: `Aviso` se monta y pasan 3 segundos sin que el usuario toque nada.
-//     Escribe los registros en orden, contados como en producción.
+/* 14) Predice: Aviso se monta y pasan 3 segundos sin que el usuario toque nada.
+ * Escribe los registros en orden, contados como en producción.
+ * ¿Por qué no aparece "limpieza"?
+ * Porque el componente sigue montado y el efecto tiene [] como array de dependencias. El cambio de visible provoca un nuevo render,
+ * pero no vuelve a ejecutar el efecto ni su limpieza.
+ */
 export const respuesta14: string[] = ["pinta", "efecto", "se acaba el tiempo", "pinta"];
-// ¿Por qué no aparece "limpieza"?
-// Porque el componente sigue montado y el efecto tiene [] como array de dependencias. El cambio de visible provoca un nuevo render,
-// pero no vuelve a ejecutar el efecto ni su limpieza.
 
-// 15) `AvisoConLikes` — el aviso tiene que irse a los 3 segundos de aparecer, pulse
-//     el usuario lo que pulse. Hoy, cada clic en "Me gusta" le da 3 segundos más.
+/* 15) AvisoConLikes — el aviso tiene que irse a los 3 segundos de aparecer, pulse
+ * el usuario lo que pulse. Hoy, cada clic en "Me gusta" le da 3 segundos más.
+ */
 export function AvisoConLikes() {
   // El aviso aparece en true, o sea que el primer render pinta AVISO
   const [visible, setVisible] = useState(true);
@@ -461,26 +476,29 @@ export function AvisoConLikes() {
   );
 }
 
-// ── FASE 3 · el desmontaje: la limpieza cancela lo que quedó pendiente ────────
+/* ▸ FASE 3 · el desmontaje: la limpieza cancela lo que quedó pendiente */
 
-// 16) Predice: `Aviso` se monta y, al segundo 1, el usuario se va a otra sección:
-//     el aviso se desmonta. Escribe los registros hasta el segundo 5.
+/* 16) Predice: Aviso se monta y, al segundo 1, el usuario se va a otra sección:
+ * el aviso se desmonta. Escribe los registros hasta el segundo 5.
+ */
 export const respuesta16: string[] = ["pinta", "efecto", "limpieza"];
 
-// 17) Predice: lo mismo que en el 16, pero con un `Aviso` cuya limpieza se olvida
-//     de cancelar el temporizador:
-//        return () => {
-//          registrar("limpieza");
-//        };
+/* 17) Predice: lo mismo que en el 16, pero con un Aviso cuya limpieza se olvida
+ * de cancelar el temporizador:
+ *   return () => {
+ *     registrar("limpieza");
+ *   };
+ * ¿Por qué?
+ * Porque la limpieza no cancela el temporizador. Cuando se cumplen
+ * los 3 segundos, su función todavía se ejecuta y registra
+ * "se acaba el tiempo". Sin embargo, el componente ya está desmontado,
+ * por lo que no se produce un nuevo render suyo.
+ */
 export const respuesta17: string[] = ["pinta", "efecto", "limpieza", "se acaba el tiempo"];
-// ¿Por qué?
-// Porque la limpieza no cancela el temporizador. Cuando se cumplen
-// los 3 segundos, su función todavía se ejecuta y registra
-// "se acaba el tiempo". Sin embargo, el componente ya está desmontado,
-// por lo que no se produce un nuevo render suyo.
 
-// 18) `AvisoConLimpieza` — si el usuario se va antes de los 3 segundos, el
-//     temporizador se queda pendiente, como en el 17. Al desmontarse, cancélalo.
+/* 18) AvisoConLimpieza — si el usuario se va antes de los 3 segundos, el
+ * temporizador se queda pendiente, como en el 17. Al desmontarse, cancélalo.
+ */
 export function AvisoConLimpieza() {
   const [visible, setVisible] = useState(true);
 
@@ -494,50 +512,53 @@ export function AvisoConLimpieza() {
   return <>{visible ? <p role="status">AVISO: Proyecto Demo</p> : <p>Aviso cerrado</p>}</>;
 }
 
-// ── FASE 4 · el array: si cambia, la limpieza corre antes de repetir ──────────
+/* ▸ FASE 4 · el array: si cambia, la limpieza corre antes de repetir */
 
-// 19) Predice: `AvisoConTexto` se monta con `texto="Enviado"` y, al segundo 2, el
-//     padre le pasa `texto="Reenviado"`. ¿En qué segundo desaparece el aviso?
-//        function AvisoConTexto({ texto }: { texto: string }) {
-//          const [visible, setVisible] = useState(true);
-//          useEffect(() => {
-//            const id = window.setTimeout(() => setVisible(false), 3000);
-//            return () => {
-//              window.clearTimeout(id);
-//            };
-//          }, [texto]);
-//          return visible ? <p role="status">{texto}</p> : null;
-//        }
+/* 19) Predice: AvisoConTexto se monta con texto="Enviado" y, al segundo 2, el
+ * padre le pasa texto="Reenviado". ¿En qué segundo desaparece el aviso?
+ *   function AvisoConTexto({ texto }: { texto: string }) {
+ *     const [visible, setVisible] = useState(true);
+ *     useEffect(() => {
+ *       const id = window.setTimeout(() => setVisible(false), 3000);
+ *       return () => {
+ *         window.clearTimeout(id);
+ *       };
+ *     }, [texto]);
+ *     return visible ? <p role="status">{texto}</p> : null;
+ *   }
+ *
+ * EXPLICACIÓN:
+ * - Seg 0 (Montaje): Se recibe texto="Enviado" y se programa el 1er timeout para el Seg 3.
+ * - Seg 2 (Update): Cambia a texto="Reenviado". Se ejecuta el cleanup (clearTimeout),
+ *   cancelando el timeout del Seg 3, y se inicia un nuevo timeout de 3 segundos.
+ * - Seg 5 (Desenlace): El nuevo timeout (iniciado en el Seg 2) se cumple (2 + 3 = 5),
+ *   ejecutando setVisible(false) y haciendo desaparecer el aviso.
+ */
 export const respuesta19: number = 5;
 
-// EXPLICACIÓN:
-// - Seg 0 (Montaje): Se recibe texto="Enviado" y se programa el 1er timeout para el Seg 3.
-// - Seg 2 (Update): Cambia a texto="Reenviado". Se ejecuta el cleanup (clearTimeout),
-//   cancelando el timeout del Seg 3, y se inicia un nuevo timeout de 3 segundos.
-// - Seg 5 (Desenlace): El nuevo timeout (iniciado en el Seg 2) se cumple (2 + 3 = 5),
-//   ejecutando setVisible(false) y haciendo desaparecer el aviso.
-
-// 20) Predice: el efecto de tu `PortfolioItem` de Projex, tal cual, con dos
-//     `registrar`. El usuario pulsa "Ver detalle" y pasan 3 segundos. Escribe los
-//     registros en orden.
-//        const [showDemoMessage, setShowDemoMessage] = useState(false);
-//        useEffect(() => {
-//          if (!showDemoMessage) return;
-//          registrar("programa");
-//          const id = setTimeout(() => setShowDemoMessage(false), 3000);
-//          return () => {
-//            registrar("limpieza");
-//            clearTimeout(id);
-//          };
-//        }, [showDemoMessage]);
+/* 20) Predice: el efecto de tu PortfolioItem de Projex, tal cual, con dos
+ * registrar. El usuario pulsa "Ver detalle" y pasan 3 segundos. Escribe los
+ * registros en orden.
+ *   const [showDemoMessage, setShowDemoMessage] = useState(false);
+ *   useEffect(() => {
+ *     if (!showDemoMessage) return;
+ *     registrar("programa");
+ *     const id = setTimeout(() => setShowDemoMessage(false), 3000);
+ *     return () => {
+ *       registrar("limpieza");
+ *       clearTimeout(id);
+ *     };
+ *   }, [showDemoMessage]);
+ * ¿Por qué aparece "limpieza", si el componente no se desmonta?
+ * Porque el efecto se repite al cambiar showDemoMessage. Cuando el usuario pulsa "Ver detalle", showDemoMessage pasa a true, lo que ejecuta el efecto y programa el temporizador. Después de 3 segundos, el temporizador llama a setShowDemoMessage(false), lo que provoca un re-render y hace que el efecto se ejecute de nuevo. Antes de ejecutar el nuevo efecto, React llama a la limpieza del efecto anterior, registrando "limpieza".
+ */
 export const respuesta20: string[] = ["programa", "limpieza"];
-// ¿Por qué aparece "limpieza", si el componente no se desmonta?
-// Porque el efecto se repite al cambiar `showDemoMessage`. Cuando el usuario pulsa "Ver detalle", `showDemoMessage` pasa a `true`, lo que ejecuta el efecto y programa el temporizador. Después de 3 segundos, el temporizador llama a `setShowDemoMessage(false)`, lo que provoca un re-render y hace que el efecto se ejecute de nuevo. Antes de ejecutar el nuevo efecto, React llama a la limpieza del efecto anterior, registrando "limpieza".
 
-// 21) `AvisoProyectoDemo` — tu `PortfolioItem` desde cero, solo con el aviso. Al
-//     pulsar "Ver detalle", "AVISO: Proyecto Demo" aparece y se va a los 3
-//     segundos, aunque el padre se vuelva a pintar entre medias. Se puede volver a
-//     pulsar, y si se desmonta antes de tiempo, el temporizador se cancela.
+/* 21) AvisoProyectoDemo — tu PortfolioItem desde cero, solo con el aviso. Al
+ * pulsar "Ver detalle", "AVISO: Proyecto Demo" aparece y se va a los 3
+ * segundos, aunque el padre se vuelva a pintar entre medias. Se puede volver a
+ * pulsar, y si se desmonta antes de tiempo, el temporizador se cancela.
+ */
 export function AvisoProyectoDemo() {
   const [showDemoMessage, setShowDemoMessage] = useState(false);
 

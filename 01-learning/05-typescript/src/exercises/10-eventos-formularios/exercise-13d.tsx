@@ -1,51 +1,40 @@
-/* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — los tres momentos de un pedido
- *
- *     type EstadoEnvio = "idle" | "enviando" | "enviado"
- *
- *     idle      quieto: nadie ha pulsado, o lo de antes ya caducó
- *     enviando  pulsado, y la respuesta todavía no ha vuelto
- *     enviado   volvió, y volvió bien
- *
- * Todo lo que se decide en este archivo se decide durante el rato del medio.
- * ───────────────────────────────────────────────────────────────────────────── */
-
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
 /* =============================================================================
- * 13d · DÓNDE SE PONE EL FRENO
- * =============================================================================
+ * EJERCICIO 13d — dónde se pone el freno · refuerzo del 13
  *
- * 🎯 AL TERMINAR SABRÁS
- * ----------------------------------------------------------------------------
- *   · contar cuántas puertas llevan a una acción antes de decidir dónde frenarla
- *   · distinguir el freno que AVISA del freno que PROTEGE, y decir qué te da cada uno
- *   · frenar una acción que se dispara por una puerta sin interruptor
+ * 📌 RECORDATORIO — los tres momentos de un pedido:
+ * type EstadoEnvio = "idle" | "enviando" | "enviado"
+ * idle     → quieto: nadie ha pulsado, o lo de antes ya caducó.
+ * enviando → pulsado, y la respuesta todavía no ha vuelto.
+ * enviado  → volvió, y volvió bien.
+ * Todo lo que se decide en este archivo se decide durante el rato del medio.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * ----------------------------------------------------------------------------
- * En el `13c` pusiste la guarda en el sitio bueno y cerraste los tres drills. Pero lo
- * cerraste sabiendo QUÉ hacer, no POR QUÉ ahí. Aquí se sube el mismo escalón seis veces
- * seguidas, empezando por abajo del todo, hasta que el porqué se vea sin que te lo diga
- * nadie.
+ * 🎯 OBJETIVOS
+ * · Contar cuántas puertas llevan a una acción antes de decidir dónde frenarla.
+ * · Distinguir el freno que avisa del freno que protege, y decir qué te da cada uno.
+ * · Frenar una acción que se dispara por una puerta sin interruptor.
  *
- * 🗺️ MAPA DEL ARCHIVO
- * ----------------------------------------------------------------------------
- * Cero teoría nueva; lo que haga falta está en el `13b` y en el `13c`.
- *   drills 1-2 · el freno en la puerta: primero una, luego dos
- *   drills 3-4 · la regla y la acción salen a una función propia
- *   drills 5-6 · las dos puertas donde apagar el botón no sirve de nada
+ * 🟢 CONTEXTO — en el 13c pusiste la guarda en el sitio bueno y cerraste los tres
+ * drills. Pero lo cerraste sabiendo qué hacer, no por qué ahí. Aquí se sube el
+ * mismo escalón seis veces seguidas, empezando por abajo del todo, hasta que el
+ * porqué se vea sin que te lo diga nadie.
  *
- * ▸ EJERCICIO — 6 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/10-eventos-formularios/exercise-13d.test.tsx
- *     pnpm typecheck
+ * 🗺️ MAPA — cero teoría nueva; lo que haga falta está en el 13b y en el 13c.
+ * drills 1–2 · el freno en la puerta: primero una, luego dos
+ * drills 3–4 · la regla y la acción salen a una función propia
+ * drills 5–6 · las dos puertas donde apagar el botón no sirve de nada
  *
- *   Todos los starters están rotos a propósito, y ninguno tiene un tipo mal puesto: aquí
- *   `pnpm typecheck` no va a decirte nada y la señal está en el test. 1 de los 6 lo pasa
- *   con el fallo dentro: ese se comprueba leyendo tu código.
- *   ¿Atascado? Las pistas están en `exercise-13d.pistas.md`, de una en una.
- * ===========================================================================*/
+ * ▸ 6 drills, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/10-eventos-formularios/exercise-13d.test.tsx
+ * pnpm typecheck
+ *
+ * Los starters están rotos a propósito, y ninguno tiene un tipo mal puesto: aquí
+ * pnpm typecheck no va a decirte nada y la señal está en el test. 1 de los 6 lo
+ * pasa con el fallo dentro: ese se comprueba leyendo tu código.
+ * Pistas: exercise-13d.pistas.md.
+ * ============================================================================= */
 
 type EstadoEnvio = "idle" | "enviando" | "enviado";
 
@@ -63,9 +52,10 @@ const rotulo = (estado: EstadoEnvio) =>
 
 // type EstadoEnvio = "idle" | "enviando" | "enviado";
 
-// 1) `BotonQueSeApaga` — el pedido tarda un segundo en irse, y en ese rato el botón
-//    sigue pulsable: dos clics seguidos lo mandan dos veces. Haz que no se pueda pulsar
-//    mientras el envío está en marcha, y que vuelva a poder pulsarse en cuanto termine.
+/* 1) BotonQueSeApaga — el pedido tarda un segundo en irse, y en ese rato el botón
+ * sigue pulsable: dos clics seguidos lo mandan dos veces. Haz que no se pueda pulsar
+ * mientras el envío está en marcha, y que vuelva a poder pulsarse en cuanto termine.
+ */
 export function BotonQueSeApaga() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
 
@@ -92,9 +82,10 @@ export function BotonQueSeApaga() {
 }
 // <BotonQueSeApaga />
 
-// 2) `DosBotonesUnEnvio` — el formulario es largo y por eso lleva el mismo botón arriba
-//    y abajo; los dos mandan el mismo pedido. Hoy solo uno se entera de que hay un envío
-//    en marcha. Consigue que ninguno de los dos se pueda pulsar mientras dura.
+/* 2) DosBotonesUnEnvio — el formulario es largo y por eso lleva el mismo botón arriba
+ * y abajo; los dos mandan el mismo pedido. Hoy solo uno se entera de que hay un envío
+ * en marcha. Consigue que ninguno de los dos se pueda pulsar mientras dura.
+ */
 export function DosBotonesUnEnvio() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
 
@@ -118,10 +109,11 @@ export function DosBotonesUnEnvio() {
 }
 // <DosBotonesUnEnvio />
 
-// 3) `puedeEnviar` — la regla de cuándo se puede mandar deja de vivir suelta dentro del
-//    JSX y pasa a una función a la que se le pregunta. Se puede mandar siempre que no
-//    haya un envío en marcha, y eso incluye el momento de después: quien acaba de mandar
-//    un pedido tiene derecho a mandar otro.
+/* 3) puedeEnviar — la regla de cuándo se puede mandar deja de vivir suelta dentro del
+ * JSX y pasa a una función a la que se le pregunta. Se puede mandar siempre que no
+ * haya un envío en marcha, y eso incluye el momento de después: quien acaba de mandar
+ * un pedido tiene derecho a mandar otro.
+ */
 export function puedeEnviar(estado: EstadoEnvio): boolean {
   switch (estado) {
     case "idle":
@@ -135,10 +127,11 @@ export function puedeEnviar(estado: EstadoEnvio): boolean {
 // puedeEnviar("enviando") -> false
 // puedeEnviar("enviado") -> true
 
-// 4) `DosBotonesMismaAccion` — otra vez los dos botones, y ahora cada uno lleva su propia
-//    copia de lo que hay que hacer al enviar. Las copias ya se han desincronizado: por
-//    uno de los dos el pedido se queda enviándose para siempre. Consigue que los dos
-//    hagan exactamente lo mismo, sin copias que puedan volver a separarse.
+/* 4) DosBotonesMismaAccion — otra vez los dos botones, y ahora cada uno lleva su propia
+ * copia de lo que hay que hacer al enviar. Las copias ya se han desincronizado: por
+ * uno de los dos el pedido se queda enviándose para siempre. Consigue que los dos
+ * hagan exactamente lo mismo, sin copias que puedan volver a separarse.
+ */
 export function DosBotonesMismaAccion() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
 
@@ -162,11 +155,12 @@ export function DosBotonesMismaAccion() {
 }
 // <DosBotonesMismaAccion />
 
-// 5) `FormularioConEnter` — dentro de un formulario, Enter en el campo manda el pedido
-//    sin tocar ningún botón: es una puerta que no tiene interruptor, y por eso apagar el
-//    botón no llega hasta ella. Mientras hay un envío en marcha no puede arrancar otro,
-//    y eso se comprueba en dos sitios: el contador de envíos arrancados y los viajes que
-//    apunta el servidor.
+/* 5) FormularioConEnter — dentro de un formulario, Enter en el campo manda el pedido
+ * sin tocar ningún botón: es una puerta que no tiene interruptor, y por eso apagar el
+ * botón no llega hasta ella. Mientras hay un envío en marcha no puede arrancar otro,
+ * y eso se comprueba en dos sitios: el contador de envíos arrancados y los viajes que
+ * apunta el servidor.
+ */
 export function FormularioConEnter() {
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
   const [nota, setNota] = useState("");
@@ -225,10 +219,11 @@ export function FormularioConEnter() {
 }
 // <FormularioConEnter />
 
-// 6) `SalidaSiempreEncendida` — "Cancelar pedido" es la salida de emergencia y el diseño
-//    la quiere encendida siempre, también mientras el pedido viaja. Y aun así, en mitad
-//    del envío no puede cancelar nada: lo que ya salió no se deshace desde aquí.
-//    Protégela sin apagarla.
+/* 6) SalidaSiempreEncendida — «Cancelar pedido» es la salida de emergencia y el diseño
+ * la quiere encendida siempre, también mientras el pedido viaja. Y aun así, en mitad
+ * del envío no puede cancelar nada: lo que ya salió no se deshace desde aquí.
+ * Protégela sin apagarla.
+ */
 export function SalidaSiempreEncendida() {
   // Seteamos el estado inicial del envío. Sólo pueden ser los valores del type EstadoEnvio. Estos son "idle" - "enviando" - "enviado"
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
@@ -265,7 +260,7 @@ export function SalidaSiempreEncendida() {
 // <SalidaSiempreEncendida />
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * Los seis drills son el mismo freno puesto en sitios distintos. Si al llegar al 6 te
- * parece que el 1 estaba mal, no lo estaba: estaba solo. Un freno en la puerta vale
- * mientras haya una puerta y se pueda cerrar.
+ * Los seis drills son el mismo freno puesto en sitios distintos. Si al llegar al 6
+ * te parece que el 1 estaba mal, no lo estaba: estaba solo. Un freno en la puerta
+ * vale mientras haya una puerta y se pueda cerrar.
  * ───────────────────────────────────────────────────────────────────────────── */

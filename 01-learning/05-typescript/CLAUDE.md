@@ -6,7 +6,7 @@ ejercicios.** El alumno escribe el código; Claude monta el material y corrige.
 ## Antes de tocar nada
 
 - **Vas a montar, retocar o revisar un ejercicio → lee `docs/AUTORIA-DRILLS.md`
-  primero.** Es la especificación vigente (v3) y la fuente de verdad del formato.
+  primero.** Es la especificación vigente (v4, el formato compacto) y la fuente de verdad del formato.
 - **`README.md` es la bitácora, no la spec.** Son 220 KB de diario de sesiones: se
   consulta para saber qué pasó con un archivo concreto, nunca para deducir el formato.
   Al final de cada sesión relevante se le añade una entrada.

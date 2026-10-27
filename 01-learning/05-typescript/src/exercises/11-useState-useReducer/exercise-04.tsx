@@ -1,78 +1,70 @@
 import { useReducer, type FormEvent } from "react";
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * 📌 RECORDATORIO — tu `07-Contact/ContactForm.tsx` de Projex, recortado:
- *
- *     const [formData, setFormData] = useState({ name: "", email: "", message: "" })
- *     const [errors, setErrors]     = useState<ContactErrors>({})
- *     const [status, setStatus]     = useState<EstadoEnvio>("idle")
- *
- *     handleChange → setFormData(…), y si status era "enviado", setStatus("idle")
- *     handleSubmit → con errores: setErrors(…) + setStatus("idle")
- *                    sin errores: setErrors({}) · setStatus("enviando") · espera
- *                                 · setStatus("enviado") · setFormData(vacío)
- *
- * Tres estados que cambian juntos, y las reglas repartidas en dos manejadores.
- * ───────────────────────────────────────────────────────────────────────────── */
-
 /* =============================================================================
- * EJERCICIO 04 — tu formulario de contacto, con un reducer   ·  bloque 11
- * =============================================================================
+ * EJERCICIO 04 — tu formulario de contacto, con un reducer · bloque 11
  *
- * 🎯 AL TERMINAR SABRÁS
- *   · juntar en un solo estado objeto lo que antes eran tres `useState`
- *   · escribir las reglas de un formulario como transiciones de un reducer
- *   · devolver el mismo estado cuando una transición no está permitida
- *   · pedir las acciones desde el formulario, en el orden en que pasan
+ * 📌 RECORDATORIO — tu 07-Contact/ContactForm.tsx de Projex, recortado:
+ * const [formData, setFormData] = useState({ name: "", email: "", message: "" })
+ * const [errors, setErrors]     = useState<ContactErrors>({})
+ * const [status, setStatus]     = useState<EstadoEnvio>("idle")
+ * handleChange → setFormData(…), y si status era "enviado", setStatus("idle")
+ * handleSubmit → con errores: setErrors(…) + setStatus("idle")
+ *                sin errores: setErrors({}) · setStatus("enviando") · espera
+ *                             · setStatus("enviado") · setFormData(vacío)
+ * Tres estados que cambian juntos, y las reglas repartidas en dos manejadores.
  *
- * 🟢 ¿POR QUÉ ESTE ARCHIVO?
- * En el `03c` la cadena tenía un solo número. Aquí el estado es tu formulario real,
- * y lo que gana el reducer ya no es comodidad: es que todas las reglas del
- * formulario viven en un solo sitio, y ese sitio se puede probar sin pantalla.
+ * 🎯 OBJETIVOS
+ * · Juntar en un solo estado objeto lo que antes eran tres useState.
+ * · Escribir las reglas de un formulario como transiciones de un reducer.
+ * · Devolver el mismo estado cuando una transición no está permitida.
+ * · Pedir las acciones desde el formulario, en el orden en que pasan.
  *
- * 🗺️ MAPA DEL ARCHIVO
- *   TEORÍA 1 · un estado, no tres                      →  drill 1
- *   TEORÍA 2 · el reducer decide qué transiciones valen →  drills 2 a 6
- *   TEORÍA 3 · pedir en el orden en que pasan las cosas  →  drills 7, 8
+ * 🟢 CONTEXTO — en el 03c la cadena tenía un solo número. Aquí el estado es tu
+ * formulario real, y lo que gana el reducer ya no es comodidad: es que todas las
+ * reglas del formulario viven en un solo sitio, y ese sitio se prueba sin pantalla.
  *
- * ▸ EJERCICIO — 8 drills, en orden. ❌ Prohibido `any` y `as`.
- *     pnpm test:run src/exercises/11-useState-useReducer/exercise-04.test.tsx
- *     pnpm typecheck
+ * 🗺️ MAPA
+ * TEORÍA 1 · un estado, no tres → drill 1
+ * TEORÍA 2 · el reducer decide qué transiciones valen → drills 2–6
+ * TEORÍA 3 · pedir en el orden en que pasan las cosas → drills 7–8
  *
- *   Todos los starters están rotos a propósito. 1 de los 8 pasa el test con el
- *   fallo dentro: corre siempre los dos comandos.
- *   ¿Atascado? Las pistas están en `exercise-04.pistas.md`, de una en una.
+ * ▸ 8 drills en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/11-useState-useReducer/exercise-04.test.tsx
+ * pnpm typecheck
  *
- * 👁️ `FormContacto` está montado en `src/App.tsx`.
- * ===========================================================================*/
+ * Los starters están rotos a propósito, y 1 de los 8 pasa el test con el fallo
+ * dentro: ejecuta ambos comandos. Contesta cada ¿Por qué? en la línea libre de
+ * debajo. Pistas: exercise-04.pistas.md. FormContacto: banco, pestaña 11.
+ * ============================================================================= */
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 1 — un estado, no tres
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Cuando varios estados cambian siempre juntos, se agrupan en un solo objeto, y
- *   un reducer lo actualiza entero en cada transición. Cada pieza del objeto
- *   lleva su propio tipo, y la fase va como unión de textos, no como `string`.
+ * Cuando varios estados cambian siempre juntos, se agrupan en un solo objeto, y un
+ * reducer lo actualiza entero en cada transición. Cada pieza del objeto lleva su
+ * propio tipo, y la fase va como unión de textos, no como string.
  *
  * SINTAXIS
- *     type EstadoForm = { datos: Datos; errores: Errores; fase: Fase }
+ * type EstadoForm = { datos: Datos; errores: Errores; fase: Fase }
  *
  * EJEMPLO
- *     type Fase = "idle" | "enviando" | "enviado"
- *     const f: Fase = "enviado"      // ✅
- *     const g: Fase = "sucess"       // ❌ la errata no compila
+ * type Fase = "idle" | "enviando" | "enviado"
+ * const f: Fase = "enviado" // ✅
+ * const g: Fase = "sucess" // ❌ la errata no compila
  *
  * 🧠 ANALOGÍA — la ficha de un paciente: en vez de tres papeles sueltos (datos,
- *    diagnóstico, estado del trámite), una sola carpeta que se actualiza entera.
+ * diagnóstico, estado del trámite), una sola carpeta que se actualiza entera.
  *
  * 🗣️ LAS PIEZAS
- *     `keyof Datos` → la unión de sus claves: "name" | "email" | "message"
+ * keyof Datos → la unión de sus claves: "name" | "email" | "message".
  *
- * ⚠️ TRAMPA — con `string`, TypeScript acepta cualquier texto como fase, y un
- *    `switch` sobre ella nunca puede estar completo.
+ * ⚠️ TRAMPA — con string, TypeScript acepta cualquier texto como fase, y un switch
+ * sobre ella nunca puede estar completo.
  * ───────────────────────────────────────────────────────────────────────────── */
-// 1) `Fase` — las tres fases del envío: "idle", "enviando" y "enviado". `textoDeFase`,
-//    justo debajo, ya está bien escrita: cuando `Fase` lo esté, deja de dar error.
+/* 1) Fase — las tres fases del envío: "idle", "enviando" y "enviado". textoDeFase,
+ * justo debajo, ya está bien escrita: cuando Fase lo esté, deja de dar error.
+ */
 export type Fase = "idle" | "enviando" | "enviado";
 
 export function textoDeFase(fase: Fase): string {
@@ -91,39 +83,40 @@ export function textoDeFase(fase: Fase): string {
 }
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — el reducer decide qué transiciones valen
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   Cada `case` es una regla del formulario. Si la acción no tiene sentido en la
- *   fase actual, el reducer devuelve EL MISMO estado que recibió: para React, eso
- *   significa "no pasó nada", y no repinta.
+ * Cada case es una regla del formulario. Si la acción no tiene sentido en la fase
+ * actual, el reducer devuelve el mismo estado que recibió: para React, eso
+ * significa «no pasó nada», y no repinta.
  *
  * SINTAXIS
- *     case "empezar":
- *       if (estado.fase === "enviando") return estado;   // no vale: igual que estaba
- *       return { ...estado, fase: "enviando" };          // vale: estado nuevo
+ * case "empezar":
+ *   if (estado.fase === "enviando") return estado; // no vale: igual que estaba
+ *   return { ...estado, fase: "enviando" }; // vale: estado nuevo
  *
  * 🧠 ANALOGÍA — el cajero que no te deja retirar dos veces el mismo cheque: te
- *    devuelve el papel y tu saldo queda como estaba.
+ * devuelve el papel y tu saldo queda como estaba.
  *
- * ⚠️ TRAMPA — con un objeto, `{ ...estado }` sin cambios NO es "el mismo": es
- *    una llave nueva, y React repinta. "No pasó nada" se dice con `return estado`.
+ * ⚠️ TRAMPA — con un objeto, { ...estado } sin cambios no es «el mismo»: es una
+ * llave nueva, y React repinta. «No pasó nada» se dice con return estado.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// Del 2 al 5, cada drill es un `case` de este reducer, marcado con su número.
-// 2) "escribir" — cambia el campo que dice el papel. Y si el formulario ya se
-//    había enviado, vuelve a "idle", como hace tu `handleChange`.
-// 3) "rechazar" — guarda los errores que trae el papel y deja la fase en "idle".
-// 4) "empezar" — pasa a "enviando" y borra los errores. Si ya estaba enviando, no
-//    cambia nada: así no se envía dos veces.
-// 5) "terminar" — solo vale si está "enviando": pasa a "enviado" y deja los datos
-//    vacíos. Desde cualquier otra fase, no cambia nada.
+/* Del 2 al 5, cada drill es un case de este reducer, marcado con su número.
+ * 2) "escribir" — cambia el campo que dice el papel. Y si el formulario ya se
+ *    había enviado, vuelve a "idle", como hace tu handleChange.
+ * 3) "rechazar" — guarda los errores que trae el papel y deja la fase en "idle".
+ * 4) "empezar" — pasa a "enviando" y borra los errores. Si ya estaba enviando, no
+ *    cambia nada: así no se envía dos veces.
+ * 5) "terminar" — solo vale si está "enviando": pasa a "enviado" y deja los datos
+ *    vacíos. Desde cualquier otra fase, no cambia nada.
+ */
 
-// Las piezas del estado. No se tocan, salvo `Fase` en el drill 1.
+/* Las piezas del estado. No se tocan, salvo Fase en el drill 1. */
 export type Datos = { name: string; email: string; message: string };
 export type Errores = { name?: string; email?: string; message?: string };
 export type EstadoForm = { datos: Datos; errores: Errores; fase: Fase };
 
-// 📌 Los papeles del formulario. `escribir` lleva qué campo cambia y su texto nuevo.
+/* 📌 Los papeles del formulario. escribir lleva qué campo cambia y su texto nuevo. */
 export type AccionForm =
   | { tipo: "escribir"; campo: keyof Datos; valor: string }
   | { tipo: "rechazar"; errores: Errores }
@@ -178,29 +171,30 @@ export function formReducer(estado: EstadoForm, accion: AccionForm): EstadoForm 
 // formReducer(inicial, { tipo: "empezar" }) -> { datos: { name: "", email: "", message: "" }, errores: {}, fase: "enviando" }
 // formReducer(inicial, { tipo: "terminar" }) -> { datos: { name: "", email: "", message: "" }, errores: {}, fase: "enviado" }
 
-// 6) Con el reducer del 2 al 5 terminado: parte de `inicial` y le llegan, en este
-//    orden, empezar · empezar · terminar · escribir. ¿En qué fase queda?
+/* 6) Con el reducer del 2 al 5 terminado: parte de inicial y le llegan, en este
+ * orden, empezar · empezar · terminar · escribir. ¿En qué fase queda?
+ * ¿Por qué?  Porque el primer "empezar" pasa a "enviando", el segundo "empezar" no hace nada, el "terminar" pasa a "enviado", y el "escribir" vuelve a "idle".
+ */
 export const respuesta6: Fase = "idle";
-// ¿Por qué?  Porque el primer "empezar" pasa a "enviando", el segundo "empezar" no hace nada, el "terminar" pasa a "enviado", y el "escribir" vuelve a "idle".
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 3 — pedir en el orden en que pasan las cosas
- * ─────────────────────────────────────────────────────────────────────────────
+ *
  * DEFINICIÓN
- *   El componente ya no decide nada: solo pide lo que acaba de ocurrir, en el
- *   orden en que ocurre. Las reglas están en el reducer, y si un papel llega en
- *   un momento que no toca, el reducer lo ignora.
+ * El componente ya no decide nada: solo pide lo que acaba de ocurrir, en el orden
+ * en que ocurre. Las reglas están en el reducer, y si un papel llega en un momento
+ * que no toca, el reducer lo ignora.
  *
- * EJEMPLO — tu `handleSubmit`, dicho con papeles:
- *     con errores  →  pedir rechazar
- *     sin errores  →  pedir empezar  ·  espera  ·  pedir terminar
+ * EJEMPLO — tu handleSubmit, dicho con papeles:
+ * con errores → pedir rechazar
+ * sin errores → pedir empezar · espera · pedir terminar
  *
- * 🧠 ANALOGÍA — el mesero no cocina: anota el pedido y lo pasa a cocina. Si
- *    pide el postre antes que el plato de fondo, en cocina se lo devuelven.
+ * 🧠 ANALOGÍA — el mesero no cocina: anota el pedido y lo pasa a cocina. Si pide el
+ * postre antes que el plato de fondo, en cocina se lo devuelven.
  *
- * ⚠️ TRAMPA — `pedir` no devuelve el estado nuevo, igual que el setter del `02`.
- *    Justo después de `pedir(…)`, `estado.fase` sigue siendo la de este render:
- *    la nueva llega en el siguiente.
+ * ⚠️ TRAMPA — pedir no devuelve el estado nuevo, igual que el setter del 02. Justo
+ * después de pedir(…), estado.fase sigue siendo la de este render: la nueva llega
+ * en el siguiente.
  * ───────────────────────────────────────────────────────────────────────────── */
 
 // export type Errores = { name?: string; email?: string; message?: string };
@@ -245,14 +239,15 @@ export function validarContacto(contacto: Datos): Errores {
 
   return errores;
 }
-// Simula la espera de una petición HTTP, con `await esperar(…)` en el drill 8.
+/* Simula la espera de una petición HTTP, con await esperar(…) en el drill 8. */
 const esperar = (ms: number) => new Promise((resolver) => setTimeout(resolver, ms));
 
-// 7) y 8) `FormContacto` — tres campos, "Enviar" y un <p role="status"> con el
-//    texto de la fase. Los dos drills están en este componente, marcados.
-// 7) Lo que escribes en "Nombre" no se queda en el campo.
-// 8) Al enviar con los tres campos bien, tiene que salir "Enviando…" y después
-//    "Mensaje enviado". Hoy nunca sale "Enviando…".
+/* 7) y 8) FormContacto — tres campos, "Enviar" y un <p role="status"> con el
+ * texto de la fase. Los dos drills están en este componente, marcados.
+ * 7) Lo que escribes en "Nombre" no se queda en el campo.
+ * 8) Al enviar con los tres campos bien, tiene que salir "Enviando…" y después
+ *    "Mensaje enviado". Hoy nunca sale "Enviando…".
+ */
 export function FormContacto() {
   const [estado, pedir] = useReducer(formReducer, inicial);
 

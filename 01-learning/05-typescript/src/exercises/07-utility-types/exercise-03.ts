@@ -1,55 +1,50 @@
 /* =============================================================================
- * EJERCICIO 03 — EL CAMPEÓN, paso a paso: del BUCLE al REDUCE
- * =============================================================================
+ * EJERCICIO 03 — el campeón, paso a paso: del bucle al reduce · refuerzo del 02
  *
- * 🟢 POR QUÉ EXISTE ESTE ARCHIVO
- * ----------------------------------------------------------------------------
- * El drill 7 de exercise-02 (`menorNumero`) se atascó: la lógica de "arrastrar
- * un campeón a lo largo del array" se hace bola cuando va escondida dentro de
- * `reduce`. Aquí la sacamos a la luz: primero la escribes como un BUCLE `for`
- * normal (que ya dominas de JS), y luego ves que `reduce` es EXACTAMENTE ese
- * bucle, plegado.
+ * 🎯 OBJETIVOS
+ * · Escribir un campeón como un bucle for con una variable que vas pisando.
+ * · Traducir ese bucle a reduce: lo que devuelves en un turno es el acum siguiente.
  *
+ * 🟢 CONTEXTO — el drill 7 del 02 (menorNumero) se atascó: la lógica de «arrastrar
+ * un campeón a lo largo del array» se hace bola cuando va escondida dentro de
+ * reduce. Aquí sale a la luz: primero la escribes como un bucle for normal, que ya
+ * dominas de JS, y luego ves que reduce es exactamente ese bucle, plegado.
  *
- * ▸ EXPLICACIÓN — un campeón es un bucle con UNA variable que vas pisando
- * ----------------------------------------------------------------------------
- * Buscar el menor (o el mayor, o el más largo...) es siempre lo mismo:
+ * 🗺️ MAPA
+ * BLOQUE A · con bucle for: una variable que pisas → drills 1–3
+ * BLOQUE B · el mismo problema con reduce → drills 4–6
  *
- *     let campeon = <tope inicial>          // arranca en un valor que cualquiera vence
- *     for (const retador of lista) {        // entra cada elemento, uno a uno
- *       if (retador GANA a campeon) {        // ¿el nuevo supera al actual?
- *         campeon = retador                  // sí → se corona (pisas la variable)
- *       }                                    // no → no haces nada, sigue el de antes
- *     }
- *     return campeon
+ * ▸ 6 drills en escalera, en orden. Prohibidos any y as.
+ * pnpm test:run src/exercises/07-utility-types/exercise-03.test.ts
+ * pnpm typecheck
  *
- * `reduce` es ESE bucle con dos cosas escondidas:
- *     - el `campeon` (la variable que sobrevive)  →  es el `acum`
- *     - `campeon = retador` (pisar la variable)    →  es lo que `return`-as:
- *       LO QUE DEVUELVES EN UN TURNO SE CONVIERTE EN EL `acum` DEL SIGUIENTE.
- *
- * Por eso un reduce campeón tiene SIEMPRE esta forma:
- *     (acum, valor) => {
- *       if (valor GANA a acum) return valor   // "se corona" = lo devuelvo
- *       return acum                            // "sigue el campeón" = devuelvo el de antes
- *     }
- *
- *
- * ▸ EJERCICIO — escalera, EN ORDEN. ❌ Prohibido `any` y `as`.
- * ----------------------------------------------------------------------------
- * Bloque A (1–3): con BUCLE `for`. Completa la línea marcada con 👉.
- * Bloque B (4–6): el MISMO problema con `reduce`. Tienes el bucle al lado como
- *   referencia: tradúcelo. El starter va MAL (nunca corona) → test ROJO.
- * ===========================================================================*/
+ * En el bloque B tienes el bucle al lado como referencia: tradúcelo. El starter va
+ * mal (nunca corona) y el test queda rojo.
+ * ============================================================================= */
 
-/* ---------------------------------------------------------------------------
- * BLOQUE A — con BUCLE `for` (terreno conocido: una variable que pisas)
- * -------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE A — con bucle for: un campeón es una variable que vas pisando
+ *
+ * DEFINICIÓN
+ * Buscar el menor, el mayor o el más largo es siempre lo mismo: una variable
+ * arranca en un valor que cualquiera vence, entra cada elemento uno a uno, y si el
+ * nuevo supera al actual se corona (pisas la variable); si no, sigue el de antes.
+ *
+ * SINTAXIS
+ * let campeon = <tope inicial>
+ * for (const retador of lista) {
+ *   if (retador GANA a campeon) {
+ *     campeon = retador // se corona: pisas la variable
+ *   }
+ * }
+ * return campeon
+ * ───────────────────────────────────────────────────────────────────────────── */
 
-// 1) `mayorBucle` — el número más grande, con un for. El campeón y el inicial
-//    ya están; el cuerpo del bucle está VACÍO. Escribe la coronación: si el
-//    retador supera al campeón, písalo.
-//      mayorBucle([3, 1, 2]) → 3 ; mayorBucle([5]) → 5
+/* 1) mayorBucle — el número más grande, con un for. El campeón y el inicial
+ * ya están; el cuerpo del bucle está vacío. Escribe la coronación: si el
+ * retador supera al campeón, písalo.
+ *   mayorBucle([3, 1, 2]) → 3 ; mayorBucle([5]) → 5
+ */
 
 // infinity = el número más grande posible
 // -infinity = el número más pequeño posible
@@ -68,10 +63,11 @@ export function mayorBucle(nums: number[]): number {
 }
 mayorBucle([3, 1, 2]); // El mayor del bucle es 3
 
-// 2) `menorBucle` — el número más pequeño, con for. Ahora TÚ pones las tres
-//    piezas: el inicial (el starter está MAL: 0 no es el tope de un mínimo),
-//    y la coronación dentro del bucle.
-//      menorBucle([3, 1, 2]) → 1 ; menorBucle([5]) → 5
+/* 2) menorBucle — el número más pequeño, con for. Ahora tú pones las tres
+ * piezas: el inicial (el starter está mal: 0 no es el tope de un mínimo),
+ * y la coronación dentro del bucle.
+ *   menorBucle([3, 1, 2]) → 1 ; menorBucle([5]) → 5
+ */
 export function menorBucle(nums: number[]): number {
   let menor = Infinity;
   for (const valor of nums) {
@@ -82,10 +78,11 @@ export function menorBucle(nums: number[]): number {
   return menor;
 }
 
-// 3) `masLargaBucle` — la palabra MÁS LARGA, con for. El campeón se compara por
-//    `.length` (un valor derivado), pero lo que guardas/devuelves es la PALABRA
-//    entera. Inicial: "" (length 0, cualquier palabra la supera).
-//      masLargaBucle(["sol", "luna", "mar"]) → "luna" ; masLargaBucle([]) → ""
+/* 3) masLargaBucle — la palabra más larga, con for. El campeón se compara por
+ * .length (un valor derivado), pero lo que guardas/devuelves es la palabra
+ * entera. Inicial: "" (length 0, cualquier palabra la supera).
+ *   masLargaBucle(["sol", "luna", "mar"]) → "luna" ; masLargaBucle([]) → ""
+ */
 export function masLargaBucle(palabras: string[]): string {
   let masLarga = "";
   for (const palabra of palabras) {
@@ -96,30 +93,43 @@ export function masLargaBucle(palabras: string[]): string {
   return masLarga;
 }
 
-/* ---------------------------------------------------------------------------
- * BLOQUE B — el MISMO problema con `reduce` (el bucle de arriba, plegado)
- * ---------------------------------------------------------------------------
- * Traduce tu bucle. Recuerda la regla escondida: lo que DEVUELVES es el `acum`
- * del turno siguiente. `campeon = retador` se vuelve `return valor`.
- * -------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ BLOQUE B — el mismo problema con reduce: el bucle de arriba, plegado
+ *
+ * DEFINICIÓN
+ * reduce es ese bucle con dos cosas escondidas: el campeon, la variable que
+ * sobrevive, es el acum; y campeon = retador, pisar la variable, es lo que
+ * devuelves. Lo que devuelves en un turno se convierte en el acum del siguiente.
+ *
+ * SINTAXIS
+ * (acum, valor) => {
+ *   if (valor GANA a acum) return valor // «se corona»: lo devuelvo
+ *   return acum                         // «sigue el campeón»: el de antes
+ * }
+ *
+ * Traduce tu bucle: campeon = retador se vuelve return valor.
+ * ───────────────────────────────────────────────────────────────────────────── */
 
-// 4) `mayorReduce` — igual que el drill 1, con reduce. El starter nunca corona
-//    (devuelve `acum` siempre). Tradúcelo:
-//      bucle:   if (valor > mayor) mayor = valor
-//      reduce:  if (valor > acum) return valor ;  return acum
+/* 4) mayorReduce — igual que el drill 1, con reduce. El starter nunca corona
+ * (devuelve acum siempre). Tradúcelo:
+ *   bucle:   if (valor > mayor) mayor = valor
+ *   reduce:  if (valor > acum) return valor ;  return acum
+ */
 export function mayorReduce(nums: number[]): number {
   return nums.reduce((acum, valor) => (valor > acum ? valor : acum), -Infinity);
 }
 
-// 5) `menorReduce` — igual que el drill 2, con reduce. Mismo molde, invertido.
-//      menorReduce([3, 1, 2]) → 1 ; menorReduce([5]) → 5
+/* 5) menorReduce — igual que el drill 2, con reduce. Mismo molde, invertido.
+ * menorReduce([3, 1, 2]) → 1 ; menorReduce([5]) → 5
+ */
 export function menorReduce(nums: number[]): number {
   return nums.reduce((acum, valor) => (valor < acum ? valor : acum), Infinity);
 }
 
-// 6) `masLargaReduce` — igual que el drill 3, con reduce. Compara por `.length`,
-//    devuelve la palabra entera. Inicial "".
-//      masLargaReduce(["sol", "luna", "mar"]) → "luna"
+/* 6) masLargaReduce — igual que el drill 3, con reduce. Compara por .length,
+ * devuelve la palabra entera. Inicial "".
+ *   masLargaReduce(["sol", "luna", "mar"]) → "luna"
+ */
 export function masLargaReduce(palabras: string[]): string {
   return palabras.reduce((acum, palabra) => (palabra.length > acum.length ? palabra : acum), "");
 }
