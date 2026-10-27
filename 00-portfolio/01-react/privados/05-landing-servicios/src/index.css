@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Paleta Apple en claro: los mismos grises y el mismo azul del banco de 05-typescript,
+   sobre blanco. Cambiar de rubro debería tocar como mucho --color-accent. */
+@theme {
+  /* Sin "SF Pro Text" a propósito: en el PC de desarrollo está instalada solo en
+     Regular Italic, y el navegador usaba esa cara para todo el texto. En Apple da
+     igual, porque -apple-system ya es SF Pro; las otras dos solo cuentan en Windows. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+
+  --color-ink: #1d1d1f;
+  /* #6e6e73 y no #86868b: sobre blanco, el segundo da 3,6:1 y no llega al 4,5:1 que
+     pide el texto normal. #86868b solo funciona sobre negro. */
+  --color-muted: #6e6e73;
+  --color-canvas: #ffffff;
+  --color-surface: #f5f5f7;
+  --color-surface-hover: #e8e8ed;
+  --color-accent: #0071e3;
+  --color-accent-hover: #0077ed;
+}
+
+@layer base {
+  html {
+    /* Sin esto, Safari en iPhone agranda el texto por su cuenta al girar a horizontal. */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
