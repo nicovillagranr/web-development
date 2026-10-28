@@ -65,32 +65,42 @@ import { useEffect, useState } from "react";
  * sabe que una función es un hook.
  * ───────────────────────────────────────────────────────────────────────────── */
 
+// Definimos el tipo de consulta que vamos a hacer.
+// Esta irá dirigida a saber en base a un booleano si el usuario ha activado en la configuración de su sistema operativo la opción de reducir el movimiento o las animaciones de la interfaz.
 const CONSULTA = "(prefers-reduced-motion: reduce)";
 
 /* 1) prefiereMenosMovimiento — tu PreferenciaMovimiento del 02, sacado a una
  * función para que lo use el Hero. Funciona y el test pasa, pero el lint no lo
  * deja pasar.
  * ¿Por qué? En el navegador funcionaba igual. ¿Qué miraba el lint para quejarse?
- *
+ * React es quisquilloso con el nombre que le damos a los Custom Hooks. En este caso el problema estaba en el nombre: prefiereMenosMovimiento. El lint esperaba que el nombre del hook empezara con use, así que lo cambiamos a usePrefiereMenosMovimiento y el error desapareció.
  */
-export function prefiereMenosMovimiento() {
+export function usePrefiereMenosMovimiento() {
+  // Inicializamos el estado de forma perezosa (lazy) evaluando la media query en el navegador.
+  // window.matchMedia devuelve un objeto; su .matches es el booleano (true/false) según la preferencia del sistema del usuario.
   const [prefiere, setPrefiere] = useState(() => window.matchMedia(CONSULTA).matches);
 
+  // Sincronizamos el estado con los cambios del sistema una vez montado el componente.
   useEffect(() => {
+    // Creamos la referencia a la media query para escuchar sus cambios activos.
     const consulta = window.matchMedia(CONSULTA);
+    // Función manejadora que actualiza el estado cuando el usuario cambia su configuración.
     const actualizar = () => setPrefiere(consulta.matches);
+    // Escuchamos activamente el evento "change" del sistema operativo.
     consulta.addEventListener("change", actualizar);
+    // Función de limpieza (cleanup): remueve el listener al desmontar el componente para evitar fugas de memoria.
     return () => consulta.removeEventListener("change", actualizar);
+    // Array de dependencias vacío: garantiza que el efecto solo se ejecute al montar y desmontar el componente.
   }, []);
-
   return prefiere;
 }
 
 export function HeroDeProjex() {
-  const estatico = prefiereMenosMovimiento();
+  // Consumimos el hook personalizado para rastrear en tiempo real la preferencia de movimiento.
+  const estatico = usePrefiereMenosMovimiento();
+  // Renderizado condicional: si prefiere accesibilidad visual muestra la imagen, si no, reproduce el vídeo.
   return <p>{estatico ? "Hero: imagen fija" : "Hero: vídeo"}</p>;
 }
-// <HeroDeProjex />
 
 /* 2) FondoDelContacto — tu sección de contacto tiene un fondo animado que también
  * se apaga con «reducir movimiento». Alguien copió la lógica en vez de usar el
@@ -98,19 +108,12 @@ export function HeroDeProjex() {
  * escuchando. Borra la copia y usa el hook.
  * ¿Por qué? El Hero y el fondo llaman ahora al mismo hook. ¿Comparten el mismo
  * prefiere, o cada uno tiene el suyo?
- *
+ * Al usar la misma lógica para saber las preferencias de animación del usuario, ambos componentes (Hero y FondoDelContacto) usan su propio hook. Cada uno tiene su propio estado interno, pero ambos se basan en la misma fuente de verdad: la preferencia del usuario. Por lo tanto, si el usuario cambia su configuración, ambos componentes reaccionarán de manera consistente y mostrarán la interfaz adecuada según la preferencia actual.
  */
 export function FondoDelContacto() {
-  const [prefiere, setPrefiere] = useState(() => window.matchMedia(CONSULTA).matches);
-
-  useEffect(() => {
-    const consulta = window.matchMedia(CONSULTA);
-    consulta.addEventListener("change", () => setPrefiere(consulta.matches));
-  }, []);
-
+  const prefiere = usePrefiereMenosMovimiento();
   return <p>{prefiere ? "Fondo: quieto" : "Fondo: animado"}</p>;
 }
-// <FondoDelContacto />
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ TEORÍA 2 — contarle a TypeScript lo que falta
@@ -151,12 +154,38 @@ export function FondoDelContacto() {
  * lo usa el drill 4.
  * ¿Por qué? El ? de tu declaración, ¿qué te obligó a cambiar en ahorraDatos, y de
  * qué te protege?
- *
+ * Ese ahorrarDatos no servía en navegadores que no tienen navigator.connection, como Safari y Firefox. El ? en la declaración de connection indica que puede ser undefined, lo que nos obliga a usar el operador de encadenamiento opcional (?.) al acceder a saveData. Esto protege contra errores de tipo TypeError al intentar acceder a una propiedad de undefined.
  */
-export function ahorraDatos(): boolean {
-  return Boolean(navigator.connection.saveData);
+// Describe la forma del objeto navigator.connection.
+// "extends EventTarget" le da addEventListener/removeEventListener,
+// que el drill 4 necesita para escuchar el evento "change".
+interface ConexionRed extends EventTarget {
+  // true si el usuario activó "Ahorrar datos".
+  // readonly: se lee, no se asigna (lo controla el navegador).
+  readonly saveData: boolean;
 }
-// ahorraDatos();
+
+// Como este archivo tiene "export", es un módulo y sus tipos quedan
+// encerrados aquí. "declare global" permite modificar un tipo global.
+declare global {
+  // Navigator ya existe en TypeScript. Al declararlo de nuevo con el
+  // mismo nombre, no se reemplaza: se le suma lo que escribas aquí
+  // (declaration merging).
+  interface Navigator {
+    // readonly: no se puede reasignar navigator.connection.
+    // ?: puede no existir (Safari y Firefox no la tienen), así que
+    //    su tipo real es ConexionRed | undefined.
+    readonly connection?: ConexionRed;
+  }
+}
+
+export function ahorraDatos(): boolean {
+  // ?. -> si connection es undefined, corta ahí y devuelve undefined
+  //       en vez de lanzar un TypeError.
+  // ?? false -> si el resultado es undefined, usa false, porque la
+  //             función promete devolver siempre un boolean.
+  return navigator.connection?.saveData ?? false;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ▸ ARMARLO TÚ — tu hook, sin errores y bien desde el primer render
@@ -174,50 +203,47 @@ export function ahorraDatos(): boolean {
  * usuario haya pedido menos movimiento o ahorrar datos. Tiene que salir bien desde
  * el primer render. Los prefijos moz y webkit ya no los usa ningún navegador:
  * decláralos o bórralos, tú eliges.
- * ¿Por qué? Con useState(false), ¿qué veía el Hero en su primer render, aunque el
+ * ¿Por qué?
+ * Con useState(false), ¿qué veía el Hero en su primer render, aunque el
  * usuario hubiera pedido menos movimiento?
- *
+ * Lo que se veía era el vídeo, porque el estado inicial era false. Al calcular el valor inicial dentro de useState, el Hero renderiza correctamente desde el primer render según la preferencia del usuario.
+ * Ese cálculo ocurre en el primer render, antes de que se ejecute el efecto, así que no hay parpadeo ni renderizado incorrecto.
  */
-export function useMediaPreferences() {
-  const [usarHeroEstatico, setUsarHeroEstatico] = useState(false);
+// Definimos la forma del objeto que devuelve el hook, para que TypeScript sepa qué propiedades tiene y de qué tipo son.
+interface Preferencias {
+  prefiereReducirMovimiento: boolean;
+  prefiereAhorrarDatos: boolean;
+}
+
+export function useMediaPreferences(): Preferencias {
+  // Calculamos las preferencias desde el primer render.
+  const [preferencias, setPreferencias] = useState<Preferencias>(() => ({
+    // El resultado de prefiereReducirMovimiento se obtiene evaluando la media query en el navegador, el resultado es booleano
+    prefiereReducirMovimiento: window.matchMedia(CONSULTA).matches,
+    // El resultado de prefiereAhorrarDatos se obtiene llamando a la función ahorraDatos, que devuelve un booleano según la configuración del navegador
+    prefiereAhorrarDatos: ahorraDatos(),
+  }));
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const consulta = window.matchMedia(CONSULTA);
 
-    // Connection API: detecta si el usuario tiene "Ahorrar datos" activado en el SO.
-    // Fallbacks para diferentes navegadores (cada uno usa un prefijo diferente):
-    // - navigator.connection (Chrome, Edge, Opera)
-    // - navigator.mozConnection (Firefox con prefijo moz)
-    // - navigator.webkitConnection (Safari con prefijo webkit)
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-
-    const updatePreferences = () => {
-      // Si tiene reduce-motion O saveData activo, usar imagen estática.
-      setUsarHeroEstatico(mediaQuery.matches || Boolean(connection?.saveData));
+    // Actualizamos ambas preferencias cuando cambia cualquiera de las fuentes.
+    const actualizarPreferencias = () => {
+      setPreferencias({
+        prefiereReducirMovimiento: consulta.matches,
+        prefiereAhorrarDatos: ahorraDatos(),
+      });
     };
 
-    updatePreferences();
+    consulta.addEventListener("change", actualizarPreferencias);
+    navigator.connection?.addEventListener("change", actualizarPreferencias);
 
-    // Listener para cambios en tiempo real (ej: el usuario activa reduce-motion mientras navega).
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", updatePreferences);
-    } else {
-      mediaQuery.addListener(updatePreferences);
-    }
-
-    connection?.addEventListener?.("change", updatePreferences);
-
-    // Cleanup: remover listeners para evitar memory leaks.
+    // Eliminamos los listeners al desmontar el componente.
     return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener("change", updatePreferences);
-      } else {
-        mediaQuery.removeListener(updatePreferences);
-      }
-      connection?.removeEventListener?.("change", updatePreferences);
+      consulta.removeEventListener("change", actualizarPreferencias);
+      navigator.connection?.removeEventListener("change", actualizarPreferencias);
     };
   }, []);
 
-  return usarHeroEstatico;
+  return preferencias;
 }
-// useMediaPreferences();

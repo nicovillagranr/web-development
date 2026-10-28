@@ -46,9 +46,11 @@ function conexionFalsa(saveData: boolean) {
   return { oyentes };
 }
 
-/* El drill 4 apunta lo que devuelve el hook en CADA render, para ver el primero. */
+/* El drill 4 apunta lo que decide el Hero en CADA render, para ver el primero. El hook
+ * devuelve las dos preferencias y el Hero las junta: con cualquiera, imagen fija. */
 function Espia({ alPintar }: { alPintar: (valor: boolean) => void }) {
-  const valor = useMediaPreferences();
+  const { prefiereReducirMovimiento, prefiereAhorrarDatos } = useMediaPreferences();
+  const valor = prefiereReducirMovimiento || prefiereAhorrarDatos;
   alPintar(valor);
   return <p>{valor ? "imagen fija" : "vídeo"}</p>;
 }

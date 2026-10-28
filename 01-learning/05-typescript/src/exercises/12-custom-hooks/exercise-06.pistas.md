@@ -3,8 +3,8 @@
 Cuatro niveles por drill. Ábrelas **de una en una** y vuelve al archivo entre una y la
 siguiente.
 
-Dos starters no compilan (1 y 2): su Pista 3 cita al compilador. Del 3 al 6, el typecheck
-calla, y la Pista 3 trae el dato duro del test.
+Cuatro starters no compilan (1, 2, 2c y 2d): su Pista 3 cita al compilador. En el 2a, el 2b,
+el 2e y del 3 al 6, el typecheck calla, y la Pista 3 trae el dato duro del test.
 
 ---
 
@@ -103,6 +103,230 @@ se pregunta por la clase que necesita la línea de después.
 
 ---
 
+## Peldaño 2a — `estaDentro`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+En `a.contains(b)` hay uno que pregunta y otro por el que se pregunta. Léelo en voz alta como
+«¿b está dentro de a?». En el starter, ¿quién hace de caja?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El que va antes del punto es el que pregunta («¿esto está dentro de mí?»), y el del paréntesis
+es por quien pregunta. En el starter están cambiados de sitio.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+AssertionError: expected false to be true
+```
+
+Es en `estaDentro(caja, boton)`: el starter le pregunta al botón si la caja está dentro de él,
+y no lo está. El typecheck calla porque los dos son `Node`, y cualquiera puede preguntar: el
+fallo es de orden, no de tipos.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function estaDentro(caja: Node, cosa: Node): boolean {
+  return caja.contains(cosa);
+}
+```
+
+La caja pregunta y `cosa` es por quien se pregunta. Es tu `menuRef.current?.contains(event.target)`
+sin el ref ni el evento: `menuRef.current` hace de caja, y `event.target`, de cosa.
+
+</details>
+
+---
+
+## Peldaño 2b — `esDeLaPagina`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Poder recibir eventos no te hace parte de la página. ¿Qué tienen en común un botón y un texto
+que no tengan `window` ni un `EventTarget` suelto?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Los dos primeros son `Node`: están colgados del árbol del documento. La Teoría 1 ya tiene la
+herramienta para preguntar en ejecución «¿esto es de esta clase?».
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+AssertionError: expected true to be false
+```
+
+Es en `esDeLaPagina(window)`: el starter responde que sí, porque `window` también tiene
+`addEventListener`. Todo `EventTarget` lo tiene: es justo lo que significa serlo. El typecheck
+calla porque la pregunta es válida y devuelve un `boolean`: solo que no es la que toca.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function esDeLaPagina(objetivo: EventTarget): boolean {
+  return objetivo instanceof Node;
+}
+```
+
+`instanceof Node` da `true` con elementos y textos, y `false` con `window` o con un `EventTarget`
+suelto: los dos reciben eventos, pero no están en el árbol de la página.
+
+</details>
+
+---
+
+## Peldaño 2c — `clicDentro`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Junta las dos preguntas de antes, en este orden: primero «¿es de la página?» y, solo si lo es,
+«¿está dentro de la caja?».
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`contains` solo acepta un `Node`, y `objetivo` es un `EventTarget | null`. Pregunta con
+`instanceof` antes, en el mismo `return`, con `&&`. Si reutilizas `esDeLaPagina`, TypeScript no
+estrecha: devuelve un `boolean`, no un `objetivo is Node` (los type guards del 05/08).
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+error TS2345: Argument of type 'EventTarget | null' is not assignable to parameter of type 'Node | null'.
+```
+
+Y el test, al pasarle `window`:
+
+```
+TypeError: Failed to execute 'contains' on 'Node': parameter 1 is not of type 'Node'.
+```
+
+Ese `TypeError` es lo que TypeScript te estaba evitando en el drill 2.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function clicDentro(caja: Node, objetivo: EventTarget | null): boolean {
+  return objetivo instanceof Node && caja.contains(objetivo);
+}
+```
+
+Si `objetivo` no es un `Node` (`null`, `window`…), el `&&` corta y devuelve `false` sin llamar a
+`contains`. Si lo es, después del `&&` TypeScript ya lo trata como `Node`, y `contains` lo acepta.
+
+</details>
+
+---
+
+## Peldaño 2d — `dondeCayo`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+TypeScript no ve tu página: el tipo de `event.target` lo saca de cómo está declarado
+`MouseEvent`, y esa declaración vale para cualquier `mousedown`, caiga donde caiga.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Para un `MouseEvent`, `target` es un `EventTarget | null`, y `nodeName` es de `Node`. Pregunta con
+`instanceof` antes de leerlo, y decide qué devolver si no lo es (un ternario o un `if`).
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+error TS18047: 'event.target' is possibly 'null'.
+error TS2339: Property 'nodeName' does not exist on type 'EventTarget'.
+```
+
+Y el test:
+
+```
+AssertionError: expected [ 'BUTTON', undefined ] to deeply equal [ 'BUTTON', 'fuera de la página' ]
+```
+
+Con el evento lanzado sobre `window`, el starter devuelve `undefined`: `window` no tiene
+`nodeName`.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function dondeCayo(event: MouseEvent): string {
+  return event.target instanceof Node ? event.target.nodeName : "fuera de la página";
+}
+```
+
+`instanceof Node` descarta a la vez el `null` y a `window`. En la rama del sí, TypeScript ya sabe
+que `event.target` es un `Node`, y `nodeName` existe.
+
+</details>
+
+---
+
+## Peldaño 2e — `FiltrosQueSeCierranFuera`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Cuando marcas «React», el clic no cae en el panel: cae en algo que está dentro del panel.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+`!==` mira si son el mismo objeto, no si uno está dentro del otro. Para «dentro de» está
+`contains`, con la pregunta del 2c delante.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+TestingLibraryElementError: Unable to find an accessible element with the role "group" and name "Filtros del portfolio"
+```
+
+Es justo después de marcar «React»: `event.target` era el `<input>` de la casilla, distinto del
+`<div>` del panel, así que el starter cerraba. El typecheck calla porque comparar con `!==` un
+`EventTarget | null` y un `HTMLDivElement | null` es válido: el fallo es la pregunta, no el tipo.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+if (abierto && event.target instanceof Node && !panelRef.current?.contains(event.target)) {
+  setAbierto(false);
+}
+```
+
+Es tu drill 2 con otro ref: primero «¿es de la página?», y luego «¿está fuera del panel?».
+
+</details>
+
+---
+
 ## Drill 3 — `ContactoConDosEntradas`
 
 <details><summary>Pista 1 — conceptual</summary>
@@ -131,7 +355,7 @@ Received element with focus:
   <button type="button">Ver mapa</button>
 ```
 
-Y la segunda parte del test monta `ModalDosEntradas` en otra página, sin tu padre: si la vuelta
+Y la segunda parte del test monta `MapaQueRecuerdaQuienLoAbrio` en otra página, sin tu padre: si la vuelta
 la hace el padre, ahí el foco se pierde.
 
 </details>

@@ -2206,3 +2206,44 @@ drills, y sus comentarios son tuyos.
 - El 📌 de Pick/Omit del bloque 09 va entero (10 líneas) del 01 al 06 y en versión de 3 líneas
   del 07 al 10, porque en el 07 la cabecera pasaba de 40. Se puede unificar.
 - El `12/06` desde el drill 3, y después el `12/07`.
+
+## Sesión 28 oct 2026 — cierre del `12/06` y el `12/07`: el bloque 12, en el 🏁
+
+### Qué pasó
+
+- **`12/06` CERRADO:** el drill 6 aprobado (código + porqué). Quitaste el `as` de
+  `document.activeElement`, y en la limpieza el `contains` de la escalera 2 hace que el
+  comentario diga la verdad. También el porqué del 2, que tenías aparcado: `event.target`
+  puede ser cualquier `EventTarget`, incluido `window`. Ojo con la pieza: `contains` es de
+  `menuRef.current`; `event.target` es su argumento.
+- **`12/07` CERRADO:** los cuatro drills, aprobados con código y porqué.
+  - El 2: borraste la copia y el fondo llama al hook. Los textos volvieron a «quieto» /
+    «animado» para que el test los encontrara.
+  - El 4: el valor inicial sale del `useState` con una función y el primer render ya sale bien.
+    Borraste `moz` y `webkit`. Porqué: el efecto corre después de pintar, así que con
+    `useState(false)` el vídeo alcanzaba a verse (y a descargarse) antes de corregirse.
+
+### Cambios en el material
+
+- **Contrato del 4:** el hook devuelve `{ prefiereReducirMovimiento, prefiereAhorrarDatos }`
+  en vez de un boolean, a petición tuya. El enunciado no decía qué forma tenía que devolver y
+  solo lo sabía el test. Ahora el test y la demo del banco juntan las dos con `||`, como el
+  Hero, y la solución de las pistas usa el objeto (verificada en una copia: 4/4, 0 tipos).
+- **Trace lines:** las borras a propósito para ahorrar líneas. Desde hoy no se avisan ni se
+  restauran. El `CLAUDE.md` y la spec todavía dicen lo contrario (pendiente de que decidas).
+- Corregidos dos comentarios del 07 que decían que `matchMedia` devuelve un booleano: devuelve
+  un objeto y el booleano es su `.matches`.
+
+### Resultado
+
+- `12/06`: 11/11. `12/07`: 4/4 (verificador sin problemas mecánicos). `pnpm typecheck` y
+  `pnpm lint`: 0 errores en todo el proyecto. El banco no tiene ninguna tarjeta sin resolver.
+
+### Pendiente
+
+- Projex: 6 errores de tipos, todos con material ya hecho. Los 3 de `useMediaPreferences.ts`
+  salen con los drills 3 y 4 del `12/07`, y los 3 `TS18048` de `Contact.tsx`, con el `12/05`.
+  Además, el guard del doble envío (`// 0. PENDIENTE`).
+- Al llevar el hook a Projex: `Hero.tsx` (l.24 y l.33) tiene que juntar las dos preferencias;
+  un objeto siempre cuenta como verdadero y el vídeo no saldría nunca.
+- La `PruebaZoom` temporal del banco (12 oct) sigue montada.

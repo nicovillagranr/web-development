@@ -5,8 +5,13 @@ import userEvent from "@testing-library/user-event";
 import {
   devolverFoco,
   MenuQueSeCierraFuera,
+  estaDentro,
+  esDeLaPagina,
+  clicDentro,
+  dondeCayo,
+  FiltrosQueSeCierranFuera,
   ContactoConDosEntradas,
-  ModalDosEntradas,
+  MapaQueRecuerdaQuienLoAbrio,
   MapaConMarcapaginas,
   MapaSobreElMenu,
   MapModalDeProjex,
@@ -29,6 +34,20 @@ function DosEntradas({ Modal }: { Modal: ComponentType<{ onClose: () => void }> 
       {abierto && <Modal onClose={() => setAbierto(false)} />}
     </div>
   );
+}
+
+/* Para el 2a y el 2c: una caja de la página con un botón dentro y un párrafo fuera. */
+function montarCaja() {
+  const caja = document.createElement("div");
+  const boton = document.createElement("button");
+  const fuera = document.createElement("p");
+  caja.appendChild(boton);
+  document.body.append(caja, fuera);
+  onTestFinished(() => {
+    caja.remove();
+    fuera.remove();
+  });
+  return { caja, boton, fuera };
 }
 
 afterEach(() => {
@@ -62,6 +81,64 @@ describe("12-custom-hooks / exercise-06 — el modal que nace abierto", () => {
     expect(screen.queryByRole("group", { name: "Opciones para compartir" })).not.toBeInTheDocument();
   });
 
+  it("2a) estaDentro — la caja contiene su botón, y no el párrafo de fuera", () => {
+    const { caja, boton, fuera } = montarCaja();
+
+    expect(estaDentro(caja, boton)).toBe(true);
+    expect(estaDentro(caja, fuera)).toBe(false);
+  });
+
+  it("2b) esDeLaPagina — un elemento y un texto sí; window y un EventTarget suelto no", () => {
+    expect(esDeLaPagina(document.createElement("button"))).toBe(true);
+    expect(esDeLaPagina(document.createTextNode("hola"))).toBe(true);
+    expect(esDeLaPagina(window)).toBe(false);
+    expect(esDeLaPagina(new EventTarget())).toBe(false);
+  });
+
+  it("2c) clicDentro — dentro, true; fuera, null o window, false, y sin romper", () => {
+    const { caja, boton, fuera } = montarCaja();
+
+    expect(clicDentro(caja, boton)).toBe(true);
+    expect(clicDentro(caja, fuera)).toBe(false);
+    expect(clicDentro(caja, null)).toBe(false);
+    expect(clicDentro(caja, window)).toBe(false);
+  });
+
+  it("2d) dondeCayo — el nodeName de lo pulsado; si el evento cae en window, «fuera de la página»", () => {
+    const boton = document.createElement("button");
+    document.body.appendChild(boton);
+    const vistos: string[] = [];
+    const anotar = (event: MouseEvent) => {
+      vistos.push(dondeCayo(event));
+    };
+    window.addEventListener("mousedown", anotar);
+    onTestFinished(() => {
+      window.removeEventListener("mousedown", anotar);
+      boton.remove();
+    });
+
+    boton.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    window.dispatchEvent(new MouseEvent("mousedown"));
+    expect(vistos).toEqual(["BUTTON", "fuera de la página"]);
+  });
+
+  it("2e) FiltrosQueSeCierranFuera — marcar un filtro lo deja abierto; un clic fuera lo cierra", async () => {
+    const user = userEvent.setup();
+    render(
+      <StrictMode>
+        <FiltrosQueSeCierranFuera />
+      </StrictMode>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Filtros" }));
+    await user.click(screen.getByRole("checkbox", { name: "React" }));
+    expect(screen.getByRole("group", { name: "Filtros del portfolio" })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "React" })).toBeChecked();
+
+    await user.click(screen.getByText("Resto del portfolio"));
+    expect(screen.queryByRole("group", { name: "Filtros del portfolio" })).not.toBeInTheDocument();
+  });
+
   it("3) ContactoConDosEntradas — el foco vuelve al botón que abrió el mapa, sea cual sea", async () => {
     const user = userEvent.setup();
     const { unmount } = render(
@@ -83,7 +160,7 @@ describe("12-custom-hooks / exercise-06 — el modal que nace abierto", () => {
     // El mismo modal, montado desde otra página: aquí no hay `verMapaRef` que valga.
     render(
       <StrictMode>
-        <DosEntradas Modal={ModalDosEntradas} />
+        <DosEntradas Modal={MapaQueRecuerdaQuienLoAbrio} />
       </StrictMode>,
     );
     await user.click(screen.getByRole("button", { name: "Cómo llegar" }));

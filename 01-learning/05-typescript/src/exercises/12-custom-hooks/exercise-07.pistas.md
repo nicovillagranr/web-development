@@ -193,33 +193,34 @@ error TS2339: Property 'webkitConnection' does not exist on type 'Navigator'.
 ```
 
 Con el drill 3 hecho, solo quedan los prefijos (el de `moz` cambia a `TS2551 … Did you mean
-'connection'?`). Y el test, con menos movimiento pedido, en el primer render:
-
-```
-AssertionError: expected false to be true
-```
+'connection'?`). Y el test, con menos movimiento pedido, ve «vídeo» en el primer render.
 
 </details>
 
 <details><summary>Solución</summary>
 
 ```tsx
-function debeUsarHeroEstatico(): boolean {
-  return (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    Boolean(navigator.connection?.saveData)
-  );
+interface Preferencias {
+  prefiereReducirMovimiento: boolean;
+  prefiereAhorrarDatos: boolean;
 }
 
-export function useMediaPreferences() {
-  const [usarHeroEstatico, setUsarHeroEstatico] = useState(debeUsarHeroEstatico);
+function leerPreferencias(): Preferencias {
+  return {
+    prefiereReducirMovimiento: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    prefiereAhorrarDatos: Boolean(navigator.connection?.saveData),
+  };
+}
+
+export function useMediaPreferences(): Preferencias {
+  const [preferencias, setPreferencias] = useState(leerPreferencias);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const connection = navigator.connection;
 
     const updatePreferences = () => {
-      setUsarHeroEstatico(debeUsarHeroEstatico());
+      setPreferencias(leerPreferencias());
     };
 
     mediaQuery.addEventListener("change", updatePreferences);
@@ -231,13 +232,18 @@ export function useMediaPreferences() {
     };
   }, []);
 
-  return usarHeroEstatico;
+  return preferencias;
 }
 ```
 
-`useState(debeUsarHeroEstatico)` le pasa la función sin llamarla: es lo mismo que
-`useState(() => debeUsarHeroEstatico())`, y React solo la llama al nacer. Con eso, el primer
+`useState(leerPreferencias)` le pasa la función sin llamarla: es lo mismo que
+`useState(() => leerPreferencias())`, y React solo la llama al nacer. Con eso, el primer
 render ya sale bien, y la llamada a `updatePreferences()` al empezar el efecto sobra.
+
+El hook devuelve las dos preferencias por separado y el Hero decide:
+`prefiereReducirMovimiento || prefiereAhorrarDatos`. Al llevarlo a Projex, tu `Hero.tsx` usa
+`!shouldUseStaticHero`: hay que juntar las dos ahí, porque un objeto siempre cuenta como
+verdadero y el vídeo no saldría nunca.
 
 Los `if (mediaQuery.addEventListener)` con `addListener` eran para Safari 13 y anteriores. Hoy
 no hacen falta: para TypeScript, `addEventListener` existe siempre.

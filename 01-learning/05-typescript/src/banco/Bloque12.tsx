@@ -48,6 +48,11 @@ import {
 } from "../exercises/12-custom-hooks/exercise-05";
 import {
   MenuQueSeCierraFuera,
+  estaDentro,
+  esDeLaPagina,
+  clicDentro,
+  dondeCayo,
+  FiltrosQueSeCierranFuera,
   ContactoConDosEntradas,
   MapaConMarcapaginas,
   MapaSobreElMenu,
@@ -466,6 +471,133 @@ function DemoMapaDeProjex() {
   );
 }
 
+/* 06 · escalera 2a: una caja con un botón dentro y un texto fuera. Cada botón de la
+ * demo le pregunta a estaDentro por uno de los dos. */
+function DemoEstaDentro() {
+  const cajaRef = useRef<HTMLDivElement>(null);
+  const dentroRef = useRef<HTMLButtonElement>(null);
+  const fueraRef = useRef<HTMLParagraphElement>(null);
+  const [respuesta, setRespuesta] = useState("sin preguntar");
+
+  function preguntar(cosa: Node | null, nombre: string) {
+    if (cajaRef.current && cosa) {
+      setRespuesta(`estaDentro(caja, ${nombre}) → ${String(estaDentro(cajaRef.current, cosa))}`);
+    }
+  }
+
+  return (
+    <div className={ANILLO}>
+      <div ref={cajaRef} className="rounded-xl bg-white/4 px-4 py-3">
+        <button ref={dentroRef} type="button">
+          Copiar enlace
+        </button>
+      </div>
+      <p ref={fueraRef}>Fuera de la caja</p>
+      <div className="flex flex-wrap gap-4">
+        <button type="button" onClick={() => preguntar(dentroRef.current, "el botón")}>
+          ¿El botón está dentro?
+        </button>
+        <button type="button" onClick={() => preguntar(fueraRef.current, "el texto de fuera")}>
+          ¿El texto de fuera está dentro?
+        </button>
+      </div>
+      <p className="font-mono text-[13px] text-[#86868b]">{respuesta}</p>
+    </div>
+  );
+}
+
+/* 06 · escalera 2b: cuatro cosas que reciben eventos, y lo que dice esDeLaPagina de
+ * cada una. Las dos de abajo no están en la página. */
+function DemoEsDeLaPagina() {
+  const candidatos: [string, EventTarget][] = [
+    ["un <button>", document.createElement("button")],
+    ["un texto", document.createTextNode("hola")],
+    ["window", window],
+    ["un EventTarget suelto", new EventTarget()],
+  ];
+
+  return (
+    <div className={ANILLO}>
+      {candidatos.map(([nombre, objetivo]) => (
+        <p key={nombre} className="font-mono text-[13px]">
+          esDeLaPagina({nombre}) → {String(esDeLaPagina(objetivo))}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/* 06 · escalera 2c: la misma caja, y ahora también se le pregunta por window y por
+ * null. Con el starter, window revienta: la demo enseña el error en vez de romperse. */
+function DemoClicDentro() {
+  const cajaRef = useRef<HTMLDivElement>(null);
+  const dentroRef = useRef<HTMLButtonElement>(null);
+  const [respuesta, setRespuesta] = useState("sin preguntar");
+
+  function preguntar(objetivo: EventTarget | null, nombre: string) {
+    if (!cajaRef.current) return;
+    try {
+      setRespuesta(
+        `clicDentro(caja, ${nombre}) → ${String(clicDentro(cajaRef.current, objetivo))}`,
+      );
+    } catch (error) {
+      const mensaje = error instanceof Error ? error.message : String(error);
+      setRespuesta(`clicDentro(caja, ${nombre}) → 💥 ${mensaje}`);
+    }
+  }
+
+  return (
+    <div className={ANILLO}>
+      <div ref={cajaRef} className="rounded-xl bg-white/4 px-4 py-3">
+        <button ref={dentroRef} type="button">
+          Copiar enlace
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-4">
+        <button type="button" onClick={() => preguntar(dentroRef.current, "el botón")}>
+          Con el botón
+        </button>
+        <button type="button" onClick={() => preguntar(window, "window")}>
+          Con window
+        </button>
+        <button type="button" onClick={() => preguntar(null, "null")}>
+          Con null
+        </button>
+      </div>
+      <p className="font-mono text-[13px] text-[#86868b]">{respuesta}</p>
+    </div>
+  );
+}
+
+/* 06 · escalera 2d: un mousedown dentro del recuadro le llega a dondeCayo con lo que
+ * pulsaste. El botón de abajo lanza uno sobre window, como el test. */
+function DemoDondeCayo() {
+  const [visto, setVisto] = useState("sin clics");
+
+  function lanzarEnWindow() {
+    const anotar = (event: MouseEvent) => setVisto(String(dondeCayo(event)));
+    window.addEventListener("mousedown", anotar);
+    window.dispatchEvent(new MouseEvent("mousedown"));
+    window.removeEventListener("mousedown", anotar);
+  }
+
+  return (
+    <div className={ANILLO}>
+      <div
+        className="flex items-center gap-4 rounded-xl bg-white/4 px-4 py-3"
+        onMouseDown={(event) => setVisto(String(dondeCayo(event.nativeEvent)))}
+      >
+        <button type="button">Un botón</button>
+        <span>un texto</span>
+      </div>
+      <button type="button" onClick={lanzarEnWindow}>
+        Lanzar un mousedown en window
+      </button>
+      <p className="font-mono text-[13px] text-[#86868b]">dondeCayo → {visto}</p>
+    </div>
+  );
+}
+
 /* 06 · el `overflow` del body, en vivo. No es de ningún drill: lo lee cada medio
  * segundo para que se vea qué deja el modal al nacer y al morir. */
 function OverflowEnVivo() {
@@ -546,11 +678,13 @@ function DemoAhorraDatos() {
   );
 }
 
-/* 07 · drill 4: lo que devuelve el hook ahora, y lo que devolvió en el primer render
- * (el `useState` se queda con el valor de ese primer render). Con menos movimiento
- * pedido, el starter enseña la diferencia: el primer render dijo "vídeo". */
+/* 07 · drill 4: lo que pinta el Hero ahora, y lo que pintó en el primer render
+ * (el `useState` se queda con el valor de ese primer render). El hook devuelve las
+ * dos preferencias y el Hero las junta. Con menos movimiento pedido, el starter
+ * enseña la diferencia: el primer render dijo "vídeo". */
 function DemoHeroConPreferencias() {
-  const estatico = useMediaPreferences();
+  const { prefiereReducirMovimiento, prefiereAhorrarDatos } = useMediaPreferences();
+  const estatico = prefiereReducirMovimiento || prefiereAhorrarDatos;
   const [enElPrimerRender] = useState(estatico);
 
   return (
@@ -1126,9 +1260,62 @@ export function Bloque12() {
         nombre="MenuQueSeCierraFuera"
         mirar="Pulsa Compartir y luego Copiar enlace: el menú sigue abierto. Haz clic en Fuera del menú, o en cualquier otro sitio de la página: se cierra. Aquí funciona ya con el starter: el fallo solo está en pnpm typecheck."
         campos="botón Compartir · al abrir: los botones Copiar enlace y Enviar por correo · el texto Fuera del menú"
+        estado="resuelto"
       >
         <div className={ANILLO_TRAMPA}>
           <MenuQueSeCierraFuera />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n="2a"
+        nombre="estaDentro"
+        mirar="Pulsa ¿El botón está dentro?: resuelto, true; con el texto de fuera, false. Con el starter, el botón da false: la pregunta está al revés."
+        campos="la caja, con el botón Copiar enlace · el texto Fuera de la caja · dos botones para preguntar (de la demo) · la respuesta"
+        estado="resuelto"
+      >
+        <DemoEstaDentro />
+      </Tarjeta>
+
+      <Tarjeta
+        n="2b"
+        nombre="esDeLaPagina"
+        mirar="Resuelto: el botón y el texto dan true; window y el EventTarget suelto, false. Con el starter, los cuatro dan true: todos tienen addEventListener."
+        campos="lo que responde esDeLaPagina por cada uno de los cuatro (de la demo)"
+        estado="resuelto"
+      >
+        <DemoEsDeLaPagina />
+      </Tarjeta>
+
+      <Tarjeta
+        n="2c"
+        nombre="clicDentro"
+        mirar="Pregunta con el botón, con window y con null. Resuelto: true, false y false. Con el starter, window revienta y aquí ves el mensaje del error: es lo que TypeScript te estaba evitando en el 2."
+        campos="la caja, con el botón Copiar enlace · tres botones para preguntar (de la demo) · la respuesta, o el error"
+        estado="resuelto"
+      >
+        <DemoClicDentro />
+      </Tarjeta>
+
+      <Tarjeta
+        n="2d"
+        nombre="dondeCayo"
+        mirar="Haz clic en el botón o en el texto del recuadro: sale BUTTON o SPAN. Luego lanza un mousedown en window: resuelto, «fuera de la página»; con el starter, undefined."
+        campos="el recuadro, con un botón y un texto · botón Lanzar un mousedown en window (de la demo) · lo que devolvió dondeCayo"
+        estado="resuelto"
+      >
+        <DemoDondeCayo />
+      </Tarjeta>
+
+      <Tarjeta
+        n="2e"
+        nombre="FiltrosQueSeCierranFuera"
+        mirar="Pulsa Filtros y marca React: el panel sigue abierto y la casilla, marcada. Haz clic en Resto del portfolio: se cierra. Con el starter, marcar React lo cierra."
+        campos="botón Filtros · al abrir: las casillas React y TypeScript · el texto Resto del portfolio"
+        estado="resuelto"
+      >
+        <div className={ANILLO}>
+          <FiltrosQueSeCierranFuera />
         </div>
       </Tarjeta>
 
@@ -1137,6 +1324,7 @@ export function Bloque12() {
         nombre="ContactoConDosEntradas"
         mirar="Pulsa Cómo llegar: el anillo salta a la ×. Ciérralo con la ×: el anillo tiene que volver a Cómo llegar. Con el starter vuelve siempre a Ver mapa, lo abras desde donde lo abras."
         campos="botón Ver mapa · el pie, con el botón Cómo llegar · al abrir: la × y el enlace Abrir en Google Maps"
+        estado="resuelto"
       >
         <div className={ANILLO_TRAMPA}>
           <ContactoConDosEntradas />
@@ -1148,6 +1336,7 @@ export function Bloque12() {
         nombre="MapaConMarcapaginas"
         mirar="Pulsa Cómo llegar y ciérralo con la ×: el anillo tiene que volver a Cómo llegar. Con el starter el anillo desaparece: el foco se pierde en la página."
         campos="botones Ver mapa y Cómo llegar (de la demo) · al abrir: la × y el enlace Abrir en Google Maps"
+        estado="resuelto"
       >
         <DemoDosEntradas Modal={MapaConMarcapaginas} />
       </Tarjeta>
@@ -1157,6 +1346,7 @@ export function Bloque12() {
         nombre="MapaSobreElMenu"
         mirar="Pulsa Abrir menú: el overflow pasa a hidden. Dentro, pulsa Ver mapa y ciérralo con la ×: con el menú todavía abierto, el overflow tiene que seguir en hidden. Con el starter vuelve a vacío, y la página se mueve detrás del menú."
         campos="botón Abrir menú (de la demo) · el menú: Ver mapa y Cerrar menú · al abrir el mapa: la × y el enlace · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoMenuMovil />
       </Tarjeta>
@@ -1166,6 +1356,7 @@ export function Bloque12() {
         nombre="MapModalDeProjex"
         mirar="Pulsa Ver mapa o Cómo llegar: el anillo salta a la × y el overflow pasa a hidden. Ciérralo con Escape o con la ×: el anillo vuelve al botón que lo abrió, y el overflow, a como estaba. Con el starter solo funciona el Escape. Si lo cierras con un clic en el fondo, el foco no vuelve ni resuelto: el ratón lo mueve después."
         campos="botones Ver mapa y Cómo llegar (de la demo) · el modal: el fondo, la × y el enlace Abrir en Google Maps · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoDosEntradas Modal={MapModalDeProjex} />
       </Tarjeta>
@@ -1180,6 +1371,7 @@ export function Bloque12() {
         nombre="prefiereMenosMovimiento"
         mirar="Cámbialo sin recargar: DevTools → ⋮ → More tools → Rendering → Emulate CSS media feature prefers-reduced-motion. Con reduce, el Hero pasa a imagen fija. Aquí funciona ya con el starter: el fallo solo está en pnpm lint."
         campos="el texto del Hero: imagen fija o vídeo"
+        estado="resuelto"
       >
         <HeroDeProjex />
       </Tarjeta>
@@ -1189,6 +1381,7 @@ export function Bloque12() {
         nombre="FondoDelContacto"
         mirar="Con la misma emulación de prefers-reduced-motion, el fondo pasa a quieto. Lo que falla no se ve aquí: al desmontarse se queda escuchando, y eso lo mira el test."
         campos="el texto del fondo: quieto o animado"
+        estado="resuelto"
       >
         <FondoDelContacto />
       </Tarjeta>
@@ -1198,6 +1391,7 @@ export function Bloque12() {
         nombre="ahorraDatos"
         mirar="Pulsa ¿Ahorra datos?: en Chrome responde no, salvo que tengas activado Ahorrar datos. Chrome sí tiene navigator.connection; en Safari o Firefox, con el starter, el botón tiraría un error en la consola."
         campos="botón ¿Ahorra datos? (de la demo) · la respuesta"
+        estado="resuelto"
       >
         <DemoAhorraDatos />
       </Tarjeta>
@@ -1206,7 +1400,8 @@ export function Bloque12() {
         n={4}
         nombre="useMediaPreferences"
         mirar="Emula prefers-reduced-motion: reduce y recarga la página. Resuelto, las dos líneas dicen imagen fija. Con el starter, la segunda dice vídeo: es el instante en que tu Hero pinta el vídeo antes de que corra el efecto."
-        campos="lo que devuelve el hook ahora · lo que devolvió en el primer render (de la demo)"
+        campos="lo que pinta el Hero ahora · lo que pintó en el primer render (de la demo)"
+        estado="resuelto"
       >
         <DemoHeroConPreferencias />
       </Tarjeta>
