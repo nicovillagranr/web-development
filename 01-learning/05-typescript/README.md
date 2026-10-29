@@ -2247,3 +2247,35 @@ drills, y sus comentarios son tuyos.
 - Al llevar el hook a Projex: `Hero.tsx` (l.24 y l.33) tiene que juntar las dos preferencias;
   un objeto siempre cuenta como verdadero y el vídeo no saldría nunca.
 - La `PruebaZoom` temporal del banco (12 oct) sigue montada.
+
+## Sesión 29 oct 2026 — montados el `12/08` y el `12/09`, refuerzos del 06 y del 07
+
+### Qué se montó
+
+Plan propuesto por ti el 28 oct: reforzar el último drill del 06 y el del 07. Se montan
+dos y no los tres, por la regla de no ir más de dos por delante. El 10 (el `MapModal`
+sacado a tres custom hooks) se monta cuando cierres el 08.
+
+- **`12/08` — el efecto como préstamo** (0/5, 207 líneas): anotar → cambiar → devolver.
+  Los drills: el título que no vuelve, el overflow devuelto con `""`, el título anotado
+  después de cambiarlo, y el `activeElement` sin `as`. El armarlo tú es el `MobileNav`
+  de Projex sin `focus-trap-react`: bloquea el scroll y devuelve el foco a la hamburguesa.
+- **`12/09` — el tema de tu portfolio** (0/6, 213 líneas), sacado del `App.jsx` de
+  `00-hosting`. Leer de fuera una vez, en el `useState` (el refuerzo del 4 del 07), y
+  escribir hacia fuera en el efecto, en cada cambio. El armarlo tú es `useTema()`, con el
+  contrato `{ tema, alternarTema }` escrito en la firma. La idea del tema fue tuya.
+- **Sin trace lines:** dijiste que no sirven, así que los archivos nuevos ya no las traen.
+
+### Verificación
+
+- Con las soluciones, en una copia que ya se borró: 12/12, 0 errores de tipos y lint 0.
+- Los starters: en el 08 salen rojos el 1, el 2, el 3 y el 5, y el 4 pasa el test con un
+  `TS2339` (el verde de mentira que anuncia la cabecera). En el 09 salen rojos los 6; el
+  lint marca además el 1 (`set-state-in-effect`) y el 4 (`exhaustive-deps`).
+- Pistas en 4 niveles, con la Pista 3 copiada de la salida real. Prueba de humo: la
+  pestaña 12 del banco se monta entera, con las 11 tarjetas nuevas.
+
+### Pendiente
+
+- Resolver el 08 y el 09. Montar el 10 cuando cierres el 08.
+- Sin commitear: el 08, el 09, el banco, esta entrada, y tu comentario en el JSX del 06.

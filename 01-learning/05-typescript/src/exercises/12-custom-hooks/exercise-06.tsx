@@ -113,6 +113,7 @@ export function MenuQueSeCierraFuera() {
       </button>
 
       {abierto && (
+        // Este div usa menuRef para poder comprobar si el clic fue dentro o fuera de él
         <div ref={menuRef} role="group" aria-label="Opciones para compartir">
           <button type="button">Copiar enlace</button>
           <button type="button">Enviar por correo</button>

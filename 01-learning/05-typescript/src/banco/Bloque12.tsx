@@ -64,6 +64,22 @@ import {
   ahorraDatos,
   useMediaPreferences,
 } from "../exercises/12-custom-hooks/exercise-07";
+import {
+  MapaConTitulo,
+  VisorDeFoto,
+  EnvioConfirmado,
+  BuscadorDeProjex,
+  MenuDelMovil,
+} from "../exercises/12-custom-hooks/exercise-08";
+import {
+  useTemaGuardado,
+  BotonDeTema,
+  TemaDelSistema,
+  TemaDelPortfolio,
+  TemaQueNoVuelve,
+  useTema,
+  type Tema,
+} from "../exercises/12-custom-hooks/exercise-09";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
@@ -707,6 +723,227 @@ function DemoMenuMovil() {
       </button>
       {menuAbierto && <MenuMovil onClose={() => setMenuAbierto(false)} />}
       <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 08 · drills 1 y 3: el título de esta pestaña, leído cada medio segundo. */
+function TituloEnVivo() {
+  const [titulo, setTitulo] = useState(document.title);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setTitulo(document.title), 500);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <p className="font-mono text-[13px] text-[#86868b]">título de la pestaña: "{titulo}"</p>
+  );
+}
+
+/* 08 · drills 1 y 3: el botón monta el componente, y su propio botón lo desmonta. */
+function DemoConTitulo({
+  etiqueta,
+  Modal,
+}: {
+  etiqueta: string;
+  Modal: (props: { onClose: () => void }) => ReactNode;
+}) {
+  const [abierto, setAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        {etiqueta}
+      </button>
+      {abierto && <Modal onClose={() => setAbierto(false)} />}
+      <TituloEnVivo />
+    </div>
+  );
+}
+
+/* 08 · drill 2: un menú del móvil que bloquea el scroll por su cuenta (y lo devuelve
+ * como estaba). La foto se puede ampliar desde fuera o desde dentro del menú. */
+function MenuConFoto({ onClose }: { onClose: () => void }) {
+  const [fotoAbierta, setFotoAbierta] = useState(false);
+
+  useEffect(() => {
+    const anterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = anterior;
+    };
+  }, []);
+
+  return (
+    <div role="region" aria-label="Menú del móvil">
+      <button type="button" onClick={() => setFotoAbierta(true)}>
+        Ampliar foto
+      </button>
+      <button type="button" onClick={onClose}>
+        Cerrar menú
+      </button>
+      {fotoAbierta && <VisorDeFoto onClose={() => setFotoAbierta(false)} />}
+    </div>
+  );
+}
+
+function DemoFotoDesdeElMenu() {
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const [fotoAbierta, setFotoAbierta] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <div>
+        <button type="button" onClick={() => setMenuAbierto(true)}>
+          Abrir menú
+        </button>
+        <button type="button" onClick={() => setFotoAbierta(true)}>
+          Ampliar foto
+        </button>
+      </div>
+      {menuAbierto && <MenuConFoto onClose={() => setMenuAbierto(false)} />}
+      {fotoAbierta && <VisorDeFoto onClose={() => setFotoAbierta(false)} />}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 08 · drill 4: la lupa de la cabecera abre el buscador. */
+function DemoBuscador() {
+  const [abierto, setAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Buscar
+      </button>
+      {abierto && <BuscadorDeProjex onClose={() => setAbierto(false)} />}
+    </div>
+  );
+}
+
+/* 08 · drill 5: la cabecera de Projex, recortada. La hamburguesa cambia de nombre como
+ * la tuya, pero es el mismo botón: el menú no tiene ningún ref a ella. */
+function DemoCabeceraMovil() {
+  const [abierto, setAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button
+        type="button"
+        aria-label={abierto ? "Cerrar menú" : "Abrir menú"}
+        aria-expanded={abierto}
+        onClick={() => setAbierto(!abierto)}
+      >
+        {abierto ? "✕ Cerrar menú" : "☰ Abrir menú"}
+      </button>
+      {abierto && <MenuDelMovil onClose={() => setAbierto(false)} />}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 09 · drills 4, 5 y 6: si el <html> lleva la clase light, leído cada medio segundo.
+ * Las tres tarjetas escriben en el mismo <html>: manda la última que haya corrido. */
+function ClaseLightEnVivo() {
+  const [tieneLight, setTieneLight] = useState(document.documentElement.classList.contains("light"));
+
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setTieneLight(document.documentElement.classList.contains("light")),
+      500,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <p className="font-mono text-[13px] text-[#86868b]">
+      clase light en el &lt;html&gt;: {tieneLight ? "sí" : "no"}
+    </p>
+  );
+}
+
+/* 09 · drill 1: lo que devuelve el hook ahora, y lo que devolvió en el primer render.
+ * Con la `key`, «Volver a montar» hace nacer otra vez al componente. */
+function VistaTemaGuardado() {
+  const tema = useTemaGuardado();
+  const [enElPrimerRender] = useState(tema);
+
+  return (
+    <>
+      <p>Tema: {tema}</p>
+      <p className="font-mono text-[13px] text-[#86868b]">en el primer render: "{enElPrimerRender}"</p>
+    </>
+  );
+}
+
+function DemoTemaGuardado() {
+  const [montaje, setMontaje] = useState(0);
+  const guardar = (tema: Tema) => {
+    localStorage.setItem("theme:mode", tema);
+    setMontaje((n) => n + 1);
+  };
+
+  return (
+    <div className={ANILLO}>
+      <div>
+        <button type="button" onClick={() => guardar("light")}>
+          Guardar claro y volver a montar
+        </button>
+        <button type="button" onClick={() => guardar("dark")}>
+          Guardar oscuro y volver a montar
+        </button>
+      </div>
+      <VistaTemaGuardado key={montaje} />
+    </div>
+  );
+}
+
+/* 09 · drill 2: cuántas veces se ha llamado a leerTema, leído cada medio segundo. */
+const lecturas = { veces: 0 };
+const leerTemaContando = (): Tema => {
+  lecturas.veces += 1;
+  return "dark";
+};
+
+function DemoLecturas() {
+  const [veces, setVeces] = useState(lecturas.veces);
+  const [montaje, setMontaje] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setVeces(lecturas.veces), 500);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <div className={ANILLO}>
+      <BotonDeTema key={montaje} leerTema={leerTemaContando} />
+      <button
+        type="button"
+        onClick={() => {
+          lecturas.veces = 0;
+          setMontaje((n) => n + 1);
+        }}
+      >
+        Poner a cero y volver a montar
+      </button>
+      <p className="font-mono text-[13px] text-[#86868b]">leerTema, llamadas: {veces}</p>
+    </div>
+  );
+}
+
+/* 09 · drill 6: tu hook, usado como lo usaría el App.jsx de tu portfolio. */
+function DemoUseTema() {
+  const { tema, alternarTema } = useTema();
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={alternarTema}>
+        Cambiar tema
+      </button>
+      <p>Tema: {tema}</p>
+      <ClaseLightEnVivo />
     </div>
   );
 }
@@ -1404,6 +1641,121 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoHeroConPreferencias />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-08"
+        titulo="El efecto como préstamo: anota lo que cambias y devuélvelo al morir."
+      />
+
+      <Tarjeta
+        n={1}
+        nombre="MapaConTitulo"
+        mirar="Pulsa Ver mapa: la pestaña del navegador pasa a «Mapa · Projex». Ciérralo con la ×: tiene que volver al título de antes. Con el starter se queda en «Mapa · Projex»."
+        campos="botón Ver mapa (de la demo) · al abrir: la × · el título de la pestaña, en vivo"
+      >
+        <DemoConTitulo etiqueta="Ver mapa" Modal={MapaConTitulo} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="VisorDeFoto"
+        mirar="Pulsa Abrir menú y, dentro, Ampliar foto. Cierra la foto: con el menú todavía abierto, el overflow tiene que seguir en hidden. Con el starter vuelve a vacío. Desde el Ampliar foto de fuera, sin menú, los dos vuelven a vacío."
+        campos="botones Abrir menú y Ampliar foto (de la demo) · el menú: Ampliar foto y Cerrar menú · la foto: Cerrar foto · el overflow del body, en vivo"
+      >
+        <DemoFotoDesdeElMenu />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="EnvioConfirmado"
+        mirar="Pulsa Enviar mensaje: la pestaña pasa a «Enviado · Projex». Cierra el aviso: tiene que volver al título de antes. Con el starter se queda en «Enviado · Projex»."
+        campos="botón Enviar mensaje (de la demo) · al abrir: Mensaje enviado y Cerrar aviso · el título de la pestaña, en vivo"
+      >
+        <DemoConTitulo etiqueta="Enviar mensaje" Modal={EnvioConfirmado} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="BuscadorDeProjex"
+        mirar="Pulsa Buscar: el cursor salta al campo. Cierra el buscador: el anillo vuelve a Buscar. Aquí funciona ya con el starter: el fallo solo está en pnpm typecheck."
+        campos="botón Buscar (de la demo) · al abrir: el campo Buscar en Projex y Cerrar buscador"
+      >
+        <DemoBuscador />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="MenuDelMovil"
+        mirar="Pulsa Abrir menú: el overflow pasa a hidden y el anillo salta a Servicios. Ciérralo con Escape o con un enlace: el overflow vuelve a vacío y el anillo, a la hamburguesa. Con el starter, solo se cierra."
+        campos="la hamburguesa (de la demo) · al abrir: Servicios, Portfolio y Contacto · el overflow del body, en vivo"
+      >
+        <DemoCabeceraMovil />
+      </Tarjeta>
+
+      <Seccion
+        archivo="exercise-09"
+        titulo="El tema de tu portfolio: se lee una vez en el useState y se escribe en el efecto."
+      />
+
+      <Tarjeta
+        n={1}
+        nombre="useTemaGuardado"
+        mirar="Pulsa Guardar claro y volver a montar. Resuelto, las dos líneas dicen light. Con el starter, la segunda dice dark: es el instante en que tu portfolio pinta el tema equivocado."
+        campos="dos botones de la demo · el tema ahora · el tema del primer render"
+      >
+        <DemoTemaGuardado />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="BotonDeTema"
+        mirar="Pulsa el botón varias veces. Resuelto, las llamadas se quedan quietas: en pnpm dev son 2, porque StrictMode ensaya el nacimiento dos veces. Con el starter suben con cada clic."
+        campos="el botón Tema · Poner a cero y volver a montar (de la demo) · las llamadas a leerTema"
+      >
+        <DemoLecturas />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="TemaDelSistema"
+        mirar="Cámbialo sin recargar: DevTools → ⋮ → More tools → Rendering → Emulate CSS media feature prefers-color-scheme. El texto sigue al sistema ya con el starter: lo que falla, la escucha que se queda al irse, no se ve aquí y lo mira el test."
+        campos="el tema del sistema"
+      >
+        <TemaDelSistema />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="TemaDelPortfolio"
+        mirar="Pulsa Cambiar tema dos veces: la clase light tiene que aparecer y desaparecer. Con el starter no se mueve."
+        campos="botón Cambiar tema · la clase light del <html>, en vivo"
+      >
+        <div className={ANILLO}>
+          <TemaDelPortfolio />
+          <ClaseLightEnVivo />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="TemaQueNoVuelve"
+        mirar="Pulsa Cambiar tema dos veces: la clase light tiene que aparecer y desaparecer. Con el starter aparece y se queda."
+        campos="botón Cambiar tema · la clase light del <html>, en vivo"
+      >
+        <div className={ANILLO}>
+          <TemaQueNoVuelve />
+          <ClaseLightEnVivo />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="useTema"
+        mirar="Pulsa Cambiar tema y recarga la página: el tema elegido tiene que seguir. Con el starter, el tema no se guarda, la clase no se mueve y el botón solo pasa a light."
+        campos="botón Cambiar tema · el tema · la clase light del <html>, en vivo"
+      >
+        <DemoUseTema />
       </Tarjeta>
     </>
   );
