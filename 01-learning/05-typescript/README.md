@@ -2279,3 +2279,29 @@ sacado a tres custom hooks) se monta cuando cierres el 08.
 
 - Resolver el 08 y el 09. Montar el 10 cuando cierres el 08.
 - Sin commitear: el 08, el 09, el banco, esta entrada, y tu comentario en el JSX del 06.
+
+## Sesión 30 oct 2026 — cerrado el `12/08` (5/5)
+
+### Qué pasó
+
+- **El código, bien a la primera en los 5:** anotar antes de cambiar, devolver lo anotado,
+  el `instanceof` en lugar del `as`, y el `MenuDelMovil` con dos préstamos en dos efectos.
+- **El porqué del 1 se quedó a medias** («no sé la respuesta para el otro 50%»). La mitad
+  que faltaba: el `onClick` de la ✕ solo cubre una forma de cerrar el mapa, y la limpieza
+  las cubre todas. Salió con una tabla de casos y con la pestaña del banco, que desmonta el
+  mapa sin tocar la ✕. La segunda frase la escribí yo, a petición tuya, debajo de la tuya.
+- **El 2 y el 4 se quedaron en blanco con el test en verde**, y en los dos la respuesta ya
+  estaba en tus comentarios. Los completaste tú, bien.
+- **Notas sin aplicar, por decisión tuya:** «título oficial» (lo anotado es el que había);
+  «el efecto devuelve» (devuelve la limpieza); el comentario de Escape (al pulsarlo corre
+  el listener, no el efecto); y, en el 4 y el 5, el `if` del `instanceof` envuelve también
+  el `focus()` de entrada, cuando solo hace falta para devolverlo.
+
+### Resultado
+
+- `12/08`: 5/5. `pnpm typecheck`: 0 errores. `pnpm lint`: nada del 08; quedan los dos
+  starters del 09 (el 1 y el 4), a propósito. Las 5 tarjetas del 08, marcadas en el banco.
+
+### Pendiente
+
+- Montar el `12/10` (el `MapModal` sacado a tres custom hooks). Resolver el `12/09` (0/6).

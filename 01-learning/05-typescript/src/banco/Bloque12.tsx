@@ -1653,6 +1653,7 @@ export function Bloque12() {
         nombre="MapaConTitulo"
         mirar="Pulsa Ver mapa: la pestaña del navegador pasa a «Mapa · Projex». Ciérralo con la ×: tiene que volver al título de antes. Con el starter se queda en «Mapa · Projex»."
         campos="botón Ver mapa (de la demo) · al abrir: la × · el título de la pestaña, en vivo"
+        estado="resuelto"
       >
         <DemoConTitulo etiqueta="Ver mapa" Modal={MapaConTitulo} />
       </Tarjeta>
@@ -1662,6 +1663,7 @@ export function Bloque12() {
         nombre="VisorDeFoto"
         mirar="Pulsa Abrir menú y, dentro, Ampliar foto. Cierra la foto: con el menú todavía abierto, el overflow tiene que seguir en hidden. Con el starter vuelve a vacío. Desde el Ampliar foto de fuera, sin menú, los dos vuelven a vacío."
         campos="botones Abrir menú y Ampliar foto (de la demo) · el menú: Ampliar foto y Cerrar menú · la foto: Cerrar foto · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoFotoDesdeElMenu />
       </Tarjeta>
@@ -1671,6 +1673,7 @@ export function Bloque12() {
         nombre="EnvioConfirmado"
         mirar="Pulsa Enviar mensaje: la pestaña pasa a «Enviado · Projex». Cierra el aviso: tiene que volver al título de antes. Con el starter se queda en «Enviado · Projex»."
         campos="botón Enviar mensaje (de la demo) · al abrir: Mensaje enviado y Cerrar aviso · el título de la pestaña, en vivo"
+        estado="resuelto"
       >
         <DemoConTitulo etiqueta="Enviar mensaje" Modal={EnvioConfirmado} />
       </Tarjeta>
@@ -1680,6 +1683,7 @@ export function Bloque12() {
         nombre="BuscadorDeProjex"
         mirar="Pulsa Buscar: el cursor salta al campo. Cierra el buscador: el anillo vuelve a Buscar. Aquí funciona ya con el starter: el fallo solo está en pnpm typecheck."
         campos="botón Buscar (de la demo) · al abrir: el campo Buscar en Projex y Cerrar buscador"
+        estado="resuelto"
       >
         <DemoBuscador />
       </Tarjeta>
@@ -1689,6 +1693,7 @@ export function Bloque12() {
         nombre="MenuDelMovil"
         mirar="Pulsa Abrir menú: el overflow pasa a hidden y el anillo salta a Servicios. Ciérralo con Escape o con un enlace: el overflow vuelve a vacío y el anillo, a la hamburguesa. Con el starter, solo se cierra."
         campos="la hamburguesa (de la demo) · al abrir: Servicios, Portfolio y Contacto · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoCabeceraMovil />
       </Tarjeta>
