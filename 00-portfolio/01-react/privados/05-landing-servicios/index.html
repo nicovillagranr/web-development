@@ -6,16 +6,27 @@
          gestos del iPhone; env(safe-area-inset-bottom) es lo que después evita que la
          barra fija de WhatsApp quede debajo de esa barra. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#ffffff" />
-    <!-- Prototipo con marca ficticia y número de WhatsApp de relleno: fuera de Google
-         hasta que sea definitivo. Al publicarlo de verdad, se borra esta línea. -->
+    <!-- El mismo azul marino del header: en el iPhone tiñe la barra de estado y la
+         página empieza sin una franja blanca encima. -->
+    <meta name="theme-color" content="#0b1b3a" />
+    <!-- Prototipo con número de WhatsApp de relleno: fuera de Google hasta que sea
+         definitivo. Al publicarlo de verdad, se borra esta línea. -->
     <meta name="robots" content="noindex, nofollow" />
     <meta
       name="description"
       content="Mantenimiento y armado de PCs, creación de páginas web y diseño mecánico en SolidWorks. Cotiza sin costo por WhatsApp. Sitio de demostración."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Brío — PCs, páginas web y SolidWorks</title>
+    <!-- Las dos fuentes del diseño. Google sirve cada una como fuente variable: un solo
+         archivo por familia, sea cual sea el número de pesos. display=swap pinta el
+         texto con la del sistema mientras llegan, en vez de dejarlo invisible en 4G. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap"
+    />
+    <title>SERVICIOS VPS — PCs, páginas web y SolidWorks</title>
   </head>
   <body>
     <div id="root"></div>

@@ -1,24 +1,57 @@
 @import "tailwindcss";
 
-/* Paleta Apple en claro: los mismos grises y el mismo azul del banco de 05-typescript,
-   sobre blanco. Cambiar de rubro debería tocar como mucho --color-accent. */
+/* Paleta del mockup "SERVICIOS VPS" (Claude Design, oct 2026): azul marino de base y
+   un color por servicio. Los valores son los del mockup salvo tres, marcados con AA:
+   ahí el texto no llegaba al contraste mínimo y se ajustó lo justo. */
 @theme {
-  /* Sin "SF Pro Text" a propósito: en el PC de desarrollo está instalada solo en
-     Regular Italic, y el navegador usaba esa cara para todo el texto. En Apple da
-     igual, porque -apple-system ya es SF Pro; las otras dos solo cuentan en Windows. */
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Space Grotesk", Inter, system-ui, sans-serif;
 
-  --color-ink: #1d1d1f;
-  /* #6e6e73 y no #86868b: sobre blanco, el segundo da 3,6:1 y no llega al 4,5:1 que
-     pide el texto normal. #86868b solo funciona sobre negro. */
-  --color-muted: #6e6e73;
+  --color-navy: #0b1b3a;
+  --color-navy-line: #1e3a5f;
+  --color-ink: #0b1b3a;
+  --color-body: #334155;
+  --color-muted: #475569;
+  --color-line: #e2e8f0;
+  --color-surface: #f8fafc;
   --color-canvas: #ffffff;
-  --color-surface: #f5f5f7;
-  --color-surface-hover: #e8e8ed;
-  --color-accent: #0071e3;
-  --color-accent-hover: #0077ed;
+
+  /* Texto sobre el azul marino. */
+  --color-on-dark: #cbd5e1;
+  --color-on-dark-soft: #94a3b8;
+  --color-nav: #e2e8f0;
+
+  --color-cta: #22c55e;
+  --color-cta-hover: #4ade80;
+  --color-cta-ink: #052e16;
+  --color-whatsapp: #16a34a;
+  --color-badge: #facc15;
+
+  /* Un color por servicio. -soft es el fondo claro de los pasos; -strong, el mismo
+     tono oscurecido para texto pequeño sobre blanco; -light, el hover. */
+  --color-pc: #2563eb;
+  --color-pc-hover: #1d4ed8;
+  /* AA: el mockup ponía #dbeafe sobre el azul (4,2:1); #eff6ff da 4,7:1. */
+  --color-pc-soft: #eff6ff;
+
+  --color-web: #f97316;
+  --color-web-light: #fb923c;
+  --color-web-ink: #1c0a00;
+  --color-web-soft: #fff7ed;
+  --color-web-strong: #c2410c;
+
+  --color-cad: #10b981;
+  --color-cad-light: #34d399;
+  --color-cad-ink: #022c22;
+  --color-cad-soft: #ecfdf5;
+  --color-cad-strong: #047857;
+
+  /* AA: sobre el rosa, el mockup usaba #fce7f3 para el texto (4,2:1); va en blanco
+     (4,6:1). Y el antetítulo rosa sobre gris claro pasa a -strong (4,4:1 → 5,8:1). */
+  --color-soporte: #db2777;
+  --color-soporte-soft: #fce7f3;
+  --color-soporte-strong: #be185d;
+  --color-soporte-deep: #9d174d;
 }
 
 @layer base {
@@ -38,7 +71,10 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
+    outline: 3px solid var(--color-pc);
+    outline-offset: 2px;
+    /* Anillo blanco entre el elemento y el contorno: sin él, el azul se pierde sobre
+       el rosa del CTA final y sobre el botón azul de la tarjeta de PCs. */
+    box-shadow: 0 0 0 2px #fff;
   }
 }

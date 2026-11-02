@@ -1,54 +1,65 @@
+import type { Tone } from "./tone";
+
 export type Service = {
   id: string;
+  /** Lo que se lee en grande en la cabecera de color de la tarjeta. */
+  title: string;
+  tagline: string;
+  /** Nombre completo: va en el mensaje de WhatsApp, donde "PCs" a secas se queda corto. */
   name: string;
-  summary: string;
+  /** Texto del botón. Ya nombra el servicio, así que no hace falta texto oculto extra. */
+  cta: string;
   includes: string[];
-  /** Qué icono lleva la tarjeta. El dibujo vive en ServiceCard; aquí solo se elige. */
-  icon: "pc" | "web" | "cad";
+  /** Color de la tarjeta. El icono sale del mismo color: uno por servicio. */
+  tone: Tone;
   /** Precio de referencia en CLP. Sin él, la tarjeta dice "A cotizar". */
   priceFrom?: number;
 };
 
-// Sin priceFrom en ninguno a propósito: un precio inventado en una página que se va a
-// mostrar es una promesa. Cuando haya precios reales, basta con añadir el campo.
+// Sin priceFrom en ninguno a propósito: el mockup dejaba "Desde [TU PRECIO]", y un
+// precio inventado en una página que se va a mostrar es una promesa. Cuando haya
+// precios reales, basta con añadir el campo.
 export const services: Service[] = [
   {
     id: "pcs",
+    title: "PCs",
+    tagline: "Mantenimiento y armado",
     name: "Mantenimiento y armado de PCs",
-    summary:
-      "Tu computador más rápido y estable, o uno nuevo armado a la medida de lo que haces y de tu presupuesto.",
+    cta: "Cotizar PCs",
     includes: [
       "Limpieza interna y cambio de pasta térmica",
-      "Diagnóstico de fallas y lentitud",
-      "Formateo e instalación del sistema",
-      "Armado a medida, con asesoría para elegir componentes",
+      "Formateo e instalación de programas",
+      "Armado de PC gamer o de trabajo",
+      "Asesoría para comprar componentes",
     ],
-    icon: "pc",
+    tone: "pc",
   },
   {
     id: "paginas-web",
+    title: "Páginas web",
+    tagline: "Creación y rediseño",
     name: "Creación de páginas web",
-    summary:
-      "Una página rápida, que se ve bien en el celular y lleva a tus clientes directo a contactarte.",
+    cta: "Cotizar web",
     includes: [
-      "Diseño pensado primero para el celular, como esta página",
-      "Contacto directo a tu WhatsApp",
-      "Publicación en tu propio dominio",
-      "Cambios de textos e imágenes después de la entrega",
+      "Landing pages y sitios para negocios",
+      "Diseño adaptado a celular",
+      "Botón directo a WhatsApp",
+      "Ayuda con dominio y publicación",
     ],
-    icon: "web",
+    tone: "web",
   },
   {
     id: "solidworks",
+    title: "SolidWorks",
+    tagline: "Diseño mecánico",
     name: "Diseño mecánico en SolidWorks",
-    summary:
-      "Modelamos tus piezas y ensambles en 3D y preparamos los planos para que se puedan fabricar.",
+    cta: "Cotizar SolidWorks",
     includes: [
-      "Modelado 3D de piezas y ensambles",
-      "Planos de fabricación con cotas y tolerancias",
-      "De un boceto o una pieza física a modelo 3D",
-      "Archivos para impresión 3D o mecanizado (STL, STEP)",
+      "Modelado de piezas y ensambles 3D",
+      "Planos técnicos con cotas",
+      "Archivos listos para impresión 3D",
+      "Apoyo en proyectos y trabajos",
     ],
-    icon: "cad",
+    tone: "cad",
   },
 ];

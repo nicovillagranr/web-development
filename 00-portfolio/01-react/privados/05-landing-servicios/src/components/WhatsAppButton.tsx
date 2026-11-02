@@ -15,7 +15,7 @@ type Props = {
 export function WhatsAppButton({
   children,
   message,
-  variant = "primary",
+  variant = "cta",
   size = "md",
   className = "",
 }: Props) {
@@ -26,9 +26,13 @@ export function WhatsAppButton({
       rel="noopener noreferrer"
       className={buttonClass(variant, size, className)}
     >
-      <WhatsAppIcon className={size === "sm" ? "size-4" : "size-5"} />
+      {/* El logo avisa "esto abre WhatsApp" antes de leer el texto: "Cotizar PCs" a
+          secas podría ser un formulario. En el botón blanco va en verde, como el mockup. */}
+      <WhatsAppIcon
+        className={`shrink-0 ${size === "sm" ? "size-4" : "size-5"} ${variant === "inverted" ? "text-whatsapp" : ""}`}
+      />
       {/* El texto va en un solo <span>: suelto, cada trozo sería un ítem flex con su
-          propio gap, y un <span className="sr-only"> en medio dejaría doble espacio. */}
+          propio gap. */}
       <span>{children}</span>
     </a>
   );

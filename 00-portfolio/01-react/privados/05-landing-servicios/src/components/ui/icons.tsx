@@ -1,6 +1,7 @@
-// SVG sacados de la librería local (01-learning/03-css/00-assets/icons):
-// WhatsApp de boxicons/logos, el resto de lucide. Todos son decorativos: el texto
-// del botón ya dice lo que hace, así que van con aria-hidden.
+// Los iconos de servicio son los trazos exactos del mockup; el de WhatsApp es el logo
+// de boxicons (librería local 01-learning/03-css/00-assets/icons), más reconocible que
+// el globo genérico del diseño. Todos son decorativos: el texto al lado ya dice lo que
+// hace cada cosa, así que van con aria-hidden.
 
 import type { ReactNode } from "react";
 
@@ -18,14 +19,18 @@ export function WhatsAppIcon({ className = "size-5" }: IconProps) {
   );
 }
 
-function Stroke({ className = "size-5", children }: IconProps & { children: ReactNode }) {
+function Stroke({
+  className = "size-5",
+  strokeWidth = 2,
+  children,
+}: IconProps & { strokeWidth?: number; children: ReactNode }) {
   return (
     <svg
       className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -35,62 +40,46 @@ function Stroke({ className = "size-5", children }: IconProps & { children: Reac
   );
 }
 
+// Trazo 3 y no 2: a 16px, el ✓ del diseño se ve en negrita, y con 2 quedaba flaco.
 export function CheckIcon(props: IconProps) {
   return (
-    <Stroke {...props}>
+    <Stroke {...props} strokeWidth={3}>
       <path d="M20 6 9 17l-5-5" />
     </Stroke>
   );
 }
 
-export function ArrowDownIcon(props: IconProps) {
+export function MonitorIcon(props: IconProps) {
   return (
     <Stroke {...props}>
-      <path d="M12 5v14" />
-      <path d="m19 12-7 7-7-7" />
+      <rect x="2" y="4" width="20" height="13" rx="2" />
+      <path d="M8 21h8M12 17v4" />
     </Stroke>
   );
 }
 
-// Iconos de servicio: lucide/cpu, lucide/code-xml y lucide/box.
-
-export function CpuIcon(props: IconProps) {
+export function BrowserCodeIcon(props: IconProps) {
   return (
     <Stroke {...props}>
-      <path d="M12 20v2" />
-      <path d="M12 2v2" />
-      <path d="M17 20v2" />
-      <path d="M17 2v2" />
-      <path d="M2 12h2" />
-      <path d="M2 17h2" />
-      <path d="M2 7h2" />
-      <path d="M20 12h2" />
-      <path d="M20 17h2" />
-      <path d="M20 7h2" />
-      <path d="M7 20v2" />
-      <path d="M7 2v2" />
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <rect x="8" y="8" width="8" height="8" rx="1" />
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9h18M8 14l-2 2 2 2M16 14l2 2-2 2" />
     </Stroke>
   );
 }
 
-export function CodeIcon(props: IconProps) {
+export function CubeIcon(props: IconProps) {
   return (
     <Stroke {...props}>
-      <path d="m18 16 4-4-4-4" />
-      <path d="m6 8-4 4 4 4" />
-      <path d="m14.5 4-5 16" />
+      <path d="M12 2l9 5v10l-9 5-9-5V7z" />
+      <path d="M12 22V12M21 7l-9 5-9-5" />
     </Stroke>
   );
 }
 
-export function BoxIcon(props: IconProps) {
+export function SupportIcon(props: IconProps) {
   return (
     <Stroke {...props}>
-      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-      <path d="m3.3 7 8.7 5 8.7-5" />
-      <path d="M12 22V12" />
+      <path d="M21 12a9 9 0 1 1-4-7.5L21 3v5h-5" />
     </Stroke>
   );
 }

@@ -1,38 +1,49 @@
 import { site } from "../data/site";
 import { Container } from "./ui/Container";
+import { SectionHeading } from "./ui/SectionHeading";
+import { tones } from "./ui/tones";
 
 export function Process() {
   return (
     <section
-      id="como-trabajamos"
+      id="como-funciona"
       aria-labelledby="proceso-titulo"
-      className="py-16 md:scroll-mt-14 md:py-24"
+      className="bg-canvas py-14 md:scroll-mt-[76px] md:py-[88px]"
     >
-      <Container>
-        <h2
+      <Container className="flex flex-col gap-10 md:gap-12">
+        <SectionHeading
           id="proceso-titulo"
-          className="text-[32px] leading-[1.1] font-semibold tracking-[-0.03em] md:text-[48px]"
-        >
-          Cómo trabajamos
-        </h2>
+          eyebrow="Así de fácil"
+          eyebrowClassName="text-pc"
+          title="Cómo funciona"
+        />
 
         {/* <ol> y no <ul>: el orden es el contenido. El número visible va con
-            aria-hidden porque el lector de pantalla ya anuncia "1 de 3" por su cuenta. */}
-        <ol className="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
-          {site.steps.map((step, index) => (
-            <li key={step.title} className="flex gap-4 md:flex-col">
-              <span
-                aria-hidden="true"
-                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-[17px] font-semibold text-accent"
+            aria-hidden porque el lector de pantalla ya anuncia "1 de 3" por su cuenta.
+
+            En móvil el número va a la izquierda del texto y no encima: cada paso
+            ocupa unos 70px menos, y son tres. */}
+        <ol className="grid gap-4 md:grid-cols-3 md:gap-6">
+          {site.steps.map((step, index) => {
+            const tone = tones[step.tone];
+            return (
+              <li
+                key={step.title}
+                className={`flex gap-4 rounded-[20px] p-5 md:flex-col md:gap-3.5 md:p-7 ${tone.soft}`}
               >
-                {index + 1}
-              </span>
-              <div>
-                <h3 className="text-[19px] font-semibold tracking-[-0.02em]">{step.title}</h3>
-                <p className="mt-1.5 text-[15px] leading-[1.5] text-muted">{step.text}</p>
-              </div>
-            </li>
-          ))}
+                <span
+                  aria-hidden="true"
+                  className={`flex size-12 shrink-0 items-center justify-center rounded-2xl font-display text-[22px] font-bold md:size-14 md:text-[26px] ${tone.solid}`}
+                >
+                  {index + 1}
+                </span>
+                <div className="flex flex-col gap-1.5 md:gap-3.5">
+                  <h3 className="text-[19px] font-bold md:text-[21px]">{step.title}</h3>
+                  <p className="leading-[1.6] text-muted">{step.text}</p>
+                </div>
+              </li>
+            );
+          })}
         </ol>
       </Container>
     </section>
