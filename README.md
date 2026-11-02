@@ -53,7 +53,7 @@ en piezas listas para un portfolio profesional.
 Dos ejemplos de lo que hay dentro, por si el recorrido dice más que el resultado:
 
 - [`01-learning/05-typescript/`](01-learning/05-typescript) — entrenamiento propio de TypeScript: **más de 140 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
-- [`01-learning/00-docs/`](01-learning/00-docs) — convenciones de nombres, política de ubicación de proyectos y decisiones técnicas escritas antes de aplicarlas.
+- [`01-learning/00-docs/`](01-learning/00-docs) — convenciones de nombres, política de ubicación de proyectos con el porqué de sus cambios, y guías de accesibilidad y testing.
 
 ## Quick Navigation / Navegación rápida
 

@@ -112,7 +112,7 @@ button {
 
 ## Ejemplos en JavaScript
 
-### Detectar reduce-motion (patrón proyecto-3)
+### Detectar reduce-motion (patrón de 03-projex)
 
 ```javascript
 const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")

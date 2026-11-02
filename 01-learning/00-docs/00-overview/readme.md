@@ -15,16 +15,16 @@ y el camino que llevo hasta ahi.
 - `00-portfolio/`: proyectos aplicados. Es lo que se ensena.
   - `00-hosting/` el sitio del portfolio · `01-react/` proyectos React + Vite (`portfolio/` el escaparate, `privados/` el resto) · `02-next/` proyectos Next.js.
 - `01-learning/`: la ruta de aprendizaje, con la numeracion original de cada modulo.
-  - `00-docs/`: vision general, assets de referencia y documentos de soporte.
+  - `00-docs/`: decisiones del repo, guías de consulta y documentos de soporte.
   - `01-git/`: fundamentos de Git, commits, branching, GitHub y cheatsheets.
   - `02-html/`: modulo de HTML con introduccion y 25 proyectos progresivos.
   - `03-css/`: arquitectura CSS, layouts, frameworks (Bootstrap, Tailwind) y templates.
   - `04-javascript/`: fundamentos, DOM, POO, async, librerias y proyectos.
-  - `05-typescript/`: entrenamiento de TypeScript (90 ejercicios con tests).
+  - `05-typescript/`: entrenamiento de TypeScript (más de 140 ejercicios con tests).
   - `06-react/`: ruta React por etapas mas drills.
   - `07-nextjs/`: ruta Next.js.
   - `09-docker/`: fundamentos, imagenes, contenedores, compose y cheatsheets.
-  - `10-claudeCode/`: notas y experimentos con Claude Code.
+  - `10-claude/`: notas y experimentos con Claude Code.
 - `scripts/`: utilidades de mantenimiento del repo.
 
 Nota: este listado estaba desactualizado desde antes de la reestructuracion

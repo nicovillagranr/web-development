@@ -18,7 +18,7 @@ Guia corta para volver al repo despues de semanas o meses sin tocar un tema.
 - CSS arquitectura: `01-learning/03-css/01-architecture/README.md`
 - JS DOM: `01-learning/04-javascript/02-dom/`
 - JS async: `01-learning/04-javascript/04-async/`
-- React hooks: `01-learning/06-react/02-hooks/`
+- React hooks: `01-learning/05-typescript/src/exercises/12-custom-hooks/`
 - Docker compose: `01-learning/09-docker/03-compose/flujo-compose.md`
 
 ## Regla de Continuidad

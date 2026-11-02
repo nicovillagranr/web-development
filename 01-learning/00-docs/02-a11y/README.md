@@ -5,6 +5,7 @@ Referencia rápida y transversal para todos los proyectos del repo. Consultar **
 ## Archivos
 
 - [`aria-cheatsheet.md`](./aria-cheatsheet.md) — Tabla de atributos ARIA: cuándo usarlos, ejemplo y qué anuncia el lector de pantalla.
+- [`user-preference-media-queries.md`](./user-preference-media-queries.md) — Media queries de preferencias del usuario (`prefers-reduced-motion`, `prefers-color-scheme`…) con ejemplos en CSS y JS.
 
 ## Por qué existe
 
