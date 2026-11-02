@@ -80,6 +80,12 @@ import {
   useTema,
   type Tema,
 } from "../exercises/12-custom-hooks/exercise-09";
+import {
+  FotoAmpliada,
+  ConfirmacionDeEnvio,
+  MensajeRapido,
+  MapModal,
+} from "../exercises/12-custom-hooks/exercise-10";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 12 — `12-custom-hooks`, camino a cerrar Projex. Cada archivo nuevo de la
@@ -950,6 +956,80 @@ function DemoUseTema() {
 
 /* 🧪 PRUEBA TEMPORAL (12 oct) — tu `useEffect` tal cual, con un `zoom` propio para que
  * exista. No es ningún drill: se borra cuando termines de mirarlo. */
+/* 10 · drill 1: la foto ampliada bloquea el scroll mientras existe. Con el starter, el
+ * bloqueo se queda puesto al cerrarla y la página entera deja de moverse: por eso la
+ * demo trae un botón para soltarlo a mano. */
+function DemoFotoAmpliada() {
+  const [abierta, setAbierta] = useState(false);
+
+  function soltarElScroll() {
+    document.body.style.overflow = "";
+  }
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <div>
+        <button type="button" onClick={() => setAbierta(true)}>
+          Ampliar foto
+        </button>
+        <button type="button" onClick={soltarElScroll}>
+          Soltar el scroll
+        </button>
+      </div>
+      {abierta && <FotoAmpliada onClose={() => setAbierta(false)} />}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 10 · drill 2: «Enviar» abre la confirmación, y el anillo sigue al foco. */
+function DemoConfirmacion() {
+  const [enviado, setEnviado] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setEnviado(true)}>
+        Enviar
+      </button>
+      {enviado && <ConfirmacionDeEnvio onClose={() => setEnviado(false)} />}
+    </div>
+  );
+}
+
+/* 10 · drill 3: «Escribir» abre el mensaje rápido; Escape lo cierra o pregunta. */
+function DemoMensajeRapido() {
+  const [abierto, setAbierto] = useState(false);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Escribir
+      </button>
+      {abierto && <MensajeRapido onClose={() => setAbierto(false)} />}
+    </div>
+  );
+}
+
+/* 10 · drill 4: el padre pasa flechas, sin useCallback, y se vuelve a pintar al copiar,
+ * como el test. El anillo enseña dónde se queda el foco después de copiar. */
+function DemoMapModalEnHooks() {
+  const [abierto, setAbierto] = useState(false);
+  const [copias, setCopias] = useState(0);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Ver mapa
+      </button>
+      <p>Copias: {copias}</p>
+      {abierto && (
+        <MapModal onClose={() => setAbierto(false)} onCopiar={() => setCopias(copias + 1)} />
+      )}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
 function PruebaZoom() {
   const [zoom, setZoom] = useState(1);
 
@@ -1708,6 +1788,7 @@ export function Bloque12() {
         nombre="useTemaGuardado"
         mirar="Pulsa Guardar claro y volver a montar. Resuelto, las dos líneas dicen light. Con el starter, la segunda dice dark: es el instante en que tu portfolio pinta el tema equivocado."
         campos="dos botones de la demo · el tema ahora · el tema del primer render"
+        estado="resuelto"
       >
         <DemoTemaGuardado />
       </Tarjeta>
@@ -1717,6 +1798,7 @@ export function Bloque12() {
         nombre="BotonDeTema"
         mirar="Pulsa el botón varias veces. Resuelto, las llamadas se quedan quietas: en pnpm dev son 2, porque StrictMode ensaya el nacimiento dos veces. Con el starter suben con cada clic."
         campos="el botón Tema · Poner a cero y volver a montar (de la demo) · las llamadas a leerTema"
+        estado="resuelto"
       >
         <DemoLecturas />
       </Tarjeta>
@@ -1726,6 +1808,7 @@ export function Bloque12() {
         nombre="TemaDelSistema"
         mirar="Cámbialo sin recargar: DevTools → ⋮ → More tools → Rendering → Emulate CSS media feature prefers-color-scheme. El texto sigue al sistema ya con el starter: lo que falla, la escucha que se queda al irse, no se ve aquí y lo mira el test."
         campos="el tema del sistema"
+        estado="resuelto"
       >
         <TemaDelSistema />
       </Tarjeta>
@@ -1735,6 +1818,7 @@ export function Bloque12() {
         nombre="TemaDelPortfolio"
         mirar="Pulsa Cambiar tema dos veces: la clase light tiene que aparecer y desaparecer. Con el starter no se mueve."
         campos="botón Cambiar tema · la clase light del <html>, en vivo"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <TemaDelPortfolio />
@@ -1747,6 +1831,7 @@ export function Bloque12() {
         nombre="TemaQueNoVuelve"
         mirar="Pulsa Cambiar tema dos veces: la clase light tiene que aparecer y desaparecer. Con el starter aparece y se queda."
         campos="botón Cambiar tema · la clase light del <html>, en vivo"
+        estado="resuelto"
       >
         <div className={ANILLO}>
           <TemaQueNoVuelve />
@@ -1759,8 +1844,47 @@ export function Bloque12() {
         nombre="useTema"
         mirar="Pulsa Cambiar tema y recarga la página: el tema elegido tiene que seguir. Con el starter, el tema no se guarda, la clase no se mueve y el botón solo pasa a light."
         campos="botón Cambiar tema · el tema · la clase light del <html>, en vivo"
+        estado="resuelto"
       >
         <DemoUseTema />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-10" titulo="Tu MapModal en tres hooks: un préstamo, un hook." />
+
+      <Tarjeta
+        n={1}
+        nombre="useBloquearScroll"
+        mirar="Pulsa Ampliar foto: el overflow pasa a hidden. Ciérrala: tiene que volver a vacío. Con el starter se queda en hidden y la página deja de moverse: suéltalo con Soltar el scroll."
+        campos="botones Ampliar foto y Soltar el scroll (de la demo) · la foto: Cerrar foto · el overflow del body, en vivo"
+      >
+        <DemoFotoAmpliada />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="useFocoQueVuelve"
+        mirar="Pulsa Enviar: el anillo tiene que saltar a Entendido. Pulsa Entendido: vuelve a Enviar. Con el starter, al abrir, el anillo se queda en Enviar."
+        campos="botón Enviar (de la demo) · al abrir: el aviso y Entendido"
+      >
+        <DemoConfirmacion />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="useTeclaEscape"
+        mirar="Pulsa Escribir y luego Escape: se cierra. Ábrelo otra vez, escribe algo y pulsa Escape: tiene que preguntar «¿Descartar el mensaje?». Con el starter se cierra igual."
+        campos="botón Escribir (de la demo) · al abrir: Tu mensaje · al preguntar: Descartar"
+      >
+        <DemoMensajeRapido />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="MapModal"
+        mirar="Pulsa Ver mapa: el overflow pasa a hidden y el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Escape cierra y el anillo vuelve a Ver mapa."
+        campos="botón Ver mapa y las copias (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
+      >
+        <DemoMapModalEnHooks />
       </Tarjeta>
     </>
   );

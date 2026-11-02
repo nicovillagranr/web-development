@@ -2305,3 +2305,59 @@ sacado a tres custom hooks) se monta cuando cierres el 08.
 ### Pendiente
 
 - Montar el `12/10` (el `MapModal` sacado a tres custom hooks). Resolver el `12/09` (0/6).
+
+## Sesión 30 oct 2026 (noche) — montado el `12/10`, el 🏁 de la carpeta
+
+### Qué se montó
+
+- **`12/10` — tu MapModal en tres hooks** (0/4, 260 líneas). El concepto: un préstamo, un
+  hook. Teoría 1, el hook que no devuelve nada → 1 `useBloquearScroll`. Teoría 2, lo que el
+  hook recibe → 2 `useFocoQueVuelve` y 3 `useTeclaEscape`. El armarlo tú es el 4,
+  `MapModal`: el efecto de tu Projex, recortado, con un padre que pasa flechas en vez de
+  `useCallback`.
+- **Banco:** pestaña 12 con las 4 tarjetas del 10. La del 1 trae «Soltar el scroll»,
+  porque con el starter la página se queda bloqueada al cerrar la foto.
+- El drill 4 se llama `MapModal` y no `MapaDeProjex`, porque ese nombre ya lo usa el drill
+  7 del 05.
+
+### Verificación
+
+- Con las soluciones, en una copia que ya se borró: 4/4, 0 errores de tipos y lint 0.
+- Los starters: los 4 salen rojos en el test. Además, el 1 da un `TS2322`, el 2 un error
+  de lint (`react-hooks/refs`) y el 3 un aviso (`exhaustive-deps`). Ninguno pasa el test
+  con el fallo dentro.
+- `verificar-ejercicio` sin problemas mecánicos, y la Pista 3 copiada de la salida real.
+  Prueba de humo: la pestaña 12 se monta entera y las demos del 10 abren.
+
+### Pendiente
+
+- Resolver el 10 (0/4) y el 09 (0/6). Tu meta: cerrar el 10 antes del 1 nov.
+- Sin commitear: el 10, sus tarjetas y esta entrada. Tu 09 en curso, sin tocar.
+
+## Sesión 1 nov 2026 — `12/09` CERRADO (6/6)
+
+### Qué hiciste
+
+- **El código de los seis salió bien a la primera** (el 6 en dos vueltas: primero escribiste
+  el efecto y después el inicializador). Tests 7/7, 0 errores de tipos y lint limpio en el 09.
+- **Teoría 1, leer de fuera.** 1: la lectura del `localStorage` pasó al inicializador. 2:
+  `leerTema` sin paréntesis. 3: la escucha del sistema con nombre y su limpieza.
+- **Teoría 2, escribir hacia fuera.** 4: `[]` → `[tema]`. 5: el `else` que quita la clase.
+- **Armarlo tú.** 6: `useTema()` junta tus piezas del 1 y el 3 en el inicializador (primero lo
+  guardado, si no el sistema) y las del 4 y el 5 en el efecto, con un solo `setItem`.
+
+### Lo que costó
+
+- **Los porqués del 2 y el 5.** En el 2, «la función solo se ejecuta una vez» con paréntesis
+  era la trampa de la Teoría 1: React usa el valor una vez, pero `leerTema()` corre en cada
+  render (el starter: 4 llamadas, montaje + 3 clics). En el 5 volviste a la respuesta del 4
+  («el valor anterior»); el array ya estaba bien, y lo que faltaba era una línea que hiciera
+  algo con `"dark"`.
+- **Matiz para el 10:** el efecto con `[tema]` no corre solo en cada cambio; corre también al
+  nacer. Por eso el `<html>` lleva la clase desde que carga la página.
+
+### Pendiente
+
+- Resolver el 10 (0/4).
+- Sin commitear: el 09 resuelto, el 10 montado, las tarjetas del banco y las dos últimas
+  entradas de esta bitácora.

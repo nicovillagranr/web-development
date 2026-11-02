@@ -29,9 +29,10 @@ import { useEffect, useState } from "react";
  * (en dos, también en el lint). Contesta cada ¿Por qué? en la línea libre de
  * debajo. Pistas: exercise-09.pistas.md. Drills 1–6: banco, pestaña 12.
  * ============================================================================= */
-
+// Creamos un tipo Tema que puede ser 2 strings literales: "light" o "dark". Esto nos permite tener un control más estricto sobre los valores que puede tomar el tema, evitando errores de tipado y asegurando que solo se utilicen estos dos valores específicos en nuestro código.
 export type Tema = "light" | "dark";
 
+// Definimos una constante CLAVE_TEMA que contiene la clave utilizada para almacenar el tema en el localStorage. Esta clave es la misma que se utiliza en el portfolio, lo que permite mantener consistencia en la forma en que se guarda y recupera el tema del usuario.
 const CLAVE_TEMA = "theme:mode"; // la misma clave que tu portfolio
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -62,56 +63,100 @@ const CLAVE_TEMA = "theme:mode"; // la misma clave que tu portfolio
  * el primer render.
  * ¿Por qué? Si el tema se leyera en un efecto, ¿qué vería un instante quien
  * guardó el claro?
- *
+ * Si leyéramos el tema dentro de un `useEffect`, React realizaría primero el render con el valor inicial del estado (`"dark"`). Después del render se ejecutaría el efecto, que leería el tema guardado en `localStorage` y actualizaría el estado.
+Por lo tanto, un visitante que había guardado el tema claro vería brevemente la interfaz oscura antes de que React actualizara el tema a `"light"`. Esto produciría un cambio visual innecesario.
+Al utilizar una función inicializadora en `useState`, obtenemos el tema guardado antes del primer render y evitamos ese cambio visual.
  */
 export function useTemaGuardado(): Tema {
-  const [tema, setTema] = useState<Tema>("dark");
-
-  useEffect(() => {
-    const guardado = localStorage.getItem(CLAVE_TEMA);
-    if (guardado === "light" || guardado === "dark") {
-      setTema(guardado);
+  // Usamos useState con un solo argumento para inicializar el estado del tema en el primer render.
+  const [tema] = useState<Tema>(() => {
+    // Para obtener el tema, ejecutamos una función que nos devolverá un dato
+    // Obtenemos la clave del tema guardado en el localStorage usando la constante CLAVE_TEMA.
+    const temaGuardado = localStorage.getItem(CLAVE_TEMA);
+    if (temaGuardado === "light") {
+      return "light";
     }
-  }, []);
-
+    if (temaGuardado === "dark") {
+      return "dark";
+    }
+    return "dark";
+  });
   return tema;
 }
 
 /* 2) BotonDeTema — el botón alterna entre claro y oscuro. leerTema lee el tema
  * guardado; te llega por props para que el test cuente cuántas veces se llama.
  * Funciona, pero leerTema se llama cada vez que pulsas, y solo hace falta al nacer.
- * ¿Por qué? Con cada clic, el componente se vuelve a ejecutar entero. ¿Por qué tu
- * versión no vuelve a leer?
- *
+ *¿Por qué mi versión no vuelve a leer el tema?**
+    Porque estoy pasando `leerTema` directamente a `useState`, sin ejecutarla con paréntesis.
+
+    De esta manera, React utiliza `leerTema` como función inicializadora para obtener el estado inicial del tema al montar el componente.
+
+    Cuando el usuario hace clic, `setTema` actualiza el estado y provoca un nuevo render. Aunque el componente vuelve a ejecutarse, React conserva el estado anterior y no vuelve a ejecutar la función inicializadora.
+
+    **¿Qué hacen los paréntesis de `leerTema` cuando el usuario hace clic?**
+
+    Los paréntesis ejecutan una función y permiten obtener su valor de retorno.
+    - `leerTema`: entregamos la función sin ejecutarla.
+    - `leerTema()`: ejecutamos la función inmediatamente y obtenemos su resultado.
+Por eso utilizamos `leerTema` sin paréntesis al inicializar el estado: queremos que React la ejecute únicamente para obtener el valor inicial, no cada vez que se renderiza el componente.
  */
 export function BotonDeTema({ leerTema }: { leerTema: () => Tema }) {
-  const [tema, setTema] = useState<Tema>(leerTema());
+  // Seteamos el estado inicial del tema usando la función leerTema, que se ejecuta solo una vez al montar el componente.
+  // Por lo tanto, durante el montaje y al montar, React ya sabrá si el tema del usuario es "light" o "dark", y no será necesario volver a llamar a leerTema en cada render.
+  const [tema, setTema] = useState<Tema>(leerTema);
 
   return (
-    <button type="button" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>
+    <button
+      type="button"
+      onClick={() => {
+        // Al hacer clic en el botón, alternamos el tema entre "light" y "dark" usando setTema.
+        setTema(tema === "dark" ? "light" : "dark");
+      }}
+    >
       Tema: {tema}
     </button>
   );
 }
 
 /* 3) TemaDelSistema — si el visitante no eligió tema, el portfolio sigue el de su
- * sistema operativo, también cuando lo cambia con la página abierta. Al irse, deja
- * de escucharlo.
+ * sistema operativo, también cuando lo cambia con la página abierta.
+ * Al irse, deja de escucharlo.
  * ¿Por qué? Si nadie cambia el tema del sistema, la escucha que no se da de baja no
  * hace nada visible. ¿Qué problema deja igual?
- *
+ * El problema es que si el componente se desmonta y la escucha no se da de baja, la función de actualización del tema seguirá existiendo en memoria y seguirá escuchando los cambios del sistema operativo. Esto puede provocar fugas de memoria y comportamientos inesperados si el componente se vuelve a montar más tarde, ya que la función de actualización podría intentar actualizar el estado de un componente que ya no está presente en el DOM.
  */
 export function TemaDelSistema() {
+  // Seteamos el estado incial del tema según la preferencia del sistema operativo del usuario.
+  // Usamos una función inicializadora para que React ejecute la lógica solo una vez al montar el componente.
   const [tema, setTema] = useState<Tema>(() =>
     window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark",
   );
 
+  // Usamos useEffect para escuchar los cambios en la preferencia de tema del sistema operativo.
   useEffect(() => {
+    // Hacemos una consulta a la API matchMedia para detectar si el usuario prefiere un tema claro.
     const consulta = window.matchMedia("(prefers-color-scheme: light)");
-    consulta.addEventListener("change", () => setTema(consulta.matches ? "light" : "dark"));
+
+    // Definimos una función que actualiza el estado del tema según la preferencia del sistema operativo.
+    const actualizarTema = () => {
+      setTema(consulta.matches ? "light" : "dark");
+    };
+    // Agregamos un event listener para escuchar los cambios en la preferencia de tema del sistema operativo.
+    consulta.addEventListener("change", actualizarTema);
+
+    // Retornamos una función de limpieza que elimina el event listener cuando el componente se desmonta, evitando posibles fugas de memoria.
+    return () => {
+      consulta.removeEventListener("change", actualizarTema);
+    };
+    // Array de dependencias vacío: el efecto se ejecuta solo una vez al montar el componente y se limpia al desmontarlo.
   }, []);
 
-  return <p>Tema del sistema: {tema}</p>;
+  return (
+    <>
+      <p>Tema del sistema: {tema}</p>
+    </>
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -148,21 +193,33 @@ export function TemaDelSistema() {
  * <html> cuando el tema es claro y la quita cuando es oscuro. Al nacer funciona;
  * al pulsar «Cambiar tema», el <html> no se entera.
  * ¿Por qué? ¿Qué le dice el array del efecto a React sobre cuándo volver a correrlo?
- *
+ * Todo el componente gira en torno al valor de tema en tiempo real, por lo tanto React debe saber en todo momento cuándo volver a ejecutar el efecto para reflejar los cambios en el DOM. Al incluir `tema` en el array de dependencias del efecto, le estamos diciendo a React que debe volver a ejecutar el efecto cada vez que `tema` cambie. Esto asegura que la clase `light` se agregue o elimine correctamente en el `<html>` según el valor actual del tema.
  */
 export function TemaDelPortfolio() {
+  // Seteamos el estado inicial del tema en "dark".
+  //  Esto significa que al montar el componente, el tema será oscuro por defecto da igual la configuración del sistema o el valor guardado en localStorage.
+  // El efecto se encargará de actualizar la clase del <html> según el valor actual del tema.
   const [tema, setTema] = useState<Tema>("dark");
 
+  // Usamos useEffect para actualizar la clase del <html> según el valor del tema.
   useEffect(() => {
+    // Guardamos una referencia al elemento raíz del documento (el <html>) para poder modificar su clase.
     const raiz = document.documentElement;
+    // Si el tema es "light", agregamos la clase "light" al <html>
     if (tema === "light") {
       raiz.classList.add("light");
+      // Si el tema es "dark", eliminamos la clase "light" del <html>
     } else {
       raiz.classList.remove("light");
     }
-  }, []);
+    // El array de dependencias contiene el estado 'tema', lo que indica a React que debe volver a ejecutar el efecto cada vez que 'tema' cambie. Esto asegura que la clase 'light' se agregue o elimine correctamente en el <html> según el valor actual del tema.
+    // Si el array de dependencias estuviera vacío, el efecto solo se ejecutaría una vez al montar el componente y no se actualizaría cuando el usuario cambie el tema, lo que provocaría que la clase 'light' no reflejara correctamente el estado actual del tema.
+  }, [tema]);
 
   return (
+    // Cuando el usuario da clic:
+    // - Si el tema actual es "dark", se cambia a "light".
+    // - Si el tema actual es "light", se cambia a "dark".
     <button type="button" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>
       Cambiar tema
     </button>
@@ -172,15 +229,22 @@ export function TemaDelPortfolio() {
 /* 5) TemaQueNoVuelve — otro intento del mismo efecto, ya con el array bien. Del
  * oscuro al claro funciona; del claro al oscuro, el <html> se queda en claro.
  * ¿Por qué? ¿Qué valor del tema copiaba el efecto hacia fuera, y cuál no?
- *
+ * El problema es que el efecto estaba copiando el valor del tema en el momento en que se ejecutaba, y no se actualizaba correctamente cuando el usuario cambiaba el tema. Esto significa que cuando el usuario cambiaba de "light" a "dark", el efecto seguía utilizando el valor anterior del tema ("light") y no eliminaba la clase "light" del `<html>`, dejando la interfaz en modo claro.
  */
 export function TemaQueNoVuelve() {
+  // Seteamos el estado inicial del tema en "dark".
   const [tema, setTema] = useState<Tema>("dark");
 
+  // Usamos useEffect para actualizar la clase del <html> según el valor del tema.
   useEffect(() => {
+    // Si el tema es "light", agregamos la clase "light" al <html>
     if (tema === "light") {
       document.documentElement.classList.add("light");
+      // Si el tema es "dark", eliminamos la clase "light" del <html>, lo que haría que el tema vuelva a ser oscuro.
+    } else {
+      document.documentElement.classList.remove("light");
     }
+    // El array de dependencias contiene el estado 'tema', lo que indica a React que debe volver a ejecutar el efecto cada vez que 'tema' cambie. Esto asegura que la clase 'light' se agregue o elimine correctamente en el <html> según el valor actual del tema.
   }, [tema]);
 
   return (
@@ -203,11 +267,49 @@ export function TemaQueNoVuelve() {
  * poner o quitar la clase light del <html> y guardar cada cambio con CLAVE_TEMA.
  * Si lo guardado no es "light" ni "dark", cuenta como que no hay nada.
  * ¿Por qué? ¿Qué parte de tu hook corre una sola vez, y cuál después de cada cambio?
- *
+ * Lo que corre una sola vez es la función inicializadora del `useState`, que obtiene el tema guardado en `localStorage` o la preferencia del sistema operativo del usuario. Esto asegura que React tenga el valor correcto del tema desde el primer render.
+La parte que corre después de cada cambio es el `useEffect`, que se ejecuta cada vez que el estado del tema cambia. Este efecto actualiza la clase del `<html>` y guarda el tema en `localStorage`, asegurando que los cambios se reflejen correctamente en la interfaz y se mantengan entre sesiones.
  */
 // type Tema = "light" | "dark";
 export function useTema(): { tema: Tema; alternarTema: () => void } {
-  const [tema, setTema] = useState<Tema>("dark");
+  // Obtenemos el valor inicial de tema desde el localStorage o la preferencia del sistema operativo del usuario.
+  // Esto se hace dentro de una función inicializadora para que React la ejecute solo una vez al montar el componente, evitando lecturas innecesarias en cada render.
+  const [tema, setTema] = useState<Tema>(() => {
+    // Obtenemos el tema guardado en el localStorage usando la clave CLAVE_TEMA.
+    const temaGuardado = localStorage.getItem(CLAVE_TEMA);
+    // Si el tema guardado es "light", devolvemos "light" como valor inicial del estado.
+    if (temaGuardado === "light") {
+      return "light";
+    }
+    // Si el tema guardado es "dark", devolvemos "dark" como valor inicial del estado.
+    if (temaGuardado === "dark") {
+      return "dark";
+    }
+    // Si no hay un tema guardado, obtenemos la preferencia del sistema operativo del usuario.
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
 
-  return { tema, alternarTema: () => setTema("light") };
+  // Usamos useEffect para actualizar la clase del <html> y el localStorage cada vez que el estado del tema cambie.
+  useEffect(() => {
+    // Guardamos el tema actual en el localStorage usando la clave CLAVE_TEMA.
+    // localStorage.setItem lo que hace es almacenar el valor del tema en el almacenamiento local del navegador,
+    // lo que permite que la preferencia del usuario se mantenga incluso después de cerrar o recargar la página.
+    // localStorage.setItem(CLAVE_TEMA, tema); CLAVE_TEMA = "theme:mode", tema = "light" o "dark"
+    localStorage.setItem(CLAVE_TEMA, tema);
+
+    // Si el tema es "light", agregamos la clase "light" al <html>
+    if (tema === "light") {
+      document.documentElement.classList.add("light");
+
+      // Si el tema es "dark", eliminamos la clase "light" del <html>
+    } else {
+      document.documentElement.classList.remove("light");
+    }
+    // El array de dependencias contiene el estado 'tema', lo que indica a React que debe volver a ejecutar el efecto cada vez que 'tema' cambie. Esto asegura que la clase 'light' se agregue o elimine correctamente en el <html> y que el localStorage se actualice con el valor actual del tema.
+  }, [tema]);
+
+  return {
+    tema,
+    alternarTema: () => setTema(tema === "dark" ? "light" : "dark"),
+  };
 }
