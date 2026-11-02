@@ -1,10 +1,10 @@
-# Nicolás Villagrán — Frontend Developer
+# Nico Villagrán — Frontend Developer
 
-**Santiago, Chile** · React · TypeScript · Next.js · Abierto a oportunidades
+**Santiago, Chile** · React · TypeScript · Titulado en Desarrollo Web (Duoc UC) · Abierto a oportunidades
 
 **[nico-villagran.com](https://nico-villagran.com)** · [LinkedIn](https://www.linkedin.com/in/nico-villagran/) · [nicovillagranroses@gmail.com](mailto:nicovillagranroses@gmail.com) · [Mis APIs](https://github.com/nicovillagranr/APIs)
 
-> Este repositorio es mi **diario de aprendizaje**: diez módulos, de HTML semántico a Docker,
+> Este repositorio es mi **diario de aprendizaje**: nueve módulos, de Git y HTML semántico a Docker,
 > con la práctica y las decisiones técnicas documentadas por escrito.
 > **Si vienes a evaluar mi trabajo, empieza por los proyectos de aquí abajo** — el resto del
 > repositorio es el camino, no el destino.
@@ -23,7 +23,7 @@ La decisión técnica de la que estoy más contento: los datos se piden a la API
 
 | | Proyecto | Qué demuestra | Stack | |
 |---|---|---|---|---|
-| <img src="01-learning/00-docs/01-assets/proyectos/store-pulse.jpg" width="150"> | **Store Pulse** | PWA instalable con las métricas de un local en tres niveles: local, equipo y persona. Cada métrica se declara una vez en un registro que dice hacia qué lado mejora, así que la flecha y el color de cada variación salen del dato en vez de repetirse a mano. **TypeScript estricto, Zod en la frontera y 82 tests en verde.** | React 19 · TypeScript · Tailwind v4 · Recharts · Zod | **[Demo](https://nico-villagran.com/store-pulse/)** · [Código](00-portfolio/01-react/portfolio/01-store-pulse) |
+| <img src="01-learning/00-docs/01-assets/proyectos/store-pulse.jpg" width="150"> | **Store Pulse** | PWA instalable con las métricas de un local en tres niveles: local, equipo y persona. Cada métrica se declara una vez en un registro que dice hacia qué lado mejora, así que la flecha y el color de cada variación salen del dato en vez de repetirse a mano. **TypeScript estricto, Zod en la frontera y 90 tests en verde.** | React 19 · TypeScript · Tailwind v4 · Recharts · Zod | **[Demo](https://nico-villagran.com/store-pulse/)** · [Código](00-portfolio/01-react/portfolio/01-store-pulse) |
 | <img src="01-learning/00-docs/01-assets/proyectos/proyecto-5.webp" width="150"> | **Smart Cooler UI** | Dashboard de producto con datos meteorológicos **en tiempo real** (Open-Meteo), inventario persistido en localStorage y recetas sugeridas según lo guardado. **40 tests en verde** (Vitest). | React 19 · Tailwind v4 · Vitest | [Código](00-portfolio/01-react/portfolio/02-smart-cooler-ui) |
 | <img src="01-learning/00-docs/01-assets/proyectos/projex.webp" width="150"> | **Projex** | Landing por secciones con animaciones de entrada y **formulario de contacto con validación accesible**: los errores se anuncian con `role="alert"` y el foco queda atrapado en el menú y el modal. El envío es una demo, sin backend. | React 19 · Tailwind v4 · Framer Motion · React Router | **[Demo](https://nico-villagran.com/projex/)** · [Código](00-portfolio/01-react/portfolio/03-projex) |
 
@@ -52,7 +52,7 @@ en piezas listas para un portfolio profesional.
 
 Dos ejemplos de lo que hay dentro, por si el recorrido dice más que el resultado:
 
-- [`01-learning/05-typescript/`](01-learning/05-typescript) — entrenamiento propio de TypeScript: **90 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
+- [`01-learning/05-typescript/`](01-learning/05-typescript) — entrenamiento propio de TypeScript: **más de 140 ejercicios con sus tests** (Vitest), con `strict`, `noUncheckedIndexedAccess` y `exactOptionalPropertyTypes` activados. Si al correr la suite ves algún test en rojo, es el ejercicio en curso: los *starters* se dejan fallando a propósito.
 - [`01-learning/00-docs/`](01-learning/00-docs) — convenciones de nombres, política de ubicación de proyectos y decisiones técnicas escritas antes de aplicarlas.
 
 ## Quick Navigation / Navegación rápida
@@ -94,7 +94,7 @@ Two doors: the finished work, and the path that led to it.
    06-react/         ruta de React
    07-nextjs/        ruta de Next.js
    09-docker/        guías y material de Docker
-   10-claudeCode/    notas y experimentos con Claude Code
+   10-claude/        notas y experimentos con Claude Code
 
 scripts/          Utilidades de mantenimiento del repo / Repo maintenance
 ```

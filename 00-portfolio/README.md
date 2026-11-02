@@ -31,7 +31,7 @@ El slug es lo que identifica: `03-projex` se publica en `/projex/`, no en `/03-p
 
 | Carpeta | Qué es | Qué lo hace difícil | Stack |
 |---|---|---|---|
-| [`01-store-pulse`](01-react/portfolio/01-store-pulse) | **Store Pulse** — PWA instalable y mobile-first con las métricas de un local en tres niveles: local, equipo y persona. Cada métrica se declara una vez en un registro que dice hacia qué lado mejora, así que la flecha y el color salen del dato. Datos ficticios. | TypeScript estricto, Zod validando la frontera, 82 tests, service worker y manifest | React 19 · TypeScript · Tailwind v4 · Recharts · Zod · Vitest |
+| [`01-store-pulse`](01-react/portfolio/01-store-pulse) | **Store Pulse** — PWA instalable y mobile-first con las métricas de un local en tres niveles: local, equipo y persona. Cada métrica se declara una vez en un registro que dice hacia qué lado mejora, así que la flecha y el color salen del dato. Datos ficticios. | TypeScript estricto, Zod validando la frontera, 90 tests, service worker y manifest | React 19 · TypeScript · Tailwind v4 · Recharts · Zod · Vitest |
 | [`02-smart-cooler-ui`](01-react/portfolio/02-smart-cooler-ui) | **Smart Cooler UI** — dashboard de producto con clima y calidad del aire en tiempo real, inventario persistido y recetas sugeridas. | API externa (Open-Meteo) con su parseo, estado persistido y 40 tests de la lógica | React 19 · Tailwind v4 · Vitest |
 | [`03-projex`](01-react/portfolio/03-projex) | **Projex** — landing con animaciones y formulario de contacto con validación accesible; el envío es una demo, sin backend. | Accesibilidad real (focus-trap, errores anunciados) y animaciones que no estorban la lectura | React 19 · Tailwind v4 · Framer Motion · React Router |
 
