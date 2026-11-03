@@ -2361,3 +2361,79 @@ sacado a tres custom hooks) se monta cuando cierres el 08.
 - Resolver el 10 (0/4).
 - Sin commitear: el 09 resuelto, el 10 montado, las tarjetas del banco y las dos últimas
   entradas de esta bitácora.
+
+## Sesión 2 nov 2026 — `12/10` drill 1 (1/4)
+
+### Qué hiciste
+
+- **1, `useBloquearScroll`:** el préstamo pasó del cuerpo del hook a un `useEffect(…, [])`,
+  con la limpieza devuelta por el efecto. Test 1 verde, 0 errores de tipos (se fue el TS2322
+  del starter); en el lint del 10 solo quedan los starters del 2 y el 3.
+- **El porqué:** por el `[]`, el cuerpo del efecto corre solo al montar y la limpieza solo al
+  desmontar. Las dos cosas, separadas.
+
+### Lo que costó
+
+- Nada en el código. El matiz: los re-renders de `FotoAmpliada` corren el cuerpo del HOOK
+  otra vez, pero React ve el `[]` igual y no repite ni el efecto ni la limpieza. Con el
+  starter, el préstamo suelto se repetía en cada render y la función devuelta no la llamaba
+  nadie.
+- **Por qué la carpeta se llama `custom-hooks`:** un custom hook es una función `use…` que
+  llama a otros hooks; lo difícil era lo de dentro (00 ciclo de vida, 01 cuándo corre el
+  efecto, 02 la limpieza, 08 el préstamo). El 10 es el primero cuyo único trabajo es el efecto.
+
+### Pendiente
+
+- Drills 2, 3 y 4 del 10.
+- Sin commitear: el drill 1 del 10, su tarjeta del banco y esta entrada.
+
+## Sesión 2 nov 2026 (tarde) — `12/10` drills 2 y 3 (3/4 tests)
+
+### Qué hiciste
+
+- **2, `useFocoQueVuelve`:** el hook recibe el ref entero (`RefObject<HTMLElement | null>`,
+  import nuevo) y lee `.current` dentro del efecto; la llamada pasa `entendidoRef`. Porqué
+  aprobado: en el primer pintado `.current` es `null`; cuando corre el efecto, ya es el botón.
+- **3, `useTeclaEscape`:** `[]` → `[alPulsar]`. Tests 3/4, 0 errores de tipos y lint limpio en
+  todo el proyecto.
+
+### Lo que costó
+
+- **El starter del 2** leía `.current` durante el render y le entregaba al hook ese `null`: el
+  casillero de la Teoría 2 (lo de dentro en ese momento, no la caja).
+- **Tu extra en `MensajeRapido`:** `botonRef.current?.focus()` justo después de
+  `setPreguntando(true)` no mueve el foco (comprobado: se queda en el `TEXTAREA`). El setter
+  pide otro render; «Descartar» aún no existe y el `?.` lo calla. Es el drill 6 del 03 otra
+  vez. La regla para arreglarlo: lo causa que algo aparezca → efecto.
+
+### Pendiente
+
+- El porqué del 3 (en blanco) y el drill 4.
+- Si quieres el foco en «Descartar», arreglar tu extra y volver a correr el test 3.
+- Sin commitear desde `63cd5`: los drills 1–3 del 10, las tarjetas 1 y 2 del banco y las dos
+  entradas de hoy en esta bitácora.
+
+## Sesión 3 nov 2026 — `12/10` CERRADO (4/4)
+
+### Qué hiciste
+
+- **Tu extra en `MensajeRapido`:** el foco a «Descartar» pasó a un efecto `[preguntando]`
+  (lo causa que el botón aparezca). Funciona y el test 3 sigue verde.
+- **4, `MapModal`:** borraste el efecto de tu Projex y lo cambiaste por tus tres hooks:
+  `useBloquearScroll()`, `useFocoQueVuelve(closeButtonRef)` y `useTeclaEscape(onClose)`.
+  Tests 4/4, 0 errores de tipos y lint limpio. Es el 🏁 de la carpeta.
+- **Porqué del 3:** con cada flecha nueva, el efecto quita el listener viejo y pone uno nuevo
+  con la función más reciente. **Porqué del 4:** solo vuelve a correr el efecto de
+  `useTeclaEscape` (tiene la función en su array); el scroll va con `[]` y el foco con el
+  ref, que es la misma caja en todos los renders.
+
+### Lo que costó
+
+- Nada en el código. El matiz del 4: los tres hooks **corren** en cada render (Teoría 1);
+  lo que vuelve a correr es el **efecto** de uno de ellos. Y por qué saltaba el foco antes:
+  un solo efecto con `[onClose]` repetía los tres préstamos, también el foco a la ✕.
+
+### Pendiente
+
+- Sin commitear desde `63cd5`: el 10 entero, las 4 tarjetas del banco y las entradas de
+  esta bitácora del 2 y el 3 de noviembre.

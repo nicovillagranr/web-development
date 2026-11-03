@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 
 /* =============================================================================
  * EJERCICIO 10 — tu MapModal en tres hooks: un préstamo, un hook · bloque 12
@@ -71,18 +72,32 @@ import { useEffect, useRef, useState } from "react";
  * ¿Por qué? El cuerpo de tu hook corre en cada render de FotoAmpliada. ¿Cuándo
  * corre el cuerpo del efecto que lleva dentro, y cuándo su limpieza?
  *
+ * Porque es un efecto con array de dependencias vacío, el cuerpo del efecto corre solo al montar el componente (cuando FotoAmpliada se abre) y la limpieza corre solo al desmontar el componente (cuando FotoAmpliada se cierra). Esto asegura que el scroll se bloquee mientras la foto está ampliada y se restaure cuando se cierra.
  */
+
+// useBloquearScroll es un custom hook que bloquea el scroll del body mientras el componente que lo utiliza está montado.
+// Al montar, guarda el valor anterior del overflow del body y lo establece en "hidden" para bloquear el scroll.
+// Al desmontar, restaura el valor anterior del overflow, permitiendo que el scroll vuelva a funcionar normalmente.
 export function useBloquearScroll(): void {
-  const anterior = document.body.style.overflow;
-  document.body.style.overflow = "hidden";
-  return () => {
-    document.body.style.overflow = anterior;
-  };
+  // Usamos useEffect para bloquear el scroll al montar el componente y restaurarlo al desmontar.
+  useEffect(() => {
+    // Guardamos el valor anterior del overflow del body.
+    const previousOverflow = document.body.style.overflow;
+    // Bloqueamos el scroll estableciendo overflow en "hidden".
+    document.body.style.overflow = "hidden";
+
+    // La función de limpieza se ejecuta al desmontar el componente.
+    return () => {
+      // Restauramos el valor anterior del overflow del body.
+      document.body.style.overflow = previousOverflow;
+    };
+    // El array de dependencias vacío asegura que este efecto solo se ejecute una vez al montar y desmontar.
+  }, []);
 }
 
 export function FotoAmpliada({ onClose }: { onClose: () => void }) {
+  // Llamamos a useBloquearScroll a modo de préstamo: bloquea el scroll mientras FotoAmpliada está montada y lo restaura al desmontarse.
   useBloquearScroll();
-
   return (
     <div role="dialog" aria-label="Foto ampliada">
       <button type="button" onClick={onClose}>
@@ -132,21 +147,30 @@ export function FotoAmpliada({ onClose }: { onClose: () => void }) {
  * falta un import nuevo.
  * ¿Por qué? ¿Qué hay dentro de entendidoRef mientras ConfirmacionDeEnvio se pinta
  * por primera vez, y qué cuando corre el efecto?
- *
+ *  Dentro de entendidoRef.current es null mientras ConfirmacionDeEnvio se pinta por primera vez, y cuando corre el efecto, entendidoRef.current apunta al botón "Entendido" que ya ha sido renderizado en el DOM. Esto permite que el efecto pueda enfocar correctamente el botón cuando el componente se monta.
  */
-export function useFocoQueVuelve(destino: HTMLElement | null): void {
+export function useFocoQueVuelve(destino: RefObject<HTMLElement | null>): void {
+  // Usamos useEffect para manejar el enfoque del elemento referenciado por destino.
   useEffect(() => {
+    // Hacemos referencia al elemento que estaba enfocado antes de que el componente se montara.
     const anterior = document.activeElement;
-    destino?.focus();
+    // Enfocamos el elemento referenciado por destino si existe.
+    destino.current?.focus();
+    // La función de limpieza se ejecuta al desmontar el componente.
     return () => {
-      if (anterior instanceof HTMLElement) anterior.focus();
+      // Si el elemento previamente enfocado es un HTMLElement, devolvemos el foco a él.
+      if (anterior instanceof HTMLElement) {
+        anterior.focus();
+      }
     };
   }, [destino]);
 }
 
 export function ConfirmacionDeEnvio({ onClose }: { onClose: () => void }) {
+  // Hacemos referencia al botón "Entendido" para poder enfocar en él cuando el componente se monta y devolver el foco al elemento previamente enfocado cuando se desmonta.
   const entendidoRef = useRef<HTMLButtonElement>(null);
-  useFocoQueVuelve(entendidoRef.current);
+  // Usamos el hook useFocoQueVuelve para manejar el enfoque del botón "Entendido" y devolver el foco al elemento previamente enfocado al cerrar el componente.
+  useFocoQueVuelve(entendidoRef);
 
   return (
     <div role="dialog" aria-label="Mensaje enviado">
@@ -164,22 +188,41 @@ export function ConfirmacionDeEnvio({ onClose }: { onClose: () => void }) {
  * escrito. MensajeRapido ya está bien: solo falla el hook.
  * ¿Por qué? MensajeRapido le pasa a tu hook una flecha nueva en cada render. ¿Qué
  * hace tu efecto cada vez que llega una?
- *
+ * Lo que hace el efecto cada vez que llega una flecha nueva es eliminar el event listener anterior y agregar uno nuevo con la nueva función. Esto asegura que siempre se llame a la función más reciente cuando se presiona la tecla Escape, evitando que se quede con una versión antigua de la función que podría no reflejar el estado actual del componente.
  */
+
 export function useTeclaEscape(alPulsar: () => void): void {
   useEffect(() => {
+    // Escuchamos las pulsaciones del teclado.
     const alPulsarTecla = (event: KeyboardEvent) => {
-      if (event.key === "Escape") alPulsar();
+      if (event.key === "Escape") {
+        alPulsar();
+      }
     };
+    // addEventListener debe recibir 2 parámetros: el tipo de evento y la función que se ejecutará cuando ocurra ese evento. Aquí estamos escuchando el evento "keydown" y llamando a alPulsarTecla cuando se detecta.
     document.addEventListener("keydown", alPulsarTecla);
+
+    // Limpiamos el listener al desmontar o cambiar la función.
     return () => document.removeEventListener("keydown", alPulsarTecla);
-  }, []);
+  }, [alPulsar]);
 }
 
 export function MensajeRapido({ onClose }: { onClose: () => void }) {
   const [mensaje, setMensaje] = useState("");
   const [preguntando, setPreguntando] = useState(false);
 
+  // Para hacer foto en el botón descartar, necesitamos un ref a él.
+  //  Lo creamos con useRef y lo pasamos al botón con ref={botonRef}.
+  const botonRef = useRef<HTMLButtonElement>(null);
+
+  // Movemos el foco cuando el botón ya existe en el DOM.
+  useEffect(() => {
+    if (preguntando) {
+      botonRef.current?.focus();
+    }
+  }, [preguntando]);
+
+  // Gestionamos el cierre o la confirmación al pulsar Escape.
   useTeclaEscape(() => {
     if (mensaje === "") {
       onClose();
@@ -195,10 +238,11 @@ export function MensajeRapido({ onClose }: { onClose: () => void }) {
         value={mensaje}
         onChange={(e) => setMensaje(e.target.value)}
       />
+
       {preguntando && (
         <p>
           ¿Descartar el mensaje?{" "}
-          <button type="button" onClick={onClose}>
+          <button ref={botonRef} type="button" onClick={onClose}>
             Descartar
           </button>
         </p>
@@ -220,38 +264,30 @@ export function MensajeRapido({ onClose }: { onClose: () => void }) {
  * padre, y el padre se vuelve a pintar: el foco tiene que quedarse en «Copiar
  * dirección», y ahora salta a la ✕. Cambia el efecto por tus tres hooks.
  * ¿Por qué? Al pulsar «Copiar dirección», el padre te pasa un onClose nuevo.
- * ¿Cuál de tus tres hooks vuelve a correr, y por qué los otros dos no?
- *
+ * ¿El efecto de cuál de tus tres hooks vuelve a correr, y por qué los otros
+ * dos no?
+ * Porque al pulsar "Copiar dirección", el padre pasa un onClose nuevo, lo que hace que el hook useTeclaEscape vuelva a correr debido a que tiene alPulsar en su array de dependencias. Los otros dos hooks, useBloquearScroll y useFocoQueVuelve, no vuelven a correr porque no dependen de onClose ni de ningún otro valor que haya cambiado; sus arrays de dependencias están vacíos o solo contienen referencias que no han cambiado.
  */
+
 export function MapModal({ onClose, onCopiar }: { onClose: () => void; onCopiar: () => void }) {
+  // Hacemos referencia al botón de cerrar para poder enfocar en él cuando el componente se monta y devolver el foco al elemento previamente enfocado cuando se desmonta.
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const previousActiveElement = document.activeElement;
-    document.body.style.overflow = "hidden";
+  // CORRECCIÓN 1: bloqueamos el scroll con el hook existente.
+  useBloquearScroll();
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
+  // CORRECCIÓN 2: pasamos el objeto ref completo.
+  useFocoQueVuelve(closeButtonRef);
 
-    document.addEventListener("keydown", handleKeyDown);
-    closeButtonRef.current?.focus();
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
-      if (previousActiveElement instanceof HTMLElement) {
-        previousActiveElement.focus();
-      }
-    };
-  }, [onClose]);
+  // CORRECCIÓN 3: delegamos Escape al hook existente.
+  useTeclaEscape(onClose);
 
   return (
     <div role="dialog" aria-label="Mapa de ubicación">
       <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Cerrar mapa">
         &times;
       </button>
+
       <button type="button" onClick={onCopiar}>
         Copiar dirección
       </button>

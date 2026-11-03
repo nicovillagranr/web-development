@@ -225,9 +225,9 @@ export function MapModal({ onClose, onCopiar }: { onClose: () => void; onCopiar:
 ```
 
 Con un solo efecto y `[onClose]`, el onClose nuevo repetía los tres préstamos: la limpieza
-devolvía el foco a «Ver mapa» y el efecto lo volvía a poner en la ✕. Partido en tres, solo
-vuelve a correr useTeclaEscape, que es el único que depende de onClose: quita el oyente
-viejo y pone el nuevo. Los otros dos tienen `[]` y `[destinoRef]`, y la caja es la misma
+devolvía el foco a «Ver mapa» y el efecto lo volvía a poner en la ✕. Partido en tres, los
+tres hooks corren en cada render, pero solo vuelve a correr el efecto de useTeclaEscape, el
+único que depende de onClose: quita el oyente viejo y pone el nuevo. Los otros dos tienen `[]` y `[destinoRef]`, y la caja es la misma
 en todos los renders.
 
 </details>

@@ -1856,6 +1856,7 @@ export function Bloque12() {
         nombre="useBloquearScroll"
         mirar="Pulsa Ampliar foto: el overflow pasa a hidden. Ciérrala: tiene que volver a vacío. Con el starter se queda en hidden y la página deja de moverse: suéltalo con Soltar el scroll."
         campos="botones Ampliar foto y Soltar el scroll (de la demo) · la foto: Cerrar foto · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoFotoAmpliada />
       </Tarjeta>
@@ -1865,6 +1866,7 @@ export function Bloque12() {
         nombre="useFocoQueVuelve"
         mirar="Pulsa Enviar: el anillo tiene que saltar a Entendido. Pulsa Entendido: vuelve a Enviar. Con el starter, al abrir, el anillo se queda en Enviar."
         campos="botón Enviar (de la demo) · al abrir: el aviso y Entendido"
+        estado="resuelto"
       >
         <DemoConfirmacion />
       </Tarjeta>
@@ -1874,6 +1876,7 @@ export function Bloque12() {
         nombre="useTeclaEscape"
         mirar="Pulsa Escribir y luego Escape: se cierra. Ábrelo otra vez, escribe algo y pulsa Escape: tiene que preguntar «¿Descartar el mensaje?». Con el starter se cierra igual."
         campos="botón Escribir (de la demo) · al abrir: Tu mensaje · al preguntar: Descartar"
+        estado="resuelto"
       >
         <DemoMensajeRapido />
       </Tarjeta>
@@ -1883,6 +1886,7 @@ export function Bloque12() {
         nombre="MapModal"
         mirar="Pulsa Ver mapa: el overflow pasa a hidden y el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Escape cierra y el anillo vuelve a Ver mapa."
         campos="botón Ver mapa y las copias (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoMapModalEnHooks />
       </Tarjeta>
