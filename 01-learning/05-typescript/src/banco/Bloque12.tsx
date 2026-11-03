@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { ContactoConMapa, TarjetaProyecto } from "../exercises/12-custom-hooks/exercise-00";
 import { PortfolioConQuitar, ProyectoDestacado } from "../exercises/12-custom-hooks/exercise-00b";
@@ -85,6 +85,10 @@ import {
   ConfirmacionDeEnvio,
   MensajeRapido,
   MapModal,
+  MapaQueSalta,
+  MapaConEscape,
+  MapaConUnHook,
+  MenuConTema,
 } from "../exercises/12-custom-hooks/exercise-10";
 import { Seccion, Tarjeta } from "./piezas";
 
@@ -1030,6 +1034,66 @@ function DemoMapModalEnHooks() {
   );
 }
 
+/* 10 · escalera 4a–4c: el padre del 4, que además apunta las copias que llevabas al
+ * cerrar. Si el efecto se queda con el onClose del primer render, apunta 0. */
+function DemoMapaConPadre({
+  Mapa,
+}: {
+  Mapa: ComponentType<{ onClose: () => void; onCopiar: () => void }>;
+}) {
+  const [abierto, setAbierto] = useState(false);
+  const [copias, setCopias] = useState(0);
+  const [alCerrar, setAlCerrar] = useState<number | null>(null);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Ver mapa
+      </button>
+      <p>Copias: {copias}</p>
+      {alCerrar !== null && <p>Copias al cerrar: {alCerrar}</p>}
+      {abierto && (
+        <Mapa
+          onClose={() => {
+            setAlCerrar(copias);
+            setAbierto(false);
+          }}
+          onCopiar={() => setCopias(copias + 1)}
+        />
+      )}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
+/* 10 · escalera 4d: la hamburguesa abre el menú; «Cambiar tema» repinta al padre, que al
+ * cerrar apunta el tema que había. */
+function DemoMenuConTema() {
+  const [abierto, setAbierto] = useState(false);
+  const [tema, setTema] = useState<"dark" | "light">("dark");
+  const [alCerrar, setAlCerrar] = useState<string | null>(null);
+
+  return (
+    <div className={ANILLO_TRAMPA}>
+      <button type="button" onClick={() => setAbierto(true)}>
+        Abrir menú
+      </button>
+      <p>Tema: {tema}</p>
+      {alCerrar !== null && <p>Tema al cerrar: {alCerrar}</p>}
+      {abierto && (
+        <MenuConTema
+          onClose={() => {
+            setAlCerrar(tema);
+            setAbierto(false);
+          }}
+          onCambiarTema={() => setTema(tema === "dark" ? "light" : "dark")}
+        />
+      )}
+      <OverflowEnVivo />
+    </div>
+  );
+}
+
 function PruebaZoom() {
   const [zoom, setZoom] = useState(1);
 
@@ -1889,6 +1953,42 @@ export function Bloque12() {
         estado="resuelto"
       >
         <DemoMapModalEnHooks />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4a"
+        nombre="MapaQueSalta"
+        mirar="Pulsa Ver mapa: el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Ciérralo con la ×: el anillo vuelve a Ver mapa."
+        campos="botón Ver mapa y las copias (de la demo) · al abrir: la × y Copiar dirección"
+      >
+        <DemoMapaConPadre Mapa={MapaQueSalta} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4b"
+        nombre="MapaConEscape"
+        mirar="Abre, copia una vez y pulsa Escape: tiene que salir «Copias al cerrar: 1» y el anillo en Ver mapa. Con el starter, al copiar, el anillo salta a la ×; con [] deja de saltar, pero sale «Copias al cerrar: 0»."
+        campos="botón Ver mapa, las copias y las copias al cerrar (de la demo) · al abrir: la × y Copiar dirección"
+      >
+        <DemoMapaConPadre Mapa={MapaConEscape} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4c"
+        nombre="useModal"
+        mirar="Igual que el 4: Ver mapa bloquea el scroll y lleva el anillo a la ×; Copiar dirección no lo mueve; Escape cierra con «Copias al cerrar» al día y el overflow vuelve a vacío. Con el starter, al copiar, el anillo salta a la ×."
+        campos="botón Ver mapa, las copias y las copias al cerrar (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
+      >
+        <DemoMapaConPadre Mapa={MapaConUnHook} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4d"
+        nombre="MenuConTema"
+        mirar="Pulsa Abrir menú: el overflow pasa a hidden y el anillo va a Servicios. Pulsa Cambiar tema: el tema cambia y el anillo tiene que quedarse ahí. Con el starter salta a Servicios. Escape cierra, apunta el tema y el anillo vuelve a Abrir menú."
+        campos="botón Abrir menú, el tema y el tema al cerrar (de la demo) · al abrir: Servicios, Portfolio y Cambiar tema · el overflow del body, en vivo"
+      >
+        <DemoMenuConTema />
       </Tarjeta>
     </>
   );

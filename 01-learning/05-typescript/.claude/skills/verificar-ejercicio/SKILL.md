@@ -68,9 +68,20 @@ inventarse un mensaje.
   `e.target.value * 2` pasa el test porque JavaScript coacciona `"21" * 2` a `42`, y
   solo `typecheck` lo caza (`TS2362`).
 - El contador de enunciados **no cuenta los apartes** (📌 recordatorio, → resultado,
-  👀 observación, 💡 nota) ni el código comentado. Los detecta por byte, no por
-  emoji: este `awk` no matchea emojis dentro de una alternancia `(a|b)` y fallaba en
-  silencio.
+  👀 observación, 💡 nota, ⚠️) ni el código de ejemplo. Corre con `LC_ALL=C` y busca
+  los emojis con `index()` como cadenas fijas: un `awk` con locale no los matchea
+  dentro de una alternancia `(a|b)` y fallaba en silencio.
+- **Los dos formatos de drill:** `/* N) …` (el compacto, v4) y `// N) …` (el viejo, solo
+  en `00-vocabulario`). Hasta el 3 nov 2026 el script solo buscaba `// N)`: desde la
+  migración al compacto (26 oct) la señal por drill y los enunciados salían **vacíos
+  sin avisar**. Ahora no encontrar ningún drill es un aviso que cuenta como problema.
+- En el compacto, el enunciado acaba en la línea libre (` *` a secas), en el cierre, o
+  cuando la pregunta del `¿Por qué?` se cierra con «?». Lo que haya debajo es la
+  respuesta del alumno, que a veces la escribe **en** la línea libre, sin dejarla en
+  blanco.
+- **Los tests rojos salen del resumen de vitest** («4 failed»), no de contar `×`: el
+  botón ✕ de un modal se imprime como un `×` suelto cuando el test falla y sumaba
+  rojos que no existían.
 
 ## Si retocas un archivo ya resuelto
 

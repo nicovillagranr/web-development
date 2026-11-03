@@ -21,15 +21,16 @@ import type { RefObject } from "react";
  * TEORÍA 1 · el hook que no devuelve nada → drill 1
  * TEORÍA 2 · lo que el hook recibe → drills 2–3
  * ARMARLO TÚ → drill 4
+ * ESCALERA · el drill 4, pieza a pieza → peldaños 4a–4d, debajo del 4
  *
- * ▸ 4 drills en orden. Prohibidos any, as, el ! de «confía en mí» (x!) y los
- * eslint-disable.
+ * ▸ 4 drills + 4 peldaños en orden. Prohibidos any, as, el ! de «confía en mí»
+ * (x!) y los eslint-disable.
  * pnpm test:run src/exercises/12-custom-hooks/exercise-10.test.tsx
  * pnpm typecheck · pnpm lint
  *
  * Los starters están rotos a propósito: ejecuta los tres comandos. Contesta cada
  * ¿Por qué? en la línea libre de debajo. Pistas: exercise-10.pistas.md.
- * Drills 1–4: banco, pestaña 12.
+ * Drills 1–4 y la escalera: banco, pestaña 12.
  * ============================================================================= */
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -292,5 +293,224 @@ export function MapModal({ onClose, onCopiar }: { onClose: () => void; onCopiar:
         Copiar dirección
       </button>
     </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA — el drill 4, pieza a pieza (refuerzo)
+ *
+ * Tu MapModal junta tres préstamos y un padre que se vuelve a pintar. Cada
+ * peldaño añade una pieza: de un préstamo a los tres, y de un efecto a un hook.
+ *
+ * DEFINICIÓN
+ * Un efecto tiene un solo array. Cuando algo de ese array cambia, React corre su
+ * limpieza entera y después su cuerpo entero, también las líneas que no usan lo
+ * que cambió. Meter el efecto en un hook no cambia eso: el array viaja dentro.
+ *
+ * 🧠 ANALOGÍA — la zapatilla eléctrica: la tele, la lámpara y el router en el
+ * mismo enchufe. Para reiniciar el router la desenchufas, y la lámpara se apaga
+ * y se enciende aunque no le pasara nada. Con un enchufe por aparato, reinicias
+ * solo el router.
+ *
+ * 🗣️ LAS PIEZAS
+ * el array    → lo que React compara después de cada render.
+ * la limpieza → entera: todo lo que devuelve el efecto.
+ * el cuerpo   → entero: todas sus líneas, otra vez.
+ * un hook     → corre en cada render; su efecto, solo si cambia su array. Puede
+ *               llamar a otros hooks, igual que los tuyos llaman a useEffect.
+ *
+ * 4a un préstamo · 4b dos préstamos en un efecto · 4c los tres en un hook ·
+ * 4d el 4 otra vez, en tu menú del móvil. Al terminar, relee tu ¿Por qué? del 4.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 4a) MapaQueSalta — solo el préstamo del foco de tu MapModal: al nacer, a la ✕;
+ * al morir, de vuelta a quien lo tenía. El padre es el mismo del 4. Al pulsar
+ * «Copiar dirección», el foco tiene que quedarse ahí, y ahora salta a la ✕.
+ * ¿Por qué? Con [onClose], cada vez que el padre manda uno nuevo, ¿qué hace la
+ * limpieza de tu efecto, y qué hace después su cuerpo?
+ *
+ */
+export function MapaQueSalta({ onClose, onCopiar }: { onClose: () => void; onCopiar: () => void }) {
+  // Hacemos referencia a un botón HTML que hará la función de cerrar el mapa.
+  // Inicialmente el valor de cerrarRef es null, pero después de que el componente se renderiza, apuntará al botón de cerrar.
+  const cerrarRef = useRef<HTMLButtonElement>(null);
+
+  // Una vez que el componente se monta, este efecto se ejecuta.
+  useEffect(() => {
+    // Guardamos el elemento que estaba enfocado antes de que el componente se montase.
+    const anterior = document.activeElement;
+    // Enfocamos el botón de cerrar el mapa.
+    cerrarRef.current?.focus();
+    // La función de limpieza se ejecuta cuando el componente se desmonta o cuando onClose cambia.
+    return () => {
+      // Si el elemento previamente enfocado es un HTMLElement, devolvemos el foco a él.
+      if (anterior instanceof HTMLElement) {
+        anterior.focus();
+      }
+    };
+    // Array de dependencias que incluye onClose, lo que significa que si onClose cambia, el efecto se ejecutará de nuevo.
+  }, [onClose]);
+
+  return (
+    <div role="dialog" aria-label="Mapa de ubicación">
+      <button ref={cerrarRef} type="button" onClick={onClose} aria-label="Cerrar mapa">
+        &times;
+      </button>
+      <button type="button" onClick={onCopiar}>
+        Copiar dirección
+      </button>
+    </div>
+  );
+}
+
+/* 4b) MapaConEscape — el foco y el Escape, juntos en un efecto. Esta vez el
+ * Escape sí usa onClose: el padre apunta cuántas copias llevabas al cerrar
+ * («Copias al cerrar: 1» si copiaste una vez). Al copiar, el foco salta a la ✕.
+ * Tiene que quedarse en «Copiar dirección», y Escape tiene que apuntar las copias
+ * de ese momento.
+ * ¿Por qué? ¿Por qué a este efecto no le servía ni [onClose] ni []?
+ *
+ */
+export function MapaConEscape({
+  onClose,
+  onCopiar,
+}: {
+  onClose: () => void;
+  onCopiar: () => void;
+}) {
+  const cerrarRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const anterior = document.activeElement;
+    cerrarRef.current?.focus();
+
+    const alPulsarTecla = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", alPulsarTecla);
+
+    return () => {
+      document.removeEventListener("keydown", alPulsarTecla);
+      if (anterior instanceof HTMLElement) anterior.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <div role="dialog" aria-label="Mapa de ubicación">
+      <button ref={cerrarRef} type="button" onClick={onClose} aria-label="Cerrar mapa">
+        &times;
+      </button>
+      <button type="button" onClick={onCopiar}>
+        Copiar dirección
+      </button>
+    </div>
+  );
+}
+
+/* 4c) useModal — los tres préstamos de tu MapModal en un solo hook: el
+ * componente llama a useModal y a nada más. Pero dentro siguen en un efecto, y al
+ * copiar el foco salta a la ✕. Arregla useModal sin tocar MapaConUnHook: tiene
+ * que seguir llamando a un solo hook.
+ * ¿Por qué? Tu useModal del starter ya era un hook, y el foco saltaba igual.
+ * ¿Qué tenía que cambiar dentro de él, y por qué?
+ *
+ */
+export function useModal(cerrarRef: RefObject<HTMLElement | null>, onClose: () => void): void {
+  useEffect(() => {
+    const anteriorOverflow = document.body.style.overflow;
+    const anteriorFoco = document.activeElement;
+    document.body.style.overflow = "hidden";
+    cerrarRef.current?.focus();
+
+    const alPulsarTecla = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", alPulsarTecla);
+
+    return () => {
+      document.removeEventListener("keydown", alPulsarTecla);
+      document.body.style.overflow = anteriorOverflow;
+      if (anteriorFoco instanceof HTMLElement) anteriorFoco.focus();
+    };
+  }, [cerrarRef, onClose]);
+}
+
+export function MapaConUnHook({
+  onClose,
+  onCopiar,
+}: {
+  onClose: () => void;
+  onCopiar: () => void;
+}) {
+  const cerrarRef = useRef<HTMLButtonElement>(null);
+  useModal(cerrarRef, onClose);
+
+  return (
+    <div role="dialog" aria-label="Mapa de ubicación">
+      <button ref={cerrarRef} type="button" onClick={onClose} aria-label="Cerrar mapa">
+        &times;
+      </button>
+      <button type="button" onClick={onCopiar}>
+        Copiar dirección
+      </button>
+    </div>
+  );
+}
+
+/* 4d) MenuConTema — el 4 otra vez, en tu menú del móvil. Al nacer: scroll
+ * bloqueado y el foco en «Servicios»; Escape cierra; al morir, el overflow y el
+ * foco vuelven. «Cambiar tema» avisa al padre, que se vuelve a pintar y al cerrar
+ * apunta el tema que había. El foco tiene que quedarse en «Cambiar tema», y ahora
+ * salta a «Servicios». Cambia el efecto por hooks.
+ * ¿Por qué? Con tus hooks, MenuConTema ya no tiene ningún useEffect. ¿Dónde quedó
+ * cada array, y cuál se repite al cambiar el tema?
+ * 💡 En el 08 partiste este mismo menú en tres efectos.
+ *
+ */
+export function MenuConTema({
+  onClose,
+  onCambiarTema,
+}: {
+  onClose: () => void;
+  onCambiarTema: () => void;
+}) {
+  const primerEnlaceRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const anteriorOverflow = document.body.style.overflow;
+    const anteriorFoco = document.activeElement;
+    document.body.style.overflow = "hidden";
+    primerEnlaceRef.current?.focus();
+
+    const alPulsarTecla = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", alPulsarTecla);
+
+    return () => {
+      document.removeEventListener("keydown", alPulsarTecla);
+      document.body.style.overflow = anteriorOverflow;
+      if (anteriorFoco instanceof HTMLElement) anteriorFoco.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <ul aria-label="Menú del móvil">
+      <li>
+        <a ref={primerEnlaceRef} href="#servicios" onClick={onClose}>
+          Servicios
+        </a>
+      </li>
+      <li>
+        <a href="#portfolio" onClick={onClose}>
+          Portfolio
+        </a>
+      </li>
+      <li>
+        <button type="button" onClick={onCambiarTema}>
+          Cambiar tema
+        </button>
+      </li>
+    </ul>
   );
 }

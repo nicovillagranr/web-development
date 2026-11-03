@@ -4,7 +4,8 @@ Cuatro niveles por drill. Ábrelas **de una en una** y vuelve al archivo entre u
 siguiente.
 
 Los cuatro salen rojos en el test. Además, al 1 lo marca el compilador, al 2 el lint y
-al 3 un aviso del lint: su Pista 3 cita ese mensaje. El 4 solo lo marca el test.
+al 3 un aviso del lint: su Pista 3 cita ese mensaje. El 4 solo lo marca el test, y los
+cuatro peldaños de su escalera (4a–4d) también.
 
 ---
 
@@ -227,7 +228,243 @@ export function MapModal({ onClose, onCopiar }: { onClose: () => void; onCopiar:
 Con un solo efecto y `[onClose]`, el onClose nuevo repetía los tres préstamos: la limpieza
 devolvía el foco a «Ver mapa» y el efecto lo volvía a poner en la ✕. Partido en tres, los
 tres hooks corren en cada render, pero solo vuelve a correr el efecto de useTeclaEscape, el
-único que depende de onClose: quita el oyente viejo y pone el nuevo. Los otros dos tienen `[]` y `[destinoRef]`, y la caja es la misma
-en todos los renders.
+único que depende de onClose: quita el oyente viejo y pone el nuevo. Los otros dos tienen
+`[]` y `[destinoRef]`, y la caja es la misma en todos los renders.
+
+</details>
+
+---
+
+## Peldaño 4a — `MapaQueSalta`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El efecto solo hace el préstamo del foco. Al pulsar «Copiar dirección», ¿qué cambia de su
+array? ¿Y lo usa el efecto para algo?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El array dice cuándo repetir el préstamo. Este solo tiene que correr al nacer y deshacerse al
+morir: no depende de nada que cambie entre renders.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Después de pulsar «Copiar dirección»:
+
+```
+Error: expect(element).toHaveFocus()
+
+Expected element with focus:
+  <button
+  type="button"
+>
+  Copiar dirección
+</button>
+Received element with focus:
+  <button
+  aria-label="Cerrar mapa"
+  type="button"
+>
+  ×
+</button>
+```
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+useEffect(() => {
+  const anterior = document.activeElement;
+  cerrarRef.current?.focus();
+  return () => {
+    if (anterior instanceof HTMLElement) anterior.focus();
+  };
+}, []);
+```
+
+Con `[onClose]`, cada onClose nuevo hacía correr la limpieza (el foco vuelve a «Ver mapa») y
+después el cuerpo (el foco, otra vez a la ✕). Con `[]`, el cuerpo solo corre al nacer y la
+limpieza al morir.
+
+</details>
+
+---
+
+## Peldaño 4b — `MapaConEscape`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Prueba los dos arrays, `[onClose]` y `[]`, y mira qué se rompe con cada uno. ¿Hay alguno que
+les sirva a los dos préstamos a la vez?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Un efecto tiene un solo array. Si dos préstamos necesitan arrays distintos, cada uno va en su
+propio useEffect, con el suyo.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Con el starter, después de pulsar «Copiar dirección», el mismo error que en el 4a: el foco
+está en la ✕. Con `[]`, el foco ya no salta, pero al pulsar Escape:
+
+```
+TestingLibraryElementError: Unable to find an element with the text: Copias al cerrar: 1.
+```
+
+Y el lint:
+
+```
+warning  React Hook useEffect has a missing dependency: 'onClose'. Either include it or remove the dependency array.
+```
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+useEffect(() => {
+  const anterior = document.activeElement;
+  cerrarRef.current?.focus();
+  return () => {
+    if (anterior instanceof HTMLElement) anterior.focus();
+  };
+}, []);
+
+useEffect(() => {
+  const alPulsarTecla = (event: KeyboardEvent) => {
+    if (event.key === "Escape") onClose();
+  };
+  document.addEventListener("keydown", alPulsarTecla);
+  return () => document.removeEventListener("keydown", alPulsarTecla);
+}, [onClose]);
+```
+
+Con `[onClose]`, el foco salta con cada onClose nuevo. Con `[]`, el oyente se queda con el
+onClose del primer render, que apunta las copias de entonces: 0. Ningún array les sirve a los
+dos, así que cada préstamo va en su efecto, con su array.
+
+</details>
+
+---
+
+## Peldaño 4c — `useModal`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El salto no viene del componente: viene del efecto que hay dentro del hook. ¿Qué tiene tu
+MapModal del 4 que este useModal no tiene?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Un hook puede llamar a otros hooks. Dentro de useModal, cada préstamo tiene que ir con su
+propio array: tres useEffect, o tus tres hooks del 1 al 3.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Después de pulsar «Copiar dirección», el mismo error que en el 4a:
+
+```
+Received element with focus:
+  <button
+  aria-label="Cerrar mapa"
+  type="button"
+>
+  ×
+</button>
+```
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+export function useModal(cerrarRef: RefObject<HTMLElement | null>, onClose: () => void): void {
+  useBloquearScroll();
+  useFocoQueVuelve(cerrarRef);
+  useTeclaEscape(onClose);
+}
+```
+
+Tres useEffect dentro de useModal, cada uno con su array, también valen. El starter ya era
+un hook, pero con un solo efecto y `[cerrarRef, onClose]`: el onClose nuevo repetía los tres
+préstamos. Lo que arregla el salto es que cada préstamo tenga su propio array; el hook solo
+lo empaqueta para que el componente llame a una sola cosa.
+
+</details>
+
+---
+
+## Peldaño 4d — `MenuConTema`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Es el mismo arreglo del 4, en otro componente. ¿Qué necesita cada uno de tus hooks de este
+menú?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Borra el efecto y llama a tus tres hooks arriba del componente: el del scroll sin nada, el del
+foco con la caja del primer enlace y el del Escape con onClose.
+
+</details>
+
+<details><summary>Pista 3 — el dato duro</summary>
+
+Después de pulsar «Cambiar tema»:
+
+```
+Error: expect(element).toHaveFocus()
+
+Expected element with focus:
+  <button
+  type="button"
+>
+  Cambiar tema
+</button>
+Received element with focus:
+  <a
+  href="#servicios"
+>
+  Servicios
+</a>
+```
+
+Si pruebas con `[]`, el foco ya no salta, pero al pulsar Escape:
+
+```
+TestingLibraryElementError: Unable to find an element with the text: Tema al cerrar: light.
+```
+
+</details>
+
+<details><summary>Solución</summary>
+
+```tsx
+const primerEnlaceRef = useRef<HTMLAnchorElement>(null);
+
+useBloquearScroll();
+useFocoQueVuelve(primerEnlaceRef);
+useTeclaEscape(onClose);
+```
+
+Los tres arrays siguen existiendo, pero ahora viven dentro de cada hook: `[]` en el scroll,
+el ref en el foco y onClose en el Escape. Al cambiar el tema llega un onClose nuevo, y solo se
+repite el efecto de useTeclaEscape. Es lo mismo que hiciste en el 08 con tres efectos, pero
+empaquetado y reutilizable.
 
 </details>

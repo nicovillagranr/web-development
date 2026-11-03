@@ -2,6 +2,7 @@ import "./assets/styles/App.css";
 import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { Bloque11 } from "./banco/Bloque11";
 import { Bloque12 } from "./banco/Bloque12";
+import { Bloque13 } from "./banco/Bloque13";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes de los bloques del cuaderno.
  *   `pnpm dev`, abre la URL que te diga y elige el bloque en las pestañas de arriba.
@@ -18,16 +19,17 @@ import { Bloque12 } from "./banco/Bloque12";
  * Para añadir un bloque: crear `src/banco/BloqueNN.tsx`, importarlo aquí, y sumar una
  * línea a `BLOQUES` y otra a `ORDEN`. */
 
-type IdBloque = "11" | "12";
+type IdBloque = "11" | "12" | "13";
 
 const BLOQUES: Record<IdBloque, { titulo: string; Banco: () => ReactNode }> = {
   "11": { titulo: "useState y useReducer", Banco: Bloque11 },
   "12": { titulo: "Custom hooks", Banco: Bloque12 },
+  "13": { titulo: "Fetch tipado", Banco: Bloque13 },
 };
 
 // En qué orden salen las pestañas. Va en un array aparte porque `Object.keys(BLOQUES)`
 // devuelve `string[]`, no `IdBloque[]`, y para usarlo haría falta un `as`.
-const ORDEN: IdBloque[] = ["11", "12"];
+const ORDEN: IdBloque[] = ["11", "12", "13"];
 
 function App() {
   const [activo, setActivo] = useState<IdBloque>("12");

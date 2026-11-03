@@ -33,9 +33,13 @@ echo
 # ── 1. TESTS ────────────────────────────────────────────────────────────────
 echo "▸ TESTS"
 TESTOUT=$(pnpm test:run "$TEST" 2>&1)
-echo "$TESTOUT" | grep -E "^\s+(✓|×)" | sed 's/^/  /'
+# `(✓|×) ` con algo detrás: un «×» suelto es el texto de un botón ✕ que el test
+# imprime al fallar (el de tu MapModal), no un test. Por la misma razón los rojos
+# salen del resumen de vitest («4 failed»), no de contar líneas con ×.
+echo "$TESTOUT" | grep -E "^\s+(✓|×) \S" | sed 's/^/  /'
 echo "$TESTOUT" | grep -E "^\s+Tests " | sed 's/^/  /'
-ROJOS=$(echo "$TESTOUT" | grep -cE "^\s+×")
+ROJOS=$(echo "$TESTOUT" | grep -E "^\s+Tests " | grep -oE "[0-9]+ failed" | grep -oE "[0-9]+")
+ROJOS=${ROJOS:-0}
 echo
 
 # ── 2. TYPECHECK ────────────────────────────────────────────────────────────
@@ -67,9 +71,14 @@ echo
 
 # ── 4. SEÑAL POR DRILL ──────────────────────────────────────────────────────
 echo "▸ SEÑAL POR DRILL   (cada drill tiene que fallar en ALGÚN sitio)"
-DRILLS=$(grep -nE "^// *[0-9T]+\)" "$SRC" | cut -d: -f1)
+# Dos formatos: `/* N) …` (compacto, v4: casi todo el cuaderno) y `// N) …` (el viejo,
+# que solo queda en 00-vocabulario). N admite T1) y las letras de los peldaños (4a).
+# Hasta el 3 nov 2026 solo se buscaba `// N)`: tras la migración al compacto esta
+# sección y la 6 salían vacías sin avisar. Por eso no encontrar drills es un AVISO.
+PATRON_DRILL='^(//|/\*) *[0-9T]+[a-z]?\)'
+DRILLS=$(grep -nE "$PATRON_DRILL" "$SRC" | cut -d: -f1)
 if [ -z "$DRILLS" ]; then
-  echo "  (no detecto drills con el patrón '// N)')"
+  aviso "no detecto ningún drill ('/* N)' ni '// N)'): esta sección y la de enunciados no comprueban nada"
 else
   LINEAS_ERR=$(echo "$MIOS" | sed -n 's/.*(\([0-9]*\),[0-9]*).*/\1/p')
   TOTAL=$(echo "$DRILLS" | grep -c .)
@@ -78,15 +87,15 @@ else
     i=$((i + 1))
     FIN=$(echo "$DRILLS" | awk -v n=$((i + 1)) 'NR==n' )
     [ -z "$FIN" ] && FIN=$(wc -l < "$SRC")
-    NOMBRE=$(sed -n "${INICIO}p" "$SRC" | sed 's|^// *||; s| —.*||')
+    NOMBRE=$(sed -n "${INICIO}p" "$SRC" | sed -E 's#^(//|/\*) *##; s# —.*##; s#\*/ *$##' | cut -c1-34)
     TIENE=""
     for L in $LINEAS_ERR; do
       if [ "$L" -ge "$INICIO" ] && [ "$L" -lt "$FIN" ]; then TIENE="tipos"; fi
     done
     if [ -n "$TIENE" ]; then
-      printf "  %-6s error de tipos\n" "$NOMBRE"
+      printf "  %-34s error de tipos\n" "$NOMBRE"
     else
-      printf "  %-6s sin error de tipos  → tiene que estar en ROJO en el test\n" "$NOMBRE"
+      printf "  %-34s sin error de tipos  → tiene que estar en ROJO en el test\n" "$NOMBRE"
     fi
   done
   echo
@@ -123,15 +132,73 @@ echo
 
 # ── 6. LARGO DE LOS ENUNCIADOS ──────────────────────────────────────────────
 echo "▸ ENUNCIADOS   (techo 7 líneas de prosa)"
-echo "   no cuentan los apartes: 📌 recordatorio · → resultado · 👀 observación · 💡 nota"
-awk '
-  BEGIN { n = -1 }
+echo "   no cuentan los apartes: 📌 recordatorio · → resultado · 👀 observación · 💡 nota · ⚠️"
+# LC_ALL=C: el awk compara BYTES, así los emojis de los apartes se buscan con index()
+# como cadenas fijas, sin depender de cómo maneje el locale los multibyte.
+LC_ALL=C awk '
+  BEGIN { n = -1; compacto = 0 }
   function vuelca(  etq) {
     etq = (n > 7) ? "  ← pasa del techo" : ""
     printf "  %-42s %d lineas%s\n", num, n, etq
-    n = -1
+    n = -1; compacto = 0
   }
-  /^\/\/ *[0-9T]+\)/         { if (n >= 0) vuelca(); n=0; sub(/^\/\/ */,""); sub(/ —.*/,""); num=$0; next }
+  function aparte(t) {
+    return index(t, "📌") == 1 || index(t, "→") == 1 || index(t, "👀") == 1 ||
+           index(t, "💡") == 1 || index(t, "⚠") == 1
+  }
+  # Ejemplos de uso dentro del enunciado: JSX (<Caja … />) o una llamada con su
+  # resultado (f(x) → y). Son código, no prosa.
+  function codigo(t) {
+    if (t ~ /^(export|const|function|type|fn\(|\}|\/\/|<[A-Za-z])/) return 1
+    return (t ~ /^[A-Za-z_][A-Za-z0-9_.]*\(/ && index(t, ") →") > 0)
+  }
+  # Un aparte puede seguir en la línea de abajo SIN sangría: sigue mientras su frase
+  # no acabe en . ? o ! (con un ) » o " detrás, si los hay).
+  function acaba_frase(t) { return t ~ /[.?!][)»"]* *$/ }
+
+  # ── formato compacto:  /* 1) Nombre — prosa…   ·   * …   ·   *  (línea libre)   ·   */
+  # La primera línea ya es prosa y cuenta. El enunciado acaba en la línea libre de la
+  # respuesta (" *" a secas), en el cierre, o en cuanto la pregunta del ¿Por qué? se
+  # cierra con «?»: el alumno a veces escribe la respuesta EN la línea libre, sin
+  # dejarla en blanco, y lo que hay debajo de la pregunta es suyo y no cuenta.
+  /^\/\* *[0-9T]+[a-z]?\)/ {
+    if (n >= 0) vuelca()
+    n = 1; compacto = 1; pq = 0; respuesta = 0; sigue = 0
+    num = $0; sub(/^\/\* */, "", num); sub(/ —.*/, "", num); sub(/ *\*\/ *$/, "", num)
+    num = substr(num, 1, 42)
+    if ($0 ~ /\*\/ *$/) vuelca()           # el drill de una sola línea
+    next
+  }
+  compacto && /^ \*[ \t]*$/  { vuelca(); next }   # la línea libre: se acabó el enunciado
+  compacto && /^ \*\//       { vuelca(); next }   # el cierre
+  compacto && /^ \* / {
+    t = substr($0, 4)
+    cierra = ($0 ~ /\*\/ *$/)
+    if (respuesta)                        { }      # debajo de la pregunta: la respuesta
+    else if (aparte(t))                   { sigue = !acaba_frase(t) }
+    else if (t ~ /^  /)                   { if (sigue) sigue = !acaba_frase(t) }
+                                                   # sangrado: código de ejemplo de un
+                                                   # «Predice», o continuación de un aparte
+    else if (sigue && index(t, "¿Por qué?") != 1) { sigue = !acaba_frase(t) }
+                                                   # el aparte sigue, sin sangría
+    else if (codigo(t))                   { sigue = 0 }
+    else if (pq == 2 && index(t, "¿") != 1) { respuesta = 1 }  # tras un «¿Por qué?» a
+                                                   # secas, lo que no es pregunta es la respuesta
+    else {
+      n++
+      if (t ~ /^¿Por qué\? *$/) pq = 2             # la pregunta sigue (o no) en la de abajo
+      else {
+        if (index(t, "¿Por qué?") == 1 || pq == 2) pq = 1
+        if (pq == 1 && t ~ /\? *$/) respuesta = 1  # la pregunta se cierra con «?»
+      }
+    }
+    if (cierra) vuelca()
+    next
+  }
+  compacto                   { vuelca(); next }   # cualquier otra cosa: fuera del bloque
+
+  # ── formato viejo:  // 1) Nombre — …  (solo queda en 00-vocabulario)
+  /^\/\/ *[0-9T]+[a-z]?\)/   { if (n >= 0) vuelca(); n=0; sub(/^\/\/ */,""); sub(/ —.*/,""); num=$0; next }
   n >= 0 && /^[^\/]/         { vuelca(); next }
   # Un "aparte" es toda línea cuyo primer carácter tras el `//` no es ASCII imprimible,
   # o sea los marcadores 📌 → 👀 💡 ⚠️. Se detectan POR BYTES: este awk no matchea

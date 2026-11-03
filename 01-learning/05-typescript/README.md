@@ -2437,3 +2437,45 @@ sacado a tres custom hooks) se monta cuando cierres el 08.
 
 - Sin commitear desde `63cd5`: el 10 entero, las 4 tarjetas del banco y las entradas de
   esta bitácora del 2 y el 3 de noviembre.
+
+## Sesión 3 nov 2026 (2.ª parte) — escalera del 4 del `12/10` y `13/01` MONTADOS
+
+### Qué monté
+
+- **Escalera del drill 4 del `12/10`** (peldaños 4a–4d, 0/4), porque dijiste «siento que
+  toqué techo. Me cuesta entenderlo todo junto». Una sola idea: un efecto tiene un solo
+  array; si algo de él cambia, su limpieza y su cuerpo corren enteros, y meterlo en un hook
+  no cambia eso. 4a un préstamo (el foco) · 4b dos en un efecto (foco y Escape) · 4c los
+  tres en un hook (`useModal`) · 4d el 4 otra vez, en tu menú del móvil. Tarjetas 4a–4d en
+  el banco, pestaña 12.
+- **`13-fetch-tipado/exercise-01`** (0/5): pedir datos en un efecto, sacado de tu
+  `usePortfolioData`. Teoría 1: la función async va dentro del efecto (drill 1). Teoría 2:
+  cargando, listo o error (2: `loading` que no se apaga · 3: el `catch` con `unknown` ·
+  4: el 404 que fetch no rechaza). Armarlo tú: `useProjects` (5). Pestaña 13 nueva en el
+  banco, con una API de mentira que responde con retraso y aísla los starters que revientan.
+
+### Verificación
+
+- **12/10:** typecheck y lint a 0; los 4 peldaños en rojo y los drills 1–4 siguen verdes;
+  soluciones y alternativas equivocadas probadas en una copia; Pistas 3 contra la salida real.
+- **13/01:** los 5 en rojo; la solución da 5/5 sin errores, en una copia. Typecheck marca el
+  1 y el 3; lint, solo el 1. En el paso de criterio corregí tres Pistas 3 (faltaba el error
+  de lint del 1; en el 3 y el 4 el test falla con `Unable to find role="alert"` y el motivo
+  sale en «Unhandled Errors»), y en el enunciado del 5 aclaré que `error` es el mensaje del
+  error, como en el 3 y el 4: el test espera `Failed to fetch`, no el texto fijo del 2.
+- **Deuda declarada:** el 13/01 tiene 288 líneas contra el techo de ~230, porque los drills
+  1–4 repiten el mismo render de tres caminos, que es donde se ve cada fallo. La escalera
+  deja el 12/10 en 506, aceptado por ser escalera.
+- **Script de verificación arreglado.** Buscaba los drills con `// N)`, y desde la migración
+  al compacto son `/* N)`: la señal por drill y los enunciados salían vacíos sin avisar (desde
+  el 26 oct). Ahora lee los dos formatos y los peldaños (`4a)`), no cuenta tu respuesta cuando
+  la escribes en la línea libre, ni el código de ejemplo ni los apartes que siguen sin
+  sangría. Y cuenta los tests rojos desde el resumen de vitest: la ✕ de tu MapModal salía como
+  un `×` suelto y sumaba rojos que no había. Pasado por los 1012 drills del cuaderno, solo dos
+  enunciados pasan de verdad del techo de 7: el 10/04 5) y el 12/07 3), los dos ya cerrados.
+
+### Pendiente
+
+- La escalera 4a–4d del 12/10 y el 13/01, sin resolver.
+- Commiteado y subido: la escalera, el 13/01, la pestaña 13 del banco, el script y esta
+  entrada. También tus primeros comentarios en el 4a, tal como estaban.
