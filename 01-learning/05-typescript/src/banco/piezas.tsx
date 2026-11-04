@@ -41,7 +41,7 @@ export function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children
           </span>
         </div>
 
-        <p className="max-w-xl text-[15px] leading-[1.5] text-[#86868b]">{mirar}</p>
+        <p className="max-w-xl text-[15px] leading-normal text-[#86868b]">{mirar}</p>
 
         <p className="mt-3 font-mono text-[12px] text-[#6e6e73]">{campos}</p>
       </div>
@@ -59,31 +59,31 @@ export function Tarjeta({ n, nombre, mirar, campos, estado = "starter", children
        *   [&_input]  → GuardarNombre y los campos de FormContacto, FormReserva y FormRegistro
        *   [&_form]   → FormContacto y FormRegistro: apilan campos, errores, botones y estado */}
       <div
-        className="flex scheme-dark flex-col items-start gap-4 border-t border-white/[0.06]
+        className="flex scheme-dark flex-col items-start gap-4 border-t border-white/6
           bg-black/40 px-7 py-7
           [&_p:not([class],[role=alert])]:text-[17px] [&_p:not([class],[role=alert])]:font-medium
           [&_p:not([class],[role=alert])]:tracking-[-0.01em] [&_p:not([class],[role=alert])]:text-[#f5f5f7]
-          [&_[role=alert]]:text-[14px] [&_[role=alert]]:text-[#ff453a]
-          [&_[aria-invalid=true]]:border-[#ff453a]
+          **:[[role=alert]]:text-[14px] **:[[role=alert]]:text-[#ff453a]
+          **:aria-invalid:border-[#ff453a]
           [&_input]:w-72 [&_input]:rounded-xl [&_input]:border [&_input]:border-white/10
-          [&_input]:bg-white/[0.04] [&_input]:px-4 [&_input]:py-2.5 [&_input]:text-[15px]
+          [&_input]:bg-white/4 [&_input]:px-4 [&_input]:py-2.5 [&_input]:text-[15px]
           [&_input]:text-[#f5f5f7] [&_input]:outline-none
           [&_input::placeholder]:text-[#6e6e73]
           [&_input:focus]:border-[#0071e3]
           [&_textarea]:w-72 [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-white/10
-          [&_textarea]:bg-white/[0.04] [&_textarea]:px-4 [&_textarea]:py-2.5 [&_textarea]:text-[15px]
+          [&_textarea]:bg-white/4 [&_textarea]:px-4 [&_textarea]:py-2.5 [&_textarea]:text-[15px]
           [&_textarea]:text-[#f5f5f7] [&_textarea]:outline-none [&_textarea:focus]:border-[#0071e3]
           [&_label]:mb-1.5 [&_label]:block [&_label]:text-[13px] [&_label]:text-[#86868b]
-          [&_:disabled]:opacity-50
+          **:disabled:opacity-50
           [&_form]:flex [&_form]:flex-col [&_form]:items-start [&_form]:gap-3
           [&_button]:mr-2 [&_button]:cursor-pointer [&_button]:rounded-full
           [&_button]:bg-[#0071e3] [&_button]:px-5 [&_button]:py-2 [&_button]:text-[15px]
           [&_button]:font-normal [&_button]:text-white [&_button]:transition-colors
           [&_button:hover]:bg-[#0077ed]
           [&_ul]:w-72 [&_ul]:list-none [&_ul]:space-y-px [&_ul]:rounded-xl
-          [&_ul]:bg-white/[0.04] [&_ul]:p-1.5
+          [&_ul]:bg-white/4 [&_ul]:p-1.5
           [&_li]:rounded-lg [&_li]:px-3 [&_li]:py-2 [&_li]:text-[14px] [&_li]:text-[#f5f5f7]
-          [&_li]:odd:bg-white/[0.03]"
+          [&_li]:odd:bg-white/3"
       >
         {children}
       </div>
