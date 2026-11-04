@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { ContactoConMapa, TarjetaProyecto } from "../exercises/12-custom-hooks/exercise-00";
 import { PortfolioConQuitar, ProyectoDestacado } from "../exercises/12-custom-hooks/exercise-00b";
@@ -81,14 +81,18 @@ import {
   type Tema,
 } from "../exercises/12-custom-hooks/exercise-09";
 import {
-  FotoAmpliada,
-  ConfirmacionDeEnvio,
-  MensajeRapido,
-  MapModal,
-  MapaQueSalta,
+  TituloDelMapa,
+  NotaConDosCampos,
+  MapaConZoom,
   MapaConEscape,
-  MapaConUnHook,
-  MenuConTema,
+  ClicsEnLaPagina,
+  MensajeConAutoguardado,
+  BuscadorConRef,
+  PanelDeFiltros,
+  ConfirmacionDeEnvio,
+  MenuQueDevuelveFoco,
+  GraciasPorEscribir,
+  MapModal,
 } from "../exercises/12-custom-hooks/exercise-10";
 import { Seccion, Tarjeta } from "./piezas";
 
@@ -960,87 +964,101 @@ function DemoUseTema() {
 
 /* 🧪 PRUEBA TEMPORAL (12 oct) — tu `useEffect` tal cual, con un `zoom` propio para que
  * exista. No es ningún drill: se borra cuando termines de mirarlo. */
-/* 10 · drill 1: la foto ampliada bloquea el scroll mientras existe. Con el starter, el
- * bloqueo se queda puesto al cerrarla y la página entera deja de moverse: por eso la
- * demo trae un botón para soltarlo a mano. */
-function DemoFotoAmpliada() {
-  const [abierta, setAbierta] = useState(false);
-
-  function soltarElScroll() {
-    document.body.style.overflow = "";
-  }
-
-  return (
-    <div className={ANILLO_TRAMPA}>
-      <div>
-        <button type="button" onClick={() => setAbierta(true)}>
-          Ampliar foto
-        </button>
-        <button type="button" onClick={soltarElScroll}>
-          Soltar el scroll
-        </button>
-      </div>
-      {abierta && <FotoAmpliada onClose={() => setAbierta(false)} />}
-      <OverflowEnVivo />
-    </div>
-  );
-}
-
-/* 10 · drill 2: «Enviar» abre la confirmación, y el anillo sigue al foco. */
-function DemoConfirmacion() {
-  const [enviado, setEnviado] = useState(false);
-
-  return (
-    <div className={ANILLO_TRAMPA}>
-      <button type="button" onClick={() => setEnviado(true)}>
-        Enviar
-      </button>
-      {enviado && <ConfirmacionDeEnvio onClose={() => setEnviado(false)} />}
-    </div>
-  );
-}
-
-/* 10 · drill 3: «Escribir» abre el mensaje rápido; Escape lo cierra o pregunta. */
-function DemoMensajeRapido() {
+/* 10 · el padre más simple: un botón abre el drill y su onClose lo cierra. Lo de debajo
+ * (el título o el overflow en vivo) enseña lo que el drill cambia fuera de React. */
+function DemoAbrir({
+  etiqueta,
+  Modal,
+  children,
+}: {
+  etiqueta: string;
+  Modal: (props: { onClose: () => void }) => ReactNode;
+  children?: ReactNode;
+}) {
   const [abierto, setAbierto] = useState(false);
 
   return (
     <div className={ANILLO_TRAMPA}>
       <button type="button" onClick={() => setAbierto(true)}>
-        Escribir
+        {etiqueta}
       </button>
-      {abierto && <MensajeRapido onClose={() => setAbierto(false)} />}
+      {abierto && <Modal onClose={() => setAbierto(false)} />}
+      {children}
     </div>
   );
 }
 
-/* 10 · drill 4: el padre pasa flechas, sin useCallback, y se vuelve a pintar al copiar,
- * como el test. El anillo enseña dónde se queda el foco después de copiar. */
-function DemoMapModalEnHooks() {
+/* 10 · drill 4: cuenta las veces que se pide cerrar. Con el mapa ya cerrado, Escape no
+ * tendría que sumar nada. Va con (n) => n + 1 para que no se pierda ninguna llamada. */
+function DemoEscapeQueCuenta() {
   const [abierto, setAbierto] = useState(false);
-  const [copias, setCopias] = useState(0);
+  const [cierres, setCierres] = useState(0);
 
   return (
     <div className={ANILLO_TRAMPA}>
       <button type="button" onClick={() => setAbierto(true)}>
         Ver mapa
       </button>
-      <p>Copias: {copias}</p>
+      <p>Veces que se pidió cerrar: {cierres}</p>
       {abierto && (
-        <MapModal onClose={() => setAbierto(false)} onCopiar={() => setCopias(copias + 1)} />
+        <MapaConEscape
+          onClose={() => {
+            setCierres((n) => n + 1);
+            setAbierto(false);
+          }}
+        />
       )}
-      <OverflowEnVivo />
     </div>
   );
 }
 
-/* 10 · escalera 4a–4c: el padre del 4, que además apunta las copias que llevabas al
- * cerrar. Si el efecto se queda con el onClose del primer render, apunta 0. */
-function DemoMapaConPadre({
-  Mapa,
-}: {
-  Mapa: ComponentType<{ onClose: () => void; onCopiar: () => void }>;
-}) {
+/* 10 · drill 5: cuenta los clics en la página mientras ClicsEnLaPagina está montado.
+ * «Empezar» lo monta un instante después de su propio clic, para que ese no cuente.
+ * sumarClic va con useCallback: es la misma función en cada render. */
+function DemoClicsEnLaPagina() {
+  const [contando, setContando] = useState(false);
+  const [clics, setClics] = useState(0);
+  const sumarClic = useCallback(() => setClics((n) => n + 1), []);
+
+  function alternar() {
+    if (contando) setContando(false);
+    else window.setTimeout(() => setContando(true), 0);
+  }
+
+  return (
+    <div className={ANILLO}>
+      <button type="button" onClick={alternar}>
+        {contando ? "Dejar de contar" : "Empezar a contar"}
+      </button>
+      <p>Clics en la página: {clics}</p>
+      {contando && <ClicsEnLaPagina onClic={sumarClic} />}
+    </div>
+  );
+}
+
+/* 10 · drill 6: apunta cada guardado. guardar va con useCallback para que sea siempre la
+ * misma función: si cambiara en cada render, cada guardado programaría otro. */
+function DemoAutoguardado() {
+  const [guardados, setGuardados] = useState<string[]>([]);
+  const guardar = useCallback((texto: string) => setGuardados((lista) => [...lista, texto]), []);
+
+  return (
+    <div className={ANILLO}>
+      <MensajeConAutoguardado onGuardar={guardar} />
+      <p>
+        Guardados:{" "}
+        {guardados.length === 0 ? "ninguno" : guardados.map((texto) => `«${texto}»`).join(" · ")}
+      </p>
+      <button type="button" onClick={() => setGuardados([])}>
+        Vaciar la lista
+      </button>
+    </div>
+  );
+}
+
+/* 10 · drill 12: el padre de tu MapModal pasa flechas, sin useCallback, y se vuelve a
+ * pintar al copiar, como el test. Al cerrar apunta las copias que llevabas. */
+function DemoMapModal() {
   const [abierto, setAbierto] = useState(false);
   const [copias, setCopias] = useState(0);
   const [alCerrar, setAlCerrar] = useState<number | null>(null);
@@ -1053,40 +1071,12 @@ function DemoMapaConPadre({
       <p>Copias: {copias}</p>
       {alCerrar !== null && <p>Copias al cerrar: {alCerrar}</p>}
       {abierto && (
-        <Mapa
+        <MapModal
           onClose={() => {
             setAlCerrar(copias);
             setAbierto(false);
           }}
           onCopiar={() => setCopias(copias + 1)}
-        />
-      )}
-      <OverflowEnVivo />
-    </div>
-  );
-}
-
-/* 10 · escalera 4d: la hamburguesa abre el menú; «Cambiar tema» repinta al padre, que al
- * cerrar apunta el tema que había. */
-function DemoMenuConTema() {
-  const [abierto, setAbierto] = useState(false);
-  const [tema, setTema] = useState<"dark" | "light">("dark");
-  const [alCerrar, setAlCerrar] = useState<string | null>(null);
-
-  return (
-    <div className={ANILLO_TRAMPA}>
-      <button type="button" onClick={() => setAbierto(true)}>
-        Abrir menú
-      </button>
-      <p>Tema: {tema}</p>
-      {alCerrar !== null && <p>Tema al cerrar: {alCerrar}</p>}
-      {abierto && (
-        <MenuConTema
-          onClose={() => {
-            setAlCerrar(tema);
-            setAbierto(false);
-          }}
-          onCambiarTema={() => setTema(tema === "dark" ? "light" : "dark")}
         />
       )}
       <OverflowEnVivo />
@@ -1913,82 +1903,125 @@ export function Bloque12() {
         <DemoUseTema />
       </Tarjeta>
 
-      <Seccion archivo="exercise-10" titulo="Tu MapModal en tres hooks: un préstamo, un hook." />
+      <Seccion
+        archivo="exercise-10"
+        titulo="Repaso de la carpeta: efectos, refs y foco, en doce drills."
+      />
 
       <Tarjeta
         n={1}
-        nombre="useBloquearScroll"
-        mirar="Pulsa Ampliar foto: el overflow pasa a hidden. Ciérrala: tiene que volver a vacío. Con el starter se queda en hidden y la página deja de moverse: suéltalo con Soltar el scroll."
-        campos="botones Ampliar foto y Soltar el scroll (de la demo) · la foto: Cerrar foto · el overflow del body, en vivo"
-        estado="resuelto"
+        nombre="TituloDelMapa"
+        mirar="Pulsa Ver mapa y luego Acercar dos veces: el título de la pestaña tiene que ir a zoom 2 y zoom 3. Con el starter se queda en zoom 1. Al cerrar, vuelve el título de antes."
+        campos="botón Ver mapa (de la demo) · al abrir: Acercar y Cerrar mapa · el título de la pestaña, en vivo"
       >
-        <DemoFotoAmpliada />
+        <DemoAbrir etiqueta="Ver mapa" Modal={TituloDelMapa}>
+          <TituloEnVivo />
+        </DemoAbrir>
       </Tarjeta>
 
       <Tarjeta
         n={2}
-        nombre="useFocoQueVuelve"
-        mirar="Pulsa Enviar: el anillo tiene que saltar a Entendido. Pulsa Entendido: vuelve a Enviar. Con el starter, al abrir, el anillo se queda en Enviar."
-        campos="botón Enviar (de la demo) · al abrir: el aviso y Entendido"
-        estado="resuelto"
+        nombre="NotaConDosCampos"
+        mirar="Pulsa Nueva nota, pincha en Texto y escribe algo: todo tiene que quedarse en Texto. Con el starter, después de la primera letra, el cursor salta a Título."
+        campos="botón Nueva nota (de la demo) · al abrir: los campos Título y Texto"
       >
-        <DemoConfirmacion />
+        <MontarAlPulsar texto="Nueva nota">
+          <NotaConDosCampos />
+        </MontarAlPulsar>
       </Tarjeta>
 
       <Tarjeta
         n={3}
-        nombre="useTeclaEscape"
-        mirar="Pulsa Escribir y luego Escape: se cierra. Ábrelo otra vez, escribe algo y pulsa Escape: tiene que preguntar «¿Descartar el mensaje?». Con el starter se cierra igual."
-        campos="botón Escribir (de la demo) · al abrir: Tu mensaje · al preguntar: Descartar"
-        estado="resuelto"
+        nombre="MapaConZoom"
+        mirar="Pulsa Ver mapa: el anillo va a la ×. Pulsa Acercar: el zoom sube y el anillo tiene que quedarse en Acercar. Con el starter salta a la ×."
+        campos="botón Ver mapa (de la demo) · al abrir: la ×, el zoom y Acercar"
       >
-        <DemoMensajeRapido />
+        <DemoAbrir etiqueta="Ver mapa" Modal={MapaConZoom} />
       </Tarjeta>
 
       <Tarjeta
         n={4}
-        nombre="MapModal"
-        mirar="Pulsa Ver mapa: el overflow pasa a hidden y el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Escape cierra y el anillo vuelve a Ver mapa."
-        campos="botón Ver mapa y las copias (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
-        estado="resuelto"
-      >
-        <DemoMapModalEnHooks />
-      </Tarjeta>
-
-      <Tarjeta
-        n="4a"
-        nombre="MapaQueSalta"
-        mirar="Pulsa Ver mapa: el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Ciérralo con la ×: el anillo vuelve a Ver mapa."
-        campos="botón Ver mapa y las copias (de la demo) · al abrir: la × y Copiar dirección"
-      >
-        <DemoMapaConPadre Mapa={MapaQueSalta} />
-      </Tarjeta>
-
-      <Tarjeta
-        n="4b"
         nombre="MapaConEscape"
-        mirar="Abre, copia una vez y pulsa Escape: tiene que salir «Copias al cerrar: 1» y el anillo en Ver mapa. Con el starter, al copiar, el anillo salta a la ×; con [] deja de saltar, pero sale «Copias al cerrar: 0»."
-        campos="botón Ver mapa, las copias y las copias al cerrar (de la demo) · al abrir: la × y Copiar dirección"
+        mirar="Pulsa Ver mapa y luego Escape: el contador sube y el mapa se cierra. Con el mapa ya cerrado, pulsa Escape otra vez: el contador no tiene que moverse. Con el starter sigue subiendo."
+        campos="botón Ver mapa y el contador (de la demo) · al abrir: el aviso de Escape"
       >
-        <DemoMapaConPadre Mapa={MapaConEscape} />
+        <DemoEscapeQueCuenta />
       </Tarjeta>
 
       <Tarjeta
-        n="4c"
-        nombre="useModal"
-        mirar="Igual que el 4: Ver mapa bloquea el scroll y lleva el anillo a la ×; Copiar dirección no lo mueve; Escape cierra con «Copias al cerrar» al día y el overflow vuelve a vacío. Con el starter, al copiar, el anillo salta a la ×."
+        n={5}
+        nombre="ClicsEnLaPagina"
+        mirar="Pulsa Empezar a contar y haz clic en cualquier sitio de la página: sube 1 por clic. Pulsa Dejar de contar y vuelve a hacer clic: no tiene que subir más. Con el starter sube de 2 en 2 y no para."
+        campos="botón Empezar / Dejar de contar y el contador (de la demo) · al contar: el aviso"
+      >
+        <DemoClicsEnLaPagina />
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="MensajeConAutoguardado"
+        mirar="Escribe Hola de corrido y espera un segundo: en Guardados tiene que salir solo «Hola». Con el starter salen «H», «Ho», «Hol» y «Hola»."
+        campos="el campo Mensaje · la lista de guardados y Vaciar la lista (de la demo)"
+      >
+        <DemoAutoguardado />
+      </Tarjeta>
+
+      <Tarjeta
+        n={7}
+        nombre="BuscadorConRef"
+        mirar="Pulsa Abrir buscador: el cursor cae en el campo. Esto ya funciona con el starter: el fallo solo lo ve pnpm typecheck."
+        campos="botón Abrir buscador (de la demo) · al abrir: el campo Buscar proyectos"
+      >
+        <MontarAlPulsar texto="Abrir buscador">
+          <BuscadorConRef />
+        </MontarAlPulsar>
+      </Tarjeta>
+
+      <Tarjeta
+        n={8}
+        nombre="PanelDeFiltros"
+        mirar="Pulsa Filtrar proyectos: el panel se abre y el cursor tiene que caer en Buscar tecnología. Con el starter, el anillo se queda en el botón."
+        campos="botón Filtrar proyectos · al abrir: el campo Buscar tecnología"
+      >
+        <div className={ANILLO_TRAMPA}>
+          <PanelDeFiltros />
+        </div>
+      </Tarjeta>
+
+      <Tarjeta
+        n={9}
+        nombre="useFocoAlNacer"
+        mirar="Pulsa Enviar: el anillo tiene que saltar a Entendido. Con el starter se queda en Enviar."
+        campos="botón Enviar (de la demo) · al abrir: el aviso y Entendido"
+      >
+        <DemoAbrir etiqueta="Enviar" Modal={ConfirmacionDeEnvio} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={10}
+        nombre="MenuQueDevuelveFoco"
+        mirar="Pulsa Abrir menú: el anillo va a Servicios. Pulsa Cerrar menú: vuelve a Abrir menú. Esto ya funciona con el starter: el fallo solo lo ve pnpm typecheck."
+        campos="botón Abrir menú (de la demo) · al abrir: Servicios y Cerrar menú"
+      >
+        <DemoAbrir etiqueta="Abrir menú" Modal={MenuQueDevuelveFoco} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={11}
+        nombre="GraciasPorEscribir"
+        mirar="Pulsa Enviar: el anillo va a Cerrar. Pulsa Cerrar: tiene que volver a Enviar. Con el starter el anillo desaparece."
+        campos="botón Enviar (de la demo) · al abrir: el aviso y Cerrar"
+      >
+        <DemoAbrir etiqueta="Enviar" Modal={GraciasPorEscribir} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={12}
+        nombre="MapModal"
+        mirar="Pulsa Ver mapa: el overflow pasa a hidden y el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Escape cierra, apunta las copias y el anillo vuelve a Ver mapa."
         campos="botón Ver mapa, las copias y las copias al cerrar (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
       >
-        <DemoMapaConPadre Mapa={MapaConUnHook} />
-      </Tarjeta>
-
-      <Tarjeta
-        n="4d"
-        nombre="MenuConTema"
-        mirar="Pulsa Abrir menú: el overflow pasa a hidden y el anillo va a Servicios. Pulsa Cambiar tema: el tema cambia y el anillo tiene que quedarse ahí. Con el starter salta a Servicios. Escape cierra, apunta el tema y el anillo vuelve a Abrir menú."
-        campos="botón Abrir menú, el tema y el tema al cerrar (de la demo) · al abrir: Servicios, Portfolio y Cambiar tema · el overflow del body, en vivo"
-      >
-        <DemoMenuConTema />
+        <DemoMapModal />
       </Tarjeta>
     </>
   );

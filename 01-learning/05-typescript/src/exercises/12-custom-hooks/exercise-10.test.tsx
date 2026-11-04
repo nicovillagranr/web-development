@@ -1,69 +1,51 @@
-import { StrictMode, useState, type ComponentType } from "react";
-import { describe, it, expect, afterEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { StrictMode, act, useState, type ComponentType, type ReactElement } from "react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  FotoAmpliada,
-  ConfirmacionDeEnvio,
-  MensajeRapido,
-  MapModal,
-  MapaQueSalta,
+  TituloDelMapa,
+  NotaConDosCampos,
+  MapaConZoom,
   MapaConEscape,
-  MapaConUnHook,
-  MenuConTema,
+  ClicsEnLaPagina,
+  MensajeConAutoguardado,
+  BuscadorConRef,
+  PanelDeFiltros,
+  ConfirmacionDeEnvio,
+  MenuQueDevuelveFoco,
+  GraciasPorEscribir,
+  MapModal,
 } from "./exercise-10";
 
-/* Para el 2: el botón «Enviar» del formulario abre la confirmación. */
-function PaginaConEnvio() {
-  const [enviado, setEnviado] = useState(false);
-
-  return (
-    <div>
-      <button type="button" onClick={() => setEnviado(true)}>
-        Enviar
-      </button>
-      {enviado && <ConfirmacionDeEnvio onClose={() => setEnviado(false)} />}
-    </div>
-  );
+function pintar(pagina: ReactElement) {
+  const user = userEvent.setup();
+  return { user, ...render(<StrictMode>{pagina}</StrictMode>) };
 }
 
-/* Para el 3: un botón abre el mensaje rápido. */
-function PaginaConMensaje() {
+/* El padre más simple: un botón abre el componente y su onClose lo cierra. */
+function Abridor({
+  texto,
+  Modal,
+}: {
+  texto: string;
+  Modal: ComponentType<{ onClose: () => void }>;
+}) {
   const [abierto, setAbierto] = useState(false);
 
   return (
     <div>
       <button type="button" onClick={() => setAbierto(true)}>
-        Escribir
+        {texto}
       </button>
-      {abierto && <MensajeRapido onClose={() => setAbierto(false)} />}
+      {abierto && <Modal onClose={() => setAbierto(false)} />}
     </div>
   );
 }
 
-/* Para el 4: el padre pasa flechas, no useCallback, y se vuelve a pintar al copiar. */
+/* Para el 12: el padre pasa flechas, sin useCallback, y se vuelve a pintar al copiar.
+ * Al cerrar apunta las copias que llevabas: si tu Escape llama al onClose del primer
+ * render, apunta 0. */
 function PaginaDeContacto() {
-  const [abierto, setAbierto] = useState(false);
-  const [copias, setCopias] = useState(0);
-
-  return (
-    <section>
-      <button type="button" onClick={() => setAbierto(true)}>
-        Ver mapa
-      </button>
-      <p>Copias: {copias}</p>
-      {abierto && (
-        <MapModal onClose={() => setAbierto(false)} onCopiar={() => setCopias(copias + 1)} />
-      )}
-    </section>
-  );
-}
-
-/* Para la escalera 4a–4c: el padre del 4, que además apunta las copias que llevabas al
- * cerrar. Si el efecto se queda con el onClose del primer render, apunta 0. */
-type PropsDeMapa = { onClose: () => void; onCopiar: () => void };
-
-function PaginaConMapa({ Mapa }: { Mapa: ComponentType<PropsDeMapa> }) {
   const [abierto, setAbierto] = useState(false);
   const [copias, setCopias] = useState(0);
   const [alCerrar, setAlCerrar] = useState<number | null>(null);
@@ -76,7 +58,7 @@ function PaginaConMapa({ Mapa }: { Mapa: ComponentType<PropsDeMapa> }) {
       <p>Copias: {copias}</p>
       {alCerrar !== null && <p>Copias al cerrar: {alCerrar}</p>}
       {abierto && (
-        <Mapa
+        <MapModal
           onClose={() => {
             setAlCerrar(copias);
             setAbierto(false);
@@ -88,210 +70,167 @@ function PaginaConMapa({ Mapa }: { Mapa: ComponentType<PropsDeMapa> }) {
   );
 }
 
-/* Para el 4d: la hamburguesa abre el menú; «Cambiar tema» repinta al padre, que al
- * cerrar apunta el tema que había. */
-function PaginaConMenu() {
-  const [abierto, setAbierto] = useState(false);
-  const [tema, setTema] = useState<"dark" | "light">("dark");
-  const [alCerrar, setAlCerrar] = useState<string | null>(null);
-
-  return (
-    <div>
-      <button type="button" onClick={() => setAbierto(true)}>
-        Abrir menú
-      </button>
-      <p>Tema: {tema}</p>
-      {alCerrar !== null && <p>Tema al cerrar: {alCerrar}</p>}
-      {abierto && (
-        <MenuConTema
-          onClose={() => {
-            setAlCerrar(tema);
-            setAbierto(false);
-          }}
-          onCambiarTema={() => setTema(tema === "dark" ? "light" : "dark")}
-        />
-      )}
-    </div>
-  );
-}
+const boton = (nombre: string) => screen.getByRole("button", { name: nombre });
 
 afterEach(() => {
+  vi.useRealTimers();
   document.body.style.overflow = "";
 });
 
-describe("12-custom-hooks / exercise-10 — tu MapModal en tres hooks", () => {
-  it("1) useBloquearScroll — FotoAmpliada bloquea el scroll y, al cerrar, lo deja como estaba", () => {
-    // Sin nada abierto antes: al cerrar, el fondo vuelve a moverse.
-    const primero = render(
-      <StrictMode>
-        <FotoAmpliada onClose={() => {}} />
-      </StrictMode>,
-    );
-    expect(document.body.style.overflow).toBe("hidden");
-    primero.unmount();
-    expect(document.body.style.overflow).toBe("");
+describe("12-custom-hooks / exercise-10 — A · useEffect y su array", () => {
+  it("1) TituloDelMapa — el título sigue al zoom y, al cerrar, vuelve el de antes", async () => {
+    document.title = "Projex";
+    const { user } = pintar(<Abridor texto="Ver mapa" Modal={TituloDelMapa} />);
 
-    // Con otra pieza que ya lo había bloqueado: tiene que seguir bloqueado.
-    document.body.style.overflow = "hidden";
-    const segundo = render(
-      <StrictMode>
-        <FotoAmpliada onClose={() => {}} />
-      </StrictMode>,
-    );
-    segundo.unmount();
-    expect(document.body.style.overflow).toBe("hidden");
+    await user.click(boton("Ver mapa"));
+    expect(document.title).toBe("Mapa · zoom 1");
+
+    await user.click(boton("Acercar"));
+    expect(document.title).toBe("Mapa · zoom 2");
+
+    await user.click(boton("Cerrar mapa"));
+    expect(document.title).toBe("Projex");
   });
 
-  it("2) useFocoQueVuelve — el foco va a «Entendido» y, al cerrar, vuelve a «Enviar»", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaConEnvio />
-      </StrictMode>,
-    );
+  it("2) NotaConDosCampos — lo que escribes en «Texto» se queda en «Texto»", async () => {
+    const { user } = pintar(<NotaConDosCampos />);
+    const titulo = screen.getByRole("textbox", { name: "Título" });
+    const texto = screen.getByRole("textbox", { name: "Texto" });
+    expect(titulo).toHaveFocus();
 
-    await user.click(screen.getByRole("button", { name: "Enviar" }));
-    expect(screen.getByRole("button", { name: "Entendido" })).toHaveFocus();
-
-    await user.click(screen.getByRole("button", { name: "Entendido" }));
-    expect(screen.getByRole("button", { name: "Enviar" })).toHaveFocus();
+    await user.click(texto);
+    await user.keyboard("Hola");
+    expect(texto).toHaveValue("Hola");
+    expect(titulo).toHaveValue("");
+    expect(texto).toHaveFocus();
   });
 
-  it("3) useTeclaEscape — sin texto, Escape cierra; con texto, pregunta antes", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaConMensaje />
-      </StrictMode>,
-    );
+  it("3) MapaConZoom — al acercar, el foco se queda en «Acercar»", async () => {
+    const { user } = pintar(<Abridor texto="Ver mapa" Modal={MapaConZoom} />);
 
-    // Sin escribir nada: Escape cierra.
-    await user.click(screen.getByRole("button", { name: "Escribir" }));
-    await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Mensaje rápido" })).not.toBeInTheDocument();
+    await user.click(boton("Ver mapa"));
+    expect(boton("Cerrar mapa")).toHaveFocus();
 
-    // Con algo escrito: Escape pregunta, y Descartar cierra.
-    await user.click(screen.getByRole("button", { name: "Escribir" }));
-    await user.type(screen.getByRole("textbox", { name: "Tu mensaje" }), "Hola");
-    await user.keyboard("{Escape}");
-    expect(screen.getByRole("dialog", { name: "Mensaje rápido" })).toBeInTheDocument();
-    expect(screen.getByText(/¿Descartar el mensaje\?/)).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "Descartar" }));
-    expect(screen.queryByRole("dialog", { name: "Mensaje rápido" })).not.toBeInTheDocument();
-  });
-
-  it("4) MapModal — los tres préstamos, y el foco se queda en «Copiar dirección»", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaDeContacto />
-      </StrictMode>,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Ver mapa" }));
-    expect(document.body.style.overflow).toBe("hidden");
-    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
-
-    // El padre se vuelve a pintar y le pasa un onClose nuevo.
-    await user.click(screen.getByRole("button", { name: "Copiar dirección" }));
-    expect(screen.getByText("Copias: 1")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Copiar dirección" })).toHaveFocus();
-    expect(document.body.style.overflow).toBe("hidden");
-
-    await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Mapa de ubicación" })).not.toBeInTheDocument();
-    expect(document.body.style.overflow).toBe("");
-    expect(screen.getByRole("button", { name: "Ver mapa" })).toHaveFocus();
+    await user.click(boton("Acercar"));
+    expect(screen.getByText("Zoom: 2")).toBeInTheDocument();
+    expect(boton("Acercar")).toHaveFocus();
   });
 });
 
-describe("12-custom-hooks / exercise-10 — escalera del 4, pieza a pieza", () => {
-  it("4a) MapaQueSalta — el foco va a la ✕, se queda en «Copiar dirección» y vuelve al cerrar", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaConMapa Mapa={MapaQueSalta} />
-      </StrictMode>,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Ver mapa" }));
-    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
-
-    // El padre se vuelve a pintar y le pasa un onClose nuevo.
-    await user.click(screen.getByRole("button", { name: "Copiar dirección" }));
-    expect(screen.getByText("Copias: 1")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Copiar dirección" })).toHaveFocus();
-
-    await user.click(screen.getByRole("button", { name: "Cerrar mapa" }));
-    expect(screen.queryByRole("dialog", { name: "Mapa de ubicación" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Ver mapa" })).toHaveFocus();
-  });
-
-  it("4b) MapaConEscape — el foco no salta, y Escape cierra con las copias de ese momento", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaConMapa Mapa={MapaConEscape} />
-      </StrictMode>,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Ver mapa" }));
-    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
-
-    await user.click(screen.getByRole("button", { name: "Copiar dirección" }));
-    expect(screen.getByRole("button", { name: "Copiar dirección" })).toHaveFocus();
+describe("12-custom-hooks / exercise-10 — B · la limpieza", () => {
+  it("4) MapaConEscape — Escape cierra una vez, y con el mapa cerrado no llama a nadie", async () => {
+    const onClose = vi.fn();
+    const { user, unmount } = pintar(<MapaConEscape onClose={onClose} />);
 
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Mapa de ubicación" })).not.toBeInTheDocument();
-    expect(screen.getByText("Copias al cerrar: 1")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Ver mapa" })).toHaveFocus();
-  });
+    expect(onClose).toHaveBeenCalledTimes(1);
 
-  it("4c) useModal — un solo hook en el componente, y los tres préstamos como en el 4", async () => {
-    const user = userEvent.setup();
-    render(
-      <StrictMode>
-        <PaginaConMapa Mapa={MapaConUnHook} />
-      </StrictMode>,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Ver mapa" }));
-    expect(document.body.style.overflow).toBe("hidden");
-    expect(screen.getByRole("button", { name: "Cerrar mapa" })).toHaveFocus();
-
-    await user.click(screen.getByRole("button", { name: "Copiar dirección" }));
-    expect(screen.getByRole("button", { name: "Copiar dirección" })).toHaveFocus();
-    expect(document.body.style.overflow).toBe("hidden");
-
+    unmount();
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Mapa de ubicación" })).not.toBeInTheDocument();
-    expect(screen.getByText("Copias al cerrar: 1")).toBeInTheDocument();
-    expect(document.body.style.overflow).toBe("");
-    expect(screen.getByRole("button", { name: "Ver mapa" })).toHaveFocus();
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("4d) MenuConTema — el foco se queda en «Cambiar tema», y al cerrar todo vuelve", async () => {
-    const user = userEvent.setup();
+  it("5) ClicsEnLaPagina — avisa una vez por clic, y deja de avisar al desmontarse", async () => {
+    const onClic = vi.fn();
+    const { user, unmount } = pintar(<ClicsEnLaPagina onClic={onClic} />);
+
+    await user.click(document.body);
+    expect(onClic).toHaveBeenCalledTimes(1);
+
+    unmount();
+    await user.click(document.body);
+    expect(onClic).toHaveBeenCalledTimes(1);
+  });
+
+  it("6) MensajeConAutoguardado — «Hola» de corrido se guarda una sola vez", () => {
+    vi.useFakeTimers();
+    const onGuardar = vi.fn();
     render(
       <StrictMode>
-        <PaginaConMenu />
+        <MensajeConAutoguardado onGuardar={onGuardar} />
       </StrictMode>,
     );
 
-    await user.click(screen.getByRole("button", { name: "Abrir menú" }));
-    expect(document.body.style.overflow).toBe("hidden");
+    // Cuatro letras seguidas, sin que pase el tiempo entre una y otra.
+    const mensaje = screen.getByRole("textbox", { name: "Mensaje" });
+    for (const escrito of ["H", "Ho", "Hol", "Hola"]) {
+      fireEvent.change(mensaje, { target: { value: escrito } });
+    }
+    act(() => {
+      vi.advanceTimersByTime(999);
+    });
+    expect(onGuardar).not.toHaveBeenCalled();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(onGuardar).toHaveBeenCalledTimes(1);
+    expect(onGuardar).toHaveBeenCalledWith("Hola");
+  });
+});
+
+describe("12-custom-hooks / exercise-10 — C · refs: .current y focus()", () => {
+  it("7) BuscadorConRef — al abrirse, el cursor queda en el campo", () => {
+    pintar(<BuscadorConRef />);
+    expect(screen.getByRole("searchbox", { name: "Buscar proyectos" })).toHaveFocus();
+  });
+
+  it("8) PanelDeFiltros — «Filtrar proyectos» deja el cursor en «Buscar tecnología»", async () => {
+    const { user } = pintar(<PanelDeFiltros />);
+
+    await user.click(boton("Filtrar proyectos"));
+    expect(screen.getByRole("textbox", { name: "Buscar tecnología" })).toHaveFocus();
+  });
+
+  it("9) useFocoAlNacer — al abrirse la confirmación, el foco va a «Entendido»", async () => {
+    const { user } = pintar(<Abridor texto="Enviar" Modal={ConfirmacionDeEnvio} />);
+
+    await user.click(boton("Enviar"));
+    expect(boton("Entendido")).toHaveFocus();
+  });
+});
+
+describe("12-custom-hooks / exercise-10 — D · el préstamo del foco", () => {
+  it("10) MenuQueDevuelveFoco — el foco va a «Servicios» y vuelve al cerrar", async () => {
+    const { user } = pintar(<Abridor texto="Abrir menú" Modal={MenuQueDevuelveFoco} />);
+
+    await user.click(boton("Abrir menú"));
     expect(screen.getByRole("link", { name: "Servicios" })).toHaveFocus();
 
-    // El padre se vuelve a pintar y le pasa un onClose nuevo.
-    await user.click(screen.getByRole("button", { name: "Cambiar tema" }));
-    expect(screen.getByText("Tema: light")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Cambiar tema" })).toHaveFocus();
+    await user.click(boton("Cerrar menú"));
+    expect(screen.queryByRole("navigation", { name: "Menú del móvil" })).not.toBeInTheDocument();
+    expect(boton("Abrir menú")).toHaveFocus();
+  });
+
+  it("11) GraciasPorEscribir — el foco va a «Cerrar» y, al cerrar, vuelve a «Enviar»", async () => {
+    const { user } = pintar(<Abridor texto="Enviar" Modal={GraciasPorEscribir} />);
+
+    await user.click(boton("Enviar"));
+    expect(boton("Cerrar")).toHaveFocus();
+
+    await user.click(boton("Cerrar"));
+    expect(boton("Enviar")).toHaveFocus();
+  });
+});
+
+describe("12-custom-hooks / exercise-10 — todo junto", () => {
+  it("12) MapModal — el foco se queda en «Copiar dirección», y Escape cierra al día", async () => {
+    const { user } = pintar(<PaginaDeContacto />);
+
+    await user.click(boton("Ver mapa"));
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(boton("Cerrar mapa")).toHaveFocus();
+
+    // El padre se vuelve a pintar y le pasa al mapa un onClose nuevo.
+    await user.click(boton("Copiar dirección"));
+    expect(screen.getByText("Copias: 1")).toBeInTheDocument();
+    expect(boton("Copiar dirección")).toHaveFocus();
+    expect(document.body.style.overflow).toBe("hidden");
 
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("list", { name: "Menú del móvil" })).not.toBeInTheDocument();
-    expect(screen.getByText("Tema al cerrar: light")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Mapa de ubicación" })).not.toBeInTheDocument();
+    expect(screen.getByText("Copias al cerrar: 1")).toBeInTheDocument();
     expect(document.body.style.overflow).toBe("");
-    expect(screen.getByRole("button", { name: "Abrir menú" })).toHaveFocus();
+    expect(boton("Ver mapa")).toHaveFocus();
   });
 });

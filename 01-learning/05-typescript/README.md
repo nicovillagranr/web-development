@@ -2479,3 +2479,48 @@ sacado a tres custom hooks) se monta cuando cierres el 08.
 - La escalera 4a–4d del 12/10 y el 13/01, sin resolver.
 - Commiteado y subido: la escalera, el 13/01, la pestaña 13 del banco, el script y esta
   entrada. También tus primeros comentarios en el 4a, tal como estaban.
+
+## Sesión 3–4 nov 2026 — `12/10` reabierto y rehecho como REPASO de la carpeta (0/12)
+
+Se reabre el 10. Los porqués del 1 al 4 no salían de ti, y la escalera 4a–4d tampoco te
+servía: «nunca iba a pensar que el error estaba en el array de dependencias».
+
+### Un primer intento que no sirvió
+
+La noche del 3 lo rehíce en 6 drills sobre el array, con una cronología en el banco y una
+copia del starter al lado de tu versión para comparar. Tu veredicto: «más confusos que los
+anteriores». La herramienta para mirar el concepto era un concepto más que aprender. No se
+commiteó, y la cronología se borró.
+
+### El archivo (12 drills, un tema por bloque, de fácil a difícil)
+
+- **A · useEffect y su array:** 1 `TituloDelMapa` (al array le falta el zoom) · 2
+  `NotaConDosCampos` (un efecto sin array roba el cursor en cada tecla) · 3 `MapaConZoom`
+  (`[zoom]` que sobra: el foco salta a la ✕).
+- **B · la limpieza:** 4 `MapaConEscape` (sin limpieza) · 5 `ClicsEnLaPagina` (quita una
+  flecha distinta de la que puso) · 6 `MensajeConAutoguardado` (sin `clearTimeout`: «Hola»
+  se guarda letra a letra).
+- **C · refs:** 7 `BuscadorConRef` (`useRef` sin `null`) · 8 `PanelDeFiltros` (`focus()` en
+  el manejador, con `.current` todavía en `null`) · 9 `useFocoAlNacer` (el hook recibe
+  `.current` en vez del ref).
+- **D · el préstamo del foco:** 10 `MenuQueDevuelveFoco` (`focus()` sobre `Element`) · 11
+  `GraciasPorEscribir` (anota después de mover).
+- **Todo junto:** 12 `MapModal`, el drill 4 de antes, ahora al final de sus piezas.
+- Sin teorías largas: cada bloque lleva un 📌 de 2-3 líneas. Banco con tarjetas simples,
+  como las del 08 y el 09.
+
+### Verificación
+
+- La solución da 12/12 en una copia, con typecheck y lint a 0. Starters: 10 rojos en el
+  test; el 7 y el 10 pasan el test y los caza el typecheck (TS2554 y TS2339). El lint avisa
+  en el 1 y da error en el 9. Poner `[]` al efecto entero del 12 sale rojo
+  («Copias al cerrar: 1»).
+- El test del 6 escribe con `fireEvent` y relojes falsos: con `userEvent` y relojes falsos
+  se colgaba.
+- Banco probado en Chrome: en el 6 sale «Guardados: «H» · «Ho» · «Hol» · «Hola»», y en el
+  12 el anillo salta a la ✕ al copiar.
+- **Deuda declarada:** 372 líneas contra el techo de ~230. Son 12 drills, a petición tuya.
+
+### Pendiente
+
+- El 12/10 (0/12) y el 13/01, sin resolver. Sin commitear.
