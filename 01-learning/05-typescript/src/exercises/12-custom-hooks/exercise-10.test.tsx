@@ -78,11 +78,12 @@ afterEach(() => {
 });
 
 describe("12-custom-hooks / exercise-10 — A · useEffect y su array", () => {
-  it("1) TituloDelMapa — el título sigue al zoom y, al cerrar, vuelve el de antes", async () => {
+  it("1) TituloDelMapa — el foco va a «Acercar», el título sigue al zoom y, al cerrar, vuelve el de antes", async () => {
     document.title = "Projex";
     const { user } = pintar(<Abridor texto="Ver mapa" Modal={TituloDelMapa} />);
 
     await user.click(boton("Ver mapa"));
+    expect(boton("Acercar")).toHaveFocus(); // la capa que añadiste tú
     expect(document.title).toBe("Mapa · zoom 1");
 
     await user.click(boton("Acercar"));

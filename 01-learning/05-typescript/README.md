@@ -2524,3 +2524,60 @@ commiteó, y la cronología se borró.
 ### Pendiente
 
 - El 12/10 (0/12) y el 13/01, sin resolver. Sin commitear.
+
+## Sesión 4 nov 2026 (tarde) — `12/10` del 1 al 10 (10/12)
+
+Del 1 al 10, revisados uno a uno, con el código y el porqué tuyos. Los tests del 1 al 10 están
+en verde, typecheck a 0 en todo el archivo y el lint, limpio salvo los starters del 11 y el 12.
+
+- **1** `TituloDelMapa`: añadiste por tu cuenta el foco en «Acercar» (con su test) y partiste
+  el préstamo del título en efectos. Primero el efecto que anotaba iba después del que
+  cambiaba el título y al cerrar no volvía «Projex»; lo resolviste guardando el título en un
+  ref. El aviso de lint de la limpieza lo arreglé yo, a petición tuya. En el porqué apareció
+  una idea suelta: «el título de la pestaña lo pinta el TSX». Es `document.title`, y lo
+  escribe el efecto también al nacer.
+- **2** `NotaConDosCampos`: `[]`. Añadiste etiquetas; el `id="texto"` del textarea se perdió
+  dos veces al guardar desde una pestaña vieja de Cursor y lo repuse.
+- **3** `MapaConZoom`: `[]`. React no mira qué usa el efecto, solo compara el array.
+- **4** `MapaConEscape`: la limpieza. Se acumula una escucha por cada vez que corre el efecto.
+- **5** `ClicsEnLaPagina`: la misma flecha en una constante; dos `() => onClic()` iguales son
+  dos funciones.
+- **6** `MensajeConAutoguardado`: `clearTimeout`. Tu comentario ya dice que la limpieza corre
+  antes de repetir el efecto.
+- **7** `BuscadorConRef`: `useRef(null)`, el valor inicial y el `| null` del tipo.
+- **8** `PanelDeFiltros`: el foco en un efecto `[abierto]`; `setAbierto` no pinta en el momento.
+- **9** `useFocoAlNacer`: el hook recibe la caja, no lo que hay dentro.
+- **10** `MenuQueDevuelveFoco`: tu variante, estrechando con `instanceof` en un ternario al
+  nacer.
+
+### Pendiente
+
+- El 11 y el 12 del 12/10 (el 12 es tu MapModal), y el 13/01. Sin commitear desde `b6b93`.
+
+## Sesión 5–6 nov 2026 — `12/10` cerrado (12/12)
+
+- **11** `GraciasPorEscribir`: el código (anotar `anterior` antes del `focus()`) quedó
+  aprobado la noche del 4. El porqué lo contestaste el 6 en el chat: «el orden de los
+  factores sí afecta el producto». El starter mueve el foco primero, así que `anterior`
+  anota el propio «Cerrar» y no «Enviar». El eslabón que faltaba: ese botón desaparece con
+  el modal, y `.focus()` sobre un botón que ya no está no hace nada, así que el foco cae al
+  `<body>`.
+- **12** `MapModal`: partiste el efecto en tres (overflow, foco y Escape), que es la forma
+  correcta, y con eso ya pasaba el foco en «Copiar dirección». Fallaba «Copias al cerrar:
+  1»: el efecto del Escape tenía `[]` y llamaba al `onClose` del primer render. A petición
+  tuya («arréglalo tú») cambié solo ese `[]` por `[onClose]`. El porqué costó varias
+  vueltas: primero salió circular («lo necesita porque se ejecuta cuando onClose cambia»), y
+  al experimento de borrar `onClose();` contestaste «nose». Ahí no faltaba razonamiento,
+  faltaba la regla: lo que el cuerpo del efecto usa del componente va al array (la receta y
+  sus ingredientes). Con la regla delante lo escribiste bien: «es el único efecto que
+  utiliza onClose».
+- Los chips 11 y 12 los marqué en el banco a petición tuya.
+
+### Verificación
+
+- 12/12 en verde, typecheck a 0 en el archivo y lint limpio (6 nov).
+
+### Pendiente
+
+- Pasar el porqué del 11 a su línea libre (la 419): sigue en blanco en el archivo.
+- El 13/01 (0/5), montado en `c480b`.

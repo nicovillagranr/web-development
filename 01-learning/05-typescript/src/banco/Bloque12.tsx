@@ -1913,6 +1913,7 @@ export function Bloque12() {
         nombre="TituloDelMapa"
         mirar="Pulsa Ver mapa y luego Acercar dos veces: el título de la pestaña tiene que ir a zoom 2 y zoom 3. Con el starter se queda en zoom 1. Al cerrar, vuelve el título de antes."
         campos="botón Ver mapa (de la demo) · al abrir: Acercar y Cerrar mapa · el título de la pestaña, en vivo"
+        estado="resuelto"
       >
         <DemoAbrir etiqueta="Ver mapa" Modal={TituloDelMapa}>
           <TituloEnVivo />
@@ -1924,6 +1925,7 @@ export function Bloque12() {
         nombre="NotaConDosCampos"
         mirar="Pulsa Nueva nota, pincha en Texto y escribe algo: todo tiene que quedarse en Texto. Con el starter, después de la primera letra, el cursor salta a Título."
         campos="botón Nueva nota (de la demo) · al abrir: los campos Título y Texto"
+        estado="resuelto"
       >
         <MontarAlPulsar texto="Nueva nota">
           <NotaConDosCampos />
@@ -1935,6 +1937,7 @@ export function Bloque12() {
         nombre="MapaConZoom"
         mirar="Pulsa Ver mapa: el anillo va a la ×. Pulsa Acercar: el zoom sube y el anillo tiene que quedarse en Acercar. Con el starter salta a la ×."
         campos="botón Ver mapa (de la demo) · al abrir: la ×, el zoom y Acercar"
+        estado="resuelto"
       >
         <DemoAbrir etiqueta="Ver mapa" Modal={MapaConZoom} />
       </Tarjeta>
@@ -1944,6 +1947,7 @@ export function Bloque12() {
         nombre="MapaConEscape"
         mirar="Pulsa Ver mapa y luego Escape: el contador sube y el mapa se cierra. Con el mapa ya cerrado, pulsa Escape otra vez: el contador no tiene que moverse. Con el starter sigue subiendo."
         campos="botón Ver mapa y el contador (de la demo) · al abrir: el aviso de Escape"
+        estado="resuelto"
       >
         <DemoEscapeQueCuenta />
       </Tarjeta>
@@ -1953,6 +1957,7 @@ export function Bloque12() {
         nombre="ClicsEnLaPagina"
         mirar="Pulsa Empezar a contar y haz clic en cualquier sitio de la página: sube 1 por clic. Pulsa Dejar de contar y vuelve a hacer clic: no tiene que subir más. Con el starter sube de 2 en 2 y no para."
         campos="botón Empezar / Dejar de contar y el contador (de la demo) · al contar: el aviso"
+        estado="resuelto"
       >
         <DemoClicsEnLaPagina />
       </Tarjeta>
@@ -1962,6 +1967,7 @@ export function Bloque12() {
         nombre="MensajeConAutoguardado"
         mirar="Escribe Hola de corrido y espera un segundo: en Guardados tiene que salir solo «Hola». Con el starter salen «H», «Ho», «Hol» y «Hola»."
         campos="el campo Mensaje · la lista de guardados y Vaciar la lista (de la demo)"
+        estado="resuelto"
       >
         <DemoAutoguardado />
       </Tarjeta>
@@ -1971,6 +1977,7 @@ export function Bloque12() {
         nombre="BuscadorConRef"
         mirar="Pulsa Abrir buscador: el cursor cae en el campo. Esto ya funciona con el starter: el fallo solo lo ve pnpm typecheck."
         campos="botón Abrir buscador (de la demo) · al abrir: el campo Buscar proyectos"
+        estado="resuelto"
       >
         <MontarAlPulsar texto="Abrir buscador">
           <BuscadorConRef />
@@ -1982,6 +1989,7 @@ export function Bloque12() {
         nombre="PanelDeFiltros"
         mirar="Pulsa Filtrar proyectos: el panel se abre y el cursor tiene que caer en Buscar tecnología. Con el starter, el anillo se queda en el botón."
         campos="botón Filtrar proyectos · al abrir: el campo Buscar tecnología"
+        estado="resuelto"
       >
         <div className={ANILLO_TRAMPA}>
           <PanelDeFiltros />
@@ -1993,6 +2001,7 @@ export function Bloque12() {
         nombre="useFocoAlNacer"
         mirar="Pulsa Enviar: el anillo tiene que saltar a Entendido. Con el starter se queda en Enviar."
         campos="botón Enviar (de la demo) · al abrir: el aviso y Entendido"
+        estado="resuelto"
       >
         <DemoAbrir etiqueta="Enviar" Modal={ConfirmacionDeEnvio} />
       </Tarjeta>
@@ -2002,6 +2011,7 @@ export function Bloque12() {
         nombre="MenuQueDevuelveFoco"
         mirar="Pulsa Abrir menú: el anillo va a Servicios. Pulsa Cerrar menú: vuelve a Abrir menú. Esto ya funciona con el starter: el fallo solo lo ve pnpm typecheck."
         campos="botón Abrir menú (de la demo) · al abrir: Servicios y Cerrar menú"
+        estado="resuelto"
       >
         <DemoAbrir etiqueta="Abrir menú" Modal={MenuQueDevuelveFoco} />
       </Tarjeta>
@@ -2011,6 +2021,7 @@ export function Bloque12() {
         nombre="GraciasPorEscribir"
         mirar="Pulsa Enviar: el anillo va a Cerrar. Pulsa Cerrar: tiene que volver a Enviar. Con el starter el anillo desaparece."
         campos="botón Enviar (de la demo) · al abrir: el aviso y Cerrar"
+        estado="resuelto"
       >
         <DemoAbrir etiqueta="Enviar" Modal={GraciasPorEscribir} />
       </Tarjeta>
@@ -2020,6 +2031,7 @@ export function Bloque12() {
         nombre="MapModal"
         mirar="Pulsa Ver mapa: el overflow pasa a hidden y el anillo va a la ×. Pulsa Copiar dirección: las copias suben y el anillo tiene que quedarse ahí. Con el starter salta a la ×. Escape cierra, apunta las copias y el anillo vuelve a Ver mapa."
         campos="botón Ver mapa, las copias y las copias al cerrar (de la demo) · al abrir: la × y Copiar dirección · el overflow del body, en vivo"
+        estado="resuelto"
       >
         <DemoMapModal />
       </Tarjeta>
