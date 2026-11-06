@@ -32,7 +32,7 @@ const BLOQUES: Record<IdBloque, { titulo: string; Banco: () => ReactNode }> = {
 const ORDEN: IdBloque[] = ["11", "12", "13"];
 
 function App() {
-  const [activo, setActivo] = useState<IdBloque>("12");
+  const [activo, setActivo] = useState<IdBloque>("13");
 
   // Con mayúscula a propósito: en JSX, `<banco />` en minúscula sería una etiqueta HTML.
   const { Banco } = BLOQUES[activo];
