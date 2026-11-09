@@ -341,6 +341,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="ProyectosSinRed"
         mirar="Pulsa API: sin red. Tras «Cargando…» tiene que salir el aviso. Con el starter se queda en «Cargando…» para siempre. Con API: bien, la lista."
         campos="botones API: bien y API: sin red · el componente: «Cargando…», el aviso o la lista"

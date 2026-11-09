@@ -453,30 +453,39 @@ export function ListaDeProyectos() {
 
   // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
+    // Función asincrónica que se ejecuta cuando el componente se monta.
     const fetchProjects = async () => {
       try {
+        // Paso 1: Hacemos la petición a la API.
         const res = await fetch(API_PROJECTS);
-
+        // Si la respuesta no es OK, lanzamos un error: se salta el resto del try y corre el catch.
         if (!res.ok) {
           throw new Error(`Error HTTP: ${res.status}`);
         }
-
+        // Paso 2: Leemos el cuerpo de la respuesta, lo convertimos de JSON a JavaScript y lo guardamos en data.
         const data: Project[] = await res.json();
-
+        // Paso 3: Seteamos el estado de projects que era un array vacío con la data recibira. Se llena el array con la data.
         setProjects(data);
+        // Si algo falla (la red, o el error HTTP que lanzamos arriba), lo capturamos y lo mostramos en consola.
       } catch (error) {
         console.error("Error cargando proyectos:", error);
+        // Finally: se ejecuta siempre, haya ido bien o mal.
       } finally {
+        // Paso 4: Seteamos el estado de loading en false, para indicarle al usuario que la respuesta de la API ya está cargada.
         setLoading(false);
       }
     };
+    // Paso 5: Llamamos a la función fetchProjects para que se ejecute.
     fetchProjects();
+    // Array de dependencias vacío: El efecto se ejecuta solo una vez, cuando el componente se monta.
   }, []);
 
+  // Mientras loading es true, se renderiza para el usuario el mensaje de cargando.
   if (loading) {
     return <p>Cargando…</p>;
   }
 
+  // Cuando loading es false, se renderiza la lista de proyectos.
   return (
     <ul aria-label="Proyectos">
       {projects.map((project) => (
@@ -524,25 +533,49 @@ export function ListaDeProyectos() {
  * los proyectos» en un role="alert". Ahora se queda en «Cargando…» para siempre.
  * Con la red bien, la lista, como en el 1.
  * ¿Por qué? Con la red caída, ¿qué líneas del try ya no llegaron a correr?
- *
+ *  Las líneas que ya no llegarían a correr son las de setProjects(data) y setLoading(false).
  */
 export function ProyectosSinRed() {
+  // Seteamos el estado inicial de projects que será un array vacío a la espera de objetos type Project.
   const [projects, setProjects] = useState<Project[]>([]);
+  // Seteamos el estado inicial de loading en true, para indicarle al usuario que la respuesta de la API está cargando.
   const [loading, setLoading] = useState(true);
+  // Seteamos el estado inicial de error en null, con setError le pasamos el mensaje de error y puede pasar a string
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
-    async function load() {
+    // Función asincrónica que se ejecuta cuando el componente se monta.
+    const fetchProjects = async () => {
       try {
+        // Paso 1: Hacemos la petición a la API.
         const res = await fetch(API_PROJECTS);
+        // Si la respuesta no es OK, lanzamos un error: se salta el resto del try y corre el catch.
+        if (!res.ok) {
+          throw new Error(`Error HTTP: ${res.status}`);
+        }
+        // Paso 2: Leemos el cuerpo de la respuesta, lo convertimos de JSON a JavaScript y lo guardamos en data.
         const data: Project[] = await res.json();
+
+        // Paso 3: Seteamos el estado de projects que era un array vacío con la data recibira. Se llena el array con la data.
         setProjects(data);
-        setLoading(false);
-      } catch {
+
+        // Si algo falla (la red, o el error HTTP que lanzamos arriba), lo capturamos y lo mostramos en consola.
+      } catch (error) {
+        console.error("Error cargando proyectos:", error);
+
+        // Seteamos el valor de error de null a string
         setError("No se pudieron cargar los proyectos");
+
+        // Finally: se ejecuta siempre, haya ido bien o mal.
+      } finally {
+        // Paso 4: Seteamos el estado de loading en false, para indicarle al usuario que la respuesta de la API ya está cargada.
+        setLoading(false);
       }
-    }
-    load();
+    };
+    // Paso 5: Llamamos a la función fetchProjects para que se ejecute.
+    fetchProjects();
+    // Array de dependencias vacío: El efecto se ejecuta solo una vez, cuando el componente se monta.
   }, []);
 
   if (loading) {
@@ -571,12 +604,18 @@ export function ProyectosSinRed() {
  * catch es un Error?
  *
  */
+
 export function MotivoDelError() {
+  // Seteamos el estado inicial de projects como un array vacío que acepta types Project
   const [projects, setProjects] = useState<Project[]>([]);
+  // Seteamos el estado inicial de loading en true para que el usuario vea una pantalla de carga mientras se ejecuta el fetch
   const [loading, setLoading] = useState(true);
+  // Seteamos el estado inicial de error como null, este también puede cambiar con la función setError a un type string
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
+    // Creamos una función load(), que se va a ejecutar de forma asíncrona
     async function load() {
       try {
         const res = await fetch(API_PROJECTS);
@@ -591,9 +630,12 @@ export function MotivoDelError() {
     load();
   }, []);
 
-  if (loading) return <p>Cargando…</p>;
-  if (error) return <p role="alert">{error}</p>;
-
+  if (loading) {
+    return <p>Cargando…</p>;
+  }
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
   return (
     <ul aria-label="Proyectos">
       {projects.map((project) => (

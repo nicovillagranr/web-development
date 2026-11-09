@@ -2660,7 +2660,19 @@ en verde, typecheck a 0 en todo el archivo y el lint, limpio salvo los starters 
 - A petición tuya corregí comentarios sueltos (1b, 1c, 1g, 1j) y dos porqués (una palabra en
   el 1i y la línea del 1j).
 
+### Después del commit `d6c3c` (9 nov)
+
+- **Drill 1:** comentaste todo el efecto. Corregí, a petición tuya, tres líneas: el `throw`
+  salta al `catch` (no «cancela», que es lo de `AbortController`), `res.json()` va de JSON a
+  JavaScript, y el `catch` también atrapa tu propio error HTTP.
+- **Drill 2 `ProyectosSinRed`, aprobado:** rehiciste el componente sobre tu drill 1, con
+  `setError` en el `catch` y `setLoading(false)` en el `finally`. Añadiste por tu cuenta «No
+  hay proyectos» para la lista vacía, que la separa del error. Porqué: con la red caída no
+  corren `setProjects` ni `setLoading(false)`. El eslabón: el error sí se guardaba, pero el
+  render pregunta por `loading` antes que por `error`, y «Cargando…» lo tapaba.
+- 12/15 en verde; el typecheck solo marca el starter del 3 y el lint está limpio.
+
 ### Pendiente
 
-- Los drills 2–5 del 13/01 (Teoría 2: cargando, listo o error).
+- Los drills 3–5 del 13/01.
 - El porqué del 11 del 12/10, en su línea 419.
