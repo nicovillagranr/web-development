@@ -2581,3 +2581,86 @@ en verde, typecheck a 0 en todo el archivo y el lint, limpio salvo los starters 
 
 - Pasar el porqué del 11 a su línea libre (la 419): sigue en blanco en el archivo.
 - El 13/01 (0/5), montado en `c480b`.
+
+## Sesión 6 nov 2026 — `13/01`: el drill 1 y su escalera (1a–1j)
+
+- **Drill 1** `ListaDeProyectos`: código aprobado. La función async va dentro del efecto, y
+  añadiste por tu cuenta `res.ok`, try/catch y `finally`: lo que trabajan el 2 y el 4. Tu
+  catch se queda el error solo para la consola: con la red caída se ve una lista vacía, igual
+  que si no hubiera proyectos.
+- El porqué escrito («devuelve una promesa; React la trata como su limpieza») explica el
+  starter. Faltaba la otra mitad: qué le devuelve a React tu flecha. Contestaste «una
+  promesa», y es `undefined`. Mezclabas **llamar** con **devolver**: `fetchProjects();` crea
+  la promesa, pero nadie la recoge; una función solo devuelve lo que va detrás de `return`.
+  La prueba: con `return fetchProjects();` vuelve el error de tipos del starter.
+- Ahí dijiste «paremos, no entiendo casi nada» y pediste diez drills sobre toda la sintaxis
+  de ese efecto. Lo nuevo no es el `useEffect` (eso lo dominaste en el 12/10), sino lo que va
+  dentro de `fetchProjects`.
+
+### La escalera (entre la Teoría 1 y el drill 1)
+
+- **A · funciones y promesas:** 1a `etiquetaDe` (flecha con llaves sin `return`) · 1b
+  `contarProyectos` (`async` anotada como `number`) · 1c `avisoDeProyectos` (sin `await`:
+  «[object Promise]») · 1d `RegistrarVisita` (la flecha sin llaves le devuelve la promesa a
+  React: tu pregunta).
+- **B · fetch:** 1e `pedirProyectos` (fetch da el sobre, no los datos) · 1f
+  `nombresDeProyectos` (`res.json()` es any y TypeScript se cree la anotación) · 1g
+  `pedirOFallar` (`return` de un Error en vez de `throw`).
+- **C · try, catch y finally:** 1h `mensajeDeCarga` (el fetch fuera del try) · 1i
+  `cargarConAvisos` («listo» al final del try en vez de en `finally`).
+- **D · de vuelta en el efecto:** 1j `ListaConEspera` (`setLoading(false)` justo después de
+  la llamada: la llamada no espera).
+- Cada bloque lleva una teoría corta con su ejemplo. Tests, pistas en 4 niveles y 10 tarjetas
+  en la pestaña 13 del banco, con dos demos nuevas: una que enseña qué devuelve una función (y,
+  si es una promesa, con qué termina al esperarla) y otra con los avisos del 1i según llegan.
+
+### Verificación
+
+- La solución da 10/10 en una copia, con typecheck y lint limpios. Starters: nueve rojos en
+  el test; el 1b pasa el test y lo caza el typecheck (TS1064). Al 1d, el 1e y el 1g los marca
+  también el typecheck, y al 1a y al 1j, el lint.
+- Las demos del banco, probadas con los starters en jsdom; en Chrome, sin probar.
+- **Deuda declarada:** el archivo pasa de 310 a 554 líneas, más del doble del techo. Son diez
+  peldaños, a petición tuya, en el mismo archivo.
+
+### Pendiente
+
+- La escalera 1a–1j (0/10). Al terminarla, el porqué del drill 1: qué le devuelve a React tu
+  flecha.
+- Los drills 2–5 del 13/01.
+- El porqué del 11 del 12/10, en su línea 419.
+
+## Sesiones 7 y 9 nov 2026 — `13/01`: la escalera, cerrada (10/10), y el drill 1
+
+- **A · funciones y promesas.** 1a: faltaba el `return`. 1b: `Promise<number>`; el starter
+  pasaba el test y solo lo cazaba el typecheck. 1c: sin `await`, `total` guarda la promesa
+  («el número llega después») y la plantilla la convierte en «[object Promise]». 1d: con
+  llaves, la flecha no devuelve nada.
+- **Lo del jueves, resuelto en el 1d.** A «¿qué le devuelve a React tu flecha?» contestaste
+  `undefined, no tiene return`: llamar a una función async crea la promesa, pero sin `return`
+  nadie la recoge. Tu drill 1 tiene la misma forma, así que **el drill 1 queda aprobado**.
+- **B · fetch.** 1e: `await fetch(…)` da un Response, el sobre; `res.json()` lo abre y pasa
+  el cuerpo **de** JSON a JavaScript. Tu `.then` era una suposición y te pasaste por tu cuenta
+  a los dos `await`. 1f: la anotación es una etiqueta que TypeScript se cree porque
+  `res.json()` es `any`; una interface sería otra etiqueta (lo que abre el sobre es Zod, al
+  final de la carpeta). 1g: `return` termina la función bien aunque devuelva un Error;
+  `throw` la hace fallar. El error de tipos era el síntoma, no la razón.
+- **C · try, catch y finally.** 1h: con el `fetch` fuera del `try`, nadie atrapaba el error.
+  1i: «listo» al `finally`; en el starter, un 404 sí llegaba a «listo», porque `fetch` no
+  lanza con un 404.
+- **D · de vuelta en el efecto.** 1j: `cargar()` no espera, así que `setLoading(false)` corre
+  antes; `setProjects` no es asíncrona, va detrás de dos `await`.
+- **Un patrón:** en el 1f, el 1h y el 1i contestaste el porqué con tu arreglo en vez del
+  starter. La pregunta es siempre sobre el starter: tenerlo delante ayuda.
+
+### Verificación
+
+- 11/15 en verde: la escalera entera y el drill 1. El typecheck solo marca el starter del 3, y
+  el lint del archivo está limpio. Los diez porqués de la escalera, escritos.
+- A petición tuya corregí comentarios sueltos (1b, 1c, 1g, 1j) y dos porqués (una palabra en
+  el 1i y la línea del 1j).
+
+### Pendiente
+
+- Los drills 2–5 del 13/01 (Teoría 2: cargando, listo o error).
+- El porqué del 11 del 12/10, en su línea 419.

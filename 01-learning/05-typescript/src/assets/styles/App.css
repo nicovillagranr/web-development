@@ -95,6 +95,55 @@
     appearance: none;
   }
 
+  /* La barra de scroll, al estilo del banco: una píldora gris fina sobre negro, como
+   * las de macOS en modo oscuro.
+   *
+   * Otra vez dos mitades, porque cada motor la dibuja a su manera:
+   *   · `::-webkit-scrollbar…` → Chrome, Edge y Safari: control total (ancho,
+   *     color, bordes redondos). El borde transparente con `background-clip`
+   *     separa la píldora del borde de la ventana.
+   *   · `scrollbar-width` y `scrollbar-color` → Firefox, que solo deja elegir el
+   *     grosor y los dos colores. Va dentro del `@supports` porque Chrome también
+   *     las entiende, y si las ve, ignora las `::-webkit-…` de arriba.
+   *
+   * El fondo negro del `html` es para la barra de la página: su carril es
+   * transparente, y detrás está el `html`, que por defecto es blanco. */
+  html {
+    background-color: #000;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background-color: #424245;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #6e6e73;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: #86868b;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #424245 transparent;
+    }
+  }
+
   /* El foco visible es lo primero que se lleva por delante un reset, y es justo
    * lo que necesita quien navega con teclado. */
   button:focus-visible,
