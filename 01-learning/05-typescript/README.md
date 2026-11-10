@@ -2676,3 +2676,48 @@ en verde, typecheck a 0 en todo el archivo y el lint, limpio salvo los starters 
 
 - Los drills 3–5 del 13/01.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 10 nov 2026 — `13/01` CERRADO (15/15)
+
+- **Drill 3 `MotivoDelError`, aprobado:** `instanceof Error` decide entre `err.message` y
+  «Error desconocido». Porqué: con `throw` se puede lanzar cualquier cosa, no solo un
+  `Error`. El eslabón: por eso `err` es `unknown`, y `setError` solo acepta `string | null`;
+  de ese choque salía el TS2345. Renumeraste por tu cuenta la llamada a `load()` como «Paso
+  0» (corre antes que los pasos del `try`) y escribiste «de JSON a objeto de JS» en la
+  dirección correcta.
+- **try/catch, repasado:** la red del trapecista, con tu drill 3 en dos columnas (API bien /
+  red caída). El catch no es el paso que sigue al 4, corre en lugar de los que faltaban. Lo
+  comparaste con if/else: el if decide antes, el try/catch durante, y lo de antes del error
+  ya corrió.
+- **Drill 4 `ProyectosQueNoEstan`, aprobado:** la capa `if (!res.ok) throw` que añadías por
+  tu cuenta desde el drill 1, con el texto exacto «HTTP error — 404». Porqué: el servidor sí
+  respondió, así que fetch no lanza. Faltaba la consecuencia: el `try` seguía con el cuerpo
+  del 404, `{ message: "Not found" }`, se guardaba como si fuera la lista, y `.map`
+  reventaba (no quedaba vacío).
+- **Una regresión, arreglada:** quitaste el `setLoading(false)` repetido porque «finally
+  corre siempre». Eso vale en el 2 y el 4, pero el 3 no tenía `finally`, y con la API bien
+  se quedaba en «Cargando…». Le añadí el `finally` a petición tuya. El test del 3 solo prueba
+  los caminos de error: por eso no lo vio.
+- **Drill 5 `useProjects`, aprobado:** el drill 4 dentro de un hook que devuelve
+  `{ projects, loading, error }`. Porqué: mientras se espera, `loading` tiene que ser `true`.
+  El eslabón: el primer render ocurre antes que el efecto; con `false` pintaría la lista
+  vacía, como si no hubiera proyectos.
+- **El banco no llama a tu API:** cambia `fetch` por uno falso (un `setTimeout` de 900 ms
+  que devuelve un `Response` de verdad), y los proyectos están escritos a mano.
+
+### Verificación
+
+- 15/15 en verde, typecheck sin errores, lint del archivo y del banco limpio. Los cinco
+  chips marcados.
+- A petición tuya corregí erratas y comentarios sueltos del drill 3.
+
+### Tu hook real, ahora
+
+`usePortfolioDataWithFallback.js`, l.23-26, 54-59, 87-115 y 122, ya es lo que escribiste en
+el drill 5 (hasta el texto «HTTP error —»). Falta lo de los siguientes archivos:
+`AbortController` y `AbortSignal.any`, `Promise.all`, Zod y el `try` anidado del snapshot.
+
+### Pendiente
+
+- Montar el siguiente archivo de la carpeta 13.
+- El porqué del 11 del 12/10, en su línea 419.

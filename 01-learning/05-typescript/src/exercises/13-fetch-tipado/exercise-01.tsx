@@ -602,40 +602,64 @@ export function ProyectosSinRed() {
  * catch no es un Error, «Error desconocido».
  * ¿Por qué? ¿Por qué TypeScript no te deja dar por hecho que lo que llega al
  * catch es un Error?
- *
+ * Porque TypeScript/JavaScript permite lanzar cualquier tipo de valor, no solamente objetos Error
+ * Por eso usamos instanceof Error: "Este valor es una instancia de la clase Error"?
+ * - Si responde que sí, podemos acceder a la propiedad "message"
+ * - Si responde que no, renderizamos un mensaje genérico: El else que está dentro del catch
  */
-
 export function MotivoDelError() {
-  // Seteamos el estado inicial de projects como un array vacío que acepta types Project
+  // Seteamos el estado inicial de projects como un array vacío a la espera de objetos de tipo Project
   const [projects, setProjects] = useState<Project[]>([]);
-  // Seteamos el estado inicial de loading en true para que el usuario vea una pantalla de carga mientras se ejecuta el fetch
+  // Seteamos el estado inicial de loading en true, para indicarle al usuario que la respuesta de la API está cargando.
   const [loading, setLoading] = useState(true);
-  // Seteamos el estado inicial de error como null, este también puede cambiar con la función setError a un type string
+  // Seteamos el estado inicial de error en null, con setError le pasamos el mensaje de error y puede pasar a string
   const [error, setError] = useState<string | null>(null);
 
   // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
-    // Creamos una función load(), que se va a ejecutar de forma asíncrona
-    async function load() {
+    // Función asíncrona que se ejecuta cuando el componente se monta
+    const load = async () => {
       try {
+        // Paso 1: Hacemos el llamado a la API
         const res = await fetch(API_PROJECTS);
+        // Si la respuesta no es OK, lanzamos un error: Se salta el resto del try y corre el catch
+        if (!res.ok) {
+          throw new Error(`Error HTTP: ${res.status}`);
+        }
+
+        // Paso 2: Leemos el cuerpo de la respuesta, lo convertimos de JSON a objeto de JS y lo guardamos en la const data
         const data: Project[] = await res.json();
+
+        // Paso 3: Con la función setProjects, actualizamos el estado de projects con la data
         setProjects(data);
-        setLoading(false);
+
+        // Si algo del try lanza (el fetch, el throw o res.json()), se salta lo que queda y corre el catch
       } catch (err) {
-        setError(err);
+        // Comprobamos si lo recibido es realmente un Error.
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Error desconocido");
+        }
+      } finally {
+        // Finally: se ejecuta siempre, haya ido bien o mal: apagamos loading en los dos caminos
         setLoading(false);
       }
-    }
+    };
+    // Paso 0: Llamamos a la función load
     load();
   }, []);
 
+  // Cuando loading esté en true, pintamos un mensaje de carga al usuario
   if (loading) {
     return <p>Cargando…</p>;
   }
+
+  // Si hay un error, pintamos el mensaje de error
   if (error) {
     return <p role="alert">{error}</p>;
   }
+
   return (
     <ul aria-label="Proyectos">
       {projects.map((project) => (
@@ -648,23 +672,49 @@ export function MotivoDelError() {
 /* 4) ProyectosQueNoEstan — la ruta de la API cambió y responde 404, con el cuerpo
  * { message: "Not found" }. Ahora la página revienta al pintar. Tiene que salir
  * el role="alert" con «HTTP error — 404», como en tu usePortfolioData.
- * ¿Por qué? Con el 404, fetch no saltó al catch. ¿Por qué, si la petición salió
- * mal?
+/*
+ * ¿Por qué, con el 404, fetch no saltó al catch?
  *
+ * Porque fetch() no considera los errores HTTP (como 404 o 500)
+ * como errores de conexión. La petición se completó y el servidor
+ * respondió, aunque lo hizo con un estado HTTP fallido.
+ *
+ * Por eso necesitamos comprobar res.ok. Si es false, lanzamos
+ * un error con throw, que interrumpe el try y hace que se ejecute
+ * el catch.
  */
 export function ProyectosQueNoEstan() {
+  /// Seteamos el estado inicial de projects que será un array vacío a la espera de objetos type Project.
   const [projects, setProjects] = useState<Project[]>([]);
+  // Seteamos el estado inicial de loading en true, para indicarle al usuario que la respuesta de la API está cargando.
   const [loading, setLoading] = useState(true);
+  // Seteamos el estado inicial de error en null, con setError le pasamos el mensaje de error y puede pasar a string
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
+    // Función asíncrona que se ejecuta cuando el componente se monta
     async function load() {
       try {
+        // Paso 1: Hacemos el llamado a la API
         const res = await fetch(API_PROJECTS);
+
+        // Si la respuesta no es OK, lanzamos un error: Se salta el resto del try y corre el catch
+        if (!res.ok) {
+          throw new Error(`HTTP error — ${res.status}`);
+        }
+
+        // Paso 2: Leemos el cuerpo de la respuesta, lo convertimos de JSON a objeto de JS y lo guardamos en la const data
         const data: Project[] = await res.json();
+
+        // Paso 3: Con la función setProjects, actualizamos el estado de projects con la data
         setProjects(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido");
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Error desconocido");
+        }
       } finally {
         setLoading(false);
       }
@@ -672,8 +722,12 @@ export function ProyectosQueNoEstan() {
     load();
   }, []);
 
-  if (loading) return <p>Cargando…</p>;
-  if (error) return <p role="alert">{error}</p>;
+  if (loading) {
+    return <p>Cargando…</p>;
+  }
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
 
   return (
     <ul aria-label="Proyectos">
@@ -696,17 +750,72 @@ export function ProyectosQueNoEstan() {
  * como en el 3 y el 4, o null. SeccionProyectos ya está bien: solo falla el
  * hook, que hoy se queda siempre en «Cargando…».
  * ¿Por qué? ¿Por qué loading empieza en true, y no en false?
- *
+ * Siempre que uno abre una App que necesita data, como Youtube, el usuario está a la espera de recibir los datos que quiere ver.
+ * Durante esta espera loading debe ser true, y el desarrollador puede decidir si mostrarle un skeleton temporal para no arruinar la experiencia del usuario o no perderlo.
  */
-export function useProjects(): { projects: Project[]; loading: boolean; error: string | null } {
-  return { projects: [], loading: true, error: null };
+
+export function useProjects(): {
+  projects: Project[];
+  loading: boolean;
+  error: string | null;
+} {
+  // Seteamos el estado inicial de projects como un array vacío.
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  // Loading comienza en true porque la petición todavía está pendiente.
+  const [loading, setLoading] = useState(true);
+
+  // Error comienza en null y puede pasar a contener un mensaje string.
+  const [error, setError] = useState<string | null>(null);
+
+  // Una vez montado el componente, ejecutamos el efecto.
+  useEffect(() => {
+    // Función asíncrona que realiza la petición.
+    const loadProjects = async () => {
+      try {
+        // Paso 1: Hacemos el llamado a la API.
+        const res = await fetch(API_PROJECTS);
+
+        // Si la respuesta no es OK, lanzamos un error.
+        if (!res.ok) {
+          throw new Error(`HTTP error — ${res.status}`);
+        }
+
+        // Paso 2: Leemos y convertimos el cuerpo de la respuesta.
+        const data: Project[] = await res.json();
+
+        // Paso 3: Actualizamos el estado con los proyectos recibidos.
+        setProjects(data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Ha ocurrido un error inesperado");
+        }
+      } finally {
+        // La carga termina tanto si la petición tuvo éxito como si falló.
+        setLoading(false);
+      }
+    };
+
+    // Ejecutamos la función asíncrona.
+    loadProjects();
+  }, []);
+
+  // Devolvemos los estados actuales, no valores fijos.
+  return { projects, loading, error };
 }
 
 export function SeccionProyectos() {
   const { projects, loading, error } = useProjects();
 
-  if (loading) return <p>Cargando…</p>;
-  if (error) return <p role="alert">{error}</p>;
+  if (loading) {
+    return <p>Cargando…</p>;
+  }
+
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
 
   return (
     <section aria-label="Mis proyectos">

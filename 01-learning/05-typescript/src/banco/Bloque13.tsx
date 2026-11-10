@@ -354,6 +354,7 @@ export function Bloque13() {
         nombre="MotivoDelError"
         mirar="Pulsa API: sin red: tiene que salir «Failed to fetch». Con API: lanza un texto, «Error desconocido». Con el starter revienta: un Error no se puede pintar."
         campos="botones API: sin red y API: lanza un texto · el componente: «Cargando…» y el aviso"
+        estado="resuelto"
       >
         <ConApi Drill={MotivoDelError} respuestas={["sin red", "lanza un texto"]} />
       </Tarjeta>
@@ -363,6 +364,7 @@ export function Bloque13() {
         nombre="ProyectosQueNoEstan"
         mirar="Pulsa API: 404: tiene que salir «HTTP error — 404». Con el starter revienta: el cuerpo del 404 se guarda como si fuera la lista, y projects.map no existe. Con API: bien, la lista."
         campos="botones API: bien y API: 404 · el componente: «Cargando…», el aviso o la lista"
+        estado="resuelto"
       >
         <ConApi Drill={ProyectosQueNoEstan} respuestas={["bien", "404"]} />
       </Tarjeta>
@@ -370,6 +372,7 @@ export function Bloque13() {
       <Tarjeta
         n={5}
         nombre="useProjects"
+        estado="resuelto"
         mirar="Prueba los tres botones: la lista con su estado, «Failed to fetch» y «HTTP error — 500». Con el starter, los tres se quedan en «Cargando…»."
         campos="botones API: bien, API: sin red y API: 500 · la sección: «Cargando…», el aviso o la lista"
       >
