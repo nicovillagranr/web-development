@@ -800,6 +800,8 @@ export function useProjects(): {
 
     // Ejecutamos la función asíncrona.
     loadProjects();
+
+    // Array de dependencias vacío: El efecto se ejecutará sólo cuando el componente se monte.
   }, []);
 
   // Devolvemos los estados actuales, no valores fijos.

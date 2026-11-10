@@ -1,4 +1,11 @@
-import { Component, useEffect, useState, type ComponentType, type ReactNode } from "react";
+import {
+  Component,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+  type ComponentType,
+  type ReactNode,
+} from "react";
 import {
   etiquetaDe,
   contarProyectos,
@@ -16,6 +23,13 @@ import {
   ProyectosQueNoEstan,
   SeccionProyectos,
 } from "../exercises/13-fetch-tipado/exercise-01";
+import {
+  pedirCancelable,
+  avisoDeCarga,
+  ProyectosAlCerrar,
+  CancelacionSilenciosa,
+  FichaProyecto,
+} from "../exercises/13-fetch-tipado/exercise-02";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -25,7 +39,11 @@ import { Seccion, Tarjeta } from "./piezas";
  * `window.fetch` por uno de mentira que responde a las rutas `/api/…` (las demás van al
  * fetch de verdad). Es un préstamo, como los del 12: se cambia al montar la pestaña y se
  * devuelve al desmontarla. Cada tarjeta elige cómo va a responder la API y monta su
- * componente; la respuesta tarda un poco, para que se vea el «Cargando…». */
+ * componente; la respuesta tarda un poco, para que se vea el «Cargando…».
+ *
+ * Desde el exercise-02, el fetch de mentira hace caso al signal como el de verdad: si lo
+ * abortan antes de responder, rechaza con la cancelación. Y responde también a
+ * `/api/projects/:id`, con un proyecto suelto. */
 
 type Respuesta = "bien" | "sin red" | "lanza un texto" | "404" | "500";
 
@@ -42,9 +60,43 @@ const RETRASO_MS = 900;
  * función de fuera del componente: el lint de React no deja modificar desde dentro un
  * valor que no es suyo. */
 let respuestaElegida: Respuesta = "bien";
+/* Lo que tarda la lista. Solo la tarjeta 3 del 02 lo alarga, para que dé tiempo a cerrar. */
+let retrasoElegido = RETRASO_MS;
+/* Si las peticiones cuentan para el contador de la tarjeta 3 del 02. */
+let contarPeticiones = false;
 
-function elegirRespuesta(respuesta: Respuesta) {
+function elegirRespuesta(respuesta: Respuesta, opciones: { retrasoMs?: number; contar?: boolean } = {}) {
   respuestaElegida = respuesta;
+  retrasoElegido = opciones.retrasoMs ?? RETRASO_MS;
+  contarPeticiones = opciones.contar ?? false;
+}
+
+/* Lo que tarda cada proyecto suelto en /api/projects/:id. Projex tarda mucho a propósito:
+ * da tiempo a pedir otro antes de que llegue (exercise-02, drill 5). */
+const RETRASO_POR_ID: Record<number, number> = { 1: 2500, 2: 400, 3: 900 };
+
+/* El contador de la tarjeta 3 del 02: qué fue de las peticiones desde que se abrió la
+ * sección. Vive fuera de React, como el fetch de mentira, y la tarjeta se suscribe. */
+type Cuenta = { enviadas: number; canceladas: number; respondidas: number };
+const CUENTA_VACIA: Cuenta = { enviadas: 0, canceladas: 0, respondidas: 0 };
+let cuenta = CUENTA_VACIA;
+const oyentes = new Set<() => void>();
+
+function cambiarCuenta(nueva: Cuenta) {
+  cuenta = nueva;
+  oyentes.forEach((avisar) => avisar());
+}
+
+function useCuenta() {
+  return useSyncExternalStore(
+    (avisar) => {
+      oyentes.add(avisar);
+      return () => {
+        oyentes.delete(avisar);
+      };
+    },
+    () => cuenta,
+  );
 }
 
 function comoJson(cuerpo: unknown, status: number): Response {
@@ -54,15 +106,44 @@ function comoJson(cuerpo: unknown, status: number): Response {
   });
 }
 
-function responderDeMentira(respuesta: Respuesta): Promise<Response> {
+function responderDeMentira(
+  ruta: string,
+  respuesta: Respuesta,
+  signal: AbortSignal | null | undefined,
+): Promise<Response> {
+  const suelto = /^\/api\/projects\/(\d+)$/.exec(ruta);
+  const id = suelto ? Number(suelto[1]) : null;
+  const retraso = id === null ? retrasoElegido : (RETRASO_POR_ID[id] ?? RETRASO_MS);
+  const contar = contarPeticiones;
+
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
+    if (signal?.aborted) {
+      reject(signal.reason);
+      return;
+    }
+    if (contar) cambiarCuenta({ ...cuenta, enviadas: cuenta.enviadas + 1 });
+    let terminada = false;
+
+    const reloj = setTimeout(() => {
+      terminada = true;
+      if (contar) cambiarCuenta({ ...cuenta, respondidas: cuenta.respondidas + 1 });
       if (respuesta === "sin red") reject(new TypeError("Failed to fetch"));
       else if (respuesta === "lanza un texto") reject("se cayó el servidor");
       else if (respuesta === "404") resolve(comoJson({ message: "Not found" }, 404));
       else if (respuesta === "500") resolve(comoJson({ message: "Internal error" }, 500));
-      else resolve(comoJson(PROYECTOS, 200));
-    }, RETRASO_MS);
+      else if (id === null) resolve(comoJson(PROYECTOS, 200));
+      else {
+        const proyecto = PROYECTOS.find((p) => p.id === id);
+        resolve(proyecto ? comoJson(proyecto, 200) : comoJson({ message: "Not found" }, 404));
+      }
+    }, retraso);
+
+    signal?.addEventListener("abort", () => {
+      if (terminada) return;
+      clearTimeout(reloj);
+      if (contar) cambiarCuenta({ ...cuenta, canceladas: cuenta.canceladas + 1 });
+      reject(signal.reason);
+    });
   });
 }
 
@@ -77,7 +158,7 @@ function useFetchDeMentira() {
     const original = window.fetch;
     window.fetch = (input, init) =>
       rutaDe(input).startsWith("/api/")
-        ? responderDeMentira(respuestaElegida)
+        ? responderDeMentira(rutaDe(input), respuestaElegida, init?.signal)
         : original.call(window, input, init);
 
     return () => {
@@ -218,6 +299,114 @@ function DemoAvisos() {
         </button>
       </div>
       {avisos.length > 0 && <p>Avisos: {avisos.join(" · ")}</p>}
+    </div>
+  );
+}
+
+/* Para los drills 1 y 2 del 02: llama a la función con un signal nuevo y enseña con qué
+ * termina. «Pedir y cancelar» aprieta abort() medio segundo después, con la petición aún
+ * en vuelo. */
+function ProbarCancelable({
+  probar,
+  respuestas,
+}: {
+  probar: (signal: AbortSignal) => Promise<unknown>;
+  respuestas: Respuesta[];
+}) {
+  const [linea, setLinea] = useState("");
+
+  async function ejecutar(respuesta: Respuesta, cancelar: boolean) {
+    elegirRespuesta(respuesta);
+    const controller = new AbortController();
+    const promesa = probar(controller.signal);
+    if (cancelar) setTimeout(() => controller.abort(), 500);
+    setLinea(cancelar ? "Pedida. Se cancela a los 0,5 s…" : "Pedida. Esperándola…");
+    try {
+      const valor: unknown = await promesa;
+      setLinea(`Al esperarla: ${mostrar(valor)}`);
+    } catch (error) {
+      const motivo = error instanceof Error ? error.message : String(error);
+      setLinea(`Al esperarla, falla: «${motivo}»`);
+    }
+  }
+
+  return (
+    <div>
+      <div>
+        {respuestas.map((respuesta) => (
+          <button key={respuesta} type="button" onClick={() => ejecutar(respuesta, false)}>
+            API: {respuesta}
+          </button>
+        ))}
+        <button type="button" onClick={() => ejecutar("bien", true)}>
+          Pedir y cancelar
+        </button>
+      </div>
+      {linea && <p>{linea}</p>}
+    </div>
+  );
+}
+
+/* Para el drill 3 del 02: abrir la sección y cerrarla antes de que lleguen los proyectos
+ * (aquí tardan 3 s). Debajo, qué fue de las peticiones desde que se abrió. */
+function ConCierre({ Drill }: { Drill: ComponentType }) {
+  const [abierta, setAbierta] = useState(false);
+  const { enviadas, canceladas, respondidas } = useCuenta();
+
+  function abrir() {
+    elegirRespuesta("bien", { retrasoMs: 3000, contar: true });
+    cambiarCuenta(CUENTA_VACIA);
+    setAbierta(true);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={abrir} disabled={abierta}>
+          Abrir la sección
+        </button>
+        <button type="button" onClick={() => setAbierta(false)} disabled={!abierta}>
+          Cerrar la sección
+        </button>
+      </div>
+      {abierta && (
+        <Atrapa>
+          <Drill />
+        </Atrapa>
+      )}
+      <p className="mt-3 font-mono text-[13px] text-[#86868b]">
+        Peticiones: {enviadas} {enviadas === 1 ? "enviada" : "enviadas"} · {canceladas}{" "}
+        {canceladas === 1 ? "cancelada" : "canceladas"} · {respondidas}{" "}
+        {respondidas === 1 ? "respondida" : "respondidas"}
+      </p>
+    </div>
+  );
+}
+
+/* Para el drill 5 del 02: la ficha se queda montada y solo cambia el id que recibe. */
+function ConFicha({ Drill }: { Drill: ComponentType<{ id: number }> }) {
+  const [id, setId] = useState<number | null>(null);
+
+  function pedir(nuevo: number) {
+    elegirRespuesta("bien");
+    setId(nuevo);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => pedir(1)}>
+          Projex (tarda 2,5 s)
+        </button>
+        <button type="button" onClick={() => pedir(2)}>
+          Smart Cooler (tarda 0,4 s)
+        </button>
+      </div>
+      {id !== null && (
+        <Atrapa>
+          <Drill id={id} />
+        </Atrapa>
+      )}
     </div>
   );
 }
@@ -377,6 +566,53 @@ export function Bloque13() {
         campos="botones API: bien, API: sin red y API: 500 · la sección: «Cargando…», el aviso o la lista"
       >
         <ConApi Drill={SeccionProyectos} respuestas={["bien", "sin red", "500"]} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-02" titulo="Cancelar la petición: AbortController en la limpieza." />
+
+      <Tarjeta
+        n={1}
+        nombre="pedirCancelable"
+        mirar="Pulsa Pedir y cancelar: al medio segundo tiene que fallar con la cancelación («signal is aborted without reason»). Con el starter, la lista llega igual. Con API: bien, la lista."
+        campos="botones API: bien y Pedir y cancelar · con qué termina o falla pedirCancelable"
+      >
+        <ProbarCancelable probar={pedirCancelable} respuestas={["bien"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="avisoDeCarga"
+        mirar="Pulsa Pedir y cancelar: tiene que salir «Carga cancelada». Con el starter sale el texto de la cancelación, como si fuera un error. Con API: bien, «3 proyectos cargados»; con API: sin red, «Failed to fetch»."
+        campos="botones API: bien, API: sin red y Pedir y cancelar · lo que devuelve avisoDeCarga al esperarla"
+      >
+        <ProbarCancelable probar={avisoDeCarga} respuestas={["bien", "sin red"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="ProyectosAlCerrar"
+        mirar="Pulsa Abrir la sección y, antes de 3 s, Cerrar la sección. Abajo tienen que quedar 2 canceladas y 0 respondidas: una la cancela el ensayo de StrictMode nada más abrir. Con el starter, a los 3 s salen 2 respondidas, con la sección ya cerrada."
+        campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
+      >
+        <ConCierre Drill={ProyectosAlCerrar} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="CancelacionSilenciosa"
+        mirar="Pulsa API: bien: «Cargando…» y después la lista. Con el starter sale enseguida un aviso rojo con el texto de la cancelación, y ya no se va. Con API: sin red, «Failed to fetch»."
+        campos="botones API: bien y API: sin red · el componente: «Cargando…», el aviso o la lista"
+      >
+        <ConApi Drill={CancelacionSilenciosa} respuestas={["bien", "sin red"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="useProyecto"
+        mirar="Pulsa Projex y, antes de 2,5 s, Smart Cooler: tiene que quedarse Smart Cooler. Con el starter sale Smart Cooler y, al rato, Projex la pisa."
+        campos="botones Projex y Smart Cooler · FichaProyecto con el id que pulsaste"
+      >
+        <ConFicha Drill={FichaProyecto} />
       </Tarjeta>
     </>
   );

@@ -2721,3 +2721,34 @@ el drill 5 (hasta el texto «HTTP error —»). Falta lo de los siguientes archi
 
 - Montar el siguiente archivo de la carpeta 13.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 10 nov 2026 — `13/02` MONTADO (0/5): cancelar la petición
+
+Lo que elegiste de la escalera: **`AbortController` primero**, porque arregla un agujero que
+ya tiene tu `useProjects` (la petición sigue viva aunque nadie la espere). Un solo concepto:
+cancelar una petición y que la cancelada no toque el estado.
+
+- **TEORÍA 1 · el mando de la petición → drills 1–2.** `pedirCancelable` (el signal va
+  dentro de las opciones de fetch) y `avisoDeCarga` (en el catch, una cancelación y la red
+  caída se ven igual: solo el signal sabe cuál fue).
+- **TEORÍA 2 · cancelar en la limpieza → drills 3–4.** `ProyectosAlCerrar` (la limpieza
+  que aprieta el botón) y `CancelacionSilenciosa` (el ensayo de StrictMode cancela la
+  primera petición; la cancelada no toca ni error ni loading, tampoco desde el finally).
+- **ARMARLO TÚ → drill 5.** `useProyecto(id)` + `FichaProyecto`: la petición vieja que
+  llega tarde y pisa a la nueva. Las tres piezas juntas, en un efecto que se repite.
+
+### Verificación
+
+- Solución completa en una copia: 5/5 en verde, typecheck sin errores, lint limpio.
+- Starters: los cinco salen rojos en el test; el 1 también da `TS2559`. Ningún verde de
+  mentira.
+- Tres arreglos a medias comprobados en rojo: el 4 con la guardia solo en el catch, el 5 con
+  una bandera en vez de abortar y el 5 sin la guardia.
+- Banco: tarjetas 1–5 en la pestaña 13, probadas en jsdom con los starters y con la
+  solución. El fetch de mentira ahora hace caso al signal y responde a `/api/projects/:id`.
+- **Deuda declarada:** 266 líneas (el techo es ~230). Menos que las 288 del 13/01 original.
+
+### Pendiente
+
+- Resolver el 13/02, empezando por el drill 1.
+- El porqué del 11 del 12/10, en su línea 419.
