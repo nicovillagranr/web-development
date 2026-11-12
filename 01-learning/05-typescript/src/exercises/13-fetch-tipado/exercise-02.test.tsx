@@ -6,6 +6,15 @@ import {
   avisoDeCarga,
   ProyectosAlCerrar,
   CancelacionSilenciosa,
+  mensajeDe,
+  cargarB,
+  cargarC,
+  cargarD,
+  cargarE,
+  NombreDelProyecto,
+  RastroDeId,
+  ProyectosQueNoLlegan,
+  FichaQueNoEscucha,
   FichaProyecto,
   type Project,
 } from "./exercise-02";
@@ -71,6 +80,25 @@ function peticionesVivas(fetchFalso: FetchFalso, ruta = "/api/projects") {
 
 function esperar(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/* Para los peldaños de B: llama a la función por un camino y devuelve lo que apuntó. */
+type Camino = "bien" | "sin red" | "cancelada";
+
+async function apuntesDe(
+  cargar: (signal: AbortSignal, apuntar: (cambio: string) => void) => Promise<void>,
+  camino: Camino,
+) {
+  const apuntes: string[] = [];
+  if (camino === "sin red") caerLaRed();
+  else responder(PROYECTOS);
+  const controller = new AbortController();
+  const carga = cargar(controller.signal, (cambio) => {
+    apuntes.push(cambio);
+  });
+  if (camino === "cancelada") controller.abort();
+  await carga;
+  return apuntes;
 }
 
 afterEach(() => {
@@ -181,5 +209,111 @@ describe("13-fetch-tipado / exercise-02 — cancelar la petición", () => {
       </StrictMode>,
     );
     expect(await screen.findByRole("alert")).toHaveTextContent("Failed to fetch");
+  });
+});
+
+describe("13-fetch-tipado / exercise-02 — escalera del 4: el catch, pieza a pieza", () => {
+  it("4a) mensajeDe — el mensaje de un Error, o «Error desconocido»", () => {
+    expect(mensajeDe(new Error("Failed to fetch"))).toBe("Failed to fetch");
+    expect(mensajeDe("se cayó el servidor")).toBe("Error desconocido");
+  });
+
+  it("4b) cargarB — la cancelada no apunta nada", async () => {
+    expect(await apuntesDe(cargarB, "cancelada")).toEqual([]);
+    expect(await apuntesDe(cargarB, "sin red")).toEqual(["setError(Failed to fetch)", "setLoading(false)"]);
+    expect(await apuntesDe(cargarB, "bien")).toEqual(["setProjects(2 proyectos)", "setLoading(false)"]);
+  });
+
+  it("4c) cargarC — la guardia, antes de apuntar nada", async () => {
+    expect(await apuntesDe(cargarC, "cancelada")).toEqual([]);
+    expect(await apuntesDe(cargarC, "sin red")).toEqual(["setError(Failed to fetch)", "setLoading(false)"]);
+    expect(await apuntesDe(cargarC, "bien")).toEqual(["setProjects(2 proyectos)", "setLoading(false)"]);
+  });
+
+  it("4d) cargarD — el finally tampoco apunta por la cancelada", async () => {
+    expect(await apuntesDe(cargarD, "cancelada")).toEqual([]);
+    expect(await apuntesDe(cargarD, "sin red")).toEqual(["setError(Failed to fetch)", "setLoading(false)"]);
+    expect(await apuntesDe(cargarD, "bien")).toEqual(["setProjects(2 proyectos)", "setLoading(false)"]);
+  });
+
+  it("4e) cargarE — los tres caminos, cada uno con lo suyo", async () => {
+    expect(await apuntesDe(cargarE, "bien")).toEqual(["setProjects(2 proyectos)", "setLoading(false)"]);
+    expect(await apuntesDe(cargarE, "sin red")).toEqual(["setError(Failed to fetch)", "setLoading(false)"]);
+    expect(await apuntesDe(cargarE, "cancelada")).toEqual([]);
+  });
+
+  it("4f) NombreDelProyecto — si cambia el id, pide el nuevo", async () => {
+    responderPorId();
+    const vista = render(
+      <StrictMode>
+        <NombreDelProyecto id={1} />
+      </StrictMode>,
+    );
+    expect(await screen.findByText("Projex")).toBeInTheDocument();
+    vista.rerender(
+      <StrictMode>
+        <NombreDelProyecto id={2} />
+      </StrictMode>,
+    );
+    expect(await screen.findByText("Smart Cooler")).toBeInTheDocument();
+  });
+
+  it("4g) RastroDeId — la limpieza suelta el id de su pasada", () => {
+    const apuntes: string[] = [];
+    const apuntar = (cambio: string) => {
+      apuntes.push(cambio);
+    };
+    const vista = render(
+      <StrictMode>
+        <RastroDeId id={1} apuntar={apuntar} />
+      </StrictMode>,
+    );
+    vista.rerender(
+      <StrictMode>
+        <RastroDeId id={2} apuntar={apuntar} />
+      </StrictMode>,
+    );
+    expect(apuntes.slice(-2)).toEqual(["suelta 1", "pide 2"]);
+    vista.unmount();
+    expect(apuntes.at(-1)).toBe("suelta 2");
+  });
+
+  it("4h) ProyectosQueNoLlegan — la lista llega, y al cerrar no queda ninguna petición viva", async () => {
+    responder(PROYECTOS);
+    const abierta = render(
+      <StrictMode>
+        <ProyectosQueNoLlegan />
+      </StrictMode>,
+    );
+    expect(await screen.findByText("Projex")).toBeInTheDocument();
+    abierta.unmount();
+
+    const fetchFalso = responder(PROYECTOS);
+    const cerrada = render(
+      <StrictMode>
+        <ProyectosQueNoLlegan />
+      </StrictMode>,
+    );
+    cerrada.unmount();
+    expect(peticionesVivas(fetchFalso)).toBe(0);
+  });
+
+  it("4i) FichaQueNoEscucha — la petición vieja se cancela de verdad", async () => {
+    const fetchFalso = responderPorId();
+    const ficha = render(
+      <StrictMode>
+        <FichaQueNoEscucha id={1} />
+      </StrictMode>,
+    );
+    ficha.rerender(
+      <StrictMode>
+        <FichaQueNoEscucha id={2} />
+      </StrictMode>,
+    );
+    expect(await screen.findByText("Smart Cooler · En curso")).toBeInTheDocument();
+    // Deja pasar el tiempo que tarda Projex, por si su petición sigue viva.
+    await act(() => esperar(150));
+    expect(screen.getByText("Smart Cooler · En curso")).toBeInTheDocument();
+    expect(peticionesVivas(fetchFalso, "/api/projects/1")).toBe(0);
   });
 });

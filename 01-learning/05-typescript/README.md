@@ -2752,3 +2752,86 @@ cancelar una petición y que la cancelada no toque el estado.
 
 - Resolver el 13/02, empezando por el drill 1.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 11–12 nov 2026 — `13/02`: drills 1–3 cerrados, el 4 en código, y la escalera 4a–4i
+
+- **Drill 1 `pedirCancelable`, aprobado:** `{ signal }`. Antes probaste `signal.throwIfAborted`
+  (sin paréntesis es la función en sí, de ahí `'() => void'` en el error). El eslabón: fetch
+  busca una propiedad `signal` dentro de su segundo argumento, y un `AbortSignal` suelto no
+  la tiene. Aparte: fetch recibe como mucho dos argumentos, y el segundo es un solo objeto
+  con casillas (`method`, `headers`, `body`, `signal`…).
+- **Drill 2 `avisoDeCarga`, aprobado:** con `err.name === "AbortError"` en vez de
+  `signal.aborted`. Las dos pasan, pero `abort("me fui")` rechaza con el texto tal cual, y
+  tu condición no lo reconoce (comprobado con el fetch de Node). Porqué en el chat: en el
+  catch del starter, la cancelación y la red caída salen por la misma línea, cada una con su
+  `err.message`.
+- **Drill 3 `ProyectosAlCerrar`, aprobado:** `return () => controller.abort()`. Por el camino,
+  dos resbalones con `setLoading`: un `finally` que apagaba loading por la cancelada (lista
+  vacía tras el ensayo, medido) y, al quitarlo, un camino bueno sin `setLoading`. De ahí el
+  hábito: recorrer los tres caminos (bien, error, cancelada). Porqué: el controller vive en
+  el efecto; el eslabón es el alcance: la limpieza solo ve lo que está declarado en el
+  efecto.
+- **Drill 4 `CancelacionSilenciosa`, código aprobado:** sin `finally`, con `setLoading(false)`
+  en cada camino y la guardia al principio del catch: la forma de tu `usePortfolioData`.
+  Porqué abierto: «toqué techo con el catch» → **escalera 4a–4i montada (0/9)** entre el 4 y
+  el 5. A · lo que llega al catch (4a) · B · los tres caminos, apuntados en una lista
+  (4b–4e: guardia, orden, finally, camino bueno) · C · con id, el puente al 5 (4f–4i:
+  `[id]`, la limpieza que recuerda su id, un mando compartido, fetch sin signal).
+
+### Verificación
+
+- Escalera: solución en una copia, 13/14 en verde (solo falta tu 5), typecheck y lint
+  limpios. Starters: los nueve rojos en el test; el 4a además con `TS18046` y el 4f con el
+  aviso de `exhaustive-deps`. El test del 4h también exige cancelar al cerrar (sin eso,
+  borrar el `abort()` lo pasaba).
+- Banco: tarjetas 4a–4i entre la 4 y la 5, probadas en jsdom con starters y soluciones.
+  Chips 1, 2 y 3 marcados.
+- **Deuda declarada:** el archivo tiene 622 líneas (techo ~230), con tus comentarios de los
+  drills 1–4 dentro.
+
+### Pendiente
+
+- La escalera 4a–4i, y después el porqué del 4 (l.237) y el drill 5.
+- El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 12 nov 2026 — `13/02` CERRADO (5/5) y la escalera 4a–4i (9/9)
+
+- **4d, aprobado:** quitaste el `finally`, pero el camino bueno se quedó sin
+  `setLoading(false)`, el mismo resbalón del 13/01 drill 3 y del 13/02 drill 3. Porqué en el
+  chat: el `finally` del starter apagaba loading «en todos, porque se ejecuta siempre»; por eso,
+  al quitarlo, el bueno también se quedó sin apagar. Arreglado con `setLoading(false)` al final
+  del try, que es la forma de tu drill 4 y del hook real.
+- **4e, aprobado:** el mismo arreglo que el 4d. Con eso se cerró el bloque B (4b–4e).
+- **4f, aprobado:** `[id]` en el array de dependencias. Matiz: ese efecto no tiene limpieza;
+  lo que hace `[id]` es volver a ejecutar el efecto cuando cambia el id.
+- **Drill 5 `useProyecto`, aprobado:** controller dentro del efecto, signal en el fetch,
+  guardia en el catch, `abort()` en la limpieza y `[id]`, sin pistas. Porqué en el chat:
+  «gana Projex, porque es el que tarda más». El eslabón: sin cancelar gana la que **llega**
+  última; con el abort, la de Projex deja de existir y gana la que se **pidió** última.
+- **4g, aprobado:** la limpieza apunta su propio id. Porqué en el chat: al pasar de Projex a
+  Smart Cooler, tu `controller.abort()` aborta «el de Projex», el controller de su pasada,
+  igual que ve su id.
+- **4h, aprobado:** el controller pasa del módulo al efecto. Porqué en el chat: el starter
+  crea uno solo, y cuando sale la segunda petición del ensayo ese único mando «ya estaba
+  abortado»: un controller abortado no se des-aborta, así que la petición nace cancelada y la
+  guardia sale sin apagar loading.
+- **4i, aprobado:** `{ signal: controller.signal }` en el fetch. Por el camino añadiste un
+  estado `loading` y cambiaste el `if (!project)` del starter por `if (loading)`, lo que dio
+  `TS18047` (2 errores) con el test en verde. TypeScript solo quita el `null` de la variable
+  que comprueba el `if`; `loading` y `project` son dos `useState` sueltos para él. Lo
+  arreglaste con otra guardia `if (!project)`. Porqué en el chat: el fetch «no se entera»
+  porque no lleva el signal; `abort()` aprieta el botón, pero nadie lo escucha.
+- **Porqué del drill 4, cerrado:** en el ensayo, la petición cancelada cae en el catch del
+  starter y guarda su mensaje en `error`; la buena solo toca `projects` y `loading`, nadie
+  vuelve `error` a `null`, y el `if (error)` va antes de la lista. Lo recorrimos paso a paso en
+  una tabla; la pieza central, que la petición buena no toca `error`, la sacaste tú.
+
+### Verificación
+
+- Test 14/14, typecheck sin errores y lint limpio.
+- Banco: chips 4, 4d–4i y 5 marcados. Pestaña 13 entera en verde.
+
+### Pendiente
+
+- Decidir el 13/03 según el reparto: `Promise.all`, Zod, y timeout + snapshot al final.
+- El porqué del 11 del 12/10, en su línea 419.

@@ -1,5 +1,6 @@
 import {
   Component,
+  useCallback,
   useEffect,
   useState,
   useSyncExternalStore,
@@ -28,6 +29,15 @@ import {
   avisoDeCarga,
   ProyectosAlCerrar,
   CancelacionSilenciosa,
+  mensajeDe,
+  cargarB,
+  cargarC,
+  cargarD,
+  cargarE,
+  NombreDelProyecto,
+  RastroDeId,
+  ProyectosQueNoLlegan,
+  FichaQueNoEscucha,
   FichaProyecto,
 } from "../exercises/13-fetch-tipado/exercise-02";
 import { Seccion, Tarjeta } from "./piezas";
@@ -383,6 +393,94 @@ function ConCierre({ Drill }: { Drill: ComponentType }) {
   );
 }
 
+/* Para los peldaños 4b–4e del 02: la función por uno de los tres caminos, y lo que
+ * apuntó. «Pedir y cancelar» aprieta abort() con la petición aún en vuelo. */
+function ProbarApuntes({
+  cargar,
+}: {
+  cargar: (signal: AbortSignal, apuntar: (cambio: string) => void) => Promise<void>;
+}) {
+  const [linea, setLinea] = useState("");
+
+  async function probar(respuesta: Respuesta, cancelar: boolean) {
+    elegirRespuesta(respuesta);
+    const apuntes: string[] = [];
+    const controller = new AbortController();
+    const carga = cargar(controller.signal, (cambio) => {
+      apuntes.push(cambio);
+    });
+    if (cancelar) setTimeout(() => controller.abort(), 300);
+    setLinea(cancelar ? "Pedida. Se cancela a los 0,3 s…" : "Pedida. Esperándola…");
+    try {
+      await carga;
+      setLinea(`Apunta: ${apuntes.length > 0 ? apuntes.join(" · ") : "nada"}`);
+    } catch (error) {
+      const motivo = error instanceof Error ? error.message : String(error);
+      setLinea(`Falla sin apuntar: «${motivo}»`);
+    }
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => probar("bien", false)}>
+          API: bien
+        </button>
+        <button type="button" onClick={() => probar("sin red", false)}>
+          API: sin red
+        </button>
+        <button type="button" onClick={() => probar("bien", true)}>
+          Pedir y cancelar
+        </button>
+      </div>
+      {linea && <p>{linea}</p>}
+    </div>
+  );
+}
+
+/* Para el peldaño 4g del 02: cambia el id de RastroDeId, o lo cierra, y enseña lo que
+ * fue apuntando. Al abrir de cero, el rastro empieza vacío. */
+function ConRastro({
+  Drill,
+}: {
+  Drill: ComponentType<{ id: number; apuntar: (cambio: string) => void }>;
+}) {
+  const [id, setId] = useState<number | null>(null);
+  const [rastro, setRastro] = useState<string[]>([]);
+  const apuntar = useCallback((cambio: string) => {
+    setRastro((antes) => [...antes, cambio]);
+  }, []);
+
+  function elegir(nuevo: number) {
+    if (id === null) setRastro([]);
+    setId(nuevo);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => elegir(1)}>
+          Proyecto 1
+        </button>
+        <button type="button" onClick={() => elegir(2)}>
+          Proyecto 2
+        </button>
+        <button type="button" onClick={() => setId(null)} disabled={id === null}>
+          Cerrar
+        </button>
+      </div>
+      {id !== null && (
+        <Atrapa>
+          <Drill id={id} apuntar={apuntar} />
+        </Atrapa>
+      )}
+      {rastro.length > 0 && (
+        <p className="mt-3 font-mono text-[13px] text-[#86868b]">Rastro: {rastro.join(" · ")}</p>
+      )}
+    </div>
+  );
+}
+
 /* Para el drill 5 del 02: la ficha se queda montada y solo cambia el id que recibe. */
 function ConFicha({ Drill }: { Drill: ComponentType<{ id: number }> }) {
   const [id, setId] = useState<number | null>(null);
@@ -572,6 +670,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="pedirCancelable"
         mirar="Pulsa Pedir y cancelar: al medio segundo tiene que fallar con la cancelación («signal is aborted without reason»). Con el starter, la lista llega igual. Con API: bien, la lista."
         campos="botones API: bien y Pedir y cancelar · con qué termina o falla pedirCancelable"
@@ -581,6 +680,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="avisoDeCarga"
         mirar="Pulsa Pedir y cancelar: tiene que salir «Carga cancelada». Con el starter sale el texto de la cancelación, como si fuera un error. Con API: bien, «3 proyectos cargados»; con API: sin red, «Failed to fetch»."
         campos="botones API: bien, API: sin red y Pedir y cancelar · lo que devuelve avisoDeCarga al esperarla"
@@ -590,6 +690,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="ProyectosAlCerrar"
         mirar="Pulsa Abrir la sección y, antes de 3 s, Cerrar la sección. Abajo tienen que quedar 2 canceladas y 0 respondidas: una la cancela el ensayo de StrictMode nada más abrir. Con el starter, a los 3 s salen 2 respondidas, con la sección ya cerrada."
         campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
@@ -599,6 +700,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="CancelacionSilenciosa"
         mirar="Pulsa API: bien: «Cargando…» y después la lista. Con el starter sale enseguida un aviso rojo con el texto de la cancelación, y ya no se va. Con API: sin red, «Failed to fetch»."
         campos="botones API: bien y API: sin red · el componente: «Cargando…», el aviso o la lista"
@@ -607,8 +709,99 @@ export function Bloque13() {
       </Tarjeta>
 
       <Tarjeta
+        n="4a"
+        estado="resuelto"
+        nombre="mensajeDe"
+        mirar="Pulsa Probar: tiene que salir [«Failed to fetch», «Error desconocido»], para un Error y para un texto suelto. Con el starter, el texto suelto da undefined."
+        campos="botón Probar · lo que devuelve mensajeDe con un Error y con un texto"
+      >
+        <ProbarFuncion probar={() => [mensajeDe(new Error("Failed to fetch")), mensajeDe("se cayó el servidor")]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4b"
+        estado="resuelto"
+        nombre="cargarB"
+        mirar="Pulsa Pedir y cancelar: tiene que salir «Apunta: nada». Con el starter apunta el error de la cancelación y apaga loading. Con API: bien y API: sin red, lo de siempre."
+        campos="botones API: bien, API: sin red y Pedir y cancelar · lo que apunta cada camino"
+      >
+        <ProbarApuntes cargar={cargarB} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4c"
+        estado="resuelto"
+        nombre="cargarC"
+        mirar="Pulsa Pedir y cancelar: tiene que salir «Apunta: nada». Con el starter se cuela el setError de la cancelación, antes de que llegue la guardia."
+        campos="botones API: bien, API: sin red y Pedir y cancelar · lo que apunta cada camino"
+      >
+        <ProbarApuntes cargar={cargarC} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4d"
+        estado="resuelto"
+        nombre="cargarD"
+        mirar="Pulsa Pedir y cancelar: tiene que salir «Apunta: nada». Con el starter se cuela el setLoading(false) del finally."
+        campos="botones API: bien, API: sin red y Pedir y cancelar · lo que apunta cada camino"
+      >
+        <ProbarApuntes cargar={cargarD} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4e"
+        estado="resuelto"
+        nombre="cargarE"
+        mirar="Pulsa API: bien: tiene que salir setProjects(3 proyectos) · setLoading(false). Con el starter falta el setLoading(false)."
+        campos="botones API: bien, API: sin red y Pedir y cancelar · lo que apunta cada camino"
+      >
+        <ProbarApuntes cargar={cargarE} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4f"
+        estado="resuelto"
+        nombre="NombreDelProyecto"
+        mirar="Pulsa Projex, espera a que salga y pulsa Smart Cooler: el nombre tiene que cambiar. Con el starter se queda en Projex."
+        campos="botones Projex y Smart Cooler · el nombre del proyecto con ese id"
+      >
+        <ConFicha Drill={NombreDelProyecto} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4g"
+        estado="resuelto"
+        nombre="RastroDeId"
+        mirar="Pulsa Proyecto 1, después Proyecto 2 y después Cerrar. Al pasar al 2 tiene que salir «suelta 1» antes de «pide 2», y al cerrar, «suelta 2». Al abrir verás pide 1 · suelta 1 · pide 1: es el ensayo de StrictMode. Con el starter no sale ningún «suelta»."
+        campos="botones Proyecto 1, Proyecto 2 y Cerrar · el componente · el rastro"
+      >
+        <ConRastro Drill={RastroDeId} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4h"
+        estado="resuelto"
+        nombre="ProyectosQueNoLlegan"
+        mirar="Pulsa API: bien: «Cargando…» y después la lista. Con el starter se queda en «Cargando…» para siempre."
+        campos="botón API: bien · el componente: «Cargando…» o la lista"
+      >
+        <ConApi Drill={ProyectosQueNoLlegan} respuestas={["bien"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4i"
+        estado="resuelto"
+        nombre="FichaQueNoEscucha"
+        mirar="Pulsa Projex y, antes de 2,5 s, Smart Cooler: tiene que quedarse Smart Cooler. Con el starter, al rato, Projex la pisa, como en el 5."
+        campos="botones Projex y Smart Cooler · la ficha con el id que pulsaste"
+      >
+        <ConFicha Drill={FichaQueNoEscucha} />
+      </Tarjeta>
+
+      <Tarjeta
         n={5}
         nombre="useProyecto"
+        estado="resuelto"
         mirar="Pulsa Projex y, antes de 2,5 s, Smart Cooler: tiene que quedarse Smart Cooler. Con el starter sale Smart Cooler y, al rato, Projex la pisa."
         campos="botones Projex y Smart Cooler · FichaProyecto con el id que pulsaste"
       >
