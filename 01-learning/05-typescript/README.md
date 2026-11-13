@@ -2835,3 +2835,37 @@ cancelar una petición y que la cancelada no toque el estado.
 
 - Decidir el 13/03 según el reparto: `Promise.all`, Zod, y timeout + snapshot al final.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 13 nov 2026 — `13/03` MONTADO (0/5): pedir dos cosas a la vez
+
+Lo que elegiste de la escalera: **`Promise.all` primero**, «porque mi portfolio pide de la
+misma API los proyectos y la data personal». Matiz comprobado en `C:/apis/00-portfolio-projects`:
+no son dos JSON, es **un solo `db.json`** con dos claves (`profile`, un objeto, y `projects`,
+un array de 6). json-server convierte cada clave en su propia ruta, así que en la red sí son
+**dos respuestas**, cada una con su status. Eso es lo que importa para `Promise.all`.
+
+- **TEORÍA 1 · varias promesas, una espera → drills 1–3.** `saludoDelPortfolio` (el orden de
+  la tupla manda, no el nombre de la variable), `pedirALaVez` (dos `await` seguidos → las dos
+  a la vez) y `pedirPortfolio` (`Promise.all` sobre los dos fetch, como tu hook: un 404 no
+  rechaza, cada respuesta necesita su `res.ok`).
+- **TEORÍA 2 · las dos en el efecto → drill 4.** `CabeceraAlCerrar`: un solo controller, y su
+  signal tiene que viajar a las dos peticiones.
+- **ARMARLO TÚ → drill 5.** `usePortfolio` + `Portada`: el hook de la lista, ampliado al perfil.
+  Es tu `usePortfolioData` sin Zod, el timeout ni el snapshot.
+
+### Verificación
+
+- Solución completa en una copia: 5/5 en verde, typecheck sin errores, lint limpio.
+- Starters: los cinco salen rojos en el test; el 1 también da `TS2339` (2 errores). Ningún
+  verde de mentira.
+- Tres arreglos a medias comprobados en rojo: el 2 con `await` dentro del array, el 5 sin
+  signal en el perfil y el 5 con las dos peticiones en fila.
+- Banco: tarjetas 1–5 en la pestaña 13, probadas en jsdom con los starters y con la solución.
+  El fetch de mentira responde ahora a `/api/profile` (0,6 s) y tiene la respuesta «perfil 404».
+- **Deuda declarada:** 250 líneas (el techo es ~230). Menos que las 266 del 13/02.
+
+### Pendiente
+
+- Resolver el 13/03, empezando por el drill 1.
+- Después, del reparto: Zod, y timeout + snapshot al final.
+- El porqué del 11 del 12/10, en su línea 419.

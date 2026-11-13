@@ -40,6 +40,13 @@ import {
   FichaQueNoEscucha,
   FichaProyecto,
 } from "../exercises/13-fetch-tipado/exercise-02";
+import {
+  saludoDelPortfolio,
+  pedirALaVez,
+  pedirPortfolio,
+  CabeceraAlCerrar,
+  Portada,
+} from "../exercises/13-fetch-tipado/exercise-03";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -53,15 +60,21 @@ import { Seccion, Tarjeta } from "./piezas";
  *
  * Desde el exercise-02, el fetch de mentira hace caso al signal como el de verdad: si lo
  * abortan antes de responder, rechaza con la cancelación. Y responde también a
- * `/api/projects/:id`, con un proyecto suelto. */
+ * `/api/projects/:id`, con un proyecto suelto.
+ *
+ * Desde el exercise-03 responde además a `/api/profile`, con tu perfil, en dos tercios de lo
+ * que tarda la lista (0,6 s frente a 0,9 s). La respuesta «perfil 404» deja la lista bien y
+ * tumba solo el perfil. */
 
-type Respuesta = "bien" | "sin red" | "lanza un texto" | "404" | "500";
+type Respuesta = "bien" | "sin red" | "lanza un texto" | "404" | "500" | "perfil 404";
 
 const PROYECTOS = [
   { id: 1, name: "Projex", status: "Terminado" },
   { id: 2, name: "Smart Cooler", status: "En curso" },
   { id: 3, name: "Store Pulse", status: "En curso" },
 ];
+
+const PERFIL = { name: "Nicolás", role: "Frontend Developer" };
 
 const RETRASO_MS = 900;
 
@@ -123,7 +136,12 @@ function responderDeMentira(
 ): Promise<Response> {
   const suelto = /^\/api\/projects\/(\d+)$/.exec(ruta);
   const id = suelto ? Number(suelto[1]) : null;
-  const retraso = id === null ? retrasoElegido : (RETRASO_POR_ID[id] ?? RETRASO_MS);
+  const esPerfil = ruta === "/api/profile";
+  const retraso = esPerfil
+    ? Math.round((retrasoElegido * 2) / 3)
+    : id === null
+      ? retrasoElegido
+      : (RETRASO_POR_ID[id] ?? RETRASO_MS);
   const contar = contarPeticiones;
 
   return new Promise((resolve, reject) => {
@@ -141,6 +159,8 @@ function responderDeMentira(
       else if (respuesta === "lanza un texto") reject("se cayó el servidor");
       else if (respuesta === "404") resolve(comoJson({ message: "Not found" }, 404));
       else if (respuesta === "500") resolve(comoJson({ message: "Internal error" }, 500));
+      else if (esPerfil && respuesta === "perfil 404") resolve(comoJson({ message: "Not found" }, 404));
+      else if (esPerfil) resolve(comoJson(PERFIL, 200));
       else if (id === null) resolve(comoJson(PROYECTOS, 200));
       else {
         const proyecto = PROYECTOS.find((p) => p.id === id);
@@ -481,6 +501,38 @@ function ConRastro({
   );
 }
 
+/* Para el drill 2 del 03: llama a la función y enseña cuánto tardó en devolver. Aquí la
+ * lista tarda 0,9 s y el perfil, 0,6 s. */
+function ProbarConReloj({ probar }: { probar: () => Promise<unknown> }) {
+  const [linea, setLinea] = useState("");
+
+  async function ejecutar() {
+    elegirRespuesta("bien");
+    const inicio = performance.now();
+    setLinea("Pedida. Esperándola…");
+    const valor: unknown = await probar();
+    const segundos = ((performance.now() - inicio) / 1000).toFixed(1).replace(".", ",");
+    setLinea(`Tardó ${segundos} s · ${mostrar(valor)}`);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={ejecutar}>
+          Probar
+        </button>
+      </div>
+      {linea && <p>{linea}</p>}
+    </div>
+  );
+}
+
+/* Para los drills 2 y 3 del 03: lo que devuelven, en una frase. */
+async function resumir(carga: Promise<{ projects: unknown[]; profile: { name: string } }>) {
+  const { projects, profile } = await carga;
+  return `${projects.length} proyectos y el perfil de ${profile.name}`;
+}
+
 /* Para el drill 5 del 02: la ficha se queda montada y solo cambia el id que recibe. */
 function ConFicha({ Drill }: { Drill: ComponentType<{ id: number }> }) {
   const [id, setId] = useState<number | null>(null);
@@ -806,6 +858,53 @@ export function Bloque13() {
         campos="botones Projex y Smart Cooler · FichaProyecto con el id que pulsaste"
       >
         <ConFicha Drill={FichaProyecto} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-03" titulo="Pedir dos cosas a la vez: Promise.all." />
+
+      <Tarjeta
+        n={1}
+        nombre="saludoDelPortfolio"
+        mirar="Pulsa API: bien: tiene que salir «Nicolás · 3 proyectos». Con el starter sale «undefined · undefined proyectos»: cada variable se llevó lo de la otra."
+        campos="botón API: bien · lo que devuelve saludoDelPortfolio al esperarla"
+      >
+        <ProbarFuncion probar={saludoDelPortfolio} respuestas={["bien"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="pedirALaVez"
+        mirar="Pulsa Probar: tiene que tardar 0,9 s, lo que tarda la lista. Con el starter tarda 1,5 s: el perfil no sale hasta que llega la lista."
+        campos="botón Probar · cuánto tardó y lo que devolvió"
+      >
+        <ProbarConReloj probar={() => resumir(pedirALaVez())} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="pedirPortfolio"
+        mirar="Pulsa API: perfil 404: tiene que fallar con «HTTP error — profile:404». Con el starter llega «el perfil de undefined»: el cuerpo del 404 pasó por tu perfil. Con API: 500 falla la lista, que el starter ya comprueba."
+        campos="botones API: bien, API: perfil 404 y API: 500 · con qué termina o falla pedirPortfolio"
+      >
+        <ProbarFuncion probar={() => resumir(pedirPortfolio())} respuestas={["bien", "perfil 404", "500"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="CabeceraAlCerrar"
+        mirar="Pulsa Abrir la sección y, antes de 2 s, Cerrar la sección. Abajo tienen que quedar 4 canceladas y 0 respondidas: dos de la lista y dos del perfil, contando el ensayo de StrictMode. Con el starter, a los 2 s salen 2 respondidas: las del perfil."
+        campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
+      >
+        <ConCierre Drill={CabeceraAlCerrar} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="usePortfolio"
+        mirar="Pulsa API: bien: «Cargando…» y después tu nombre con la lista debajo. Con el starter se queda en «Cargando…» para siempre. Con API: perfil 404, el aviso «HTTP error — profile:404» y ni rastro de la lista."
+        campos="botones API: bien, API: perfil 404 y API: sin red · Portada: «Cargando…», el aviso o tu cabecera con la lista"
+      >
+        <ConApi Drill={Portada} respuestas={["bien", "perfil 404", "sin red"]} />
       </Tarjeta>
     </>
   );
