@@ -21,15 +21,16 @@ import { useEffect, useState } from "react";
  * TEORÍA 1 · varias promesas, una espera → drills 1–3
  * TEORÍA 2 · las dos en el efecto → drill 4
  * ARMARLO TÚ → drill 5
+ * REPASO · las mismas piezas, rotas de otra manera → drills 6–10
  *
- * ▸ 5 drills en orden. Prohibidos any, as, el ! de «confía en mí» (x!) y los
+ * ▸ 10 drills en orden. Prohibidos any, as, el ! de «confía en mí» (x!) y los
  * eslint-disable.
  * pnpm test:run src/exercises/13-fetch-tipado/exercise-03.test.tsx
  * pnpm typecheck · pnpm lint
  *
- * Los starters están rotos a propósito: ejecuta los tres comandos. Contesta cada
- * ¿Por qué? en la línea libre de debajo.
- * Pistas: exercise-03.pistas.md. Drills 1–5: banco, pestaña 13.
+ * Los starters están rotos a propósito, y uno pasa el test con el fallo dentro:
+ * ejecuta los tres comandos. Contesta cada ¿Por qué? en la línea libre de debajo.
+ * Pistas: exercise-03.pistas.md. Drills 1–10: banco, pestaña 13.
  * ============================================================================= */
 
 /* La forma de un proyecto y la ruta de la lista, las mismas del 01 y el 02. El
@@ -302,5 +303,160 @@ export function Portada() {
         ))}
       </ul>
     </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ REPASO — las mismas piezas, rotas de otra manera
+ *
+ * Lo de los drills 1–5, sin teoría nueva salvo un dato: .json() devuelve una
+ * promesa de any. Si lees dos con Promise.all, te da [any, any], y el tipo lo
+ * pones tú, en la tupla, al desestructurar:
+ * const [clima, ciudad]: [Clima, Ciudad] = await Promise.all([a.json(), b.json()]);
+ *
+ * type Project = { id: number; name: string; status: string };
+ * type Profile = { name: string; role: string };
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 6) pedirCasiALaVez — devuelve { projects, profile }, con las dos peticiones a la
+ * vez. Ya usa Promise.all, pero el perfil sigue sin salir hasta que llega la lista.
+ * ¿Por qué? Si el starter ya usa Promise.all, ¿por qué el perfil sale tarde?
+ *
+ */
+export async function pedirCasiALaVez(): Promise<{ projects: Project[]; profile: Profile }> {
+  const [projects, profile] = await Promise.all([await pedirProyectos(), await pedirPerfil()]);
+  return { projects, profile };
+}
+
+/* 7) portfolioTipado — como tu 3, con los dos .json() leídos a la vez y el tipo
+ * puesto en la tupla. Devuelve { projects, profile }. El test pasa, pero
+ * TypeScript protesta.
+ * ¿Por qué? Con el starter, ¿por qué el test pasa si TypeScript protesta?
+ *
+ */
+export async function portfolioTipado(): Promise<{ projects: Project[]; profile: Profile }> {
+  const [projectsRes, profileRes] = await Promise.all([fetch(API_PROJECTS), fetch(API_PROFILE)]);
+  if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
+  if (!profileRes.ok) throw new Error(`HTTP error — profile:${profileRes.status}`);
+  const [projects, profile]: [Profile, Project[]] = await Promise.all([projectsRes.json(), profileRes.json()]);
+  return { projects, profile };
+}
+
+/* 8) pedirConError500 — devuelve { projects, profile }, o falla con «HTTP error —
+ * profile:500» si el perfil viene mal. Un servidor caído no suele responder el 500
+ * con JSON, sino con una página de error en HTML. Ahora, con el perfil en 500,
+ * falla con otro mensaje.
+ * ¿Por qué? Con el perfil en 500, ¿qué línea del starter lanza primero, y qué?
+ *
+ */
+export async function pedirConError500(): Promise<{ projects: Project[]; profile: Profile }> {
+  const [projectsRes, profileRes] = await Promise.all([fetch(API_PROJECTS), fetch(API_PROFILE)]);
+  const projects: Project[] = await projectsRes.json();
+  const profile: Profile = await profileRes.json();
+  if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
+  if (!profileRes.ok) throw new Error(`HTTP error — profile:${profileRes.status}`);
+  return { projects, profile };
+}
+
+/* 9) PortadaAMedias — pinta «Cargando…» y después tu nombre con la lista debajo,
+ * todo de una vez, y con las dos peticiones a la vez. Ahora tu nombre sale
+ * primero, con la lista vacía, y la lista aparece después.
+ * ¿Por qué? Con el starter, ¿por qué se ve tu nombre con la lista vacía?
+ *
+ */
+export function PortadaAMedias() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const perfil = await pedirPerfil(controller.signal);
+        setProfile(perfil);
+        const lista = await pedirProyectos(controller.signal);
+        setProjects(lista);
+      } catch {
+        // Este drill no pinta errores: la cancelada y los fallos se quedan aquí.
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, []);
+
+  if (!profile) return <p>Cargando…</p>;
+
+  return (
+    <section>
+      <h3>
+        {profile.name} · {profile.role}
+      </h3>
+      <ul>
+        {projects.map((project) => (
+          <li key={project.id}>{project.name}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/* ▸ ARMARLO TÚ — el 02 y el 03 juntos */
+
+/* Un proyecto suelto, de API_PROJECTS/id (/api/projects/2), como en el 02. */
+async function pedirProyecto(id: number, signal: AbortSignal | null = null): Promise<Project> {
+  const res = await fetch(`${API_PROJECTS}/${id}`, { signal });
+  if (!res.ok) throw new Error(`HTTP error — project:${res.status}`);
+  const data: Project = await res.json();
+  return data;
+}
+
+/* 10) useFichaConAutor — FichaConAutor enseña el proyecto del id que recibe y
+ * quién lo hizo: «Projex · Terminado — por Nicolás». Pide el proyecto con
+ * pedirProyecto(id), y el perfil a la vez. Si pasas de Projex a Smart Cooler antes
+ * de que llegue Projex, tiene que quedarse Smart Cooler, y Projex, cancelado; si
+ * una falla, el aviso. Ahora van en fila y Projex pisa. FichaConAutor ya está bien.
+ * ¿Por qué? Con tu arreglo, al pasar a Smart Cooler, ¿cuántas peticiones cancela el
+ * abort() de la pasada de Projex, y cuáles?
+ *
+ */
+export function useFichaConAutor(id: number): {
+  project: Project | null;
+  profile: Profile | null;
+  error: string | null;
+} {
+  const [project, setProject] = useState<Project | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const proyecto = await pedirProyecto(id);
+        const perfil = await pedirPerfil();
+        setProject(proyecto);
+        setProfile(perfil);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
+    }
+
+    load();
+  }, [id]);
+
+  return { project, profile, error };
+}
+
+export function FichaConAutor({ id }: { id: number }) {
+  const { project, profile, error } = useFichaConAutor(id);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!project || !profile) return <p>Cargando…</p>;
+
+  return (
+    <p>
+      {project.name} · {project.status} — por {profile.name}
+    </p>
   );
 }

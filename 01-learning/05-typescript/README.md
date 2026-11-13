@@ -2897,3 +2897,64 @@ un array de 6). json-server convierte cada clave en su propia ruta, así que en 
 - Del reparto: Zod (no está instalado en el cuaderno, solo en el portfolio), y timeout +
   snapshot al final.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 13 nov 2026 — `13/03` ampliado a 10 drills: REPASO (6–10)
+
+A petición tuya, «para reforzar». Sin teoría nueva, salvo un dato: `.json()` devuelve una
+promesa de `any`, y con `Promise.all` de dos `.json()` el tipo se pone en la tupla.
+
+- **6 `pedirCasiALaVez`:** `Promise.all` con un `await` dentro de cada elemento: vuelven a ir
+  en fila.
+- **7 `portfolioTipado`:** la tupla anotada al revés. **Pasa el test**; solo lo marca el
+  typecheck. Es el `[any, any]` que te salió en el drill 3.
+- **8 `pedirConError500`:** leer el `.json()` antes del `res.ok`. Con un 500 en HTML, falla el
+  JSON antes de llegar al `if`.
+- **9 `PortadaAMedias`:** guardar el perfil antes de pedir la lista: tu nombre sale con la
+  lista vacía.
+- **10 `useFichaConAutor` + `FichaConAutor`:** el 02 y el 03 juntos: `Promise.all` con
+  `pedirProyecto(id)` y el perfil, cancelable al cambiar de id.
+
+### Verificación
+
+- Solución completa en una copia: 10/10 (tres pasadas seguidas), typecheck sin errores, lint
+  limpio. Tus drills 1–5 siguen en verde con el fetch de mentira nuevo.
+- Starters: 6, 8, 9 y 10 rojos en el test; el 7, verde de mentira con `TS2740` y `TS2739`.
+- Arreglos a medias comprobados en rojo: el 7 cambiando los nombres en vez de la anotación,
+  el 9 pidiendo las dos a la vez pero guardando el perfil primero, y el 10 sin signal y sin
+  guardia. Para que el del 9 se viera, la lista del test pasó de 30 a 80 ms.
+- Banco: tarjetas 6–10 en la pestaña 13, probadas en jsdom con los starters y con la solución.
+  Respuesta nueva: «perfil 500», con una página de error en HTML.
+- **Deuda declarada:** 462 líneas con tus comentarios del 1–5 (el techo es ~230).
+
+## Sesión 13 nov 2026 — `13/04` MONTADO (0/5): validar con Zod
+
+Pedido «altiro» después de alargar el 03, así que hay dos archivos abiertos a la vez (el
+repaso del 03 y este). Zod 4.4.3 instalado en el cuaderno, la misma versión que usa el
+portfolio. Un solo concepto: dejar de **prometerle** un tipo a TypeScript (`const data:
+Project[] = await res.json()`) y **comprobarlo** al ejecutar.
+
+- **TEORÍA 1 · el schema y su tipo → drills 1–3.** `ContactoSchema` (el schema describe mal
+  `years`), `leerPerfil` (de `unknown` a `Profile` con `.parse`) y `ciudadDe` (`.parse` descarta
+  las claves que el schema no nombra).
+- **TEORÍA 2 · validar en la puerta → drill 4.** `pedirProyectosValidados`: el `.parse` va
+  después del `res.ok` y antes de devolver.
+- **TU HOOK → drill 5.** `usePortfolioValidado` + `PortadaValidada`: el `usePortfolio` del 03
+  con peticiones que devuelven `unknown`. Es tu `usePortfolioData` sin el timeout ni el snapshot.
+
+### Verificación
+
+- Solución completa en una copia: 5/5 (dos pasadas), typecheck sin errores, lint limpio.
+- Starters: los cinco rojos en el test; el 2 (`TS2322`), el 3 (`TS2339`) y el 5 (`TS2345` ×2),
+  también en el typecheck. Ningún verde de mentira.
+- Comprobado con Zod de verdad antes de escribir la teoría: `.parse` descarta las claves no
+  declaradas, el `ZodError` es un `Error` y su `message` es un JSON con `path` y `message`.
+- Banco: tarjetas 1–5 en la pestaña 13, probadas en jsdom con los starters y con la solución.
+  Respuestas nuevas «lista rota» y «perfil roto». Las tarjetas resumen el `ZodError` como
+  «campo: qué falló».
+- 215 líneas, bajo el techo.
+
+### Pendiente
+
+- Resolver el repaso del 03 (6–10) y el 04, en el orden que quieras.
+- Del reparto, al final: timeout + snapshot.
+- El porqué del 11 del 12/10, en su línea 419.

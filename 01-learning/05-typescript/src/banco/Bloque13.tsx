@@ -46,7 +46,19 @@ import {
   pedirPortfolio,
   CabeceraAlCerrar,
   Portada,
+  pedirCasiALaVez,
+  portfolioTipado,
+  pedirConError500,
+  PortadaAMedias,
+  FichaConAutor,
 } from "../exercises/13-fetch-tipado/exercise-03";
+import {
+  ContactoSchema,
+  leerPerfil,
+  ciudadDe,
+  pedirProyectosValidados,
+  PortadaValidada,
+} from "../exercises/13-fetch-tipado/exercise-04";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -64,9 +76,22 @@ import { Seccion, Tarjeta } from "./piezas";
  *
  * Desde el exercise-03 responde además a `/api/profile`, con tu perfil, en dos tercios de lo
  * que tarda la lista (0,6 s frente a 0,9 s). La respuesta «perfil 404» deja la lista bien y
- * tumba solo el perfil. */
+ * tumba solo el perfil; «perfil 500» también, pero con una página de error en HTML, como un
+ * servidor caído.
+ *
+ * Desde el exercise-04 hay dos respuestas que llegan bien (200) pero con la forma rota:
+ * «lista rota» trae un proyecto sin status, y «perfil roto», un perfil sin role. */
 
-type Respuesta = "bien" | "sin red" | "lanza un texto" | "404" | "500" | "perfil 404";
+type Respuesta =
+  | "bien"
+  | "sin red"
+  | "lanza un texto"
+  | "404"
+  | "500"
+  | "perfil 404"
+  | "perfil 500"
+  | "lista rota"
+  | "perfil roto";
 
 const PROYECTOS = [
   { id: 1, name: "Projex", status: "Terminado" },
@@ -160,7 +185,11 @@ function responderDeMentira(
       else if (respuesta === "404") resolve(comoJson({ message: "Not found" }, 404));
       else if (respuesta === "500") resolve(comoJson({ message: "Internal error" }, 500));
       else if (esPerfil && respuesta === "perfil 404") resolve(comoJson({ message: "Not found" }, 404));
+      else if (esPerfil && respuesta === "perfil 500")
+        resolve(new Response("<!doctype html><title>500</title>", { status: 500, headers: { "Content-Type": "text/html" } }));
+      else if (esPerfil && respuesta === "perfil roto") resolve(comoJson({ name: PERFIL.name }, 200));
       else if (esPerfil) resolve(comoJson(PERFIL, 200));
+      else if (id === null && respuesta === "lista rota") resolve(comoJson([{ id: 1, name: "Projex" }], 200));
       else if (id === null) resolve(comoJson(PROYECTOS, 200));
       else {
         const proyecto = PROYECTOS.find((p) => p.id === id);
@@ -242,11 +271,42 @@ function ConApi({ Drill, respuestas }: { Drill: ComponentType; respuestas: Respu
   );
 }
 
+/* El texto de un error. Un ZodError trae en message un JSON con sus fallos (exercise-04):
+ * aquí se resume en «campo: qué falló». */
+function textoDelError(error: unknown): string {
+  if (!(error instanceof Error)) return String(error);
+  try {
+    const fallos: unknown = JSON.parse(error.message);
+    if (Array.isArray(fallos)) {
+      return fallos
+        .map((fallo: unknown) =>
+          typeof fallo === "object" && fallo !== null && "path" in fallo && "message" in fallo && Array.isArray(fallo.path)
+            ? `${fallo.path.join(".")}: ${String(fallo.message)}`
+            : String(fallo),
+        )
+        .join(" · ");
+    }
+  } catch {
+    // No era JSON: es un error normal.
+  }
+  return error.message;
+}
+
+/* Para los drills del 04 que lanzan sin promesa: devuelve lo que da la función, o el error
+ * que lanzó, para que la tarjeta lo enseñe en vez de reventar. */
+function intentar(funcion: () => unknown): unknown {
+  try {
+    return funcion();
+  } catch (error) {
+    return error;
+  }
+}
+
 /* Para la escalera del 1: cómo se ve en pantalla lo que devuelve una función. */
 function mostrar(valor: unknown): string {
   if (typeof valor === "string") return `«${valor}»`;
   if (valor instanceof Response) return `un Response (status ${valor.status})`;
-  if (valor instanceof Error) return `un Error («${valor.message}»)`;
+  if (valor instanceof Error) return `un Error («${textoDelError(valor)}»)`;
   if (Array.isArray(valor)) return `[${valor.map(mostrar).join(", ")}]`;
   if (typeof valor === "object" && valor !== null) {
     const campos = Object.entries(valor).map(([clave, dentro]) => `${clave}: ${mostrar(dentro)}`);
@@ -276,8 +336,7 @@ function ProbarFuncion({ probar, respuestas }: { probar: () => unknown; respuest
       const valor: unknown = await devuelve;
       setLineas(["Devuelve: una Promise", `Al esperarla: ${mostrar(valor)}`]);
     } catch (error) {
-      const motivo = error instanceof Error ? error.message : String(error);
-      setLineas(["Devuelve: una Promise", `Al esperarla, falla: «${motivo}»`]);
+      setLineas(["Devuelve: una Promise", `Al esperarla, falla: «${textoDelError(error)}»`]);
     }
   }
 
@@ -910,6 +969,107 @@ export function Bloque13() {
         campos="botones API: bien, API: perfil 404 y API: sin red · Portada: «Cargando…», el aviso o tu cabecera con la lista"
       >
         <ConApi Drill={Portada} respuestas={["bien", "perfil 404", "sin red"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={6}
+        nombre="pedirCasiALaVez"
+        mirar="Pulsa Probar: tiene que tardar 0,9 s. Con el starter tarda 1,5 s, como el starter del 2, aunque ya usa Promise.all."
+        campos="botón Probar · cuánto tardó y lo que devolvió"
+      >
+        <ProbarConReloj probar={() => resumir(pedirCasiALaVez())} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={7}
+        nombre="portfolioTipado"
+        mirar="Pulsa API: bien: sale «3 proyectos y el perfil de Nicolás» también con el starter. Aquí el fallo no se ve: solo lo marca pnpm typecheck."
+        campos="botón API: bien · lo que devuelve portfolioTipado al esperarla"
+      >
+        <ProbarFuncion probar={() => resumir(portfolioTipado())} respuestas={["bien"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={8}
+        nombre="pedirConError500"
+        mirar="Pulsa API: perfil 500: tiene que fallar con «HTTP error — profile:500». Con el starter falla con el error de leer HTML como JSON («Unexpected token '<'…»)."
+        campos="botones API: bien y API: perfil 500 · con qué termina o falla pedirConError500"
+      >
+        <ProbarFuncion probar={() => resumir(pedirConError500())} respuestas={["bien", "perfil 500"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={9}
+        nombre="PortadaAMedias"
+        mirar="Pulsa API: bien: «Cargando…» y después tu nombre con la lista, todo de una vez. Con el starter sale tu nombre con la lista vacía, y la lista aparece casi un segundo después."
+        campos="botón API: bien · el componente: «Cargando…», o tu nombre y la lista"
+      >
+        <ConApi Drill={PortadaAMedias} respuestas={["bien"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={10}
+        nombre="useFichaConAutor"
+        mirar="Pulsa Projex y, antes de 2,5 s, Smart Cooler: tiene que quedarse «Smart Cooler · En curso — por Nicolás». Con el starter, al rato, Projex la pisa."
+        campos="botones Projex y Smart Cooler · FichaConAutor con el id que pulsaste"
+      >
+        <ConFicha Drill={FichaConAutor} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-04" titulo="No le creas a la API: validar con Zod." />
+
+      <Tarjeta
+        n={1}
+        nombre="ContactoSchema"
+        mirar="Pulsa Probar: tiene que salir el contacto tal cual, con years: 2. Con el starter sale el ZodError: «years: Invalid input: expected string, received number»."
+        campos="botón Probar · lo que devuelve ContactoSchema.parse, o el error que lanza"
+      >
+        <ProbarFuncion
+          probar={() =>
+            intentar(() => ContactoSchema.parse({ email: "nico@ejemplo.com", github: "nicovillagranr", years: 2 }))
+          }
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="leerPerfil"
+        mirar="Pulsa Probar: el perfil completo pasa, y el perfil sin role tiene que dar un Error («role: …»). Con el starter, el perfil sin role pasa sin más."
+        campos="botón Probar · leerPerfil con un perfil completo y con uno sin role"
+      >
+        <ProbarFuncion
+          probar={() => [
+            intentar(() => leerPerfil(PERFIL)),
+            intentar(() => leerPerfil({ name: PERFIL.name })),
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="ciudadDe"
+        mirar="Pulsa Probar: tiene que salir «Santiago, CL». Con el starter sale undefined, aunque los datos traen based."
+        campos="botón Probar · lo que devuelve ciudadDe con un perfil que trae based"
+      >
+        <ProbarFuncion probar={() => ciudadDe({ ...PERFIL, based: "Santiago, CL" })} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="pedirProyectosValidados"
+        mirar="Pulsa API: lista rota: tiene que fallar con «0.status: Invalid input…», el proyecto 0 sin status. Con el starter, el proyecto roto llega como si nada."
+        campos="botones API: bien y API: lista rota · con qué termina o falla pedirProyectosValidados"
+      >
+        <ProbarFuncion probar={pedirProyectosValidados} respuestas={["bien", "lista rota"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="usePortfolioValidado"
+        mirar="Pulsa API: perfil roto: tiene que salir el aviso con el error de Zod, que nombra role. Con el starter se pinta la portada con «Nicolás · » y el rol vacío."
+        campos="botones API: bien y API: perfil roto · PortadaValidada: «Cargando…», el aviso o tu cabecera con la lista"
+      >
+        <ConApi Drill={PortadaValidada} respuestas={["bien", "perfil roto"]} />
       </Tarjeta>
     </>
   );

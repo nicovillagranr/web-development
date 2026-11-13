@@ -6,6 +6,9 @@ siguiente.
 Los cinco salen rojos en el test. Al 1 lo marca además el compilador, y su Pista 3 cita ese
 mensaje. Del 2 al 5, solo el test.
 
+En el repaso (6–10), el 6, el 8, el 9 y el 10 salen rojos en el test. El 7 **pasa el test**:
+solo lo marca el compilador.
+
 ---
 
 ## Drill 1 — `saludoDelPortfolio`
@@ -262,5 +265,251 @@ rechaza, el await lanza y setProjects no llega a correr: va directo al catch. O 
 llega el aviso. Es tu usePortfolioData sin Zod, el timeout ni el snapshot: el controller
 (l.35), el Promise.all (l.49-52), los dos set (l.90-91), la guardia (l.96) y la limpieza
 (l.117-119).
+
+</details>
+
+---
+
+# Repaso — drills 6–10
+
+## Drill 6 — `pedirCasiALaVez`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Antes de que Promise.all reciba su array, hay que construir ese array. ¿Qué pasa mientras se
+construye?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Cada await de dentro del array detiene la función ahí mismo, igual que en tu drill 2. Cuando
+el array por fin está construido, las dos peticiones ya llegaron: Promise.all recibe dos
+valores, no dos promesas en vuelo.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: Promise.all también acepta valores que no son promesas.
+
+```
+AssertionError: expected [ '/api/projects' ] to deeply equal [ '/api/profile', '/api/projects' ]
+```
+
+Al llamar a la función solo había salido la lista, el mismo mensaje que el starter del 2.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const [projects, profile] = await Promise.all([pedirProyectos(), pedirPerfil()]);
+```
+
+Sin los await de dentro, las dos funciones se llaman al construir el array y las dos
+peticiones salen en ese momento. El único await que importa es el de fuera, el que espera a
+Promise.all.
+
+</details>
+
+---
+
+## Drill 7 — `portfolioTipado`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+La anotación de la tupla no cambia lo que hay en cada posición: solo le dice a TypeScript lo
+que tú prometes que hay. ¿Qué hay de verdad en la posición 0 del array?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El array lee primero projectsRes.json() y después profileRes.json(). La anotación tiene que
+seguir ese mismo orden. Si cambias los nombres de las variables en vez de la anotación,
+TypeScript se calla, pero el test se pone rojo: el perfil acabaría en projects.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el compilador</summary>
+
+```
+error TS2740: Type 'Profile' is missing the following properties from type 'Project[]': length, pop, push, concat, and 35 more.
+error TS2739: Type 'Project[]' is missing the following properties from type 'Profile': name, role
+```
+
+Las dos saltan en el return: según tu anotación, projects es un Profile y profile es un
+Project[], y la función prometía lo contrario. El test pasa porque .json() devuelve any: los
+valores van bien, solo el tipo prometido está al revés.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const [projects, profile]: [Project[], Profile] = await Promise.all([projectsRes.json(), profileRes.json()]);
+```
+
+Con any, TypeScript se cree lo que le anotes. La anotación tiene que copiar el orden del
+array, igual que las variables en tu drill 1.
+
+</details>
+
+---
+
+## Drill 8 — `pedirConError500`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Con el perfil en 500, la respuesta no trae JSON. ¿Qué pasa si intentas leerla como JSON
+antes de mirar si vino bien?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+profileRes.json() revienta con una página HTML, y lo hace antes de que llegue el if que
+comprueba profileRes.ok. El orden de las líneas decide qué error sale.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: el orden de las líneas no cambia ningún tipo.
+
+```
+AssertionError: expected [Function] to throw error including 'HTTP error — profile:500' but got 'Unexpected token \'<\', "<!doctype ".…'
+```
+
+«Unexpected token '<'» es el error de JSON al encontrarse el «<» de «<!doctype html>».
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
+if (!profileRes.ok) throw new Error(`HTTP error — profile:${profileRes.status}`);
+const projects: Project[] = await projectsRes.json();
+const profile: Profile = await profileRes.json();
+```
+
+Primero se mira si vino bien, y solo entonces se lee. Es el orden de tu drill 3 y de tu
+usePortfolioData (l.54-64).
+
+</details>
+
+---
+
+## Drill 9 — `PortadaAMedias`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Cada set de estado puede pintar la pantalla. ¿Qué se pinta entre el setProfile y el
+momento en que llega la lista?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El starter guarda el perfil en cuanto llega, y la lista ni siquiera se ha pedido. Para que
+salga todo de una vez, las dos tienen que pedirse a la vez y guardarse juntas, cuando ya
+han llegado las dos: lo de la Teoría 2.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla.
+
+```
+AssertionError: expected [ '/api/profile', '/api/profile' ] to include '/api/projects'
+```
+
+Al montar solo salió el perfil (dos veces, por el ensayo de StrictMode). Si arreglas eso pero
+sigues guardando el perfil antes de que llegue la lista, el error pasa a ser
+«Unable to find an element with the text: Projex»: tu nombre salió solo.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const [lista, perfil] = await Promise.all([pedirProyectos(controller.signal), pedirPerfil(controller.signal)]);
+setProjects(lista);
+setProfile(perfil);
+```
+
+Los dos set corren seguidos, después del mismo await, y React los pinta juntos. La pantalla
+pasa de «Cargando…» a todo.
+
+</details>
+
+---
+
+## Drill 10 — `useFichaConAutor`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Este hook necesita las dos piezas de la carpeta a la vez: las del 02 (cancelar la pasada
+vieja) y las del 03 (pedir dos cosas a la vez). Mira tu useProyecto del 02 y tu usePortfolio
+del 5.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Un controller por pasada; un Promise.all con pedirProyecto(id, …) y pedirPerfil(…), las dos
+con su signal; la guardia en el catch, y la limpieza que llama a abort(). El [id] ya está.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla.
+
+```
+AssertionError: expected [ Array(2) ] to include '/api/profile'
+```
+
+Al montar solo salieron las dos /api/projects/1 (una por el ensayo de StrictMode): el perfil
+espera en fila. Según lo que arregles, después puede fallar con:
+
+- `Unable to find an element with the text: Smart Cooler · En curso — por Nicolás` → la
+  pasada de Projex no se cancela y pisa a la nueva.
+- `expected document not to contain element, found <p role="alert">This operation was aborted…` →
+  falta la guardia: la cancelada del ensayo pinta el aviso.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+useEffect(() => {
+  const controller = new AbortController();
+
+  async function load() {
+    try {
+      const [proyecto, perfil] = await Promise.all([
+        pedirProyecto(id, controller.signal),
+        pedirPerfil(controller.signal),
+      ]);
+      setProject(proyecto);
+      setProfile(perfil);
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      setError(err instanceof Error ? err.message : "Error desconocido");
+    }
+  }
+
+  load();
+  return () => controller.abort();
+}, [id]);
+```
+
+Al pasar a Smart Cooler, la limpieza de la pasada de Projex aborta su controller, y su signal
+lo llevan las dos peticiones de esa pasada: se cancelan las dos. La pasada nueva sale con un
+controller nuevo.
 
 </details>
