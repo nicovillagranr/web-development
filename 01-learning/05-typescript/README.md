@@ -2869,3 +2869,31 @@ un array de 6). json-server convierte cada clave en su propia ruta, así que en 
 - Resolver el 13/03, empezando por el drill 1.
 - Después, del reparto: Zod, y timeout + snapshot al final.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 13 nov 2026 — `13/03` CERRADO (5/5)
+
+- **Drill 1 `saludoDelPortfolio`, aprobado:** cambiaste el orden del array. Porqué en el chat:
+  en el starter, la posición 0 es `pedirProyectos` «y se la lleva profile». El orden que
+  importa es «el orden en que se pasaron», no el de llegada.
+- **Drill 2 `pedirALaVez`, aprobado:** `Promise.all` en vez de dos `await`. Porqué en el chat:
+  el perfil sale «en el 0,9, cuando ya llegó la lista», así que el starter tarda 1,5 s; con
+  `Promise.all`, 0,9 s.
+- **Drill 3 `pedirPortfolio`, aprobado:** el `res.ok` del perfil. Por el camino pasaste los dos
+  `.json()` a un `Promise.all` y se perdieron las anotaciones (`[any, any]`); volviste a las dos
+  líneas anotadas. Porqué en el chat: con el 404 la respuesta del perfil «sí llega», la promesa
+  de fetch se cumple y `Promise.all` no tiene nada que rechazar.
+- **Drill 4 `CabeceraAlCerrar`, aprobado a la primera:** el signal también en `pedirPerfil`.
+  Matiz: al cancelar la lista, `Promise.all` ya rechazó; la respuesta del perfil no la lee nadie.
+- **Drill 5 `usePortfolio`, aprobado a la primera:** un estado más, un `Promise.all` con el
+  signal en las dos y los dos `set` juntos. Porqué escrito: con el perfil en 404, `setProjects`
+  no corre, porque `Promise.all` rechaza. O llega todo o llega el aviso.
+
+### Verificación
+
+- Test 5/5, typecheck sin errores y lint limpio. Banco: chips 1–5 del 03 marcados.
+
+### Pendiente
+
+- Del reparto: Zod (no está instalado en el cuaderno, solo en el portfolio), y timeout +
+  snapshot al final.
+- El porqué del 11 del 12/10, en su línea 419.

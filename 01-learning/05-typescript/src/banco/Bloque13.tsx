@@ -864,6 +864,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="saludoDelPortfolio"
         mirar="Pulsa API: bien: tiene que salir «Nicolás · 3 proyectos». Con el starter sale «undefined · undefined proyectos»: cada variable se llevó lo de la otra."
         campos="botón API: bien · lo que devuelve saludoDelPortfolio al esperarla"
@@ -873,6 +874,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="pedirALaVez"
         mirar="Pulsa Probar: tiene que tardar 0,9 s, lo que tarda la lista. Con el starter tarda 1,5 s: el perfil no sale hasta que llega la lista."
         campos="botón Probar · cuánto tardó y lo que devolvió"
@@ -882,6 +884,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="pedirPortfolio"
         mirar="Pulsa API: perfil 404: tiene que fallar con «HTTP error — profile:404». Con el starter llega «el perfil de undefined»: el cuerpo del 404 pasó por tu perfil. Con API: 500 falla la lista, que el starter ya comprueba."
         campos="botones API: bien, API: perfil 404 y API: 500 · con qué termina o falla pedirPortfolio"
@@ -891,6 +894,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="CabeceraAlCerrar"
         mirar="Pulsa Abrir la sección y, antes de 2 s, Cerrar la sección. Abajo tienen que quedar 4 canceladas y 0 respondidas: dos de la lista y dos del perfil, contando el ensayo de StrictMode. Con el starter, a los 2 s salen 2 respondidas: las del perfil."
         campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
@@ -900,6 +904,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="usePortfolio"
         mirar="Pulsa API: bien: «Cargando…» y después tu nombre con la lista debajo. Con el starter se queda en «Cargando…» para siempre. Con API: perfil 404, el aviso «HTTP error — profile:404» y ni rastro de la lista."
         campos="botones API: bien, API: perfil 404 y API: sin red · Portada: «Cargando…», el aviso o tu cabecera con la lista"

@@ -44,17 +44,33 @@ export const API_PROFILE = "/api/profile";
 /* Dos peticiones ya escritas, como tu pedirOFallar del 01: piden, comprueban res.ok
  * y devuelven el JSON con su tipo. Su error dice cuál falló: «HTTP error —
  * profile:404». El signal es opcional: sin él, la petición no se puede cancelar. */
+
+// Creamos una función asíncrona que recibe un parámetro opcional signal de tipo AbortSignal o null,
+// y devuelve una promesa que resuelve con un array de objetos Project.
 async function pedirProyectos(signal: AbortSignal | null = null): Promise<Project[]> {
+  // Hacemos una petición fetch a la API de proyectos, pasando el signal como opción.
   const res = await fetch(API_PROJECTS, { signal });
-  if (!res.ok) throw new Error(`HTTP error — projects:${res.status}`);
+  // Si la respuesta no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!res.ok) {
+    throw new Error(`HTTP error — projects:${res.status}`);
+  }
+  // Si la respuesta es ok, parseamos el cuerpo de la respuesta como JSON y lo asignamos a la variable data de tipo Project[].
   const data: Project[] = await res.json();
+  // Devolvemos el array de proyectos.
   return data;
 }
 
+// Creamos una función asíncrona que recibe un parámetro opcional signal de tipo AbortSignal o null,
 async function pedirPerfil(signal: AbortSignal | null = null): Promise<Profile> {
+  // Hacemos una petición fetch a la API de perfil, pasando el signal como opción.
   const res = await fetch(API_PROFILE, { signal });
-  if (!res.ok) throw new Error(`HTTP error — profile:${res.status}`);
+  // Si la respuesta no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!res.ok) {
+    throw new Error(`HTTP error — profile:${res.status}`);
+  }
+  // Si la respuesta es ok, parseamos el cuerpo de la respuesta como JSON y lo asignamos a la variable data de tipo Profile.
   const data: Profile = await res.json();
+  // Devolvemos el perfil.
   return data;
 }
 
@@ -88,10 +104,10 @@ async function pedirPerfil(signal: AbortSignal | null = null): Promise<Profile> 
  * y cuántos proyectos hay. Las dos peticiones ya salen a la vez, pero TypeScript
  * protesta y el saludo sale mal.
  * ¿Por qué? En el starter, ¿de dónde saca TypeScript el tipo de profile?
- *
+ * En el starter, la posición 0 del array es pedirProyectos, y se la lleva profile: por eso TypeScript dice que profile es un Project[]. El nombre de la variable no cuenta; cuenta la posición. Y la posición la da el orden en que se pasaron, no el orden en que llegan.
  */
 export async function saludoDelPortfolio(): Promise<string> {
-  const [profile, projects] = await Promise.all([pedirProyectos(), pedirPerfil()]);
+  const [profile, projects] = await Promise.all([pedirPerfil(), pedirProyectos()]);
   return `${profile.name} · ${projects.length} proyectos`;
 }
 
@@ -99,11 +115,10 @@ export async function saludoDelPortfolio(): Promise<string> {
  * el perfil no sale hasta que llega la lista. Tienen que salir las dos a la vez.
  * ¿Por qué? Si la lista tarda 0,9 s y el perfil 0,6 s, ¿cuánto tarda el starter
  * en devolver, y por qué?
- *
+ * «Porque estoy haciendo que dos peticiones independientes dependan innecesariamente una de la otra. El perfil no necesita esperar a que termine la descarga de proyectos para comenzar a solicitarse. Esto genera un tiempo de espera innecesario y empeora el rendimiento de la aplicación».
  */
 export async function pedirALaVez(): Promise<{ projects: Project[]; profile: Profile }> {
-  const projects = await pedirProyectos();
-  const profile = await pedirPerfil();
+  const [projects, profile] = await Promise.all([pedirProyectos(), pedirPerfil()]);
   return { projects, profile };
 }
 
@@ -112,13 +127,27 @@ export async function pedirALaVez(): Promise<{ projects: Project[]; profile: Pro
  * falla con «HTTP error — profile:404»: el nombre de la que falló y su status.
  * Ahora, con el perfil en 404, no falla.
  * ¿Por qué? Con el perfil en 404, ¿por qué no rechaza el Promise.all del starter?
- *
+ * Sí llega una respuesta del perfil: con el 404, la promesa de fetch se cumple con un Response de status 404, así que Promise.all no rechaza. El starter solo comprobaba projectsRes.ok; nadie miraba el ok del perfil, y el cuerpo del 404 salía como si fuera el perfil.
  */
+
+// Creamos una función asíncrona que devuelve una promesa que resuelve con un objeto que contiene un array de proyectos y un perfil.
 export async function pedirPortfolio(): Promise<{ projects: Project[]; profile: Profile }> {
+  // Hacemos dos peticiones fetch a la API de proyectos y perfil a la vez usando Promise.all.
   const [projectsRes, profileRes] = await Promise.all([fetch(API_PROJECTS), fetch(API_PROFILE)]);
-  if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
+
+  // Si la respuesta de proyectos no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!projectsRes.ok) {
+    throw new Error(`HTTP error — projects:${projectsRes.status}`);
+  }
+  // Si la respuesta de perfil no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!profileRes.ok) {
+    throw new Error(`HTTP error — profile:${profileRes.status}`);
+  }
+  // Si ambas respuestas son ok, parseamos los cuerpos de las respuestas como JSON y los asignamos a las variables projects y profile.
   const projects: Project[] = await projectsRes.json();
   const profile: Profile = await profileRes.json();
+
+  // Devolvemos un objeto que contiene el array de proyectos y el perfil.
   return { projects, profile };
 }
 
@@ -150,30 +179,44 @@ export async function pedirPortfolio(): Promise<{ projects: Project[]; profile: 
  * lista debajo. Si la sección se cierra antes de que lleguen, las dos peticiones
  * tienen que cancelarse. Ahora, al cerrar, una sigue viva.
  * ¿Por qué? ¿Qué cancela el abort() del starter, y qué no?
- *
+ * El abort del starter sólo cancela la petición de proyectos, porque el signal del controller sólo se pasa a pedirProyectos. La petición de perfil no tiene ningún signal, así que sigue viva aunque el componente se desmonte y se llame a abort(). Su respuesta no la lee nadie: Promise.all ya rechazó con la cancelada de proyectos, así que setProfile no llega a correr. Queda una petición gastando red para nada.
  */
+
+// Creamos un componente funcional llamado CabeceraAlCerrar.
 export function CabeceraAlCerrar() {
+  // Declaramos dos estados: uno para los proyectos (un array de Project) y otro para el perfil (un objeto Profile o null).
   const [projects, setProjects] = useState<Project[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  // Una vez que el componente se monta, ejecutamos un efecto que carga los datos.
   useEffect(() => {
+    // Creamos un nuevo AbortController para poder cancelar las peticiones si el componente se desmonta.
     const controller = new AbortController();
 
-    async function load() {
+    // Definimos una función asíncrona llamada load que hace las peticiones a la API.
+    const load = async () => {
+      // Ejecuta el código que podría producir un error.
+      // Si todo sale bien, continúa normalmente.
       try {
-        const [lista, perfil] = await Promise.all([pedirProyectos(controller.signal), pedirPerfil()]);
+        const [lista, perfil] = await Promise.all([
+          pedirProyectos(controller.signal),
+          pedirPerfil(controller.signal),
+        ]);
         setProjects(lista);
         setProfile(perfil);
       } catch {
         // Este drill no pinta errores: la cancelada y los fallos se quedan aquí.
       }
-    }
-
+    };
+    // Llamamos a la función load para iniciar las peticiones.
     load();
+    // La función de limpieza del efecto se ejecuta cuando el componente se desmonta.
     return () => controller.abort();
   }, []);
 
-  if (!profile) return <p>Cargando…</p>;
+  if (!profile) {
+    return <p>Cargando…</p>;
+  }
 
   return (
     <section>
@@ -203,10 +246,15 @@ export function CabeceraAlCerrar() {
  * falla, el aviso con su mensaje; al cerrar, ninguna petición viva. Portada ya
  * está bien: solo falla el hook.
  * ¿Por qué? Con el perfil en 404 y la lista bien, ¿llega a correr tu setProjects?
- *
+ * No: Promise.all rechaza con el error del perfil, así que la línea de setProjects nunca se ejecuta. El estado de projects se queda en su valor inicial (array vacío) y Portada no muestra ningún proyecto.
  */
-export function usePortfolio(): { projects: Project[]; profile: Profile | null; error: string | null } {
+export function usePortfolio(): {
+  projects: Project[];
+  profile: Profile | null;
+  error: string | null;
+} {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -214,8 +262,12 @@ export function usePortfolio(): { projects: Project[]; profile: Profile | null; 
 
     async function load() {
       try {
-        const lista = await pedirProyectos(controller.signal);
+        const [lista, perfil] = await Promise.all([
+          pedirProyectos(controller.signal),
+          pedirPerfil(controller.signal),
+        ]);
         setProjects(lista);
+        setProfile(perfil);
       } catch (err) {
         if (controller.signal.aborted) return;
         setError(err instanceof Error ? err.message : "Error desconocido");
@@ -226,14 +278,18 @@ export function usePortfolio(): { projects: Project[]; profile: Profile | null; 
     return () => controller.abort();
   }, []);
 
-  return { projects, profile: null, error };
+  return { projects, profile, error };
 }
 
 export function Portada() {
   const { projects, profile, error } = usePortfolio();
 
-  if (error) return <p role="alert">{error}</p>;
-  if (!profile) return <p>Cargando…</p>;
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
+  if (!profile) {
+    return <p>Cargando…</p>;
+  }
 
   return (
     <section>
