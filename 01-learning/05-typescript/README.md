@@ -2988,3 +2988,31 @@ Project[] = await res.json()`) y **comprobarlo** al ejecutar.
 - El 04, Zod (0/5).
 - Del reparto, al final: timeout + snapshot.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 14 nov 2026 — `13/04` CERRADO (5/5): validar con Zod
+
+- **Drill 1 `ContactoSchema`, aprobado:** `years: z.number()`. Porqué escrito: la API manda un
+  number y el schema esperaba un string. Fuiste a mirar tu API desplegada para contestar. Lo caza
+  `.parse` al ejecutar; TypeScript calla (el revés del drill 7 del 03).
+- **Drill 2 `leerPerfil`, aprobado:** `ProfileSchema.parse(data)`. Porqué escrito: `unknown` no
+  entra en un `Profile` sin comprobarlo. Matiz: un `as` callaría a TypeScript sin comprobar nada;
+  `.parse` hace las dos cosas.
+- **Drill 3 `ciudadDe`, aprobado:** `based` en el schema. Una línea arregló los dos fallos (el
+  TS2339 y el `undefined`), porque el tipo y la comprobación salen del mismo schema.
+- **Drill 4 `pedirProyectosValidados`, aprobado:** `unknown` + `ProjectsSchema.parse`. Porqué en
+  el chat: se entera «el componente, cuando pinta el status», lejos de la petición y sin error.
+- **Drill 5 `usePortfolioValidado`, aprobado:** primer intento en rojo por un `ProjectsSchema.parse`
+  dentro de `pedirJson`, que también recibe el perfil («un objeto, y el schema de arrays lo
+  rechaza»). Porqué en el chat: «pasa al catch, y setError guarda el mensaje». Tu
+  `setProjects(ProjectsSchema.parse(lista))` guarda la lista antes de validar el perfil; se queda
+  como está.
+
+### Verificación
+
+- Test 5/5, typecheck sin errores en todo el cuaderno y lint limpio. Banco: chips 1–5 del 04
+  marcados.
+
+### Pendiente
+
+- Del reparto, al final: timeout + snapshot.
+- El porqué del 11 del 12/10, en su línea 419.

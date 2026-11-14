@@ -1025,6 +1025,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="ContactoSchema"
         mirar="Pulsa Probar: tiene que salir el contacto tal cual, con years: 2. Con el starter sale el ZodError: «years: Invalid input: expected string, received number»."
         campos="botón Probar · lo que devuelve ContactoSchema.parse, o el error que lanza"
@@ -1038,6 +1039,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="leerPerfil"
         mirar="Pulsa Probar: el perfil completo pasa, y el perfil sin role tiene que dar un Error («role: …»). Con el starter, el perfil sin role pasa sin más."
         campos="botón Probar · leerPerfil con un perfil completo y con uno sin role"
@@ -1052,6 +1054,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="ciudadDe"
         mirar="Pulsa Probar: tiene que salir «Santiago, CL». Con el starter sale undefined, aunque los datos traen based."
         campos="botón Probar · lo que devuelve ciudadDe con un perfil que trae based"
@@ -1061,6 +1064,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="pedirProyectosValidados"
         mirar="Pulsa API: lista rota: tiene que fallar con «0.status: Invalid input…», el proyecto 0 sin status. Con el starter, el proyecto roto llega como si nada."
         campos="botones API: bien y API: lista rota · con qué termina o falla pedirProyectosValidados"
@@ -1070,6 +1074,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="usePortfolioValidado"
         mirar="Pulsa API: perfil roto: tiene que salir el aviso con el error de Zod, que nombra role. Con el starter se pinta la portada con «Nicolás · » y el rol vacío."
         campos="botones API: bien y API: perfil roto · PortadaValidada: «Cargando…», el aviso o tu cabecera con la lista"
