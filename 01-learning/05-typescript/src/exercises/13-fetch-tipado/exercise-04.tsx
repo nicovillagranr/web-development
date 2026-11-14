@@ -21,15 +21,16 @@ import { z } from "zod";
  * TEORÍA 1 · el schema y su tipo → drills 1–3
  * TEORÍA 2 · validar en la puerta → drill 4
  * TU HOOK → drill 5
+ * REPASO · una llamada dentro de otra → drills 6–10
  *
- * ▸ 5 drills en orden. Prohibidos any, as, el ! de «confía en mí» (x!) y los
+ * ▸ 10 drills en orden. Prohibidos any, as, el ! de «confía en mí» (x!) y los
  * eslint-disable. Zod ya está instalado e importado arriba.
  * pnpm test:run src/exercises/13-fetch-tipado/exercise-04.test.tsx
  * pnpm typecheck · pnpm lint
  *
  * Los starters están rotos a propósito: ejecuta los tres comandos. Contesta cada
  * ¿Por qué? en la línea libre de debajo.
- * Pistas: exercise-04.pistas.md. Drills 1–5: banco, pestaña 13.
+ * Pistas: exercise-04.pistas.md. Drills 1–10: banco, pestaña 13.
  * ============================================================================= */
 
 /* Las formas del 03, ahora como schemas. Los tipos ya no se escriben a mano: salen
@@ -221,14 +222,20 @@ export function usePortfolioValidado(): {
       }
     };
 
+    // Ejecutamos la función load para iniciar las peticiones a la API
     load();
+    // Devolvemos una función de limpieza que aborta las peticiones si el componente se desmonta, evitando posibles fugas de memoria y errores al intentar actualizar el estado de un componente desmontado.
     return () => controller.abort();
+
+    // Array de dependencias vacío para que el efecto se ejecute solo una vez al montar el componente
   }, []);
 
   return { projects, profile, error };
 }
 
+// PortadaValidada sólo es un componente de montaje
 export function PortadaValidada() {
+  // Usamos el hook usePortfolioValidado para obtener los proyectos, el perfil y los errores. El hook maneja la lógica de las peticiones a la API y la validación de los datos utilizando Zod.
   const { projects, profile, error } = usePortfolioValidado();
 
   // Si hay un error, lo renderizamos
@@ -245,6 +252,142 @@ export function PortadaValidada() {
       <h3>
         {profile.name} · {profile.role}
       </h3>
+      <ul>
+        {projects.map((project) => (
+          <li key={project.id}>{project.name}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ REPASO — una llamada dentro de otra
+ *
+ * DEFINICIÓN
+ * En f(g(x)), JavaScript ejecuta primero lo de dentro: g(x). Lo que g DEVUELVE
+ * ocupa su sitio, y con eso se llama a f. Se lee de dentro hacia fuera. Es lo
+ * mismo que dos líneas con una variable en medio, solo que sin ponerle nombre. Y
+ * si g lanza, f no llega a ejecutarse.
+ *
+ * SINTAXIS — tu línea del drill 5, desenrollada:
+ * setProjects(ProjectsSchema.parse(lista));
+ * // es lo mismo que:
+ * const projectsOk = ProjectsSchema.parse(lista); // 1º: parse DEVUELVE la lista comprobada
+ * setProjects(projectsOk);                         // 2º: set la GUARDA, y no devuelve nada
+ *
+ * 🧠 ANALOGÍA — el revisor y el buzón. El revisor (parse) revisa la carta y te la
+ * devuelve; tú la echas al buzón (set), que no te devuelve nada. Si el revisor la
+ * rechaza, la carta nunca llega al buzón.
+ *
+ * 🗣️ LAS PIEZAS
+ * ProjectsSchema.parse(lista) → DEVUELVE la lista comprobada, o lanza.
+ * setProjects(x)              → GUARDA x en el estado. Devuelve undefined.
+ *
+ * ⚠️ TRAMPA — leerla de izquierda a derecha, «primero guarda y después valida».
+ * Es al revés: set recibe lo que ya devolvió parse.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 6) guardarLista — comprueba la lista con ProjectsSchema y le pasa a guardar la
+ * lista ya comprobada. guardar hace de setProjects: recibe y no devuelve nada. Si
+ * la lista viene rota, tiene que lanzar sin llamar a guardar. Ahora a guardar le
+ * llega la lista sin comprobar, y parse revienta aunque la lista esté bien.
+ * ¿Por qué? Con el starter, ¿qué función se ejecuta primero, y qué le llega a parse?
+ *
+ */
+export function guardarLista(lista: unknown, guardar: (projects: Project[]) => void): void {
+  ProjectsSchema.parse(guardar(lista));
+}
+
+/* 7) guardarPerfil — comprueba el perfil y le pasa a guardar el perfil ya
+ * comprobado. guardar hace de setProfile. Ahora revienta con un perfil que está
+ * bien.
+ * ¿Por qué? Con el starter, ¿qué tipo devuelve lo de dentro, y qué tipo espera
+ * guardar?
+ *
+ */
+export function guardarPerfil(perfil: unknown, guardar: (profile: Profile) => void): void {
+  guardar(ProjectsSchema.parse(perfil));
+}
+
+/* 8) leerLista — recibe la respuesta de /projects, con res.ok ya comprobado, y
+ * devuelve la lista comprobada. En una sola línea, sin variable en medio: aquí se
+ * practica la llamada anidada. Ahora revienta aunque la lista llegue bien.
+ * ¿Por qué? Con el starter, ¿qué le llega a parse: la lista, u otra cosa?
+ *
+ */
+export async function leerLista(res: Response): Promise<Project[]> {
+  return ProjectsSchema.parse(res.json());
+}
+
+/* 9) validarPortfolio — recibe la lista y el perfil tal como llegan y devuelve
+ * { projects, profile }, cada uno comprobado con su schema, sin variables en
+ * medio. Si uno no encaja, tiene que lanzar. Ahora devuelve lo que llegue.
+ * ¿Por qué? Con tu arreglo y un perfil sin role, ¿llega a existir el objeto que
+ * devuelves?
+ *
+ */
+export function validarPortfolio(
+  lista: unknown,
+  perfil: unknown,
+): { projects: Project[]; profile: Profile } {
+  return { projects: lista, profile: perfil };
+}
+
+/* 10) usePortfolioTodoONada — PortadaTodoONada pinta el aviso y, debajo, lo que
+ * haya en el estado. Si una de las dos respuestas no encaja, solo el aviso: ni
+ * cabecera ni lista a medias. Ahora, con el perfil roto, sale el aviso con la
+ * lista debajo. PortadaTodoONada ya está bien: solo falla el hook.
+ * ¿Por qué? Con el starter y el perfil roto, ¿qué set llega a ejecutarse antes de
+ * que salte el error?
+ *
+ */
+export function usePortfolioTodoONada(): {
+  projects: Project[];
+  profile: Profile | null;
+  error: string | null;
+} {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const [lista, perfil] = await Promise.all([
+          pedirJson(API_PROJECTS, controller.signal),
+          pedirJson(API_PROFILE, controller.signal),
+        ]);
+        setProjects(ProjectsSchema.parse(lista));
+        setProfile(ProfileSchema.parse(perfil));
+      } catch (err) {
+        if (controller.signal.aborted) return;
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, []);
+
+  return { projects, profile, error };
+}
+
+export function PortadaTodoONada() {
+  const { projects, profile, error } = usePortfolioTodoONada();
+
+  if (!error && !profile) return <p>Cargando…</p>;
+
+  return (
+    <section>
+      {error && <p role="alert">{error}</p>}
+      {profile && (
+        <h3>
+          {profile.name} · {profile.role}
+        </h3>
+      )}
       <ul>
         {projects.map((project) => (
           <li key={project.id}>{project.name}</li>

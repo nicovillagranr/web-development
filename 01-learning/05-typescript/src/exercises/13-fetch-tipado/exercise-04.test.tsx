@@ -7,6 +7,11 @@ import {
   ciudadDe,
   pedirProyectosValidados,
   PortadaValidada,
+  guardarLista,
+  guardarPerfil,
+  leerLista,
+  validarPortfolio,
+  PortadaTodoONada,
   type Project,
   type Profile,
 } from "./exercise-04";
@@ -100,5 +105,72 @@ describe("13-fetch-tipado / exercise-04 — validar con Zod", () => {
       </StrictMode>,
     );
     expect(await screen.findByRole("alert")).toHaveTextContent("role");
+  });
+});
+
+describe("13-fetch-tipado / exercise-04 — repaso", () => {
+  it("6) guardarLista — guardar recibe la lista comprobada, o no recibe nada", () => {
+    const guardar = vi.fn();
+    guardarLista(PROYECTOS, guardar);
+    expect(guardar).toHaveBeenCalledWith(PROYECTOS);
+
+    const guardarRota = vi.fn();
+    expect(() => guardarLista([{ id: 1, name: "Projex" }], guardarRota)).toThrow("status");
+    expect(guardarRota).not.toHaveBeenCalled();
+  });
+
+  it("7) guardarPerfil — guardar recibe el perfil comprobado, o no recibe nada", () => {
+    const guardar = vi.fn();
+    guardarPerfil(PERFIL, guardar);
+    expect(guardar).toHaveBeenCalledWith(PERFIL);
+
+    const guardarRoto = vi.fn();
+    expect(() => guardarPerfil({ name: "Nicolás" }, guardarRoto)).toThrow("role");
+    expect(guardarRoto).not.toHaveBeenCalled();
+  });
+
+  it("8) leerLista — la lista comprobada, leída de la respuesta", async () => {
+    await expect(leerLista(new Response(JSON.stringify(PROYECTOS)))).resolves.toEqual(PROYECTOS);
+    await expect(
+      leerLista(new Response(JSON.stringify([{ id: 1, name: "Projex" }]))),
+    ).rejects.toThrow("status");
+  });
+
+  it("9) validarPortfolio — los dos comprobados, o lanza", () => {
+    expect(validarPortfolio(PROYECTOS, PERFIL)).toEqual({ projects: PROYECTOS, profile: PERFIL });
+    expect(() => validarPortfolio(PROYECTOS, { name: "Nicolás" })).toThrow("role");
+    expect(() => validarPortfolio([{ id: 1, name: "Projex" }], PERFIL)).toThrow("status");
+  });
+
+  it("10) usePortfolioTodoONada — la portada entera, o solo el aviso", async () => {
+    responder();
+    const bien = render(
+      <StrictMode>
+        <PortadaTodoONada />
+      </StrictMode>,
+    );
+    await act(async () => {});
+    expect(await screen.findByText("Nicolás · Frontend Developer")).toBeInTheDocument();
+    expect(screen.getByText("Smart Cooler")).toBeInTheDocument();
+    bien.unmount();
+
+    responder({ perfil: { name: "Nicolás" } });
+    const perfilRoto = render(
+      <StrictMode>
+        <PortadaTodoONada />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("role");
+    expect(screen.queryByText("Smart Cooler")).not.toBeInTheDocument();
+    perfilRoto.unmount();
+
+    responder({ lista: [{ id: 1, name: "Projex" }] });
+    render(
+      <StrictMode>
+        <PortadaTodoONada />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("status");
+    expect(screen.queryByText("Nicolás · Frontend Developer")).not.toBeInTheDocument();
   });
 });

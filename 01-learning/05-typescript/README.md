@@ -3016,3 +3016,63 @@ Project[] = await res.json()`) y **comprobarlo** al ejecutar.
 
 - Del reparto, al final: timeout + snapshot.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 14 nov 2026 — `13/05` MONTADO (0/5): el timeout
+
+El primer «luego» del reparto. Solo el timeout: el snapshot es otro concepto y va aparte.
+Objetivo: el `AbortSignal.any` de tu `fetchLive` (l.44-47 de `usePortfolioDataWithFallback.js`).
+
+- **1 `pedirConLimite`:** mide el tiempo con `Date.now()` cuando la respuesta ya llegó. Medir no
+  es cortar: con la API colgada, espera lo que tarde.
+- **2 `pedirConReintento`:** un reintento tras el 500 de Vercel al despertar. Los dos intentos
+  comparten un reloj nacido antes del primero, y el segundo sale con el reloj gastado. Ninguna
+  línea mal escrita.
+- **3 `pedirCancelableConLimite`:** las dos señales en un array dentro de `fetch`, que solo
+  acepta una.
+- **4 `ListaConLimite`:** el catch pregunta a la señal combinada, que también se aborta por el
+  reloj: el timeout se calla como si el usuario se hubiera ido.
+- **5 `usePortfolioConLimite` + `PortadaConLimite`:** tu hook del 04, con un reloj para toda la
+  carga y el aviso «La API tardó demasiado».
+
+### Verificación
+
+- Solución: 5/5 (tres pasadas), typecheck sin errores, lint limpio. Starters: los cinco rojos;
+  el 3 además con `TS2740`.
+- Arreglos a medias en rojo: el 3 solo con el reloj y solo con la señal de quien llama, el 4
+  sin guardia, y el 5 con la guardia en la combinada o sin distinguir el `TimeoutError`.
+- Banco: tarjetas 1–5, probadas en jsdom con el starter y con la solución. Respuestas nuevas:
+  «lenta» (5 s) y «500 y luego bien». El fetch de mentira rechaza, como Chrome, lo que no sea
+  un `AbortSignal`.
+- 267 líneas (techo ~230).
+
+## Sesión 14 nov 2026 — `13/04` ampliado a 10 drills: REPASO (6–10)
+
+A petición tuya: «¿Sabes qué línea de sintaxis me cuesta mucho entender?
+`setProjects(ProjectsSchema.parse(lista))`». Teoría nueva y corta: una llamada dentro de
+otra se lee de dentro hacia fuera, con tu línea desenrollada como ejemplo y la analogía del
+revisor y el buzón.
+
+- **6 `guardarLista`:** la llamada anidada al revés: guardar primero, y parse recibe su
+  `undefined`.
+- **7 `guardarPerfil`:** el schema equivocado dentro. TypeScript protesta fuera, en guardar,
+  porque el tipo viaja de dentro hacia fuera. Es el error de tu drill 5.
+- **8 `leerLista`:** sin `await` dentro de los paréntesis: a parse le llega la promesa.
+- **9 `validarPortfolio`:** la llamada anidada dentro de un objeto. Es el return de tu
+  `fetchLive` (l.66-69).
+- **10 `usePortfolioTodoONada`:** tu línea del drill 5. Con el perfil roto, la lista ya estaba
+  guardada: sale el aviso con la lista debajo. Ni reordenar los `set` lo arregla.
+
+### Verificación
+
+- Solución en una copia: 10/10 (dos pasadas), typecheck sin errores, lint limpio. Tus drills
+  1–5 y tus comentarios, intactos.
+- Starters: los cinco rojos; el 6 y el 7 además con `TS2345`, y el 9 con dos `TS2322`.
+- Arreglo a medias en rojo: el 10 reordenando los `set` (con la lista rota queda tu cabecera).
+- Banco: tarjetas 6–10, probadas en jsdom con el starter y con la solución.
+- **Deuda declarada:** 398 líneas con tus comentarios del 1–5.
+
+### Pendiente
+
+- El repaso 6–10 del 04 y el 05 entero, en el orden que quieras.
+- Del reparto: el snapshot, al final.
+- El porqué del 11 del 12/10, en su línea 419.

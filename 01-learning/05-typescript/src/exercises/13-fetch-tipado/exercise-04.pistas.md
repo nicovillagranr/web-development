@@ -6,6 +6,9 @@ siguiente.
 Los cinco salen rojos en el test. Al 2, al 3 y al 5 los marca además el compilador, y su
 Pista 3 cita ese mensaje. Al 1 y al 4, solo el test.
 
+En el repaso (6–10), los cinco salen rojos en el test. Al 6, al 7 y al 9 los marca además el
+compilador. Al 8 y al 10, solo el test.
+
 ---
 
 ## Drill 1 — `ContactoSchema`
@@ -239,5 +242,251 @@ setProfile(profileOk);
 Si un .parse lanza, es como cualquier otro error dentro del try: el catch ve que no fue una
 cancelación y lo guarda en error. Es tu usePortfolioData (l.66-69 y l.89-92) sin el timeout
 ni el snapshot: allí fetchLive devuelve los dos ya validados, y después se guardan.
+
+</details>
+
+---
+
+# Repaso — drills 6–10
+
+## Drill 6 — `guardarLista`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Lee la línea del starter de dentro hacia fuera. ¿Qué se ejecuta primero, y qué devuelve?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+guardar no devuelve nada, así que a parse le llega undefined. Tiene que ser al revés: primero
+se comprueba, y lo que devuelve la comprobación es lo que se guarda.
+
+</details>
+
+<details><summary>Pista 3 — lo que dicen el compilador y el test</summary>
+
+```
+error TS2345: Argument of type 'unknown' is not assignable to parameter of type '{ id: number; name: string; status: string; }[]'.
+```
+
+A guardar le llega lista sin comprobar: unknown no encaja en Project[].
+
+```
+ZodError: [
+  {
+    "expected": "array",
+    "code": "invalid_type",
+    "path": [],
+    "message": "Invalid input: expected array, received undefined"
+  }
+]
+```
+
+parse recibió undefined: lo que devolvió guardar.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+guardar(ProjectsSchema.parse(lista));
+```
+
+Primero corre ProjectsSchema.parse(lista): devuelve la lista comprobada, o lanza. Con lo que
+devuelve se llama a guardar. Si parse lanza, guardar no llega a ejecutarse. Es la carta que el
+revisor rechaza antes del buzón.
+
+</details>
+
+---
+
+## Drill 7 — `guardarPerfil`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El de fuera recibe lo que devuelve el de dentro. ¿Qué devuelve el de dentro, y qué espera
+recibir guardar?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El schema de dentro describe una lista, pero lo que llega es un perfil. Cada dato se comprueba
+con su propio schema.
+
+</details>
+
+<details><summary>Pista 3 — lo que dicen el compilador y el test</summary>
+
+```
+error TS2345: Argument of type '{ id: number; name: string; status: string; }[]' is not assignable to parameter of type '{ name: string; role: string; }'.
+```
+
+TypeScript protesta en guardar porque ahí es donde no encaja: lo de dentro devuelve un
+Project[], y guardar espera un Profile.
+
+```
+ZodError: [
+  {
+    "expected": "array",
+    "code": "invalid_type",
+    "path": [],
+    "message": "Invalid input: expected array, received object"
+  }
+]
+```
+
+Es el mismo mensaje que te salió en el drill 5, cuando pedirJson validaba el perfil con
+ProjectsSchema.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+guardar(ProfileSchema.parse(perfil));
+```
+
+ProfileSchema.parse devuelve un Profile, que es justo lo que espera guardar. El tipo viaja de
+dentro hacia fuera, igual que el valor.
+
+</details>
+
+---
+
+## Drill 8 — `leerLista`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+¿Qué devuelve res.json(): la lista, o algo que la traerá más tarde?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+res.json() devuelve una promesa. parse tiene que recibir lo que trae la promesa, así que hay
+que esperarla dentro de los paréntesis, antes de que parse la reciba.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: parse acepta cualquier cosa (unknown), también una promesa.
+
+```
+Caused by: ZodError: [
+  {
+    "expected": "array",
+    "code": "invalid_type",
+    "path": [],
+    "message": "Invalid input: expected array, received Promise"
+  }
+]
+```
+
+A parse le llegó la promesa, no la lista.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+return ProjectsSchema.parse(await res.json());
+```
+
+Dentro hacia fuera: res.json() da la promesa, await espera la lista, y parse recibe la lista. Es
+la SINTAXIS de la Teoría 2, con tu lista en vez del clima.
+
+</details>
+
+---
+
+## Drill 9 — `validarPortfolio`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Dentro de un objeto también se puede llamar a una función: el valor de cada clave es lo que
+devuelva la llamada.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+En cada clave, en vez del dato tal cual, la comprobación de ese dato con su schema.
+
+</details>
+
+<details><summary>Pista 3 — lo que dicen el compilador y el test</summary>
+
+```
+error TS2322: Type 'unknown' is not assignable to type '{ id: number; name: string; status: string; }[]'.
+error TS2322: Type 'unknown' is not assignable to type '{ name: string; role: string; }'.
+```
+
+```
+AssertionError: expected [Function] to throw an error
+```
+
+Con el perfil sin role, el starter devuelve el objeto sin rechistar.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+return { projects: ProjectsSchema.parse(lista), profile: ProfileSchema.parse(perfil) };
+```
+
+Las dos llamadas corren antes de que el objeto exista: si una lanza, no se arma nada. Es el
+return de tu fetchLive, l.66-69 de usePortfolioDataWithFallback.js.
+
+</details>
+
+---
+
+## Drill 10 — `usePortfolioTodoONada`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+En el starter, cada set lleva su comprobación dentro. ¿Qué pasa con el primer set si la
+comprobación del segundo lanza?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Para que sea todo o nada, primero se comprueban los dos y después se guardan los dos. Para eso
+la llamada anidada no sirve: hay que desenrollarla, como en la SINTAXIS del repaso. Cambiar el
+orden de los set tampoco: entonces se queda a medias con la lista rota.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: los tipos encajan.
+
+```
+Error: expect(element).not.toBeInTheDocument()
+expected document not to contain element, found <li>
+  Smart Cooler
+</li> instead
+```
+
+Con el perfil roto, la lista ya estaba guardada cuando saltó el error.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const projectsOk = ProjectsSchema.parse(lista);
+const profileOk = ProfileSchema.parse(perfil);
+setProjects(projectsOk);
+setProfile(profileOk);
+```
+
+Si una de las dos comprobaciones lanza, el catch la recoge antes de que corra ningún set. Es lo
+que hace tu fetchLive: devuelve los dos ya validados, y load guarda después.
 
 </details>
