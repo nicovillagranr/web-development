@@ -2958,3 +2958,33 @@ Project[] = await res.json()`) y **comprobarlo** al ejecutar.
 - Resolver el repaso del 03 (6–10) y el 04, en el orden que quieras.
 - Del reparto, al final: timeout + snapshot.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 14 nov 2026 — `13/03` REPASO CERRADO (6–10): el archivo, 10/10
+
+- **Drill 6 `pedirCasiALaVez`, aprobado:** quitaste los dos `await` de dentro del array. Porqué
+  en el chat: en el starter el perfil sale «en el 0,9». Lo reabriste tú («¿no se ejecutan a la
+  vez?»): `Promise.all` no lanza los fetch, solo espera los que ya salieron; el `await` del array
+  corre antes. Lo cerraste con «1,5, el await interno genera un cuello de botella».
+- **Drill 7 `portfolioTipado`, aprobado:** la tupla `[Project[], Profile]`. Porqué en el chat: del
+  tipo, al ejecutar, no queda «nada, sólo es el tipado para el compilador». El test mira valores;
+  el typecheck, tipos.
+- **Drill 8 `pedirConError500`, aprobado:** los `res.ok` antes de los `.json()`. Porqué en el chat:
+  la lista trae JSON, «entonces lanza la del perfil», con un error de sintaxis, y el
+  «HTTP error — profile:500» nunca llega a salir.
+- **Drill 9 `PortadaAMedias`, aprobado:** las dos a la vez y los dos `set` juntos. Lo que partía la
+  portada no eran los `set` ni que el perfil fuera más rápido: era el `await` de la lista entre
+  ellos. Tu `if (!projects)` no se cumple nunca (`[]` es verdadero); se queda como está.
+- **Drill 10 `useFichaConAutor`, aprobado a la primera:** controller, signal en las dos, guardia y
+  limpieza. Porqué escrito: el `abort()` de la pasada de Projex cancela las dos peticiones de esa
+  pasada, la del proyecto y la del perfil.
+
+### Verificación
+
+- Test 10/10, typecheck sin errores en el 03 y lint limpio. Banco: chips 6–10 marcados.
+- 518 líneas (techo ~230): deuda del repaso, ya anotada.
+
+### Pendiente
+
+- El 04, Zod (0/5).
+- Del reparto, al final: timeout + snapshot.
+- El porqué del 11 del 12/10, en su línea 419.

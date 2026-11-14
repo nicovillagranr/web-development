@@ -321,10 +321,12 @@ export function Portada() {
 /* 6) pedirCasiALaVez — devuelve { projects, profile }, con las dos peticiones a la
  * vez. Ya usa Promise.all, pero el perfil sigue sin salir hasta que llega la lista.
  * ¿Por qué? Si el starter ya usa Promise.all, ¿por qué el perfil sale tarde?
- *
+ * Porque los await dentro del array se ejecutan uno por uno: el primero detiene la función hasta que llega la lista (0,9 s) y recién ahí sale el perfil, que llega en el 1,5. Cuando Promise.all recibe el array, las dos ya llegaron, así que no tiene nada que esperar a la vez.
  */
+
+// Creamos una función asíncrona que devuelve una promesa que resuelve con un objeto que contiene un array de proyectos y un perfil.
 export async function pedirCasiALaVez(): Promise<{ projects: Project[]; profile: Profile }> {
-  const [projects, profile] = await Promise.all([await pedirProyectos(), await pedirPerfil()]);
+  const [projects, profile] = await Promise.all([pedirProyectos(), pedirPerfil()]);
   return { projects, profile };
 }
 
@@ -332,13 +334,31 @@ export async function pedirCasiALaVez(): Promise<{ projects: Project[]; profile:
  * puesto en la tupla. Devuelve { projects, profile }. El test pasa, pero
  * TypeScript protesta.
  * ¿Por qué? Con el starter, ¿por qué el test pasa si TypeScript protesta?
- *
+ * El starter estaba incorrecto por culpa de la línea que guarda las respuestas de la petición.
+ * Los nombres [projects, profile] iban bien, pero el tipo estaba al revés: [Profile, Project[]]. Por eso TypeScript creía que projects era un Profile y protestaba al devolverlo. El test pasa porque ese tipo es solo para el compilador: al ejecutar se borra y queda JS que guarda la lista en projects, como debe.
  */
+
+// Creamos una función asíncrona que devuelve una promesa que resuelve con un objeto que contiene un array de proyectos y un perfil.
 export async function portfolioTipado(): Promise<{ projects: Project[]; profile: Profile }> {
+  // Hacemos dos peticiones fetch a la API de proyectos y perfil a la vez usando Promise.all.
   const [projectsRes, profileRes] = await Promise.all([fetch(API_PROJECTS), fetch(API_PROFILE)]);
-  if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
-  if (!profileRes.ok) throw new Error(`HTTP error — profile:${profileRes.status}`);
-  const [projects, profile]: [Profile, Project[]] = await Promise.all([projectsRes.json(), profileRes.json()]);
+
+  // Si la respuesta de proyectos no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!projectsRes.ok) {
+    throw new Error(`HTTP error — projects:${projectsRes.status}`);
+  }
+
+  // Si la respuesta de perfil no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!profileRes.ok) {
+    throw new Error(`HTTP error — profile:${profileRes.status}`);
+  }
+
+  // Si ambas respuestas son ok, parseamos los cuerpos de las respuestas como JSON y los asignamos a las variables projects y profile, con sus tipos correspondientes.
+  const [projects, profile]: [Project[], Profile] = await Promise.all([
+    projectsRes.json(),
+    profileRes.json(),
+  ]);
+  // Devolvemos un objeto que contiene el array de proyectos y el perfil.
   return { projects, profile };
 }
 
@@ -347,14 +367,27 @@ export async function portfolioTipado(): Promise<{ projects: Project[]; profile:
  * con JSON, sino con una página de error en HTML. Ahora, con el perfil en 500,
  * falla con otro mensaje.
  * ¿Por qué? Con el perfil en 500, ¿qué línea del starter lanza primero, y qué?
- *
+ * La que lanza primero es la .json() del perfil: la lista llega bien y su .json() lee JSON sin problema, pero el perfil trae una página HTML y .json() falla con un error de sintaxis. El if del perfil nunca llega a ejecutarse.
+ * El problema del starter es el orden de las líneas: primero se leen los cuerpos con .json() y después se comprueba res.ok. Si el perfil viene mal, la línea de .json() del perfil intenta parsear un HTML como JSON y falla con un error de sintaxis, en lugar de lanzar el error con el status.
  */
+
+// Creamos una función asíncrona que devuelve una promesa que resuelve con un objeto que contiene un array de proyectos y un perfil.
 export async function pedirConError500(): Promise<{ projects: Project[]; profile: Profile }> {
+  // Hacemos dos peticiones fetch a la API de proyectos y perfil a la vez usando Promise.all.
   const [projectsRes, profileRes] = await Promise.all([fetch(API_PROJECTS), fetch(API_PROFILE)]);
+  // Si la respuesta de proyectos no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!projectsRes.ok) {
+    throw new Error(`HTTP error — projects:${projectsRes.status}`);
+  }
+  // Si la respuesta de perfil no es ok (status no está en el rango 200-299), lanzamos un error con el status.
+  if (!profileRes.ok) {
+    throw new Error(`HTTP error — profile:${profileRes.status}`);
+  }
+  // Si ambas respuestas son ok, parseamos los cuerpos de las respuestas como JSON y los asignamos a las variables projects y profile.
   const projects: Project[] = await projectsRes.json();
   const profile: Profile = await profileRes.json();
-  if (!projectsRes.ok) throw new Error(`HTTP error — projects:${projectsRes.status}`);
-  if (!profileRes.ok) throw new Error(`HTTP error — profile:${profileRes.status}`);
+
+  // Retornamos un objeto que contiene el array de proyectos y el perfil.
   return { projects, profile };
 }
 
@@ -362,31 +395,40 @@ export async function pedirConError500(): Promise<{ projects: Project[]; profile
  * todo de una vez, y con las dos peticiones a la vez. Ahora tu nombre sale
  * primero, con la lista vacía, y la lista aparece después.
  * ¿Por qué? Con el starter, ¿por qué se ve tu nombre con la lista vacía?
- *
+ * Porque el starter hace los dos setState por separado: primero setProfile y después setProjects, con el await de la lista en medio. La lista recién sale cuando llega el perfil, y mientras se espera React pinta lo que hay: el nombre con la lista vacía; luego la lista aparece. Para evitar esto, hay que esperar a que lleguen las dos respuestas y hacer los dos setState juntos, sin ningún await entre ellos.
  */
+
+// Creamos un componente funcional llamado PortadaAMedias.
 export function PortadaAMedias() {
+  // Seteamos dos estados: uno para los proyectos (un array de Project) y otro para el perfil (un objeto Profile o null).
   const [projects, setProjects] = useState<Project[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  // Una vez que el componente se monta, ejecutamos un efecto que carga los datos.
   useEffect(() => {
+    // Creamos un nuevo AbortController para poder cancelar las peticiones si el componente se desmonta.
     const controller = new AbortController();
 
-    async function load() {
+    const load = async () => {
       try {
-        const perfil = await pedirPerfil(controller.signal);
-        setProfile(perfil);
-        const lista = await pedirProyectos(controller.signal);
+        const [lista, perfil] = await Promise.all([
+          pedirProyectos(controller.signal),
+          pedirPerfil(controller.signal),
+        ]);
         setProjects(lista);
+        setProfile(perfil);
       } catch {
         // Este drill no pinta errores: la cancelada y los fallos se quedan aquí.
       }
-    }
+    };
 
     load();
     return () => controller.abort();
   }, []);
 
-  if (!profile) return <p>Cargando…</p>;
+  if (!profile || !projects) {
+    return <p>Cargando…</p>;
+  }
 
   return (
     <section>
@@ -407,7 +449,9 @@ export function PortadaAMedias() {
 /* Un proyecto suelto, de API_PROJECTS/id (/api/projects/2), como en el 02. */
 async function pedirProyecto(id: number, signal: AbortSignal | null = null): Promise<Project> {
   const res = await fetch(`${API_PROJECTS}/${id}`, { signal });
-  if (!res.ok) throw new Error(`HTTP error — project:${res.status}`);
+  if (!res.ok) {
+    throw new Error(`HTTP error — project:${res.status}`);
+  }
   const data: Project = await res.json();
   return data;
 }
@@ -419,7 +463,7 @@ async function pedirProyecto(id: number, signal: AbortSignal | null = null): Pro
  * una falla, el aviso. Ahora van en fila y Projex pisa. FichaConAutor ya está bien.
  * ¿Por qué? Con tu arreglo, al pasar a Smart Cooler, ¿cuántas peticiones cancela el
  * abort() de la pasada de Projex, y cuáles?
- *
+ * El abort() de la pasada de Projex cancela las dos peticiones de esa pasada: la del proyecto Projex y la del perfil. Cuando se pasa a Smart Cooler, se crea un nuevo controller para esa pasada, y el anterior se aborta, cancelando ambas peticiones de Projex. La petición de Smart Cooler sigue viva y se completa normalmente.
  */
 export function useFichaConAutor(id: number): {
   project: Project | null;
@@ -431,18 +475,27 @@ export function useFichaConAutor(id: number): {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function load() {
+    // Creamos un nuevo AbortController para poder cancelar las peticiones si el componente se desmonta o si cambia el id.
+    const controller = new AbortController();
+
+    const load = async () => {
       try {
-        const proyecto = await pedirProyecto(id);
-        const perfil = await pedirPerfil();
+        const [proyecto, perfil] = await Promise.all([
+          pedirProyecto(id, controller.signal),
+          pedirPerfil(controller.signal),
+        ]);
         setProject(proyecto);
         setProfile(perfil);
       } catch (err) {
+        if (controller.signal.aborted) {
+          return;
+        }
         setError(err instanceof Error ? err.message : "Error desconocido");
       }
-    }
+    };
 
     load();
+    return () => controller.abort();
   }, [id]);
 
   return { project, profile, error };
@@ -451,9 +504,12 @@ export function useFichaConAutor(id: number): {
 export function FichaConAutor({ id }: { id: number }) {
   const { project, profile, error } = useFichaConAutor(id);
 
-  if (error) return <p role="alert">{error}</p>;
-  if (!project || !profile) return <p>Cargando…</p>;
-
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
+  if (!project || !profile) {
+    return <p>Cargando…</p>;
+  }
   return (
     <p>
       {project.name} · {project.status} — por {profile.name}

@@ -973,6 +973,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={6}
+        estado="resuelto"
         nombre="pedirCasiALaVez"
         mirar="Pulsa Probar: tiene que tardar 0,9 s. Con el starter tarda 1,5 s, como el starter del 2, aunque ya usa Promise.all."
         campos="botón Probar · cuánto tardó y lo que devolvió"
@@ -982,6 +983,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={7}
+        estado="resuelto"
         nombre="portfolioTipado"
         mirar="Pulsa API: bien: sale «3 proyectos y el perfil de Nicolás» también con el starter. Aquí el fallo no se ve: solo lo marca pnpm typecheck."
         campos="botón API: bien · lo que devuelve portfolioTipado al esperarla"
@@ -991,6 +993,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={8}
+        estado="resuelto"
         nombre="pedirConError500"
         mirar="Pulsa API: perfil 500: tiene que fallar con «HTTP error — profile:500». Con el starter falla con el error de leer HTML como JSON («Unexpected token '<'…»)."
         campos="botones API: bien y API: perfil 500 · con qué termina o falla pedirConError500"
@@ -1000,6 +1003,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={9}
+        estado="resuelto"
         nombre="PortadaAMedias"
         mirar="Pulsa API: bien: «Cargando…» y después tu nombre con la lista, todo de una vez. Con el starter sale tu nombre con la lista vacía, y la lista aparece casi un segundo después."
         campos="botón API: bien · el componente: «Cargando…», o tu nombre y la lista"
@@ -1009,6 +1013,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={10}
+        estado="resuelto"
         nombre="useFichaConAutor"
         mirar="Pulsa Projex y, antes de 2,5 s, Smart Cooler: tiene que quedarse «Smart Cooler · En curso — por Nicolás». Con el starter, al rato, Projex la pisa."
         campos="botones Projex y Smart Cooler · FichaConAutor con el id que pulsaste"
