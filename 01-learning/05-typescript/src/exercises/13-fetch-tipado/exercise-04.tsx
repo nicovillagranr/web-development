@@ -293,10 +293,15 @@ export function PortadaValidada() {
  * la lista viene rota, tiene que lanzar sin llamar a guardar. Ahora a guardar le
  * llega la lista sin comprobar, y parse revienta aunque la lista esté bien.
  * ¿Por qué? Con el starter, ¿qué función se ejecuta primero, y qué le llega a parse?
- *
+ * Primero se ejecuta guardar, porque está dentro: recibe la lista sin comprobar y devuelve undefined. A parse le llega ese undefined, y revienta aunque la lista esté bien.
  */
+
+// Creamos una función que recibe una lista de tipo unknown y una función guardar que recibe un array de proyectos
 export function guardarLista(lista: unknown, guardar: (projects: Project[]) => void): void {
-  ProjectsSchema.parse(guardar(lista));
+  // Validamos la lista utilizando el método parse del ProjectsSchema. Si la lista no cumple con el schema, se lanzará un error y no se ejecutará la función guardar.
+  const proyectosValidados = ProjectsSchema.parse(lista);
+  // Llamamos a la función guardar con la lista validada de proyectos. La función guardar se encarga de almacenar los proyectos en el estado o realizar cualquier otra acción necesaria.
+  guardar(proyectosValidados);
 }
 
 /* 7) guardarPerfil — comprueba el perfil y le pasa a guardar el perfil ya
@@ -304,20 +309,24 @@ export function guardarLista(lista: unknown, guardar: (projects: Project[]) => v
  * bien.
  * ¿Por qué? Con el starter, ¿qué tipo devuelve lo de dentro, y qué tipo espera
  * guardar?
- *
+ * Lo de dentro de guardar() devuelve un Project[], pero guardar espera recibir un Profile.
+ * Por lo tanto, es como intentar encajar una figura de proyectos en el agujero con forma de perfil: no coincide la estructura y TypeScript detecta la incompatibilidad de tipos.
  */
 export function guardarPerfil(perfil: unknown, guardar: (profile: Profile) => void): void {
-  guardar(ProjectsSchema.parse(perfil));
+  const perfilValidado = ProfileSchema.parse(perfil);
+  guardar(perfilValidado);
 }
 
 /* 8) leerLista — recibe la respuesta de /projects, con res.ok ya comprobado, y
  * devuelve la lista comprobada. En una sola línea, sin variable en medio: aquí se
  * practica la llamada anidada. Ahora revienta aunque la lista llegue bien.
  * ¿Por qué? Con el starter, ¿qué le llega a parse: la lista, u otra cosa?
- *
+ * Con el starter, a parse le llega una promesa, no la lista: sin await, res.json() devuelve en el acto el número de seguimiento y el cuerpo llega después. parse esperaba un array y lanza («expected array, received Promise»). TS calla porque parse acepta unknown.
  */
+
+// Creamos una función asíncrona que recibe un objeto Response y devuelve una promesa que resuelve con un array de proyectos validados. Utilizamos el método parse del ProjectsSchema para validar los datos obtenidos de la respuesta. Si los datos no cumplen con el schema, se lanzará un error.
 export async function leerLista(res: Response): Promise<Project[]> {
-  return ProjectsSchema.parse(res.json());
+  return ProjectsSchema.parse(await res.json());
 }
 
 /* 9) validarPortfolio — recibe la lista y el perfil tal como llegan y devuelve
@@ -325,13 +334,17 @@ export async function leerLista(res: Response): Promise<Project[]> {
  * medio. Si uno no encaja, tiene que lanzar. Ahora devuelve lo que llegue.
  * ¿Por qué? Con tu arreglo y un perfil sin role, ¿llega a existir el objeto que
  * devuelves?
- *
+ * No, no llega a existir el objeto que devuelves. ProjectsSchema.parse(lista) sí se ejecuta primero y devuelve la lista comprobada; después ProfileSchema.parse(perfil) lanza por role, y el objeto no se puede terminar de armar: el return no entrega nada y la lista comprobada se pierde.
  */
 export function validarPortfolio(
   lista: unknown,
   perfil: unknown,
 ): { projects: Project[]; profile: Profile } {
-  return { projects: lista, profile: perfil };
+  // Retornamos un objeto que contiene los proyectos y el perfil validados utilizando los métodos parse de sus respectivos schemas. Si alguno no cumple su schema, lanza y el objeto no se termina de armar: no se devuelve nada.
+  return {
+    projects: ProjectsSchema.parse(lista),
+    profile: ProfileSchema.parse(perfil),
+  };
 }
 
 /* 10) usePortfolioTodoONada — PortadaTodoONada pinta el aviso y, debajo, lo que
@@ -340,33 +353,47 @@ export function validarPortfolio(
  * lista debajo. PortadaTodoONada ya está bien: solo falla el hook.
  * ¿Por qué? Con el starter y el perfil roto, ¿qué set llega a ejecutarse antes de
  * que salte el error?
- *
+ * El setProjects llega a ejecutarse antes de que salte el error. En el starter cada línea valida y guarda a la vez: setProjects(ProjectsSchema.parse(lista)) guarda la lista, y en la línea siguiente ProfileSchema.parse(perfil) lanza antes de llegar a setProfile. Por eso queda la lista a medias debajo del aviso.
  */
 export function usePortfolioTodoONada(): {
   projects: Project[];
   profile: Profile | null;
   error: string | null;
 } {
+  // Seteamos el estado inicial de los proyectos como un array vacío de tipo Project
   const [projects, setProjects] = useState<Project[]>([]);
+  // Seteamos el estado inicial del perfil como null, ya que aún no se ha cargado
   const [profile, setProfile] = useState<Profile | null>(null);
+  // Seteamos el estado inicial del error como null, ya que aún no ha ocurrido ningún error
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto
   useEffect(() => {
+    // Creamos un nuevo AbortController para poder cancelar las peticiones si el componente se desmonta
     const controller = new AbortController();
 
-    async function load() {
+    // Creamos una función asíncrona que realiza las peticiones a la API y valida los datos utilizando Zod. Si ocurre un error durante la petición o la validación, se guarda en el estado de error.
+    const load = async () => {
+      // Ejecuta el código que podría producir un error.
+      // Si todo sale bien, continúa normalmente.
       try {
         const [lista, perfil] = await Promise.all([
           pedirJson(API_PROJECTS, controller.signal),
           pedirJson(API_PROFILE, controller.signal),
         ]);
-        setProjects(ProjectsSchema.parse(lista));
-        setProfile(ProfileSchema.parse(perfil));
+        const { projects, profile } = validarPortfolio(lista, perfil);
+        setProjects(projects);
+        setProfile(profile);
+        // Captura el error si algo falla dentro del try.
+        // Permite manejarlo sin que la aplicación se interrumpa inesperadamente.
       } catch (err) {
-        if (controller.signal.aborted) return;
+        // Si la señal de abort se ha activado, no hacemos nada y salimos de la función.
+        if (controller.signal.aborted) {
+          return;
+        }
         setError(err instanceof Error ? err.message : "Error desconocido");
       }
-    }
+    };
 
     load();
     return () => controller.abort();
@@ -378,7 +405,9 @@ export function usePortfolioTodoONada(): {
 export function PortadaTodoONada() {
   const { projects, profile, error } = usePortfolioTodoONada();
 
-  if (!error && !profile) return <p>Cargando…</p>;
+  if (!error && !profile) {
+    return <p>Cargando…</p>;
+  }
 
   return (
     <section>

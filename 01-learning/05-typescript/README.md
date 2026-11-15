@@ -3076,3 +3076,39 @@ revisor y el buzón.
 - El repaso 6–10 del 04 y el 05 entero, en el orden que quieras.
 - Del reparto: el snapshot, al final.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 15 nov 2026 — `13/04` REPASO CERRADO: el archivo, 10/10
+
+El repaso «una llamada dentro de otra», el que nació de tu
+`setProjects(ProjectsSchema.parse(lista))`.
+
+- **6 y 7 (14 nov):** los desenrollaste en dos líneas con una variable, que el enunciado
+  permitía. El 6 lo leíste de dentro hacia fuera a la primera. El 7, con una analogía tuya:
+  la figura de proyectos en el agujero con forma de perfil.
+- **8 `leerLista`:** primero en dos líneas con `data`, y un porqué que culpaba al `any`. Con
+  tu propia versión delante (el mismo `res.json()`; solo cambia el `await`) y el delivery: a
+  parse le llega el número de seguimiento. Después lo plegaste tú solo:
+  `ProjectsSchema.parse(await res.json())`.
+- **9 `validarPortfolio`:** dijiste que te cuesta escribirla anidada. Receta de plegar: forma
+  larga → cada valor por lo que vale → fuera los `const`. Lo cerraste con los dos `parse`
+  dentro del objeto. El porqué tenía una trampa: el `parse` de proyectos **sí** corre; lo
+  que no llega a pasar es que el objeto se termine de armar. Comprobado con un espía en cada
+  `parse`.
+- **10 `usePortfolioTodoONada`:** tu `validarPortfolio` dentro del hook. Primero se
+  comprueban los dos, después se guarda. Es el matiz que te señalé al cerrar el drill 5 y
+  que ese día dejaste como estaba: hoy lo resolviste tú.
+
+**Dónde vive esto en tu código:** el return de `fetchLive` en
+`usePortfolioDataWithFallback.js` (l.66-69) es tu drill 9, línea por línea.
+
+### Verificación
+
+- verificar-ejercicio: 10/10, 0 errores de tipos en el archivo (fuera, solo el starter del 3
+  del 05), sin `TS6133`, lint limpio.
+- **Deuda declarada:** 427 líneas con tus comentarios.
+
+### Pendiente
+
+- El 05 entero (0/5), el timeout.
+- Del reparto: el snapshot, al final.
+- El porqué del 11 del 12/10, en su línea 419.

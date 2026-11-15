@@ -1225,6 +1225,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={6}
+        estado="resuelto"
         nombre="guardarLista"
         mirar="Pulsa Lista bien: guardar tiene que recibir tus tres proyectos, y no lanza. Pulsa Lista rota: lanza por status y guardar no recibe nada. Con el starter, guardar recibe la lista sin comprobar, también la rota, y después parse revienta con undefined."
         campos="botones Lista bien y Lista rota · qué recibió guardar y si guardarLista lanzó"
@@ -1242,6 +1243,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={7}
+        estado="resuelto"
         nombre="guardarPerfil"
         mirar="Pulsa Perfil bien: guardar tiene que recibir tu perfil. Pulsa Perfil sin role: lanza por role y guardar no recibe nada. Con el starter revienta hasta con el perfil bien: «expected array, received object»."
         campos="botones Perfil bien y Perfil sin role · qué recibió guardar y si guardarPerfil lanzó"
@@ -1256,6 +1258,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={8}
+        estado="resuelto"
         nombre="leerLista"
         mirar="Pulsa API: bien: al esperarla tiene que salir tu lista. Con el starter falla con «expected array, received Promise»: a parse le llegó la promesa."
         campos="botones API: bien y API: lista rota · con qué termina o falla leerLista"
@@ -1265,6 +1268,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={9}
+        estado="resuelto"
         nombre="validarPortfolio"
         mirar="Pulsa Probar: el primero tiene que salir con tu lista y tu perfil, y el segundo, con el perfil sin role, un Error («role: …»). Con el starter, el perfil roto sale tal cual."
         campos="botón Probar · validarPortfolio con un perfil completo y con uno sin role"
@@ -1279,6 +1283,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={10}
+        estado="resuelto"
         nombre="usePortfolioTodoONada"
         mirar="Pulsa API: perfil roto: tiene que salir solo el aviso, sin lista debajo. Con API: lista rota, solo el aviso, sin tu cabecera. Con el starter, con el perfil roto sale el aviso con la lista debajo."
         campos="botones API: bien, API: perfil roto y API: lista rota · PortadaTodoONada: el aviso, tu cabecera y la lista"
