@@ -3112,3 +3112,47 @@ El repaso «una llamada dentro de otra», el que nació de tu
 - El 05 entero (0/5), el timeout.
 - Del reparto: el snapshot, al final.
 - El porqué del 11 del 12/10, en su línea 419.
+
+## Sesión 18 nov 2026 — `13/05`: escalera del drill 1 (1a–1d)
+
+Empezaste el 1 (`pedirConLimite`) creando un `AbortController` y pasando su `signal` a
+`fetch`, con el `if` del `Date.now()` todavía debajo. Test rojo: nadie llama nunca a
+`abort()`, así que la petición espera entera y después falla con un `Error` normal. Dijiste
+«El drill 1 no lo entiendo. Necesito una escalera».
+
+Cuatro peldaños, debajo del 1:
+
+- **A · lo de debajo del `await` espera.** **1a `cuantoTarda`:** `fin` se toma antes del
+  `await` → devuelve 0. **1b `pedirYAnular`:** el `abort()` va después del `await` → llega
+  cuando la lista ya está en casa.
+- **B · un botón con alarma.** **1c `pedirConAlarma`:** el starter es tu primer intento del
+  1. Falta que un `setTimeout` apriete el botón mientras se espera.
+- **C · la señal que se aprieta sola.** **1d `pedirConReloj`:** el starter es el 1c resuelto.
+  Corta a tiempo, pero sale `AbortError`; con `AbortSignal.timeout` sale `TimeoutError`.
+
+### Verificación
+
+- Solución en una copia: 4/4 en verde, sin errores de tipos ni de lint. El 1b vale de las
+  dos formas (`fetch` sin `await` + `abort()`, o `abort()` antes del `fetch`).
+- Starters: los cuatro en rojo, solo en el test. Arreglos a medias: el 1c con la alarma
+  después del `await` sale rojo. El 1d con el `controller` sin borrar pasa el test, pero lo
+  marcan el lint y `TS6133`. El 1c con el `if` del `Date.now()` todavía dentro pasa: es
+  código muerto, no un fallo.
+- Banco: tarjetas 1a–1d con `ProbarConLimites`, probadas en jsdom con los starters.
+- 394 líneas (deuda ya declarada; el 01 y el 02 pasan de 800). Cabecera de 32 líneas.
+
+### Pendiente
+
+- Escalera CERRADA 4/4 el mismo día: 1a (`fin` debajo del `await`), 1b (`setTimeout` de 0 ms antes del `fetch`: te adelantaste al bloque B), 1c (la alarma; dejaste el `if` del `Date.now()`, que ya no hace nada, por decisión tuya) y 1d (`AbortSignal.timeout`). En el 1d confundiste **cuándo** (`limiteMs`) con **quién** corta (la señal), y lo resolviste con la tabla 1c↔1d. Al editar el 1d se borró sin querer el helper `pedirLista`, y se restauró.
+- **El drill 1, CERRADO**: `AbortSignal.timeout(limiteMs)` en una `const signal`, y fuera `inicio`, el `if` del `Date.now()` y el `controller`. Porqué: «falla en el segundo 30». Matiz: el starter sí tenía límite (el `if`), pero medía después de la espera.
+- **El drill 2, CERRADO**: reutilizaste tu `pedirConReloj` del 1d en los dos intentos, así que cada uno sale con un reloj recién nacido. Te había quedado un `if` que no reintentaba tras un `TimeoutError`, cosa que el enunciado no pide; lo quitaste tú. Porqué: «le quedan 0,6 s, porque el reloj nació antes del primero».
+- **El drill 3, CERRADO**: `AbortSignal.any([signal, AbortSignal.timeout(limiteMs)])` dentro de las opciones de `fetch`. Con él, el typecheck del cuaderno queda en 0 errores. Porqué: se aborta la del llamador y la combinada la sigue. Comprobación en el chat: si nadie cancela y salta el reloj, el error es «TimeoutError».
+- **El drill 4, CERRADO, con una guardia tuya**: en vez de preguntarle a la suya (`controller.signal.aborted`), le preguntas a la combinada por qué se abortó: `signal.aborted && signal.reason.name === "AbortError"`. Tu primera versión usaba `instanceof DOMException` y salía roja por una rareza del entorno: en vitest+jsdom hay dos clases `DOMException`, y la global no es la del motivo. Comprobado en un archivo temporal. Dato: `signal.reason` es `any` en los tipos del navegador, así que TS no comprueba ese `.name`.
+- **El drill 5, CERRADO**: una sola señal combinada para las dos peticiones del `Promise.all`, y el `catch` de tu 4 (desmontaje callado, aviso del reloj, aviso de Zod). Porqué en el chat: «Las dos, porque comparten la misma señal». El que habías escrito no contestaba la pregunta.
+
+### Cierre del archivo
+
+- **`13/05` CERRADO: 5/5 drills + 4/4 peldaños.** verificar-ejercicio: 9/9 tests, 0 errores de tipos en todo el cuaderno, sin `TS6133`, lint limpio.
+- Dos veces, al editar un drill, se borró lo que iba justo debajo (`pedirLista` y `PortadaConLimite`) y se restauró. Si la app se cae sin motivo aparente: `pnpm typecheck` y buscar `TS2305`.
+- **Deuda declarada:** 523 líneas, con tus comentarios.
+- Del reparto: queda el snapshot, que es otro archivo y no se monta sin que lo pidas.

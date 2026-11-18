@@ -3,6 +3,10 @@ import { describe, it, expect, vi, afterEach, type Mock } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import {
   pedirConLimite,
+  cuantoTarda,
+  pedirYAnular,
+  pedirConAlarma,
+  pedirConReloj,
   pedirConReintento,
   pedirCancelableConLimite,
   ListaConLimite,
@@ -80,6 +84,33 @@ describe("13-fetch-tipado / exercise-05 — el timeout", () => {
 
     responder({ retrasoMs: 200 });
     await expect(pedirConLimite(50)).rejects.toHaveProperty("name", "TimeoutError");
+  });
+
+  it("1a) cuantoTarda — lo que tardó la API, en milisegundos", async () => {
+    responder({ retrasoMs: 200 });
+    const ms = await cuantoTarda();
+    expect(ms).toBeGreaterThanOrEqual(150);
+  });
+
+  it("1b) pedirYAnular — la anula sin esperar a que llegue: AbortError", async () => {
+    responder({ retrasoMs: 200 });
+    await expect(pedirYAnular()).rejects.toHaveProperty("name", "AbortError");
+  });
+
+  it("1c) pedirConAlarma — la lista, o AbortError si no llega a tiempo", async () => {
+    responder();
+    await expect(pedirConAlarma(500)).resolves.toEqual(PROYECTOS);
+
+    responder({ retrasoMs: 200 });
+    await expect(pedirConAlarma(50)).rejects.toHaveProperty("name", "AbortError");
+  });
+
+  it("1d) pedirConReloj — la lista, o TimeoutError si no llega a tiempo", async () => {
+    responder();
+    await expect(pedirConReloj(500)).resolves.toEqual(PROYECTOS);
+
+    responder({ retrasoMs: 200 });
+    await expect(pedirConReloj(50)).rejects.toHaveProperty("name", "TimeoutError");
   });
 
   it("2) pedirConReintento — el segundo intento tiene su propio límite", async () => {

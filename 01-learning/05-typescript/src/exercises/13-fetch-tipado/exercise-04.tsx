@@ -168,6 +168,7 @@ export async function pedirProyectosValidados(): Promise<Project[]> {
 async function pedirJson(url: string, signal: AbortSignal | null = null): Promise<unknown> {
   const res = await fetch(url, { signal });
 
+  // Si la respuesta no es correcta, lanzamos un error con el estado HTTP.
   if (!res.ok) {
     throw new Error(`HTTP error — ${url}:${res.status}`);
   }

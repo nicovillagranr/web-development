@@ -66,6 +66,10 @@ import {
 } from "../exercises/13-fetch-tipado/exercise-04";
 import {
   pedirConLimite,
+  cuantoTarda,
+  pedirYAnular,
+  pedirConAlarma,
+  pedirConReloj,
   pedirConReintento,
   pedirCancelableConLimite,
   ListaConLimite,
@@ -700,7 +704,7 @@ async function pedirYLeer() {
   return leerLista(res);
 }
 
-/* Para los drills 1–3 del 05: un botón por prueba. Cada una elige cómo responde la API,
+/* Para los drills 1–3 del 05 y su escalera (1a–1d): un botón por prueba. Cada una elige cómo responde la API,
  * llama a la función y enseña cuánto tardó y con qué terminó. Si falla, enseña el name del
  * error, que es lo que dice quién cortó: TimeoutError, AbortError o un Error normal. */
 type Prueba = { etiqueta: string; respuesta: Respuesta; probar: () => Promise<unknown> };
@@ -1295,6 +1299,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="pedirConLimite"
         mirar="La lista tarda 0,9 s. Pulsa Límite 0,5 s: tiene que fallar a los 0,5 s con TimeoutError. Con el starter espera la lista entera y falla a los 0,9 s con un Error suyo, «La API tardó demasiado»."
         campos="botones Límite 2 s y Límite 0,5 s · cuánto tardó y con qué terminó o falló"
@@ -1308,7 +1313,58 @@ export function Bloque13() {
       </Tarjeta>
 
       <Tarjeta
+        n="1a"
+        estado="resuelto"
+        nombre="cuantoTarda"
+        mirar="La lista tarda 0,9 s. Pulsa Pedir la lista: el banco mide 0,9 s, y cuantoTarda tiene que decir unos 900. Con el starter dice 0."
+        campos="botón Pedir la lista · cuánto midió el banco y lo que devolvió cuantoTarda"
+      >
+        <ProbarConLimites pruebas={[{ etiqueta: "Pedir la lista", respuesta: "bien", probar: cuantoTarda }]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="1b"
+        estado="resuelto"
+        nombre="pedirYAnular"
+        mirar="La lista tarda 0,9 s. Pulsa Pedir y anular: tiene que fallar enseguida, a los 0,0 s, con AbortError. Con el starter espera la lista entera y devuelve su status, 200."
+        campos="botón Pedir y anular · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites pruebas={[{ etiqueta: "Pedir y anular", respuesta: "bien", probar: pedirYAnular }]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="1c"
+        estado="resuelto"
+        nombre="pedirConAlarma"
+        mirar="La lista tarda 0,9 s. Pulsa Límite 0,5 s: tiene que fallar a los 0,5 s con AbortError. Con el starter, que es tu intento del 1, espera la lista entera y falla a los 0,9 s con un Error suyo."
+        campos="botones Límite 2 s y Límite 0,5 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            { etiqueta: "Límite 2 s", respuesta: "bien", probar: () => pedirConAlarma(2000) },
+            { etiqueta: "Límite 0,5 s", respuesta: "bien", probar: () => pedirConAlarma(500) },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="1d"
+        estado="resuelto"
+        nombre="pedirConReloj"
+        mirar="Pulsa Límite 0,5 s: tiene que fallar a los 0,5 s con TimeoutError. Con el starter corta igual a los 0,5 s, pero con AbortError."
+        campos="botones Límite 2 s y Límite 0,5 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            { etiqueta: "Límite 2 s", respuesta: "bien", probar: () => pedirConReloj(2000) },
+            { etiqueta: "Límite 0,5 s", respuesta: "bien", probar: () => pedirConReloj(500) },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="pedirConReintento"
         mirar="Pulsa API: 500 y luego bien: el primer intento da 500 a los 0,9 s, y el segundo tiene que llegar a los 1,8 s. Con el starter, el segundo se corta a los 1,5 s con TimeoutError."
         campos="botones API: bien y API: 500 y luego bien, con límite 1,5 s · cuánto tardó y con qué terminó o falló"
@@ -1327,6 +1383,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="pedirCancelableConLimite"
         mirar="Pulsa Límite 0,5 s: TimeoutError a los 0,5 s. Pulsa Cancelar a los 0,3 s: AbortError a los 0,3 s. Con el starter fallan los tres al instante, con el TypeError de fetch."
         campos="botones Límite 2 s, Límite 0,5 s y Cancelar a los 0,3 s · cuánto tardó y con qué terminó o falló"
@@ -1350,6 +1407,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="ListaConLimite"
         mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2 s tiene que salir el aviso «La API tardó demasiado». Con el starter se queda en «Cargando…» para siempre."
         campos="botones API: bien y API: lenta · ListaConLimite: «Cargando…», el aviso o la lista"
@@ -1359,6 +1417,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="usePortfolioConLimite"
         mirar="Límite: 2 s. Pulsa API: lenta: a los 2 s, el aviso «La API tardó demasiado». Con el starter espera los 5 s y pinta la portada. Con API: perfil roto, el aviso de Zod, como en el 04."
         campos="botones API: bien, API: lenta y API: perfil roto · PortadaConLimite: «Cargando…», el aviso o tu cabecera con la lista"

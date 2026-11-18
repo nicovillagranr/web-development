@@ -6,6 +6,9 @@ siguiente.
 Los cinco salen rojos en el test. Al 3 lo marca además el compilador, y su Pista 3 cita ese
 mensaje. Al 1, al 2, al 4 y al 5, solo el test.
 
+La escalera (1a–1d) va entre el 1 y el 2, como en el archivo. Los cuatro peldaños salen rojos
+en el test, y el compilador no marca ninguno.
+
 ---
 
 ## Drill 1 — `pedirConLimite`
@@ -48,6 +51,191 @@ const res = await fetch(API_PROJECTS, { signal: AbortSignal.timeout(limiteMs) })
 Y fuera inicio y el if del Date.now(). El reloj viaja ahora dentro de fetch: cuando se acaba el
 tiempo, la petición se corta y rechaza con TimeoutError, sin esperar a la API. Es tu
 AbortSignal.timeout(TIMEOUT_MS) de la l.46 de usePortfolioDataWithFallback.js.
+
+</details>
+
+---
+
+## Peldaño 1a — `cuantoTarda`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Para medir cuánto duró algo, el segundo vistazo al reloj tiene que ser cuando ese algo ya
+terminó. ¿En qué línea termina la petición?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+La petición termina en el await: lo que va debajo corre cuando la respuesta ya llegó. fin
+tiene que tomarse ahí, no antes.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: restar dos Date.now() es código válido.
+
+```
+AssertionError: expected 0 to be greater than or equal to 150
+```
+
+La API tardó 200 ms, pero inicio y fin se toman uno detrás del otro, antes de esperar: entre
+los dos no pasa nada.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const inicio = Date.now();
+await fetch(API_PROJECTS);
+const fin = Date.now();
+return fin - inicio;
+```
+
+fin corre cuando la respuesta ya llegó, así que mide la espera entera. Es lo que hace el if de
+tu drill 1: mide bien, pero mide cuando la espera ya pasó entera.
+
+</details>
+
+---
+
+## Peldaño 1b — `pedirYAnular`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Anular sirve mientras se espera. Cuando corre la línea del abort(), ¿qué queda por cortar?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+abort() tiene que correr antes de que la función se quede parada en el await. Mira la
+SINTAXIS de la Teoría 1 del exercise-02: ahí la petición sale sin await, y el abort() va
+justo debajo.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: llamar a abort() tarde es código válido.
+
+```
+AssertionError: promise resolved "200" instead of rejecting
+```
+
+La lista llegó entera, con su 200, y el abort() corrió después, sobre una petición que ya
+había terminado.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const controller = new AbortController();
+const peticion = fetch(API_PROJECTS, { signal: controller.signal });
+controller.abort();
+const res = await peticion;
+return res.status;
+```
+
+fetch sale sin await, así que la función sigue de largo y llega al abort() con la petición en
+vuelo. El await de debajo recibe el rechazo: AbortError. También vale llamar a abort() antes
+del fetch: la petición nace anulada y ni siquiera sale.
+
+</details>
+
+---
+
+## Peldaño 1c — `pedirConAlarma`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El mando está creado y su signal viaja a fetch. Falta quien lo apriete. En el starter, ¿quién
+llama a abort()?
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Un setTimeout que llame a controller.abort() a los limiteMs, programado antes del await:
+mientras la función espera, la alarma sigue corriendo. El if del Date.now() ya no decide nada.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: un controller que nadie aprieta es código válido.
+
+```
+AssertionError: expected Error: La API tardó demasiado to have property "name" with value 'AbortError'
+```
+
+Es el mismo mensaje que tu drill 1, con otro name: el starter espera los 200 ms enteros y
+falla después, con el Error del if.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const controller = new AbortController();
+setTimeout(() => controller.abort(), limiteMs);
+const res = await fetch(API_PROJECTS, { signal: controller.signal });
+return ProjectsSchema.parse(await res.json());
+```
+
+Con la API lenta, la alarma salta a los limiteMs y aprieta el botón: fetch rechaza en ese
+momento con AbortError, sin esperar a la lista. Fuera inicio y el if: cuando la lista no llega
+a tiempo, la función ya falló antes de llegar a él. En código real, si la lista llega a
+tiempo, la alarma se apagaría con clearTimeout; aquí no hace falta, porque abortar una
+petición ya terminada no hace nada, y en el 1d la alarma desaparece.
+
+</details>
+
+---
+
+## Peldaño 1d — `pedirConReloj`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+El corte ya llega a tiempo. Lo que falla es quién firma el error. Relee qué dice el name en la
+Teoría 1.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Cambia el mando y la alarma por una señal que traiga su propio reloj. Mira la SINTAXIS de la
+Teoría 1.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+El compilador calla: el starter corta bien, solo que a mano.
+
+```
+AssertionError: expected DOMException{ stack: 'AbortError: Th…' } to have property "name" with value 'TimeoutError'
+```
+
+Corta a los 50 ms, pero el error dice AbortError: para fetch, alguien llamó a abort(). No
+sabe que ese alguien era un setTimeout.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const res = await fetch(API_PROJECTS, { signal: AbortSignal.timeout(limiteMs) });
+return ProjectsSchema.parse(await res.json());
+```
+
+AbortSignal.timeout(limiteMs) es el controller y el setTimeout del 1c en una sola pieza, y
+cuando corta, el error dice que fue el reloj: TimeoutError. Fuera el controller: si se queda
+sin usar, el lint y el compilador lo marcan. Con esto vuelve al 1: es esta línea, con el
+res.ok de su starter.
 
 </details>
 
