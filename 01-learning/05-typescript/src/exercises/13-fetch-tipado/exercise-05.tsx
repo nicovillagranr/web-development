@@ -435,7 +435,7 @@ async function pedirJson(url: string, signal: AbortSignal): Promise<unknown> {
  * 04; si se desmonta antes, nada. Ahora espera a la API lo que tarde.
  * PortadaConLimite ya está bien: solo falla el hook.
  * ¿Por qué? Con tu arreglo y la API colgada, ¿cuántas peticiones corta el reloj?
- * Para cortar el reloj, debemos hacer que la señal del reloj se combine con la señal del controller del efecto, de manera que si cualquiera de las dos señales se aborta, la petición se corta. En el starter, la señal del reloj no estaba combinada con la señal del controller, por lo que la petición no se cortaba cuando el componente se desmontaba y el reloj seguía corriendo. Por eso, debemos usar AbortSignal.any para combinar ambas señales y asegurarnos de que la petición se corte correctamente.
+ * Las dos, porque comparten la misma señal
  */
 
 // Creamos un hook llamado usePortfolioConLimite que recibe un parámetro limiteMs de tipo number y devuelve un objeto con los proyectos, el perfil y el error.
