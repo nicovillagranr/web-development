@@ -74,7 +74,21 @@ import {
   pedirCancelableConLimite,
   ListaConLimite,
   PortadaConLimite,
+  PerfilAlMontar,
+  PerfilAlCerrar,
+  pedirLasDos,
+  avisoDe,
+  ListaConAvisos,
+  ListaDeCero,
+  PortadaDeCero,
 } from "../exercises/13-fetch-tipado/exercise-05";
+import {
+  leerSnapshot,
+  pedirConRespaldo,
+  cargarConRespaldo,
+  pedirConLimiteYRespaldo,
+  PortadaConRespaldo,
+} from "../exercises/13-fetch-tipado/exercise-06";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -100,7 +114,11 @@ import { Seccion, Tarjeta } from "./piezas";
  *
  * Desde el exercise-05, «lenta» contesta bien pero a los 5 s, y «500 y luego bien» da un
  * 500 a la primera petición de la lista y contesta bien a las siguientes. Y como el fetch
- * de verdad, solo acepta un AbortSignal: con otra cosa en signal, falla sin salir. */
+ * de verdad, solo acepta un AbortSignal: con otra cosa en signal, falla sin salir.
+ *
+ * Desde el exercise-06 responde además a `/data-snapshot.json`, el snapshot del último
+ * deploy (sin Store Pulse, que es más nuevo), en 0,3 s y sin importar lo lenta que esté la
+ * API. «500 y sin snapshot» tumba la API como «500» y, además, el snapshot da 404. */
 
 type Respuesta =
   | "bien"
@@ -113,7 +131,8 @@ type Respuesta =
   | "lista rota"
   | "perfil roto"
   | "lenta"
-  | "500 y luego bien";
+  | "500 y luego bien"
+  | "500 y sin snapshot";
 
 const PROYECTOS = [
   { id: 1, name: "Projex", status: "Terminado" },
@@ -182,11 +201,38 @@ function comoJson(cuerpo: unknown, status: number): Response {
   });
 }
 
+/* El snapshot del exercise-06: el del último deploy, sin Store Pulse. */
+const RUTA_SNAPSHOT = "/data-snapshot.json";
+const SNAPSHOT = {
+  generatedAt: "2026-11-01T12:00:00.000Z",
+  projects: PROYECTOS.slice(0, 2),
+  profile: PERFIL,
+};
+
+function responderSnapshot(respuesta: Respuesta, signal: AbortSignal | null | undefined): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason);
+      return;
+    }
+    const reloj = setTimeout(() => {
+      resolve(
+        respuesta === "500 y sin snapshot" ? comoJson({ message: "Not found" }, 404) : comoJson(SNAPSHOT, 200),
+      );
+    }, 300);
+    signal?.addEventListener("abort", () => {
+      clearTimeout(reloj);
+      reject(signal.reason);
+    });
+  });
+}
+
 function responderDeMentira(
   ruta: string,
   respuesta: Respuesta,
   signal: AbortSignal | null | undefined,
 ): Promise<Response> {
+  if (ruta === RUTA_SNAPSHOT) return responderSnapshot(respuesta, signal);
   const suelto = /^\/api\/projects\/(\d+)$/.exec(ruta);
   const id = suelto ? Number(suelto[1]) : null;
   const esPerfil = ruta === "/api/profile";
@@ -217,7 +263,8 @@ function responderDeMentira(
       else if (respuesta === "sin red") reject(new TypeError("Failed to fetch"));
       else if (respuesta === "lanza un texto") reject("se cayó el servidor");
       else if (respuesta === "404") resolve(comoJson({ message: "Not found" }, 404));
-      else if (respuesta === "500") resolve(comoJson({ message: "Internal error" }, 500));
+      else if (respuesta === "500" || respuesta === "500 y sin snapshot")
+        resolve(comoJson({ message: "Internal error" }, 500));
       else if (esPerfil && respuesta === "perfil 404") resolve(comoJson({ message: "Not found" }, 404));
       else if (esPerfil && respuesta === "perfil 500")
         resolve(new Response("<!doctype html><title>500</title>", { status: 500, headers: { "Content-Type": "text/html" } }));
@@ -250,7 +297,8 @@ function useFetchDeMentira() {
   useEffect(() => {
     const original = window.fetch;
     window.fetch = (input, init) => {
-      if (!rutaDe(input).startsWith("/api/")) return original.call(window, input, init);
+      const ruta = rutaDe(input);
+      if (!ruta.startsWith("/api/") && ruta !== RUTA_SNAPSHOT) return original.call(window, input, init);
       const signal: unknown = init?.signal;
       if (signal != null && !(signal instanceof AbortSignal)) {
         return Promise.reject(
@@ -514,12 +562,14 @@ function ConCierre({ Drill }: { Drill: ComponentType }) {
   );
 }
 
-/* Para los peldaños 4b–4e del 02: la función por uno de los tres caminos, y lo que
- * apuntó. «Pedir y cancelar» aprieta abort() con la petición aún en vuelo. */
+/* Para los peldaños 4b–4e del 02 y el drill 3 del 06: la función por uno de los caminos, y
+ * lo que apuntó. «Pedir y cancelar» aprieta abort() con la petición aún en vuelo. */
 function ProbarApuntes({
   cargar,
+  respuestas = ["bien", "sin red"],
 }: {
   cargar: (signal: AbortSignal, apuntar: (cambio: string) => void) => Promise<void>;
+  respuestas?: Respuesta[];
 }) {
   const [linea, setLinea] = useState("");
 
@@ -544,12 +594,11 @@ function ProbarApuntes({
   return (
     <div>
       <div>
-        <button type="button" onClick={() => probar("bien", false)}>
-          API: bien
-        </button>
-        <button type="button" onClick={() => probar("sin red", false)}>
-          API: sin red
-        </button>
+        {respuestas.map((respuesta) => (
+          <button key={respuesta} type="button" onClick={() => probar(respuesta, false)}>
+            API: {respuesta}
+          </button>
+        ))}
         <button type="button" onClick={() => probar("bien", true)}>
           Pedir y cancelar
         </button>
@@ -763,6 +812,84 @@ function ListaConLimiteDe2s() {
 
 function PortadaConLimiteDe2s() {
   return <PortadaConLimite limiteMs={2000} />;
+}
+
+/* Para el peldaño 5c del 05: pide las dos (la lista tarda 3 s y el perfil 2 s) y cancela a
+ * los 0,5 s. Debajo, qué fue de las dos peticiones. */
+function ProbarDosYCancelar() {
+  const [linea, setLinea] = useState("");
+  const { enviadas, canceladas, respondidas } = useCuenta();
+
+  async function ejecutar() {
+    elegirRespuesta("bien", { retrasoMs: 3000, contar: true });
+    cambiarCuenta(CUENTA_VACIA);
+    const controller = new AbortController();
+    const promesa = pedirLasDos(controller.signal);
+    setTimeout(() => controller.abort(), 500);
+    setLinea("Pedidas. Se cancela a los 0,5 s…");
+    try {
+      await promesa;
+      setLinea("Llegaron las dos");
+    } catch (error) {
+      const nombre = error instanceof Error ? error.name : "no es un Error";
+      setLinea(`Al esperarlas, falla: ${nombre}`);
+    }
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={ejecutar}>
+          Pedir las dos y cancelar
+        </button>
+      </div>
+      {linea && <p>{linea}</p>}
+      <p className="mt-3 font-mono text-[13px] text-[#86868b]">
+        Peticiones: {enviadas} {enviadas === 1 ? "enviada" : "enviadas"} · {canceladas}{" "}
+        {canceladas === 1 ? "cancelada" : "canceladas"} · {respondidas}{" "}
+        {respondidas === 1 ? "respondida" : "respondidas"}
+      </p>
+    </div>
+  );
+}
+
+/* Para el peldaño 5d del 05: avisoDe con los cuatro casos del catch. */
+function casosDeAviso() {
+  const seFue = new AbortController();
+  seFue.abort();
+  const sigue = new AbortController().signal;
+  const reloj = Object.assign(new Error("signal timed out"), { name: "TimeoutError" });
+  return [
+    avisoDe(new Error("This operation was aborted"), seFue.signal),
+    avisoDe(reloj, sigue),
+    avisoDe(new Error("HTTP error — /api/projects:500"), sigue),
+    avisoDe("se cayó el servidor", sigue),
+  ];
+}
+
+/* Para los peldaños 5e–5g del 05: los componentes con 2 s de límite. */
+function ListaConAvisosDe2s() {
+  return <ListaConAvisos limiteMs={2000} />;
+}
+
+function ListaDeCeroDe2s() {
+  return <ListaDeCero limiteMs={2000} />;
+}
+
+function PortadaDeCeroDe2s() {
+  return <PortadaDeCero limiteMs={2000} />;
+}
+
+/* Para el drill 4 del 06: cancela a los 0,3 s, con la API lenta y 2 s de límite. */
+function respaldoYCancelarPronto() {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 300);
+  return pedirConLimiteYRespaldo(controller.signal, 2000);
+}
+
+/* Para el drill 5 del 06: la portada con 2 s de límite. */
+function PortadaConRespaldoDe2s() {
+  return <PortadaConRespaldo limiteMs={2000} />;
 }
 
 export function Bloque13() {
@@ -1423,6 +1550,130 @@ export function Bloque13() {
         campos="botones API: bien, API: lenta y API: perfil roto · PortadaConLimite: «Cargando…», el aviso o tu cabecera con la lista"
       >
         <ConApi Drill={PortadaConLimiteDe2s} respuestas={["bien", "lenta", "perfil roto"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5a"
+        nombre="PerfilAlMontar"
+        mirar="Pulsa API: bien: «Cargando…» y, a los 0,6 s, tu nombre y tu rol. Con el starter se queda en «Cargando…» para siempre. Con API: sin red, el aviso «Failed to fetch»."
+        campos="botones API: bien y API: sin red · PerfilAlMontar: «Cargando…», el aviso o tu perfil"
+      >
+        <ConApi Drill={PerfilAlMontar} respuestas={["bien", "sin red"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5b"
+        nombre="PerfilAlCerrar"
+        mirar="Pulsa Abrir la sección y, antes de 2 s, Cerrar la sección. Abajo tienen que quedar 2 canceladas y 0 respondidas: una la cancela el ensayo de StrictMode nada más abrir. Con el starter, a los 2 s salen 2 respondidas, con la sección ya cerrada."
+        campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
+      >
+        <ConCierre Drill={PerfilAlCerrar} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5c"
+        nombre="pedirLasDos"
+        mirar="Pulsa Pedir las dos y cancelar: a los 0,5 s falla con AbortError y abajo tienen que quedar 2 canceladas. Con el starter, solo 1 cancelada, y a los 2 s el perfil sale respondido."
+        campos="botón Pedir las dos y cancelar · con qué falló · qué fue de las dos peticiones"
+      >
+        <ProbarDosYCancelar />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5d"
+        nombre="avisoDe"
+        mirar="Pulsa Probar: tiene que salir [null, «La API tardó demasiado», «HTTP error — /api/projects:500», «Error desconocido»]: se fue, el reloj, un 500 y un texto suelto. Con el starter, el del reloj sale «signal timed out»."
+        campos="botón Probar · lo que devuelve avisoDe en los cuatro casos"
+      >
+        <ProbarFuncion probar={casosDeAviso} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5e"
+        nombre="ListaConAvisos"
+        mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2 s tiene que salir el aviso «La API tardó demasiado». Con el starter se queda en «Cargando…» para siempre. Usa tu avisoDe del 5d."
+        campos="botones API: bien y API: lenta · ListaConAvisos: «Cargando…», el aviso o la lista"
+      >
+        <ConApi Drill={ListaConAvisosDe2s} respuestas={["bien", "lenta"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5f"
+        nombre="useListaDeCero"
+        mirar="Límite: 2 s. Con API: bien, «Cargando…» y después la lista; con API: lenta, a los 2 s el aviso «La API tardó demasiado». Con el starter se queda en «Cargando…» para siempre: el efecto está vacío."
+        campos="botones API: bien y API: lenta · ListaDeCero: «Cargando…», el aviso o la lista"
+      >
+        <ConApi Drill={ListaDeCeroDe2s} respuestas={["bien", "lenta"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5g"
+        nombre="usePortadaDeCero"
+        mirar="Límite: 2 s. API: bien, tu cabecera con la lista; API: lenta, a los 2 s «La API tardó demasiado»; API: perfil roto, el aviso de Zod. Con el starter se queda en «Cargando…» para siempre: el efecto está vacío."
+        campos="botones API: bien, API: lenta y API: perfil roto · PortadaDeCero: «Cargando…», el aviso o tu cabecera con la lista"
+      >
+        <ConApi Drill={PortadaDeCeroDe2s} respuestas={["bien", "lenta", "perfil roto"]} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-06" titulo="El plan B: si falla en vivo, el snapshot." />
+
+      <Tarjeta
+        n={1}
+        nombre="leerSnapshot"
+        mirar="Pulsa API: bien: a los 0,3 s, el snapshot entero, con generatedAt, tu lista (Projex y Smart Cooler) y tu perfil. Con el starter falla con el error de Zod: esperaba una lista y llegó un objeto."
+        campos="botones API: bien, API: 500 y sin snapshot y Pedir y cancelar · con qué termina o falla"
+      >
+        <ProbarCancelable probar={leerSnapshot} respuestas={["bien", "500 y sin snapshot"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="pedirConRespaldo"
+        mirar="Pulsa API: 500: tienen que llegar los datos del snapshot (sin Store Pulse) con stale: true. Con el starter falla con «La API no contestó». Con API: bien, los de la API, con stale: false."
+        campos="botones API: bien, API: 500 y Pedir y cancelar · con qué termina o falla"
+      >
+        <ProbarCancelable probar={pedirConRespaldo} respuestas={["bien", "500"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="cargarConRespaldo"
+        mirar="Pulsa API: 500 y sin snapshot: tiene que salir «Apunta: error: HTTP error — /data-snapshot.json:404». Con el starter, «Falla sin apuntar»: el error se escapa. Con API: 500, «snapshot»; con API: bien, «en vivo»."
+        campos="botones API: bien, API: 500, API: 500 y sin snapshot y Pedir y cancelar · lo que apunta"
+      >
+        <ProbarApuntes cargar={cargarConRespaldo} respuestas={["bien", "500", "500 y sin snapshot"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="pedirConLimiteYRespaldo"
+        mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2,3 s, los datos del snapshot con stale: true. Con el starter falla a los 2 s con TimeoutError. Cancelar a los 0,3 s: AbortError, sin snapshot."
+        campos="botones API: bien, API: lenta y Cancelar a los 0,3 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            {
+              etiqueta: "API: bien · límite 2 s",
+              respuesta: "bien",
+              probar: () => pedirConLimiteYRespaldo(new AbortController().signal, 2000),
+            },
+            {
+              etiqueta: "API: lenta · límite 2 s",
+              respuesta: "lenta",
+              probar: () => pedirConLimiteYRespaldo(new AbortController().signal, 2000),
+            },
+            { etiqueta: "Cancelar a los 0,3 s · API: lenta", respuesta: "lenta", probar: respaldoYCancelarPronto },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="usePortfolioConRespaldo"
+        mirar="Límite: 2 s. API: lenta o API: 500: tu portada con el aviso «Datos del último deploy» y sin Store Pulse. API: 500 y sin snapshot: el aviso con el 404. Con el starter, API: 500 enseña el error en vez del snapshot."
+        campos="botones API: bien, API: lenta, API: 500 y API: 500 y sin snapshot · PortadaConRespaldo: «Cargando…», el aviso o tu portada"
+      >
+        <ConApi Drill={PortadaConRespaldoDe2s} respuestas={["bien", "lenta", "500", "500 y sin snapshot"]} />
       </Tarjeta>
     </>
   );

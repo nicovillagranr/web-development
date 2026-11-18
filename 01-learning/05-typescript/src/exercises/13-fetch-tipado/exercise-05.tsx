@@ -22,8 +22,9 @@ import { z } from "zod";
  * ESCALERA · el límite del 1, pieza a pieza → peldaños 1a–1d, debajo del 1
  * TEORÍA 2 · dos motivos, una señal → drills 3–4
  * TU HOOK → drill 5
+ * ESCALERA · tu hook del 5, pieza a pieza → peldaños 5a–5g, debajo del 5
  *
- * ▸ 5 drills + 4 peldaños en orden. Prohibidos el tipo any, as, el ! de «confía
+ * ▸ 5 drills + 11 peldaños en orden. Prohibidos el tipo any, as, el ! de «confía
  * en mí» (x!) y los eslint-disable. Los límites llegan como parámetro, en
  * milisegundos.
  * pnpm test:run src/exercises/13-fetch-tipado/exercise-05.test.tsx
@@ -505,6 +506,292 @@ export function usePortfolioConLimite(limiteMs: number): {
 
 export function PortadaConLimite({ limiteMs }: { limiteMs: number }) {
   const { projects, profile, error } = usePortfolioConLimite(limiteMs);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!profile) return <p>Cargando…</p>;
+
+  return (
+    <section>
+      <h3>
+        {profile.name} · {profile.role}
+      </h3>
+      <ul>
+        {projects.map((project) => (
+          <li key={project.id}>{project.name}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA — tu hook del 5, pieza a pieza (refuerzo)
+ *
+ * El 5 junta cuatro cosas, y cada bloque trabaja una: A · el orden del efecto
+ * (5a–5b) · B · una señal, dos peticiones (5c) · C · el catch de tres ramas
+ * (5d–5e) · D · el hook de cero (5f–5g). Al terminar, vuelve a leer tu 5.
+ *
+ * 📌 Project es { id, name, status } y Profile es { name, role }. pedirJson(url,
+ * signal) pide, comprueba res.ok y devuelve el JSON como unknown. pedirLista(signal)
+ * pide la lista y la devuelve validada.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ A — el orden del efecto
+ *
+ * DEFINICIÓN
+ * El cuerpo del efecto corre de un tirón, sin esperar a nadie: crea el controller,
+ * lanza load() y devuelve la limpieza. load sigue sola, en segundo plano. React
+ * guarda la función que devuelve el efecto y la llama al desmontar. Lo que va
+ * después de un return no corre nunca.
+ *
+ * SINTAXIS — el efecto del clima, en el orden en que corre:
+ * useEffect(() => {
+ *   const controller = new AbortController(); // 1 · al montar
+ *   async function load() { … }               //   aquí solo se define
+ *   load();                                   // 2 · al montar: sale la petición
+ *   return () => controller.abort();          // 3 · React la guarda para el final
+ * }, []);
+ *
+ * 🧠 ANALOGÍA — pides el delivery y dejas una nota en la puerta: «si me fui,
+ * anúlalo». No te quedas parado en la puerta esperando: sigues con tu día.
+ *
+ * ⚠️ TRAMPA — la limpieza es lo que devuelve el efecto. Lo que devuelva load no le
+ * llega a React.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 5a) PerfilAlMontar — pinta «Cargando…» y después tu nombre y tu rol. Ahora se
+ * queda en «Cargando…» para siempre, y la API ni se entera.
+ * ¿Por qué? En el starter, ¿llega a correr la línea de load()?
+ *
+ */
+export function PerfilAlMontar() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const perfil = await pedirJson(API_PROFILE, controller.signal);
+        setProfile(ProfileSchema.parse(perfil));
+      } catch (err) {
+        if (controller.signal.aborted) return;
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
+    }
+
+    return () => controller.abort();
+    load();
+  }, []);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!profile) return <p>Cargando…</p>;
+
+  return (
+    <p>
+      {profile.name} · {profile.role}
+    </p>
+  );
+}
+
+/* 5b) PerfilAlCerrar — lo mismo que el 5a, pero si cierras la sección antes de que
+ * llegue tu perfil, la petición se cancela. Ahora sigue viva aunque ya nadie la
+ * vaya a ver.
+ * ¿Por qué? En el starter, ¿qué le devuelve el efecto a React?
+ *
+ */
+export function PerfilAlCerrar() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const perfil = await pedirJson(API_PROFILE, controller.signal);
+        setProfile(ProfileSchema.parse(perfil));
+      } catch (err) {
+        if (controller.signal.aborted) return;
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
+      return () => controller.abort();
+    }
+
+    load();
+  }, []);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!profile) return <p>Cargando…</p>;
+
+  return (
+    <p>
+      {profile.name} · {profile.role}
+    </p>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ B — una señal, dos peticiones
+ *
+ * DEFINICIÓN
+ * Promise.all no cancela nada. Si una petición falla, rechaza enseguida, pero la
+ * otra sigue en vuelo hasta que contesta. Lo que corta las dos a la vez es que
+ * escuchen la misma señal: cuando se aborta, se aborta para todas las que la llevan.
+ *
+ * SINTAXIS — el clima y el pronóstico con un solo botón:
+ * const [clima, pronostico] = await Promise.all([
+ *   pedirJson("/api/clima", signal),
+ *   pedirJson("/api/pronostico", signal),
+ * ]);
+ *
+ * 🧠 ANALOGÍA — dos pedidos con el mismo número de seguimiento: una llamada anula
+ * los dos. Con números distintos, anulas uno y el otro te llega igual.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 5c) pedirLasDos — pide tu lista y tu perfil a la vez, con el signal que recibe, y
+ * los devuelve sin validar. Si quien llama cancela, se cortan las dos. Ahora el
+ * perfil sigue en vuelo después de cancelar.
+ * ¿Por qué? En el starter, ¿quién puede llamar a abort() sobre la señal del perfil?
+ *
+ */
+export async function pedirLasDos(signal: AbortSignal): Promise<[unknown, unknown]> {
+  return await Promise.all([
+    pedirJson(API_PROJECTS, signal),
+    pedirJson(API_PROFILE, new AbortController().signal),
+  ]);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ C — el catch de tres ramas
+ *
+ * DEFINICIÓN
+ * Un catch con varios if es una fila de ventanillas: el error entra por la primera
+ * que lo acepta y sale con su return. Por eso van de la más concreta a la más
+ * general. En tu 5: primero «¿se fue?», después «¿saltó el reloj?» y al final
+ * «cualquier otro error», que los acepta a todos.
+ *
+ * SINTAXIS — el aviso del clima, con un caso concreto y el resto:
+ * if (err instanceof Error && err.message.includes("404")) {
+ *   return "Ciudad no encontrada"; // el caso concreto, primero
+ * }
+ * return err instanceof Error ? err.message : "Error desconocido"; // el resto
+ *
+ * 🧠 ANALOGÍA — el triaje de urgencias: si la primera pregunta fuera «¿le duele
+ * algo?», todos entrarían por ahí, también el que llega con un infarto.
+ *
+ * ⚠️ TRAMPA — un TimeoutError también es un Error.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 5d) avisoDe — el catch de tu 5, sacado a una función. Con lo que llegó al catch y
+ * la señal de tu controller, devuelve null si el usuario se fue, «La API tardó
+ * demasiado» si saltó el reloj, o el mensaje del error. Ahora, cuando salta el
+ * reloj, devuelve el mensaje en inglés del navegador.
+ * ¿Por qué? En el starter, un TimeoutError, ¿en qué if se queda?
+ *
+ */
+export function avisoDe(err: unknown, miSenal: AbortSignal): string | null {
+  if (miSenal.aborted) return null;
+  if (err instanceof Error) return err.message;
+  if (err instanceof Error && err.name === "TimeoutError") return "La API tardó demasiado";
+  return "Error desconocido";
+}
+
+/* 5e) ListaConAvisos — tu ListaConLimite del 4, con el catch en una línea gracias a
+ * tu avisoDe. Si la API no contesta en limiteMs, el aviso «La API tardó
+ * demasiado». Ahora, con la API lenta, se queda en «Cargando…» para siempre.
+ * ¿Por qué? En el starter, cuando salta el reloj, ¿cuánto vale aborted en la señal
+ * que recibe avisoDe?
+ *
+ */
+export function ListaConAvisos({ limiteMs }: { limiteMs: number }) {
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(limiteMs)]);
+
+    async function load() {
+      try {
+        setProjects(await pedirLista(signal));
+      } catch (err) {
+        const aviso = avisoDe(err, signal);
+        if (aviso !== null) setError(aviso);
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, [limiteMs]);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!projects) return <p>Cargando…</p>;
+
+  return (
+    <ul>
+      {projects.map((project) => (
+        <li key={project.id}>{project.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ D — el hook de cero
+ *
+ * Ya tienes todas las piezas: el orden del efecto (A), una señal para las dos (B)
+ * y el catch con tu avisoDe (C). Aquí se arman desde una función vacía. Los
+ * componentes ya están bien: solo falta el hook.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+/* 5f) useListaDeCero — ListaDeCero pinta «Cargando…» y después tus proyectos. Si la
+ * API no contesta en limiteMs, el aviso «La API tardó demasiado»; si se desmonta
+ * antes, nada. Ahora el efecto está vacío.
+ */
+export function useListaDeCero(limiteMs: number): {
+  projects: Project[] | null;
+  error: string | null;
+} {
+  useEffect(() => {}, [limiteMs]);
+  return { projects: null, error: null };
+}
+
+export function ListaDeCero({ limiteMs }: { limiteMs: number }) {
+  const { projects, error } = useListaDeCero(limiteMs);
+
+  if (error) return <p role="alert">{error}</p>;
+  if (!projects) return <p>Cargando…</p>;
+
+  return (
+    <ul>
+      {projects.map((project) => (
+        <li key={project.id}>{project.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+/* 5g) usePortadaDeCero — PortadaDeCero enseña tu nombre y tu rol con la lista
+ * debajo. Si la API no contesta en limiteMs, el aviso «La API tardó demasiado»; si
+ * los datos no encajan, el aviso de Zod; si se desmonta antes, nada. Es tu 5, desde
+ * una función vacía.
+ * ¿Por qué? Con tu arreglo, si cierras la portada a los 0,3 s, ¿qué devuelve avisoDe?
+ *
+ */
+export function usePortadaDeCero(limiteMs: number): {
+  projects: Project[];
+  profile: Profile | null;
+  error: string | null;
+} {
+  useEffect(() => {}, [limiteMs]);
+  return { projects: [], profile: null, error: null };
+}
+
+export function PortadaDeCero({ limiteMs }: { limiteMs: number }) {
+  const { projects, profile, error } = usePortadaDeCero(limiteMs);
 
   if (error) return <p role="alert">{error}</p>;
   if (!profile) return <p>Cargando…</p>;

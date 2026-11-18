@@ -3156,3 +3156,49 @@ Cuatro peldaños, debajo del 1:
 - Dos veces, al editar un drill, se borró lo que iba justo debajo (`pedirLista` y `PortadaConLimite`) y se restauró. Si la app se cae sin motivo aparente: `pnpm typecheck` y buscar `TS2305`.
 - **Deuda declarada:** 523 líneas, con tus comentarios.
 - Del reparto: queda el snapshot, que es otro archivo y no se monta sin que lo pidas.
+
+## Sesión 18 nov 2026 (tarde) — escalera del 5 (5a–5g) y `13/06` MONTADO (0/5): el snapshot
+
+Con el 05 ya cerrado y subido, pediste «una escalera para entender el drill 5» y montar el
+06. Preguntado qué parte del 5 no te cuadraba, marcaste las cuatro: el orden del efecto, una
+señal para dos peticiones, el catch de tres ramas y el hook entero de cero.
+
+**Escalera del 5 (debajo del 5):**
+
+- **A · el orden del efecto.** **5a `PerfilAlMontar`:** el `return` de la limpieza está
+  antes de `load()`, y `load()` no corre nunca. **5b `PerfilAlCerrar`:** la limpieza la
+  devuelve `load` en vez del efecto, y React no recibe nada.
+- **B · una señal, dos peticiones.** **5c `pedirLasDos`:** el perfil sale con
+  `new AbortController().signal`, una señal que nadie aprieta (tu 1c otra vez).
+- **C · el catch de tres ramas.** **5d `avisoDe`:** el catch de tu 5 sacado a una función;
+  la rama de «cualquier Error» va antes que la del reloj. **5e `ListaConAvisos`:** `avisoDe`
+  recibe la combinada en vez de la del controller.
+- **D · de cero.** **5f `useListaDeCero`** y **5g `usePortadaDeCero`:** el efecto vacío; los
+  componentes ya están hechos.
+
+**`13/06` — el plan B** (la mitad de abajo de tu `usePortfolioDataWithFallback.js`):
+
+- **1 `leerSnapshot`:** lo valida con `ProjectsSchema` en vez de `SnapshotSchema` (`TS2739`).
+- **2 `pedirConRespaldo`:** el catch se rinde («La API no contestó») en vez de leer el snapshot.
+- **3 `cargarConRespaldo`:** el plan B sin su propio `try/catch`: si el snapshot falla, el
+  error se escapa.
+- **4 `pedirConLimiteYRespaldo`:** el plan B sale con la combinada, que el reloj ya abortó.
+- **5 `usePortfolioConRespaldo` + `PortadaConRespaldo`:** tu hook del 05 con red de seguridad
+  y el aviso «Datos del último deploy».
+
+### Verificación
+
+- Escalera: solución 16/16 en una copia, 0 errores de tipos y lint limpio. Starters: los
+  siete rojos, solo en el test. A medias: `avisoDe` con la combinada (5e y 5f) y el hook sin
+  guardia (5g) salen rojos. Sin el 5d fallan el 5e, el 5f y el 5g, porque lo usan.
+- 06: solución 5/5 en una copia, 0 errores de tipos y lint limpio. Starters: los cinco rojos;
+  el 1 además con `TS2739`. A medias: el plan B con la combinada y el plan B sin `try` (este
+  con el `Unhandled Rejection` del error que se escapa) salen rojos.
+- Banco: tarjetas 5a–5g y 1–5 del 06, probadas en jsdom con los starters. El fetch de mentira
+  responde también a `/data-snapshot.json` (sin Store Pulse) y hay una respuesta nueva, «500 y
+  sin snapshot». `ProbarApuntes` acepta botones de respuesta; los del 02 siguen iguales.
+- Deuda: el 05 tiene 811 líneas y el 06, 265.
+
+### Pendiente
+
+- La escalera del 5 (0/7) y el 06 (0/5), en el orden que elijas.

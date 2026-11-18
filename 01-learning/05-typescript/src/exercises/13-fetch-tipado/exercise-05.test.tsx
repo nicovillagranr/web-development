@@ -11,6 +11,13 @@ import {
   pedirCancelableConLimite,
   ListaConLimite,
   PortadaConLimite,
+  PerfilAlMontar,
+  PerfilAlCerrar,
+  pedirLasDos,
+  avisoDe,
+  ListaConAvisos,
+  ListaDeCero,
+  PortadaDeCero,
   type Project,
   type Profile,
 } from "./exercise-05";
@@ -190,6 +197,131 @@ describe("13-fetch-tipado / exercise-05 — el timeout", () => {
     render(
       <StrictMode>
         <PortadaConLimite limiteMs={500} />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("role");
+  });
+
+  it("5a) PerfilAlMontar — «Cargando…» y después tu perfil", async () => {
+    responder();
+    render(
+      <StrictMode>
+        <PerfilAlMontar />
+      </StrictMode>,
+    );
+    await act(async () => {});
+    expect(await screen.findByText("Nicolás · Frontend Developer")).toBeInTheDocument();
+  });
+
+  it("5b) PerfilAlCerrar — al cerrar antes de que llegue, la petición se cancela", async () => {
+    responder();
+    const bien = render(<PerfilAlCerrar />);
+    expect(await screen.findByText("Nicolás · Frontend Developer")).toBeInTheDocument();
+    bien.unmount();
+
+    const fetchFalso = responder({ retrasoMs: 300 });
+    const cerrada = render(<PerfilAlCerrar />);
+    cerrada.unmount();
+    const signal = fetchFalso.mock.calls[0]?.[1]?.signal;
+    expect(signal?.aborted, "al cerrar, la petición tenía que cancelarse").toBe(true);
+  });
+
+  it("5c) pedirLasDos — si quien llama cancela, se cortan las dos", async () => {
+    responder();
+    await expect(pedirLasDos(new AbortController().signal)).resolves.toEqual([PROYECTOS, PERFIL]);
+
+    const fetchFalso = responder({ retrasoMs: 300 });
+    const controller = new AbortController();
+    const peticion = pedirLasDos(controller.signal);
+    controller.abort();
+    await expect(peticion).rejects.toHaveProperty("name", "AbortError");
+    const perfil = fetchFalso.mock.calls.find(([input]) => String(input) === "/api/profile");
+    expect(perfil?.[1]?.signal?.aborted, "la petición del perfil tenía que cortarse también").toBe(
+      true,
+    );
+  });
+
+  it("5d) avisoDe — nada si se fue, el aviso del reloj o el mensaje del error", () => {
+    const seFue = new AbortController();
+    seFue.abort();
+    const sigue = new AbortController().signal;
+    const reloj = Object.assign(new Error("signal timed out"), { name: "TimeoutError" });
+
+    expect(avisoDe(new Error("This operation was aborted"), seFue.signal)).toBeNull();
+    expect(avisoDe(reloj, sigue)).toBe("La API tardó demasiado");
+    expect(avisoDe(new Error("HTTP error — /api/projects:500"), sigue)).toBe(
+      "HTTP error — /api/projects:500",
+    );
+    expect(avisoDe("se cayó el servidor", sigue)).toBe("Error desconocido");
+  });
+
+  it("5e) ListaConAvisos — la lista, o el aviso si la API no contesta a tiempo", async () => {
+    responder();
+    const bien = render(
+      <StrictMode>
+        <ListaConAvisos limiteMs={500} />
+      </StrictMode>,
+    );
+    await act(async () => {});
+    expect(await screen.findByText("Smart Cooler")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    bien.unmount();
+
+    responder({ retrasoMs: 200 });
+    render(
+      <StrictMode>
+        <ListaConAvisos limiteMs={50} />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("La API tardó demasiado");
+  });
+
+  it("5f) useListaDeCero — la lista, o el aviso si la API no contesta a tiempo", async () => {
+    responder();
+    const bien = render(
+      <StrictMode>
+        <ListaDeCero limiteMs={500} />
+      </StrictMode>,
+    );
+    await act(async () => {});
+    expect(await screen.findByText("Smart Cooler")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    bien.unmount();
+
+    responder({ retrasoMs: 200 });
+    render(
+      <StrictMode>
+        <ListaDeCero limiteMs={50} />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("La API tardó demasiado");
+  });
+
+  it("5g) usePortadaDeCero — la portada, el aviso del límite o el aviso de Zod", async () => {
+    responder();
+    const bien = render(
+      <StrictMode>
+        <PortadaDeCero limiteMs={500} />
+      </StrictMode>,
+    );
+    await act(async () => {});
+    expect(await screen.findByText("Nicolás · Frontend Developer")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    bien.unmount();
+
+    responder({ retrasoMs: 200 });
+    const lenta = render(
+      <StrictMode>
+        <PortadaDeCero limiteMs={50} />
+      </StrictMode>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("La API tardó demasiado");
+    lenta.unmount();
+
+    responder({ perfil: { name: "Nicolás" } });
+    render(
+      <StrictMode>
+        <PortadaDeCero limiteMs={500} />
       </StrictMode>,
     );
     expect(await screen.findByRole("alert")).toHaveTextContent("role");
