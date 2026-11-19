@@ -1554,6 +1554,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5a"
+        estado="resuelto"
         nombre="PerfilAlMontar"
         mirar="Pulsa API: bien: «Cargando…» y, a los 0,6 s, tu nombre y tu rol. Con el starter se queda en «Cargando…» para siempre. Con API: sin red, el aviso «Failed to fetch»."
         campos="botones API: bien y API: sin red · PerfilAlMontar: «Cargando…», el aviso o tu perfil"
@@ -1563,6 +1564,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5b"
+        estado="resuelto"
         nombre="PerfilAlCerrar"
         mirar="Pulsa Abrir la sección y, antes de 2 s, Cerrar la sección. Abajo tienen que quedar 2 canceladas y 0 respondidas: una la cancela el ensayo de StrictMode nada más abrir. Con el starter, a los 2 s salen 2 respondidas, con la sección ya cerrada."
         campos="botones Abrir y Cerrar la sección · el componente · qué fue de las peticiones"
@@ -1572,6 +1574,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5c"
+        estado="resuelto"
         nombre="pedirLasDos"
         mirar="Pulsa Pedir las dos y cancelar: a los 0,5 s falla con AbortError y abajo tienen que quedar 2 canceladas. Con el starter, solo 1 cancelada, y a los 2 s el perfil sale respondido."
         campos="botón Pedir las dos y cancelar · con qué falló · qué fue de las dos peticiones"
@@ -1581,6 +1584,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5d"
+        estado="resuelto"
         nombre="avisoDe"
         mirar="Pulsa Probar: tiene que salir [null, «La API tardó demasiado», «HTTP error — /api/projects:500», «Error desconocido»]: se fue, el reloj, un 500 y un texto suelto. Con el starter, el del reloj sale «signal timed out»."
         campos="botón Probar · lo que devuelve avisoDe en los cuatro casos"
@@ -1590,6 +1594,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5e"
+        estado="resuelto"
         nombre="ListaConAvisos"
         mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2 s tiene que salir el aviso «La API tardó demasiado». Con el starter se queda en «Cargando…» para siempre. Usa tu avisoDe del 5d."
         campos="botones API: bien y API: lenta · ListaConAvisos: «Cargando…», el aviso o la lista"
@@ -1599,6 +1604,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5f"
+        estado="resuelto"
         nombre="useListaDeCero"
         mirar="Límite: 2 s. Con API: bien, «Cargando…» y después la lista; con API: lenta, a los 2 s el aviso «La API tardó demasiado». Con el starter se queda en «Cargando…» para siempre: el efecto está vacío."
         campos="botones API: bien y API: lenta · ListaDeCero: «Cargando…», el aviso o la lista"
@@ -1608,6 +1614,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5g"
+        estado="resuelto"
         nombre="usePortadaDeCero"
         mirar="Límite: 2 s. API: bien, tu cabecera con la lista; API: lenta, a los 2 s «La API tardó demasiado»; API: perfil roto, el aviso de Zod. Con el starter se queda en «Cargando…» para siempre: el efecto está vacío."
         campos="botones API: bien, API: lenta y API: perfil roto · PortadaDeCero: «Cargando…», el aviso o tu cabecera con la lista"

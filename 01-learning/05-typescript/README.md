@@ -3202,3 +3202,43 @@ señal para dos peticiones, el catch de tres ramas y el hook entero de cero.
 ### Pendiente
 
 - La escalera del 5 (0/7) y el 06 (0/5), en el orden que elijas.
+
+## Sesión 19 nov 2026 — escalera del 5 CERRADA (7/7)
+
+Empezaste por la escalera antes que el 06, porque el hook del 06 se monta sobre tu 5.
+
+- **5a, CERRADO:** `load()` antes del `return`. Comprobación en el chat: cuando el efecto
+  llega al `return`, el perfil todavía no llegó, porque «load() solo lanza la petición».
+- **5b, CERRADO:** sacaste la limpieza de `load` al cuerpo del efecto. Contestaste dos veces
+  que el `return` era «del efecto», y era de vocabulario: **el efecto es solo la flecha que
+  recibe `useEffect`**, y `load` es otra función metida dentro. Regla: un `return` es de la
+  función más cercana que lo encierra; `try`, `catch` e `if` no cuentan. Comprobado con un
+  ejemplo nuevo (`saludar`).
+- **5c, CERRADO:** la misma `signal` para las dos. Comprobación: el mando de
+  `new AbortController()` no se guarda en ninguna variable, así que nadie puede apretarlo.
+- **5d, CERRADO:** la ventanilla del reloj antes que la genérica. Comprobado con el ejemplo
+  del clima: con la genérica arriba, un 404 nunca llega a «Ciudad no encontrada».
+- **5e, CERRADO, con un diseño tuyo:** en vez de pasarle `controller.signal` a `avisoDe`
+  (una palabra en el 5e), cambiaste `avisoDe` para que le pregunte el motivo a la
+  combinada, igual que en tus drills 4 y 5. Es válido y fue decisión tuya. Tu portfolio usa
+  la otra forma (`controller.signal.aborted`, l.96, 101 y 108). La Solución del 5e en las
+  pistas describe esa otra forma, no la tuya.
+- **5f, CERRADO:** tu 5e convertido en hook. Al editarlo se borró `ListaDeCero` (la tercera
+  vez que se va lo de justo debajo) y se restauró.
+- **5g, CERRADO:** el hook entero desde una función vacía. Comprobación en el chat: tu
+  `avisoDe` sabe que fue un cierre y no el reloj por el motivo (`reason.name === "AbortError"`),
+  no por `aborted`, que vale `true` en los dos casos.
+
+### Verificación
+
+- `exercise-05`: 16/16 tests. Typecheck: solo el `TS2739` del starter del 06. Lint limpio.
+- Si la app se cae sin motivo aparente: `pnpm typecheck` y buscar `TS2305` o `TS2724`
+  (un export que ya no existe).
+
+### Pendiente
+
+- Propuestas abiertas en tus porqués escritos, a decidir por ti: l.624 (5b, «dentro del
+  efecto» → «dentro de load»), l.728 (5d, «primer» → «segundo») y l.886 (5g, la razón es el
+  motivo de la combinada, no la señal del controller).
+- El bloque dice «al terminar, vuelve a leer tu 5».
+- El 06 (0/5).

@@ -563,27 +563,48 @@ export function PortadaConLimite({ limiteMs }: { limiteMs: number }) {
 /* 5a) PerfilAlMontar — pinta «Cargando…» y después tu nombre y tu rol. Ahora se
  * queda en «Cargando…» para siempre, y la API ni se entera.
  * ¿Por qué? En el starter, ¿llega a correr la línea de load()?
- *
+ * La línea load() no corría porque estaba debajo del return del efecto, lo que hacía que nunca se ejecutara. Al mover la llamada a load() antes del return, ahora sí se ejecuta y la petición se realiza correctamente.
  */
+
 export function PerfilAlMontar() {
+  // Inicializamos profile como null porque todavía no tenemos los datos del perfil.
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  // Inicializamos error como null porque todavía no tenemos ningún error.
   const [error, setError] = useState<string | null>(null);
 
+  // Ejecutamos el efecto al montar el componente.
   useEffect(() => {
+    // Creamos un AbortController para poder cancelar la petición mediante su signal.
     const controller = new AbortController();
 
-    async function load() {
+    // Definimos una función asíncrona que solicitará el perfil y manejará posibles errores.
+    const load = async () => {
       try {
+        // Solicitamos el perfil a la API y pasamos la señal para poder cancelar la petición.
         const perfil = await pedirJson(API_PROFILE, controller.signal);
+
+        // Validamos los datos recibidos con ProfileSchema.
+        // Si cumplen el esquema, parse devuelve los datos validados.
+        // Si no cumplen, lanza un error.
         setProfile(ProfileSchema.parse(perfil));
       } catch (err) {
-        if (controller.signal.aborted) return;
+        // Si la señal fue abortada durante la limpieza del efecto,
+        // ignoramos el error y no actualizamos el estado.
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        // Si ocurrió otro error, guardamos su mensaje en el estado.
         setError(err instanceof Error ? err.message : "Error desconocido");
       }
-    }
+    };
 
-    return () => controller.abort();
+    // Ejecutamos la función asíncrona.
     load();
+
+    // Función de limpieza: abortamos la petición cuando React limpia el efecto.
+    return () => controller.abort();
   }, []);
 
   if (error) return <p role="alert">{error}</p>;
@@ -600,27 +621,37 @@ export function PerfilAlMontar() {
  * llegue tu perfil, la petición se cancela. Ahora sigue viva aunque ya nadie la
  * vaya a ver.
  * ¿Por qué? En el starter, ¿qué le devuelve el efecto a React?
- *
+ * El starter tenía el return metido dentro del efecto, lo que hacía que React no recibiera ninguna función de limpieza y la petición seguía viva aunque el componente se desmontara. Al mover el return fuera del catch, ahora React recibe la función de limpieza y puede abortar la petición correctamente.
  */
 export function PerfilAlCerrar() {
+  // Inicializamos profile como null porque todavía no tenemos los datos del perfil.
   const [profile, setProfile] = useState<Profile | null>(null);
+  // Inicializamos error como null porque todavía no tenemos ningún error.
   const [error, setError] = useState<string | null>(null);
 
+  // Ejecutamos el efecto al montar el componente.
   useEffect(() => {
+    // Creamos un AbortController para poder cancelar la petición mediante su signal.
     const controller = new AbortController();
 
+    // Definimos una función asíncrona que solicitará el perfil y manejará posibles errores.
     async function load() {
       try {
+        // Solicitamos el perfil a la API y pasamos la señal para poder cancelar la petición.
         const perfil = await pedirJson(API_PROFILE, controller.signal);
+        // Validamos los datos recibidos con ProfileSchema.
+        // Si cumplen el esquema, parse devuelve los datos validados.
+        // Si no cumplen, lanza un error.
         setProfile(ProfileSchema.parse(perfil));
       } catch (err) {
+        // Si la señal fue abortada durante la limpieza del efecto, ignoramos el error y no actualizamos el estado.
         if (controller.signal.aborted) return;
         setError(err instanceof Error ? err.message : "Error desconocido");
       }
-      return () => controller.abort();
     }
 
     load();
+    return () => controller.abort();
   }, []);
 
   if (error) return <p role="alert">{error}</p>;
@@ -655,13 +686,17 @@ export function PerfilAlCerrar() {
  * los devuelve sin validar. Si quien llama cancela, se cortan las dos. Ahora el
  * perfil sigue en vuelo después de cancelar.
  * ¿Por qué? En el starter, ¿quién puede llamar a abort() sobre la señal del perfil?
- *
+ * Con el starter, la señal del perfil es independiente de la señal del llamador, por lo que nadie puede llamar a abort() sobre ella. Para que ambas peticiones se corten al mismo tiempo, deben compartir la misma señal.
  */
 export async function pedirLasDos(signal: AbortSignal): Promise<[unknown, unknown]> {
-  return await Promise.all([
-    pedirJson(API_PROJECTS, signal),
-    pedirJson(API_PROFILE, new AbortController().signal),
-  ]);
+  // Esta línea explicada paso a paso:
+  // 1. Se llama a Promise.all, que recibe un array de promesas.
+  // 2. Se llama a pedirJson para la API_PROJECTS, pasando la señal recibida.
+  // 3. Se llama a pedirJson para la API_PROFILE, pasando la misma señal recibida.
+  // 4. Promise.all espera a que ambas promesas se resuelvan o que alguna falle.
+  // 5. Si alguna promesa falla, Promise.all rechaza con el error de esa promesa.
+  // 6. Si ambas promesas se resuelven, Promise.all devuelve un array con los resultados.
+  return await Promise.all([pedirJson(API_PROJECTS, signal), pedirJson(API_PROFILE, signal)]);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -690,12 +725,26 @@ export async function pedirLasDos(signal: AbortSignal): Promise<[unknown, unknow
  * demasiado» si saltó el reloj, o el mensaje del error. Ahora, cuando salta el
  * reloj, devuelve el mensaje en inglés del navegador.
  * ¿Por qué? En el starter, un TimeoutError, ¿en qué if se queda?
- *
+ * Con el starter, un TimeoutError entra en el primer if porque es una instancia de Error, por lo que devuelve su mensaje en inglés del navegador. Para que devuelva "La API tardó demasiado", debemos verificar primero si es un TimeoutError antes de verificar si es un Error genérico.
  */
 export function avisoDe(err: unknown, miSenal: AbortSignal): string | null {
-  if (miSenal.aborted) return null;
+  // Ignoramos exclusivamente las cancelaciones por desmontaje.
+  if (miSenal.aborted && miSenal.reason.name === "AbortError") {
+    return null;
+  }
+
+  // Identificamos primero el TimeoutError.
+  if (err instanceof Error && err.name === "TimeoutError") {
+    return "La API tardó demasiado";
+  }
+
+  // Cualquier otro error, estos pueden ser:
+  // - errores de validación de Zod
+  // - errores de red
+  // - errores de HTTP
   if (err instanceof Error) return err.message;
-  if (err instanceof Error && err.name === "TimeoutError") return "La API tardó demasiado";
+
+  // Si el error sale de todas las opciones de arriba, devolvemos un mensaje genérico.
   return "Error desconocido";
 }
 
@@ -704,26 +753,42 @@ export function avisoDe(err: unknown, miSenal: AbortSignal): string | null {
  * demasiado». Ahora, con la API lenta, se queda en «Cargando…» para siempre.
  * ¿Por qué? En el starter, cuando salta el reloj, ¿cuánto vale aborted en la señal
  * que recibe avisoDe?
- *
+ * Con el starter, cuando salta el reloj, la señal combinada se ha abortado y su propiedad aborted es true. Por lo tanto, avisoDe devuelve null y el componente se queda en "Cargando..." para siempre. Para solucionar esto, debemos asegurarnos de que avisoDe distinga entre un AbortError por desmontaje y un TimeoutError por límite de tiempo.
  */
+
 export function ListaConAvisos({ limiteMs }: { limiteMs: number }) {
+  // Seteamos el estado de projects como un array de Project o null
   const [projects, setProjects] = useState<Project[] | null>(null);
+  // Seteamos el estado de error como un string o null
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto que carga la lista de proyectos.
   useEffect(() => {
+    // Creamos un nuevo AbortController para poder abortar la petición si es necesario.
     const controller = new AbortController();
+
+    // Combinamos la señal de desmontaje con la señal del reloj:
+    // si cualquiera de las dos se aborta, la petición se aborta.
+    // Esto permite que la petición se aborte si el componente se desmonta || si se alcanza el límite de tiempo.
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(limiteMs)]);
 
     async function load() {
       try {
-        setProjects(await pedirLista(signal));
+        const lista = await pedirLista(signal); // -> Solicitamos la lista de proyectos a la API y pasamos la señal para poder cancelar la petición.
+        ProjectsSchema.parse(lista); // -> Validamos los datos recibidos con ProjectsSchema. Si cumplen el esquema, parse devuelve los datos validados. Si no cumplen, lanza un error.
+        setProjects(lista); // -> Seteamos el estado de projects con los datos validados.
       } catch (err) {
+        // Analizamos el error y el motivo de cancelación.
         const aviso = avisoDe(err, signal);
-        if (aviso !== null) setError(aviso);
+        // Si el componente se desmontó, aviso será null.
+        // Si venció el reloj u ocurrió otro error, guardamos el mensaje.
+        if (aviso !== null) {
+          setError(aviso);
+        }
       }
     }
-
     load();
+    // Si React limpia el efecto, cancelamos la petición.
     return () => controller.abort();
   }, [limiteMs]);
 
@@ -751,12 +816,51 @@ export function ListaConAvisos({ limiteMs }: { limiteMs: number }) {
  * API no contesta en limiteMs, el aviso «La API tardó demasiado»; si se desmonta
  * antes, nada. Ahora el efecto está vacío.
  */
+
+// Creamos un hook llamado useListaDeCero que recibe un parámetro limiteMs de tipo number y devuelve un objeto con los proyectos y el error.
 export function useListaDeCero(limiteMs: number): {
   projects: Project[] | null;
   error: string | null;
 } {
-  useEffect(() => {}, [limiteMs]);
-  return { projects: null, error: null };
+  // Seteamos el estado de projects como un array de Project o null
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  // Seteamos el estado de error como un string o null
+  const [error, setError] = useState<string | null>(null);
+
+  // Una vez montado el componente, ejecutamos el efecto que carga la lista de proyectos.
+  useEffect(() => {
+    // Creamos un nuevo AbortController para poder abortar la petición si es necesario.
+    const controller = new AbortController();
+
+    // Combinamos la señal de desmontaje con la señal del reloj:
+    // si cualquiera de las dos se aborta, la petición se aborta.
+    // Esto permite que la petición se aborte si el componente se desmonta || si se alcanza el límite de tiempo.
+    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(limiteMs)]);
+
+    async function load() {
+      try {
+        // Solicitamos la lista de proyectos a la API y pasamos la señal para poder cancelar la petición.
+        const lista = await pedirLista(signal);
+        // Validamos los datos recibidos con ProjectsSchema. Si cumplen el esquema, parse devuelve los datos validados. Si no cumplen, lanza un error.
+        ProjectsSchema.parse(lista);
+        // Seteamos el estado de projects con los datos validados.
+        setProjects(lista);
+      } catch (err) {
+        // Analizamos el error y el motivo de cancelación.
+        const aviso = avisoDe(err, signal);
+        // Si el componente se desmontó, aviso será null.
+        // Si venció el reloj u ocurrió otro error, guardamos el mensaje.
+        if (aviso !== null) {
+          setError(aviso);
+        }
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, [limiteMs]);
+
+  return { projects, error };
 }
 
 export function ListaDeCero({ limiteMs }: { limiteMs: number }) {
@@ -779,15 +883,49 @@ export function ListaDeCero({ limiteMs }: { limiteMs: number }) {
  * los datos no encajan, el aviso de Zod; si se desmonta antes, nada. Es tu 5, desde
  * una función vacía.
  * ¿Por qué? Con tu arreglo, si cierras la portada a los 0,3 s, ¿qué devuelve avisoDe?
- *
+ * Con mi arreglo, avisoDe devuelve null porque la señal del controller se ha abortado y su propiedad aborted es true. Por lo tanto, el componente no muestra ningún mensaje de error y se desmonta sin problemas.
  */
+
+// Creamos un hook llamado usePortadaDeCero que recibe un parámetro limiteMs de tipo number y devuelve un objeto con los proyectos, el perfil y el error.
 export function usePortadaDeCero(limiteMs: number): {
   projects: Project[];
   profile: Profile | null;
   error: string | null;
 } {
-  useEffect(() => {}, [limiteMs]);
-  return { projects: [], profile: null, error: null };
+  // Seteamos el estado de projects como un array de Project vacío.
+  const [projects, setProjects] = useState<Project[]>([]);
+  // Seteamos el estado de profile como un objeto Profile o null.
+  const [profile, setProfile] = useState<Profile | null>(null);
+  // Seteamos el estado de error como un string o null.
+  const [error, setError] = useState<string | null>(null);
+
+  // Una vez montado el componente, ejecutamos el efecto que carga los proyectos, el perfil y maneja los errores.
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(limiteMs)]);
+
+    async function load() {
+      try {
+        // Creamos un Promise.all para pedir la lista de proyectos y el perfil al mismo tiempo, usando la misma señal para que ambas peticiones se aborten si cualquiera de las dos señales se aborta.
+        const [lista, perfil] = await Promise.all([
+          pedirJson(API_PROJECTS, signal),
+          pedirJson(API_PROFILE, signal),
+        ]);
+        // Validamos los datos obtenidos con los esquemas ProjectsSchema y ProfileSchema. Si el resultado no coincide con el esquema, parse lanza un error.
+        setProjects(ProjectsSchema.parse(lista));
+        setProfile(ProfileSchema.parse(perfil));
+      } catch (err) {
+        const aviso = avisoDe(err, signal);
+        if (aviso !== null) {
+          setError(aviso);
+        }
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, [limiteMs]);
+  return { projects, profile, error };
 }
 
 export function PortadaDeCero({ limiteMs }: { limiteMs: number }) {
