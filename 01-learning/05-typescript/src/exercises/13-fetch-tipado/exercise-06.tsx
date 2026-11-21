@@ -650,7 +650,7 @@ export function ListaConRespaldo() {
  * error. PortadaConRespaldo ya está bien: solo falla el hook.
  * ¿Por qué? Con tu arreglo y la API caída, si cierras la portada mientras se lee el
  * snapshot, ¿qué señal corta esa lectura?
- *
+ * La del controller, la aborta el cleanup al desmontar
  */
 export function usePortfolioConRespaldo(limiteMs: number): {
   projects: Project[];
