@@ -87,6 +87,12 @@ import {
   pedirConRespaldo,
   cargarConRespaldo,
   pedirConLimiteYRespaldo,
+  enVivoConReloj,
+  enVivoConSalida,
+  respaldoConLaQueQueda,
+  PerfilConRespaldo,
+  cargarConGuardias,
+  ListaConRespaldo,
   PortadaConRespaldo,
 } from "../exercises/13-fetch-tipado/exercise-06";
 import { Seccion, Tarjeta } from "./piezas";
@@ -562,16 +568,20 @@ function ConCierre({ Drill }: { Drill: ComponentType }) {
   );
 }
 
-/* Para los peldaños 4b–4e del 02 y el drill 3 del 06: la función por uno de los caminos, y
- * lo que apuntó. «Pedir y cancelar» aprieta abort() con la petición aún en vuelo. */
+/* Para los peldaños 4b–4e del 02, el drill 3 del 06 y el peldaño 5b del 06: la función por
+ * uno de los caminos, y lo que apuntó. «Pedir y cancelar» aprieta abort() con la petición aún
+ * en vuelo: por defecto con la API bien y a los 0,3 s; cancelarCon cambia las dos cosas. */
 function ProbarApuntes({
   cargar,
   respuestas = ["bien", "sin red"],
+  cancelarCon = { respuesta: "bien", ms: 300 },
 }: {
   cargar: (signal: AbortSignal, apuntar: (cambio: string) => void) => Promise<void>;
   respuestas?: Respuesta[];
+  cancelarCon?: { respuesta: Respuesta; ms: number };
 }) {
   const [linea, setLinea] = useState("");
+  const aLos = `${(cancelarCon.ms / 1000).toString().replace(".", ",")} s`;
 
   async function probar(respuesta: Respuesta, cancelar: boolean) {
     elegirRespuesta(respuesta);
@@ -580,8 +590,8 @@ function ProbarApuntes({
     const carga = cargar(controller.signal, (cambio) => {
       apuntes.push(cambio);
     });
-    if (cancelar) setTimeout(() => controller.abort(), 300);
-    setLinea(cancelar ? "Pedida. Se cancela a los 0,3 s…" : "Pedida. Esperándola…");
+    if (cancelar) setTimeout(() => controller.abort(), cancelarCon.ms);
+    setLinea(cancelar ? `Pedida. Se cancela a los ${aLos}…` : "Pedida. Esperándola…");
     try {
       await carga;
       setLinea(`Apunta: ${apuntes.length > 0 ? apuntes.join(" · ") : "nada"}`);
@@ -599,8 +609,8 @@ function ProbarApuntes({
             API: {respuesta}
           </button>
         ))}
-        <button type="button" onClick={() => probar("bien", true)}>
-          Pedir y cancelar
+        <button type="button" onClick={() => probar(cancelarCon.respuesta, true)}>
+          {cancelarCon.respuesta === "bien" ? "Pedir y cancelar" : `API: ${cancelarCon.respuesta} y cancelar a los ${aLos}`}
         </button>
       </div>
       {linea && <p>{linea}</p>}
@@ -885,6 +895,22 @@ function respaldoYCancelarPronto() {
   const controller = new AbortController();
   setTimeout(() => controller.abort(), 300);
   return pedirConLimiteYRespaldo(controller.signal, 2000);
+}
+
+/* Para los peldaños 4a y 4b del 06: cancela a los 0,3 s, con un reloj de 10 s, para que el
+ * que corte sea el usuario y no el reloj. */
+function relojYCancelarPronto(probar: (signal: AbortSignal, reloj: AbortSignal) => Promise<unknown>) {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 300);
+  return probar(controller.signal, AbortSignal.timeout(10000));
+}
+
+/* Para el peldaño 4c del 06: la combinada con 2 s de reloj. Con cancelarMs, el usuario se va
+ * a esa altura (a los 2,15 s, el snapshot va a medias). */
+function respaldoConLaQueQuedaDe2s(cancelarMs?: number) {
+  const controller = new AbortController();
+  if (cancelarMs !== undefined) setTimeout(() => controller.abort(), cancelarMs);
+  return respaldoConLaQueQueda(controller.signal, AbortSignal.any([controller.signal, AbortSignal.timeout(2000)]));
 }
 
 /* Para el drill 5 del 06: la portada con 2 s de límite. */
@@ -1626,6 +1652,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="leerSnapshot"
         mirar="Pulsa API: bien: a los 0,3 s, el snapshot entero, con generatedAt, tu lista (Projex y Smart Cooler) y tu perfil. Con el starter falla con el error de Zod: esperaba una lista y llegó un objeto."
         campos="botones API: bien, API: 500 y sin snapshot y Pedir y cancelar · con qué termina o falla"
@@ -1635,8 +1662,9 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="pedirConRespaldo"
-        mirar="Pulsa API: 500: tienen que llegar los datos del snapshot (sin Store Pulse) con stale: true. Con el starter falla con «La API no contestó». Con API: bien, los de la API, con stale: false."
+        mirar="Pulsa API: 500: tienen que llegar los datos del snapshot (sin Store Pulse) con deRespaldo: true. Con el starter falla con «La API no contestó». Con API: bien, los de la API, con deRespaldo: false."
         campos="botones API: bien, API: 500 y Pedir y cancelar · con qué termina o falla"
       >
         <ProbarCancelable probar={pedirConRespaldo} respuestas={["bien", "500"]} />
@@ -1644,6 +1672,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="cargarConRespaldo"
         mirar="Pulsa API: 500 y sin snapshot: tiene que salir «Apunta: error: HTTP error — /data-snapshot.json:404». Con el starter, «Falla sin apuntar»: el error se escapa. Con API: 500, «snapshot»; con API: bien, «en vivo»."
         campos="botones API: bien, API: 500, API: 500 y sin snapshot y Pedir y cancelar · lo que apunta"
@@ -1653,8 +1682,9 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="pedirConLimiteYRespaldo"
-        mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2,3 s, los datos del snapshot con stale: true. Con el starter falla a los 2 s con TimeoutError. Cancelar a los 0,3 s: AbortError, sin snapshot."
+        mirar="Límite: 2 s. Pulsa API: lenta (tarda 5 s): a los 2,3 s, los datos del snapshot con deRespaldo: true. Con el starter falla a los 2 s con TimeoutError. Cancelar a los 0,3 s: AbortError, sin snapshot."
         campos="botones API: bien, API: lenta y Cancelar a los 0,3 s · cuánto tardó y con qué terminó o falló"
       >
         <ProbarConLimites
@@ -1675,7 +1705,118 @@ export function Bloque13() {
       </Tarjeta>
 
       <Tarjeta
+        n="4a"
+        estado="resuelto"
+        nombre="enVivoConReloj"
+        mirar="Reloj: 2 s. Pulsa API: lenta (tarda 5 s): tiene que fallar a los 2 s con TimeoutError. Con el starter espera los 5 s y llegan tus datos. Cancelar a los 0,3 s ya funciona con el starter: ese es el otro motivo, el del 4b."
+        campos="botones API: bien, API: lenta y Cancelar a los 0,3 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            {
+              etiqueta: "API: bien · reloj 2 s",
+              respuesta: "bien",
+              probar: () => enVivoConReloj(new AbortController().signal, AbortSignal.timeout(2000)),
+            },
+            {
+              etiqueta: "API: lenta · reloj 2 s",
+              respuesta: "lenta",
+              probar: () => enVivoConReloj(new AbortController().signal, AbortSignal.timeout(2000)),
+            },
+            {
+              etiqueta: "Cancelar a los 0,3 s · API: lenta · reloj 10 s",
+              respuesta: "lenta",
+              probar: () => relojYCancelarPronto(enVivoConReloj),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4b"
+        estado="resuelto"
+        nombre="enVivoConSalida"
+        mirar="Pulsa Cancelar a los 0,3 s (API: lenta, reloj de 10 s): tiene que fallar a los 0,3 s con AbortError. Con el starter espera los 5 s y llegan tus datos. API: lenta con el reloj de 2 s ya funciona con el starter: ese es el motivo del 4a."
+        campos="botones API: bien, API: lenta y Cancelar a los 0,3 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            {
+              etiqueta: "API: bien · reloj 2 s",
+              respuesta: "bien",
+              probar: () => enVivoConSalida(new AbortController().signal, AbortSignal.timeout(2000)),
+            },
+            {
+              etiqueta: "API: lenta · reloj 2 s",
+              respuesta: "lenta",
+              probar: () => enVivoConSalida(new AbortController().signal, AbortSignal.timeout(2000)),
+            },
+            {
+              etiqueta: "Cancelar a los 0,3 s · API: lenta · reloj 10 s",
+              respuesta: "lenta",
+              probar: () => relojYCancelarPronto(enVivoConSalida),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4c"
+        estado="resuelto"
+        nombre="respaldoConLaQueQueda"
+        mirar="Reloj: 2 s. Pulsa API: lenta: a los 2,3 s, los datos del snapshot (sin Store Pulse). Cancelar a los 2,15 s, con el snapshot a medias: AbortError. Con el starter, los dos fallan a los 2 s con TimeoutError: el snapshot ni sale."
+        campos="botones API: bien, API: lenta y Cancelar a los 2,15 s · cuánto tardó y con qué terminó o falló"
+      >
+        <ProbarConLimites
+          pruebas={[
+            { etiqueta: "API: bien · reloj 2 s", respuesta: "bien", probar: () => respaldoConLaQueQuedaDe2s() },
+            { etiqueta: "API: lenta · reloj 2 s", respuesta: "lenta", probar: () => respaldoConLaQueQuedaDe2s() },
+            {
+              etiqueta: "Cancelar a los 2,15 s · API: lenta",
+              respuesta: "lenta",
+              probar: () => respaldoConLaQueQuedaDe2s(2150),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5a"
+        estado="resuelto"
+        nombre="usePerfilConRespaldo"
+        mirar="Pulsa API: 500: tu nombre y tu rol, sacados del snapshot. API: 500 y sin snapshot: el aviso con el 404. Con el starter, API: 500 enseña «HTTP error — /api/profile:500»."
+        campos="botones API: bien, API: 500 y API: 500 y sin snapshot · PerfilConRespaldo: «Cargando…», el aviso o tu perfil"
+      >
+        <ConApi Drill={PerfilConRespaldo} respuestas={["bien", "500", "500 y sin snapshot"]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5b"
+        estado="resuelto"
+        nombre="cargarConGuardias"
+        mirar="Pulsa API: 500 y cancelar a los 0,75 s: la API falla a los 0,6 s y cancelas con el snapshot a medias. Tiene que salir «Apunta: nada». Con el starter, «Apunta: error: …» con el mensaje de la cancelación."
+        campos="botones API: bien, API: 500, API: 500 y sin snapshot y API: 500 y cancelar · lo que apunta"
+      >
+        <ProbarApuntes
+          cargar={cargarConGuardias}
+          respuestas={["bien", "500", "500 y sin snapshot"]}
+          cancelarCon={{ respuesta: "500", ms: 750 }}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5c"
+        estado="resuelto"
+        nombre="useListaConRespaldo"
+        mirar="Pulsa API: 500: tu lista del snapshot (sin Store Pulse) con el aviso «Datos del último deploy». Con el starter sale «La API no contestó». Con API: bien, tu lista entera y sin aviso."
+        campos="botones API: bien y API: 500 · ListaConRespaldo: «Cargando…», el aviso o tu lista"
+      >
+        <ConApi Drill={ListaConRespaldo} respuestas={["bien", "500"]} />
+      </Tarjeta>
+
+      <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="usePortfolioConRespaldo"
         mirar="Límite: 2 s. API: lenta o API: 500: tu portada con el aviso «Datos del último deploy» y sin Store Pulse. API: 500 y sin snapshot: el aviso con el 404. Con el starter, API: 500 enseña el error en vez del snapshot."
         campos="botones API: bien, API: lenta, API: 500 y API: 500 y sin snapshot · PortadaConRespaldo: «Cargando…», el aviso o tu portada"

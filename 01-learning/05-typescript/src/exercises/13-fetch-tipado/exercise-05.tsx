@@ -901,7 +901,9 @@ export function usePortadaDeCero(limiteMs: number): {
 
   // Una vez montado el componente, ejecutamos el efecto que carga los proyectos, el perfil y maneja los errores.
   useEffect(() => {
+    // Creamos un nuevo AbortController para poder abortar la petición si es necesario.
     const controller = new AbortController();
+    // Combinamos la señal del controller con una señal de tiempo límite usando AbortSignal.any. Esto permite que la petición se aborte si cualquiera de las dos señales se aborta, ya sea porque el componente se desmontó o porque se alcanzó el límite de tiempo.
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(limiteMs)]);
 
     async function load() {
@@ -911,7 +913,11 @@ export function usePortadaDeCero(limiteMs: number): {
           pedirJson(API_PROJECTS, signal),
           pedirJson(API_PROFILE, signal),
         ]);
-        // Validamos los datos obtenidos con los esquemas ProjectsSchema y ProfileSchema. Si el resultado no coincide con el esquema, parse lanza un error.
+        // Qué pasa aquí paso a paso:
+        // 1. Se valida la lista de proyectos con ProjectsSchema.parse(lista).
+        // 2. Se valida el perfil con ProfileSchema.parse(perfil).
+        // 3. Si ambas validaciones son exitosas, se actualizan los estados de projects y profile.
+        // 4. Si alguna de las validaciones falla, se lanza un error que será capturado en el catch.
         setProjects(ProjectsSchema.parse(lista));
         setProfile(ProfileSchema.parse(perfil));
       } catch (err) {
@@ -924,10 +930,13 @@ export function usePortadaDeCero(limiteMs: number): {
 
     load();
     return () => controller.abort();
+    // Array de dependencias del efecto: si limiteMs cambia, se vuelve a ejecutar el efecto.
   }, [limiteMs]);
+  // Devolvemos un objeto con los proyectos, el perfil y el error.
   return { projects, profile, error };
 }
 
+// Esto es un componente funcional llamado PortadaDeCero que recibe un parámetro limiteMs de tipo number y devuelve un elemento JSX.
 export function PortadaDeCero({ limiteMs }: { limiteMs: number }) {
   const { projects, profile, error } = usePortadaDeCero(limiteMs);
 

@@ -3242,3 +3242,96 @@ Empezaste por la escalera antes que el 06, porque el hook del 06 se monta sobre 
   motivo de la combinada, no la señal del controller).
 - El bloque dice «al terminar, vuelve a leer tu 5».
 - El 06 (0/5).
+
+## Sesiones 20 y 21 nov 2026 — `13/06` CERRADO (5/5), con dos escaleras (6/6)
+
+**20 nov.**
+
+- **Drill 1, CERRADO:** `SnapshotSchema.parse` en vez de `ProjectsSchema`. Con él, el typecheck
+  del cuaderno quedó en 0.
+- **`stale` pasó a llamarse `deRespaldo`**, porque te resultaba confuso. Lo elegiste tú: es el
+  vocabulario del archivo (`pedirConRespaldo`, `PortadaConRespaldo`…). Se cambió en el
+  material, el test, las pistas y el banco, y en «Las piezas» quedó el puente: en tu
+  portfolio se llama `stale`.
+- **Drill 2, CERRADO:** el catch ya no se rinde, lee el snapshot. Porqué en el chat: «nadie, el
+  catch lanza el error y no lee el snapshot». Al probarlo en el banco lo resumiste así: «el
+  usuario nunca pierde la experiencia: los datos pueden fallar en A, pero se obtienen de B».
+- **Drill 3, CERRADO:** el plan B con su propio `try/catch`. Porqué en el chat: «ninguno, el
+  error se escapa de la función».
+
+**21 nov.**
+
+- **Drill 4:** arreglado (el snapshot con `signal`), y el porqué del chat estaba bien («true,
+  el reloj ya abortó la combinada»). Pero dijiste que no entendías **por qué una petición
+  necesita la combinada y la otra solo `signal`**, así que **queda reabierto** hasta que lo
+  veas. Se volvió a cerrar con el 4c (abajo).
+- **Escalera del 4 (4a–4c), MONTADA (0/3)**, debajo del 4. A · en vivo, dos motivos para
+  cortar: **4a** `enVivoConReloj` (mira el reloj con un if al salir y no lo escucha) y **4b**
+  `enVivoConSalida` (lo mismo con el usuario). B · el respaldo: **4c**
+  `respaldoConLaQueQueda` (el snapshot sale con la combinada ya abortada).
+- **Escalera del 5 (5a–5c), MONTADA (0/3)**, antes del 5, para que llegues a él con las piezas
+  practicadas. Marcaste las tres partes que te frenaban: **5a** `usePerfilConRespaldo` (el
+  plan B dentro del load), **5b** `cargarConGuardias` (falta la guardia del catch de dentro) y
+  **5c** `useListaConRespaldo` (el camino del snapshot guarda un error en vez de
+  `deRespaldo`).
+
+### Verificación
+
+- Solución completa en una copia: 11/11 tests, 0 errores de tipos y lint limpio. Starters: los
+  seis peldaños rojos, solo en el test. A medias, rojos: el 4a solo con el reloj (además
+  `TS6133`, `signal` sin usar), el 4c con `new AbortController().signal` y el 5c quitando solo
+  el `setError`.
+- Al montar el 4c, la primera versión dejaba `combinada` sin usar en la solución (`TS6133`).
+  Se rehízo para que cada señal tenga un trabajo: en vivo con la combinada, y el snapshot en el
+  catch.
+- El fetch de mentira del test acepta `snapshotMs`, para alargar el snapshot. El
+  `ProbarApuntes` del banco acepta `cancelarCon`, para cancelar con el snapshot a medias. Los
+  usos anteriores siguen iguales.
+- Banco: tarjetas 4a–4c y 5a–5c, comprobadas pintando el bloque en jsdom.
+- **Deuda declarada:** 629 líneas, con tus comentarios.
+
+**21 nov, después de montar.**
+
+- **4a y 4b, CERRADOS:** en los dos, `AbortSignal.any([signal, reloj])` y la petición con la
+  combinada. Porqué del 4a (pegado de tu chat): el reloj solo se mira al principio. Tu
+  resumen de los dos: ninguna de las cuatro versiones escuchaba las dos señales a la vez.
+  El matiz: `AbortSignal.any` es el cómo; el porqué es que fetch escucha **una sola** señal,
+  y un `if` antes del `await` mira una sola vez.
+- **4c, CERRADO, y con él el drill 4 otra vez:** el snapshot con `signal`. «Aquí entendí
+  mejor lo que no entendí con el 4 original.» Las dos razones juntas: la combinada ya nace
+  abortada por el reloj, y el snapshot no necesita reloj porque está en el mismo servidor.
+- **5a, CERRADO:** el plan B dentro del `load`, con su propio `try` y el `setError` solo en el
+  catch de dentro. Porqué: «se rinde, guarda el error y ni señal del snapshot».
+- **5b, CERRADO:** la guardia en el catch de dentro. Primero contestaste «ninguno lo atrapa»:
+  era **ninguna guardia lo frena**, pero un catch sí lo atrapa. Porqué: «al catch de dentro,
+  y apunta el error de la cancelación».
+- **5c, CERRADO:** `setDeRespaldo(true)` en vez de `setError`. Primero dijiste «no se valida
+  con Zod» y «tiramos un error»: `leerSnapshot` ya valida, y `setError` **guarda**, no lanza.
+  Porqué: «nunca se pinta, el return sale antes de llegar a la lista».
+- **Drill 5, CERRADO:** tu hook entero. Se borró `PortadaConRespaldo` y se restauró. Los
+  `parse` que añadiste validaban la lista con `ProjectSchema`, que es un proyecto suelto (Zod:
+  «expected object, received array»); lo cambiaste a `ProjectsSchema`. Esas validaciones
+  repiten las de `pedirEnVivo` y `leerSnapshot`: quitarlas o no, tú decides. Porqué en el
+  chat: «la del controller, la aborta el cleanup al desmontar».
+
+### Verificación del cierre
+
+- 11/11 tests, 0 errores de tipos y lint limpio. Todos los chips del 06 marcados.
+- Dos veces se perdió algo en el 06: el porqué del 5a (lo pisó un guardado tuyo) y
+  `PortadaConRespaldo`. Recargar el archivo después de cada edit mío.
+
+### Lo que viene: la 13 llega al 10, por Smart-Cooler
+
+Con el 06 escribiste entero tu `usePortfolioDataWithFallback.js`. Pediste que la carpeta
+llegue al 10, y elegiste aterrizar en el `useWeather.jsx` de Smart-Cooler:
+
+- **07:** un fetch que depende de algo (`[lat, lon]`): si cambia la ciudad, se cancela la
+  vieja.
+- **08:** volver a pedir a mano: «Reintentar» (`refresh` y `refreshTick`).
+- **09:** volver a pedir solo: polling (`setInterval` en el efecto y su limpieza).
+- **10:** capstone: tu `useWeather` tipado, con Zod para Open-Meteo.
+
+### Pendiente
+
+- Montar el 07.
+- Nada del 06 está subido todavía.
