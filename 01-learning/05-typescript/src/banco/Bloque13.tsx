@@ -95,6 +95,23 @@ import {
   ListaConRespaldo,
   PortadaConRespaldo,
 } from "../exercises/13-fetch-tipado/exercise-06";
+import {
+  API_CLIMA,
+  Temperatura,
+  useTemperaturaConBandera,
+  useTemperaturaConRef,
+  useTemperaturaCancelable,
+  useTemperaturaConLasDos,
+  TarjetaClima,
+} from "../exercises/13-fetch-tipado/exercise-07";
+import {
+  useRastroDeIntentos,
+  useRastroQueNoEscucha,
+  TarjetaReintentable,
+  useClimaConAvisoPegado,
+  useClimaSinEspera,
+  TarjetaClimaConReintento,
+} from "../exercises/13-fetch-tipado/exercise-08";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -124,7 +141,12 @@ import { Seccion, Tarjeta } from "./piezas";
  *
  * Desde el exercise-06 responde además a `/data-snapshot.json`, el snapshot del último
  * deploy (sin Store Pulse, que es más nuevo), en 0,3 s y sin importar lo lenta que esté la
- * API. «500 y sin snapshot» tumba la API como «500» y, además, el snapshot da 404. */
+ * API. «500 y sin snapshot» tumba la API como «500» y, además, el snapshot da 404.
+ *
+ * Desde el exercise-07 responde además a Open-Meteo (API_CLIMA), con la temperatura de la
+ * ciudad que diga la latitud: Santiago tarda 2,5 s a propósito, y Valparaíso 0,4 s. Todas
+ * sus peticiones cuentan en el contador de la tarjeta. Las tarjetas del 07 pueden tumbarlo
+ * entero, y las del 08, hacer que falle las primeras veces que contesta. */
 
 type Respuesta =
   | "bien"
@@ -293,6 +315,60 @@ function responderDeMentira(
   });
 }
 
+/* Open-Meteo de mentira (exercise-07 y 08). Cada ciudad, su temperatura y lo que tarda. */
+type Ciudad = { lat: number; lon: number; temperatura: number; retrasoMs: number };
+const SANTIAGO: Ciudad = { lat: -33.45, lon: -70.67, temperatura: 24.3, retrasoMs: 2500 };
+const VALPARAISO: Ciudad = { lat: -33.05, lon: -71.62, temperatura: 16.8, retrasoMs: 400 };
+
+/* Cómo responde Open-Meteo: caido da 500 a todo; fallos, 500 a las primeras que lleguen a
+ * contestar (las canceladas no gastan fallo). Se cambia desde fuera de los componentes,
+ * como la respuesta de la API. */
+let climaCaido = false;
+let climaFallos = 0;
+
+function elegirClima({ caido = false, fallos = 0 }: { caido?: boolean; fallos?: number } = {}) {
+  climaCaido = caido;
+  climaFallos = fallos;
+}
+
+function responderClima(url: string, signal: AbortSignal | null | undefined): Promise<Response> {
+  const latitud = new URL(url).searchParams.get("latitude");
+  const ciudad = [SANTIAGO, VALPARAISO].find((c) => String(c.lat) === latitud);
+
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason);
+      return;
+    }
+    cambiarCuenta({ ...cuenta, enviadas: cuenta.enviadas + 1 });
+    let terminada = false;
+
+    const reloj = setTimeout(() => {
+      terminada = true;
+      cambiarCuenta({ ...cuenta, respondidas: cuenta.respondidas + 1 });
+      if (climaCaido || climaFallos > 0 || !ciudad) {
+        if (climaFallos > 0) climaFallos -= 1;
+        resolve(comoJson({ error: true, reason: "Internal error" }, 500));
+        return;
+      }
+      resolve(comoJson({ current_weather: { temperature: ciudad.temperatura, weathercode: 1 } }, 200));
+    }, ciudad?.retrasoMs ?? 400);
+
+    signal?.addEventListener("abort", () => {
+      if (terminada) return;
+      clearTimeout(reloj);
+      cambiarCuenta({ ...cuenta, canceladas: cuenta.canceladas + 1 });
+      reject(signal.reason);
+    });
+  });
+}
+
+function urlDe(input: RequestInfo | URL): string {
+  if (typeof input === "string") return input;
+  if (input instanceof URL) return input.href;
+  return input.url;
+}
+
 function rutaDe(input: RequestInfo | URL): string {
   if (typeof input === "string") return input;
   if (input instanceof URL) return input.pathname;
@@ -303,6 +379,8 @@ function useFetchDeMentira() {
   useEffect(() => {
     const original = window.fetch;
     window.fetch = (input, init) => {
+      const url = urlDe(input);
+      if (url.startsWith(API_CLIMA)) return responderClima(url, init?.signal);
       const ruta = rutaDe(input);
       if (!ruta.startsWith("/api/") && ruta !== RUTA_SNAPSHOT) return original.call(window, input, init);
       const signal: unknown = init?.signal;
@@ -916,6 +994,179 @@ function respaldoConLaQueQuedaDe2s(cancelarMs?: number) {
 /* Para el drill 5 del 06: la portada con 2 s de límite. */
 function PortadaConRespaldoDe2s() {
   return <PortadaConRespaldo limiteMs={2000} />;
+}
+
+/* Qué fue de las peticiones a Open-Meteo desde que se montó la tarjeta (07 y 08). */
+function LineaDeCuenta() {
+  const { enviadas, canceladas, respondidas } = useCuenta();
+  return (
+    <p className="mt-3 font-mono text-[13px] text-[#86868b]">
+      Peticiones a Open-Meteo: {enviadas} {enviadas === 1 ? "enviada" : "enviadas"} · {canceladas}{" "}
+      {canceladas === 1 ? "cancelada" : "canceladas"} · {respondidas}{" "}
+      {respondidas === 1 ? "respondida" : "respondidas"}
+    </p>
+  );
+}
+
+type Coordenadas = { lat: number; lon: number };
+
+/* Para el 07: la tarjeta se queda montada y solo cambian lat y lon, como en tu Smart-Cooler
+ * al cambiar de ciudad. Con conCaida, un botón más la vuelve a montar con Open-Meteo dando
+ * 500. Cerrar la desmonta. */
+function ConCiudades({ Drill, conCaida = false }: { Drill: ComponentType<Coordenadas>; conCaida?: boolean }) {
+  const [ciudad, setCiudad] = useState<Coordenadas | null>(null);
+  const [vez, setVez] = useState(0);
+
+  function elegir(nueva: Coordenadas) {
+    elegirClima();
+    if (ciudad === null) cambiarCuenta(CUENTA_VACIA);
+    setCiudad(nueva);
+  }
+
+  function caer() {
+    elegirClima({ caido: true });
+    cambiarCuenta(CUENTA_VACIA);
+    setCiudad(VALPARAISO);
+    setVez(vez + 1);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => elegir(SANTIAGO)}>
+          Santiago (tarda 2,5 s)
+        </button>
+        <button type="button" onClick={() => elegir(VALPARAISO)}>
+          Valparaíso (tarda 0,4 s)
+        </button>
+        {conCaida && (
+          <button type="button" onClick={caer}>
+            Open-Meteo: 500
+          </button>
+        )}
+        <button type="button" onClick={() => setCiudad(null)} disabled={ciudad === null}>
+          Cerrar
+        </button>
+      </div>
+      {ciudad !== null && (
+        <Atrapa key={vez}>
+          <Drill lat={ciudad.lat} lon={ciudad.lon} />
+        </Atrapa>
+      )}
+      <LineaDeCuenta />
+    </div>
+  );
+}
+
+function TemperaturaConBandera({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useTemperaturaConBandera(lat, lon)} />;
+}
+
+function TemperaturaConRef({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useTemperaturaConRef(lat, lon)} />;
+}
+
+function TemperaturaCancelable({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useTemperaturaCancelable(lat, lon)} />;
+}
+
+function TemperaturaConLasDos({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useTemperaturaConLasDos(lat, lon)} />;
+}
+
+/* Para los drills 1 y 2 del 08: el componente solo tiene el botón «Reintentar», y su efecto
+ * apunta «pide» en el rastro cada vez que corre. */
+type ConApuntar = { apuntar: (linea: string) => void };
+
+function RastroDeIntentos({ apuntar }: ConApuntar) {
+  const reintentar = useRastroDeIntentos(apuntar);
+  return (
+    <button type="button" onClick={reintentar}>
+      Reintentar
+    </button>
+  );
+}
+
+function RastroQueNoEscucha({ apuntar }: ConApuntar) {
+  const reintentar = useRastroQueNoEscucha(apuntar);
+  return (
+    <button type="button" onClick={reintentar}>
+      Reintentar
+    </button>
+  );
+}
+
+function ConIntentos({ Drill }: { Drill: ComponentType<ConApuntar> }) {
+  const [vez, setVez] = useState(0);
+  const [rastro, setRastro] = useState<string[]>([]);
+  const apuntar = useCallback((linea: string) => {
+    setRastro((antes) => [...antes, linea]);
+  }, []);
+
+  function montar() {
+    setRastro([]);
+    setVez(vez + 1);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={montar}>
+          Montar
+        </button>
+      </div>
+      {vez > 0 && (
+        <Atrapa key={vez}>
+          <Drill apuntar={apuntar} />
+        </Atrapa>
+      )}
+      {rastro.length > 0 && (
+        <p className="mt-3 font-mono text-[13px] text-[#86868b]">Rastro: {rastro.join(" · ")}</p>
+      )}
+    </div>
+  );
+}
+
+/* Para los drills 3–5 del 08: monta la tarjeta en Valparaíso con Open-Meteo fallando las
+ * primeras veces que contesta, y después bien. */
+function ConFallos({ Drill, fallos }: { Drill: ComponentType; fallos: number[] }) {
+  const [vez, setVez] = useState(0);
+
+  function montar(veces: number) {
+    elegirClima({ fallos: veces });
+    cambiarCuenta(CUENTA_VACIA);
+    setVez(vez + 1);
+  }
+
+  return (
+    <div>
+      <div>
+        {fallos.map((veces) => (
+          <button key={veces} type="button" onClick={() => montar(veces)}>
+            Open-Meteo: falla {veces === 1 ? "1 vez" : `${veces} veces`}
+          </button>
+        ))}
+      </div>
+      {vez > 0 && (
+        <Atrapa key={vez}>
+          <Drill />
+        </Atrapa>
+      )}
+      <LineaDeCuenta />
+    </div>
+  );
+}
+
+function ClimaConAvisoPegado() {
+  return <TarjetaReintentable {...useClimaConAvisoPegado(VALPARAISO.lat, VALPARAISO.lon)} />;
+}
+
+function ClimaSinEspera() {
+  return <TarjetaReintentable {...useClimaSinEspera(VALPARAISO.lat, VALPARAISO.lon)} />;
+}
+
+function ClimaConReintentoEnValparaiso() {
+  return <TarjetaClimaConReintento lat={VALPARAISO.lat} lon={VALPARAISO.lon} />;
 }
 
 export function Bloque13() {
@@ -1822,6 +2073,105 @@ export function Bloque13() {
         campos="botones API: bien, API: lenta, API: 500 y API: 500 y sin snapshot · PortadaConRespaldo: «Cargando…», el aviso o tu portada"
       >
         <ConApi Drill={PortadaConRespaldoDe2s} respuestas={["bien", "lenta", "500", "500 y sin snapshot"]} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-07" titulo="La ciudad vieja: ignorar su respuesta o cancelarla." />
+
+      <Tarjeta
+        n={1}
+        estado="resuelto"
+        nombre="useTemperaturaConBandera"
+        mirar="Pulsa Santiago y enseguida Valparaíso: se queda «17 °C», y a los 2,5 s no cambia. Con el starter, a los 2,5 s llega Santiago y pone «24 °C». Abajo verás que, aun arreglado, Santiago no se cancela: la bandera solo tira su respuesta."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TemperaturaConBandera} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        estado="resuelto"
+        nombre="useTemperaturaConRef"
+        mirar="Lo mismo que el 1: Santiago y enseguida Valparaíso, y se queda «17 °C». Con el starter, a los 2,5 s Santiago pone «24 °C» aunque la bandera se mira después del await."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TemperaturaConRef} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        estado="resuelto"
+        nombre="useTemperaturaCancelable"
+        mirar="Santiago y enseguida Valparaíso: se queda «17 °C», y abajo las de Santiago salen canceladas en el momento del cambio (en pnpm dev también la del ensayo). Con el starter, ninguna se cancela y a los 2,5 s Santiago pone «24 °C»."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TemperaturaCancelable} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        estado="resuelto"
+        nombre="useTemperaturaConLasDos"
+        mirar="Santiago y enseguida Valparaíso: se queda «17 °C» también con el starter. La diferencia está abajo: con el starter, 0 canceladas y Santiago responde a los 2,5 s; arreglado, las de Santiago salen canceladas."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TemperaturaConLasDos} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        estado="resuelto"
+        nombre="useClima"
+        mirar="Santiago y enseguida Valparaíso: «17 °C», sin aviso, y las de Santiago canceladas. Open-Meteo: 500: el aviso «No fue posible obtener el clima». Con el starter, «Cargando…» para siempre."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s), Open-Meteo: 500 y Cerrar · TarjetaClima: «Cargando…», el aviso o la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TarjetaClima} conCaida />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-08" titulo="«Reintentar»: repetir el efecto a mano." />
+
+      <Tarjeta
+        n={1}
+        nombre="useRastroDeIntentos"
+        mirar="Pulsa Montar: el rastro dice «pide» (dos veces en pnpm dev, por el ensayo). Cada «Reintentar» tiene que añadir otro «pide». Con el starter no añade nada."
+        campos="botón Montar · el botón Reintentar del drill · el rastro"
+      >
+        <ConIntentos Drill={RastroDeIntentos} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="useRastroQueNoEscucha"
+        mirar="Lo mismo que el 1: cada «Reintentar» añade un «pide» al rastro. Con el starter, intento sube pero el rastro no cambia."
+        campos="botón Montar · el botón Reintentar del drill · el rastro"
+      >
+        <ConIntentos Drill={RastroQueNoEscucha} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="useClimaConAvisoPegado"
+        mirar="Pulsa Open-Meteo: falla 1 vez: sale el aviso con «Reintentar». Púlsalo: a los 0,4 s, «17 °C». Con el starter, el aviso no se va aunque la temperatura llegó."
+        campos="botón Open-Meteo: falla 1 vez · TarjetaReintentable: «Cargando…», el aviso con Reintentar o la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConFallos Drill={ClimaConAvisoPegado} fallos={[1]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="useClimaSinEspera"
+        mirar="Open-Meteo: falla 1 vez, y «Reintentar»: enseguida «Cargando…», y a los 0,4 s «17 °C». Con el starter, el aviso sigue ahí hasta que llega la temperatura."
+        campos="botón Open-Meteo: falla 1 vez · TarjetaReintentable: «Cargando…», el aviso con Reintentar o la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConFallos Drill={ClimaSinEspera} fallos={[1]} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="useClimaConReintento"
+        mirar="Open-Meteo: falla 2 veces: el aviso, «Reintentar», «Cargando…», el aviso otra vez, «Reintentar» y «17 °C». Con el starter, «Cargando…» para siempre."
+        campos="botones Open-Meteo: falla 1 vez y falla 2 veces · TarjetaClimaConReintento · las peticiones a Open-Meteo"
+      >
+        <ConFallos Drill={ClimaConReintentoEnValparaiso} fallos={[1, 2]} />
       </Tarjeta>
     </>
   );

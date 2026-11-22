@@ -3335,3 +3335,112 @@ llegue al 10, y elegiste aterrizar en el `useWeather.jsx` de Smart-Cooler:
 
 - Montar el 07.
 - Nada del 06 está subido todavía.
+
+> Al cierre: el 06 se subió en `f3cb7`, y el porqué del 5 en `59ba8`.
+
+## Sesión 21 nov 2026 (noche) — `13/07` y `13/08` MONTADOS (0/5 y 0/5): Smart-Cooler
+
+Los dos aterrizan en tu `useWeather.jsx` (Smart-Cooler), la ruta que elegiste para llegar al
+10. Clima de Open-Meteo con Zod, recortado a la temperatura; Santiago tarda mucho a propósito
+y Valparaíso poco.
+
+**Un ajuste al plan, con su motivo.** El 07 iba a ser «un fetch que depende de algo: cambia la
+ciudad y se cancela la vieja». Al montarlo salió que eso **ya lo hiciste en el 13/02**: el `id`
+en las deps, la limpieza que aborta y la respuesta que llega tarde y pisa (`FichaQueNoEscucha`,
+`useProyecto(id)`). Así que el 07 se queda con lo que tu `useWeather` tiene y el cuaderno no:
+**la bandera `isCancelled` y dónde vive el controller**. El bug de tu hook sigue reservado para
+que lo encuentres tú: el 🔭 del 07 te manda a mirarlo al cerrar.
+
+**`13/07` — la ciudad vieja: ignorar su respuesta o cancelarla**
+
+- T1 · la bandera: **1** `useTemperaturaConBandera` (la mira antes del await) · **2**
+  `useTemperaturaConRef` (la bandera en un ref: una sola para todas las ejecuciones).
+- T2 · el mando: **3** `useTemperaturaCancelable` (el controller nace dentro de cargar y solo
+  lo aborta un finally) · **4** `useTemperaturaConLasDos` (la bandera y ese controller: la
+  tarjeta se ve bien, pero Santiago no se cancela).
+- TU HOOK: **5** `useClima` + `TarjetaClima`, desde una función vacía, con una sola protección.
+
+**`13/08` — «Reintentar»: repetir el efecto a mano**
+
+- T1 · el contador en las deps: **1** `useRastroDeIntentos` (`setIntento(intento)`: el mismo
+  valor, React no repinta) · **2** `useRastroQueNoEscucha` (intento sube, pero no está en las
+  deps, y el linter no lo pide). Sin red: el efecto apunta «pide».
+- T2 · cada intento deja el estado listo: **3** `useClimaConAvisoPegado` (el éxito no borra el
+  aviso) · **4** `useClimaSinEspera` (el clic no pone «Cargando…»).
+- TU HOOK: **5** `useClimaConReintento` + `TarjetaClimaConReintento`, desde una función vacía.
+- `useCallback` queda fuera, declarado en un 💡: tu `refresh` lo usa, aquí no hace falta.
+
+### Verificación
+
+- Soluciones en una copia: 07 5/5 y 08 5/5, 0 errores de tipos y lint limpio. Starters: los
+  diez rojos, solo en el test (ninguno pasa con el fallo dentro). A medias, rojos: en el 07,
+  la limpieza que no toca la bandera, el controller subido sin abort() y el 5 sin guardia; en
+  el 08, el 5 sin intento en las deps y sin guardia.
+- Comprobado que el lint de React marca `setCargando(true)` en el cuerpo del efecto (la Trampa
+  de la Teoría 2 del 08). Dentro de cargar, antes del await, pasa test y lint: las pistas lo
+  dicen.
+- Banco: el fetch de mentira responde también a Open-Meteo, y cuenta enviadas, canceladas y
+  respondidas. Tarjetas 1–5 del 07 (`ConCiudades`) y 1–5 del 08 (`ConIntentos` y
+  `ConFallos`), probadas con los starters pintando el bloque en jsdom.
+- Skill `verificar-ejercicio`: todo en orden salvo el largo. **Deuda declarada:** 285 líneas
+  el 07 y 272 el 08 (techo ~230).
+
+### Pendiente
+
+- El 07 (0/5), y después el 08 (0/5).
+- El 09 (polling) y el 10 (tu `useWeather` tipado), sin montar.
+- Nada del 07 ni del 08 está subido todavía.
+
+> Al cierre: el 07 se cerró el 22 nov (entrada siguiente). El 08 y la subida siguen pendientes.
+
+## Sesión 21–22 nov 2026 — `13/07` CERRADO 5/5: bandera vs mando, y el bug de tu `useWeather`
+
+**Un nombre cambiado.** `caducada` no se entendía: pasó a **`ignorar`** (`ignorarRef` en el 2),
+que es el `ignore` de la documentación de React y se lee solo: `if (ignorar) return;`. La
+Teoría 1 explica ahora qué es una bandera (un true/false que avisa entre dos partes del código
+que no se hablan, como el letrero «LIBRE» del taxi), quién la levanta (la limpieza) y quién la
+mira (cargar). En la analogía, la bandera es el «NO» pegado en el pedido de pepperoni.
+
+- **1** — la bandera, mirada después del await. Porqué: «El problema con el starter es que
+  siempre se mirará la bandera antes que el await». Lo que faltaba: antes del await la limpieza
+  aún no ha corrido, así que vale false siempre, y después nadie la vuelve a mirar.
+- **2** — un `let` dentro del efecto en vez del ref, y `useRef` fuera del import. Costó: la
+  primera respuesta («el ref no se puede cambiar», «let para que sea modificable») no era; la
+  segunda suponía que no se cambiaba de ciudad. Con la premisa delante: «Pone false. La última
+  línea que escribió en la caja fue la de Valparaíso, ignorarRef.current = false al empezar su
+  efecto». Una sola caja para todas las ejecuciones; con el let, un papel en cada pedido.
+- **3** — el controller sube al efecto y la limpieza lo aborta. Porqué: «Nadie, el controller
+  vive dentro de cargar». Matiz: el abort() del finally existe, pero llega tarde (cancelar el
+  pepperoni cuando ya te lo comiste).
+- **4** — controller en el efecto, sin finally, y la limpieza hace las dos cosas. Primero
+  listaste las tres piezas rotas (el qué); con dos preguntas salió el porqué: «Nadie la
+  abortaría porque el abort estaba mal hecho. El if (ignorar) return, la bandera tira la
+  respuesta». Ignorar no es cancelar: la petición viajó entera.
+- **5** — `useClima` de cero, a la primera. El porqué estaba escrito en el archivo; comprobado
+  en el chat: «Porque el abort hace que el fetch lance un error».
+
+**🔭 Tu `useWeather` (l.186-258).** Dijiste «está complicadísimo»: son nueve piezas en un solo
+efecto, y seis ya las habías trabajado. Tu veredicto: «la limpieza no toca el controller. El
+controller está dentro del finally, no en el return». Es el starter del drill 4 línea por
+línea: la petición de la ciudad vieja no se cancela, solo se ignora. **Lo encontraste tú.**
+Además, como entre los dos fetch nadie mira `isCancelled`, el de la calidad del aire de la
+ciudad vieja arranca igual. No se tocó el proyecto: el arreglo es el del 4 y va en el 10.
+
+**Abierto, decisión tuya:** tus comentarios del 1, el 2 y el 4 dicen que la bandera indica que
+el efecto «ha sido cancelado». La bandera no cancela nada: ignora; lo que cancela es `abort()`.
+
+**Incidencia.** Mientras escribías en el archivo, tu pestaña de VS Code guardó encima de mis
+pegados cuatro veces. Desde ahora: con el archivo abierto, pegas tú, o cierras la pestaña y
+pego yo.
+
+### Verificación
+
+- Tests 5/5, 0 errores de tipos, lint limpio. Chips 1–5 del 07 en «resuelto».
+- Skill `verificar-ejercicio`: todo en orden salvo el largo, ahora 376 líneas con tus
+  comentarios.
+
+### Pendiente
+
+- El 08 (0/5).
+- El 09 (polling) y el 10 (tu `useWeather` tipado), sin montar.
+- Nada subido: el 07 y el 08 enteros, el banco y la bitácora.
