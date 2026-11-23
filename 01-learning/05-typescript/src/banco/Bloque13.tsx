@@ -2131,6 +2131,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="useRastroDeIntentos"
         mirar="Pulsa Montar: el rastro dice «pide» (dos veces en pnpm dev, por el ensayo). Cada «Reintentar» tiene que añadir otro «pide». Con el starter no añade nada."
         campos="botón Montar · el botón Reintentar del drill · el rastro"
@@ -2140,6 +2141,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="useRastroQueNoEscucha"
         mirar="Lo mismo que el 1: cada «Reintentar» añade un «pide» al rastro. Con el starter, intento sube pero el rastro no cambia."
         campos="botón Montar · el botón Reintentar del drill · el rastro"
@@ -2149,6 +2151,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="useClimaConAvisoPegado"
         mirar="Pulsa Open-Meteo: falla 1 vez: sale el aviso con «Reintentar». Púlsalo: a los 0,4 s, «17 °C». Con el starter, el aviso no se va aunque la temperatura llegó."
         campos="botón Open-Meteo: falla 1 vez · TarjetaReintentable: «Cargando…», el aviso con Reintentar o la temperatura · las peticiones a Open-Meteo"
@@ -2158,6 +2161,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="useClimaSinEspera"
         mirar="Open-Meteo: falla 1 vez, y «Reintentar»: enseguida «Cargando…», y a los 0,4 s «17 °C». Con el starter, el aviso sigue ahí hasta que llega la temperatura."
         campos="botón Open-Meteo: falla 1 vez · TarjetaReintentable: «Cargando…», el aviso con Reintentar o la temperatura · las peticiones a Open-Meteo"
@@ -2167,6 +2171,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="useClimaConReintento"
         mirar="Open-Meteo: falla 2 veces: el aviso, «Reintentar», «Cargando…», el aviso otra vez, «Reintentar» y «17 °C». Con el starter, «Cargando…» para siempre."
         campos="botones Open-Meteo: falla 1 vez y falla 2 veces · TarjetaClimaConReintento · las peticiones a Open-Meteo"

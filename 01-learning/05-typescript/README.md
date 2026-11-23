@@ -3444,3 +3444,47 @@ pego yo.
 - El 08 (0/5).
 - El 09 (polling) y el 10 (tu `useWeather` tipado), sin montar.
 - Nada subido: el 07 y el 08 enteros, el banco y la bitácora.
+
+## Sesión 22–23 nov 2026 — `13/08` CERRADO 5/5: «Reintentar»
+
+- **1** — `setIntento(intento + 1)`. Porqué: «setIntento(intento) no hace nada, React pinta lo
+  mismo». Matiz: con el mismo valor React ni repinta ni vuelve a correr el efecto.
+- **2** — `intento` a las deps. Porqué: «El efecto no corre porque intento no forma parte del
+  array de dependencias». El sujeto se corrigió en el chat: `intento` sí cambia; el que no
+  corre es el efecto.
+- **3** — `setError(null)` en el `try`, después de `setGrados`. Tu imagen: «un extintor de
+  incendios dentro del try». La primera versión decía que la temperatura «llega bien y pinta
+  bien». Con la tarjeta delante salió la otra mitad: «pintaría sólo error porque if(error) gana
+  en la jerarquía». `if (error)` se pregunta antes y hace `return`, y nunca llega a `{grados}`.
+- **4** — **lo hiciste solo.** El diagnóstico era tuyo y estaba bien: `cargando` se queda en
+  `false`. El primer arreglo puso `setCargando(true)` dentro de `cargar()`, que es la TRAMPA de
+  la Teoría 2: cae en el efecto y no en el manejador. Lo moviste a `reintentar`. Preguntaste si
+  `setError(null)` también va ahí: no, porque cambiar de ciudad no pasa por `reintentar` y el
+  aviso volvería a quedarse pegado. El post-it se tira cuando contestan, no al rellamar. Porqué:
+  primero «la función reintentar» (eso era tu arreglo, no el starter); con el starter delante:
+  «Nadie, sigue en false del primer intento».
+- **5** — `useClimaConReintento` desde cero, a la primera, con todo lo anterior junto. El
+  porqué estaba escrito en el archivo. En el chat se comprobó su última frase («se aborta al
+  desmontar el efecto»): «No se desmonta nada, corre porque cambiaron lat y lon». Esa frase
+  reemplaza la vieja en el archivo.
+
+**Abierto, decisión tuya** (sin tocar, son tus comentarios):
+- Drill 3, l.202: `pedirTemperatura` es una función, no un «molde». En tu material, «molde» es
+  un type.
+- Drill 3, l.208-210: el bloque no es del todo como un `finally`. Si la petición se abortó, el
+  `return` del `catch` se salta `setCargando(false)`.
+
+**Hueco del material.** La TRAMPA de la Teoría 2 dice que «el lint de React lo marca», pero tu
+`setCargando(true)` dentro de `cargar()` no lo marcó, y el test 4 también lo dejó pasar.
+
+**Incidencia.** El autocompletado metió `import { set } from "zod"` mientras escribías
+`setCargando`: era el único error de tipos y de lint.
+
+### Verificación
+
+- Tests 5/5, 0 errores de tipos, lint limpio. Chips 1–5 del 08 en «resuelto».
+- Skill `verificar-ejercicio`: todo en orden salvo el largo (325 líneas con tus comentarios).
+
+### Pendiente
+
+- El 09 (polling) y el 10 (tu `useWeather` tipado), sin montar.

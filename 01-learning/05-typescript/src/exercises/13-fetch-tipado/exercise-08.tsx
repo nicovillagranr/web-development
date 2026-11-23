@@ -89,7 +89,8 @@ type Apuntar = (linea: string) => void;
  * que devuelve, reintentar, lo vuelve a correr. Ahora reintentar no hace nada.
  * ¿Por qué? En el starter, cuando pulsas «Reintentar», ¿con qué valor llamas a
  * setIntento, y qué hace React con él?
- *
+ * Es que setIntento(intento) no hace nada, React pinta lo mismo. Por eso mi primer
+ * intuición al hacer el drill fue setIntento(intento + 1) ya que el useSate usa un type number.
  */
 export function useRastroDeIntentos(apuntar: Apuntar): () => void {
   // Seteamos el estado inicial de intentos en 0
@@ -108,15 +109,14 @@ export function useRastroDeIntentos(apuntar: Apuntar): () => void {
  * pero el efecto no vuelve a apuntar «pide».
  * ¿Por qué? En el starter, intento cambia en cada clic. ¿Por qué no corre el
  * efecto?
- *
+ * El efecto no corre porque intento no forma parte del array de dependencias
  */
 export function useRastroQueNoEscucha(apuntar: Apuntar): () => void {
   const [intento, setIntento] = useState(0);
 
   useEffect(() => {
     apuntar("pide");
-  }, [apuntar]);
-
+  }, [intento, apuntar]);
   return () => setIntento(intento + 1);
 }
 
@@ -179,24 +179,38 @@ export function TarjetaReintentable({ grados, cargando, error, reintentar }: Cli
  * viendo el aviso.
  * ¿Por qué? En el starter, cuando llega la temperatura del reintento, ¿qué vale
  * error, y qué pregunta primero la tarjeta?
- *
+ * Nadie limpió el error del primer intento: sigue valiendo «No fue posible obtener el
+ * clima» aunque la temperatura llegue bien. Y la tarjeta pinta solo el aviso, porque
+ * if (error) se pregunta antes y hace return: nunca llega a {grados}.
  */
 export function useClimaConAvisoPegado(lat: number, lon: number): ClimaReintentable {
+  // Seteamos el estado inicial de los grados como null, a la espera de que se cargue la temperatura
   const [grados, setGrados] = useState<number | null>(null);
+  // Seteamos el estado inicial de cargando como true, ya que al inicio estamos cargando la temperatura
   const [cargando, setCargando] = useState(true);
+  // Seteamos el estado inicial de error como null, ya que al inicio no hay ningún error
   const [error, setError] = useState<string | null>(null);
+  // Seteamos el estado inicial de intento como 0, que se usará para reintentar la carga de la temperatura
   const [intento, setIntento] = useState(0);
 
+  // Una vez montado el componente, se ejecuta el efecto que carga la temperatura
   useEffect(() => {
+    // Creamos un AbortController para poder cancelar la petición si el componente se desmonta o si se hace un reintento
     const controller = new AbortController();
 
     async function cargar() {
       try {
+        // Hacemos la petición a la API usando el molde pedirTemperatura y pasamos la señal del controller para poder abortarla si es necesario
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
+        // Si es segunda petición, limpiamos cualquier error previo para que no se quede pegado el aviso
+        setError(null);
       } catch {
         if (controller.signal.aborted) return;
         setError("No fue posible obtener el clima");
       }
+      //Su comportamiento es parecido al de un finally:
+      // - Si la petición funciona, termina el try y ejecuta setCargando(false).
+      // - Si la petición falla, ejecuta el catch y después ejecuta setCargando(false).
       setCargando(false);
     }
 
@@ -205,7 +219,7 @@ export function useClimaConAvisoPegado(lat: number, lon: number): ClimaReintenta
   }, [lat, lon, intento]);
 
   function reintentar() {
-    setIntento((anterior) => anterior + 1);
+    setIntento(intento + 1);
   }
 
   return { grados, cargando, error, reintentar };
@@ -216,7 +230,9 @@ export function useClimaConAvisoPegado(lat: number, lon: number): ClimaReintenta
  * botón, como si no hubieras pulsado nada.
  * ¿Por qué? En el starter, desde el clic hasta que llega la respuesta, ¿cuánto vale
  * cargando?
- *
+ * Cargando vale false: en el starter nadie le escribe entre el clic y la respuesta,
+ * así que sigue en false desde el setCargando(false) del primer intento.
+ * En mi arreglo moví setCargando(true) al reintentar, para que se vea «Cargando…» mientras llega la respuesta.
  */
 export function useClimaSinEspera(lat: number, lon: number): ClimaReintentable {
   const [grados, setGrados] = useState<number | null>(null);
@@ -244,6 +260,7 @@ export function useClimaSinEspera(lat: number, lon: number): ClimaReintentable {
 
   function reintentar() {
     setIntento((anterior) => anterior + 1);
+    setCargando(true);
   }
 
   return { grados, cargando, error, reintentar };
@@ -263,11 +280,46 @@ export function useClimaSinEspera(lat: number, lon: number): ClimaReintentable {
  * TarjetaClimaConReintento ya está bien.
  * ¿Por qué? Con tu arreglo, si pulsas «Reintentar» y cambias de ciudad antes de que
  * conteste, ¿quién corta la petición del reintento?
- *
+ * El efecto corta la petición del reintento, porque el controller está dentro del efecto y la limpieza lo aborta. El reintento sube el contador, que hace que el efecto vuelva a correr y cree un nuevo controller.
+ * El viejo controller lo aborta la limpieza, que React corre porque cambiaron lat y lon:
+ * no se desmonta nada.
  */
 export function useClimaConReintento(lat: number, lon: number): ClimaReintentable {
-  useEffect(() => {}, [lat, lon]);
-  return { grados: null, cargando: true, error: null, reintentar: () => {} };
+  // Seteamos el estado inicial de los grados como null, a la espera de que se cargue la temperatura
+  const [grados, setGrados] = useState<number | null>(null);
+  // Seteamos el estado inicial de cargando como true, ya que al inicio estamos cargando la temperatura
+  const [cargando, setCargando] = useState(true);
+  // Seteamos el estado inicial de error como null, ya que al inicio no hay ningún error
+  const [error, setError] = useState<string | null>(null);
+  // Seteamos el estado inicial de intento como 0, que se usará para reintentar la carga de la temperatura
+  const [intento, setIntento] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function cargar() {
+      try {
+        setGrados(await pedirTemperatura(lat, lon, controller.signal));
+        setError(null);
+      } catch {
+        if (controller.signal.aborted) return;
+        setError("No fue posible obtener el clima");
+      }
+      setCargando(false);
+    }
+
+    cargar();
+    return () => controller.abort();
+  }, [lat, lon, intento]);
+
+  function reintentar() {
+    // Aquí subimos el contador de intentos para que el efecto vuelva a correr y haga la petición de nuevo
+    setIntento((anterior) => anterior + 1);
+    // También ponemos cargando a true para que se vea el mensaje de "Cargando..." mientras llega la respuesta
+    setCargando(true);
+  }
+
+  return { grados, cargando, error, reintentar };
 }
 
 export function TarjetaClimaConReintento({ lat, lon }: { lat: number; lon: number }) {
