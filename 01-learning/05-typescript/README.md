@@ -3474,8 +3474,10 @@ pego yo.
 - Drill 3, l.208-210: el bloque no es del todo como un `finally`. Si la petición se abortó, el
   `return` del `catch` se salta `setCargando(false)`.
 
-**Hueco del material.** La TRAMPA de la Teoría 2 dice que «el lint de React lo marca», pero tu
-`setCargando(true)` dentro de `cargar()` no lo marcó, y el test 4 también lo dejó pasar.
+**Lo que el test no ve.** La TRAMPA de la Teoría 2 habla del cuerpo del efecto, que el lint sí
+marca. Tu primer `setCargando(true)`, dentro de `cargar()`, pasa el test y el lint; la Pista 4
+del 4 ya lo cuenta (es lo que hace tu `useWeather`, l.198): se pinta una vez el aviso antes de
+«Cargando…».
 
 **Incidencia.** El autocompletado metió `import { set } from "zod"` mientras escribías
 `setCargando`: era el único error de tipos y de lint.
@@ -3488,3 +3490,104 @@ pego yo.
 ### Pendiente
 
 - El 09 (polling) y el 10 (tu `useWeather` tipado), sin montar.
+
+## Sesión 23 nov 2026 — `13/09` y `13/10` MONTADOS (0/5 y 0/5): la 13 llega al 10
+
+El temario te lo propuse antes de montar, y dijiste «Montemoslo así». Los dos aterrizan en tu
+`useWeather.jsx`.
+
+**`13/09` — el polling: volver a pedir solo** (tu reloj, l.172-179, y tu polling, l.250-256)
+
+- T1 · el intervalo vive en el efecto, sin red (apunta «tic», como el rastro del 08): **1**
+  `useTicQueNoPara` (sin limpieza) · **2** `useTicQueNoArranca` (`return clearInterval(id)`: la
+  limpieza es la llamada, no una función) · **3** `useSegundos` (`setSegundos(segundos + 1)` con
+  las deps vacías se queda en 1; la restricción «las deps se quedan vacías» está declarada, y
+  el test cuenta cuántas veces nace el intervalo). En el 08 daba igual qué forma del set usaras;
+  aquí solo vale la de función. 💡 el `useState(() => …)` de tu reloj.
+- T2 · el intervalo que pide: **4** `useClimaQueSigue` (la limpieza aborta, pero el intervalo de
+  Santiago sigue pidiendo).
+- TU HOOK: **5** `useClimaQueSeRefresca` + `TarjetaClimaQueSeRefresca`, desde una función vacía.
+
+**`13/10` — tu `useWeather`, tipado**
+
+Lo nuevo es puro TypeScript: tu `tsconfig` tiene `noUncheckedIndexedAccess`, y con eso
+`arr[i]` es `T | undefined`. Son justo las 140 líneas de helpers de tu hook.
+
+- T1 · el campo que puede faltar (`.optional()`): **1** `HorasSchema` (is_day obligatorio en el
+  starter).
+- T2 · arrays paralelos por índice: **2** `temperaturaDe` (una lectura; el test pide que 0 °C
+  siga siendo un dato) · **3** `armarPronostico` (tu `buildForecast`: el día con un hueco no
+  sale) · **4** `esDeDia` (tu `resolveIsDayValue`: undefined es «no sé», no «no»).
+- TU HOOK: **5** `useWeather` + `TarjetaWeather`: Zod, el aire, el reintento y el polling en un
+  solo efecto. El test cambia de ciudad con el aire de Santiago en camino: con tu estructura de
+  ahora (el controller dentro de `fetchWeather`) sale rojo. `useState` no está en el import a
+  propósito: lo dice el bloque TU HOOK.
+- Fuera, a propósito: `useMemo` con `nowTick` y `buildCurrentMetrics` con el `reduce` del UV.
+
+### Verificación
+
+- Soluciones en una copia (borrada): 09 5/5 y 10 5/5 tres veces seguidas, 0 errores de tipos,
+  lint limpio. Starters: los diez rojos en el test, ninguno verde con el fallo dentro. Errores
+  de tipos solo en el 2 y el 3 del 10 (TS2345); aviso del lint solo en el 3 del 09.
+- A medias, todos rojos. En el 09: segundos en las deps, clearInterval en lugar de abort, y en
+  el 5 sin guardia, sin `setError(null)`, solo abort o solo clearInterval. En el 10: `.nullable()`,
+  `if (!grados)`, el día sin comprobar, `is_day === 1` como única pregunta, y en el 5 sin
+  intento en las deps, sin `setCargando(true)`, sin `setError(null)`, sin guardia, sin
+  clearInterval y con el controller dentro de cargar. Con `Promise.all` también pasa: es válido.
+- Pistas: los literales (TS2345, el TS2769 de `new Date(horas.time[i])` y los mensajes del test)
+  sacados de la salida real.
+- Banco: el Open-Meteo de mentira cuenta las llamadas de cada ciudad (también las que nacen
+  canceladas), sube 1 °C por respuesta en las tarjetas del polling, trae los días y responde a
+  la API del aire con su propio contador. Tarjetas 1–5 del 09 (`ConTics`, `ConMontaje`,
+  `ConPolling`) y 1–5 del 10 (`ProbarCasos` y `ConPolling` con el aire), probadas en jsdom con
+  los starters y con las soluciones. No probadas en Chrome.
+- Skill `verificar-ejercicio`: sin problemas mecánicos. 217 líneas el 09 y 249 el 10.
+- Un tropiezo mío, arreglado: en el test del 09, quitar el reloj falso antes que el espía de
+  `setInterval` dejaba el reloj falso puesto para el 4 y el 5.
+
+### Pendiente
+
+- El 09 (0/5) y después el 10 (0/5).
+- Nada del montaje está subido.
+
+## Sesión 23 nov 2026 (noche) — `13/09`: drill 3 CERRADO (3/5) y ESCALERAS 4a–4c y 5a–5c MONTADAS (0/6)
+
+- **3** — `setSegundos((prev) => prev + 1)` con las deps vacías. Antes probó con `[segundos]` en
+  las deps (la TRAMPA): pintaba bien, pero creaba un intervalo por segundo. Porqué: el intervalo
+  nace una vez y ve `segundos = 0` siempre, así que calcula `0 + 1`. Tu comentario dice
+  «problemas de cierre»: es el *closure*.
+- **«El drill 4 no lo entiendo. Ya me perdí»** → con la tabla de lo que hace React al cambiar
+  de ciudad delante, pidió una escalera «que me sirva para entender a la perfección el 4 y el 5».
+
+### La escalera
+
+- Antes del 4, una cosa viva por peldaño: **4a** `useRelojQueSeQueda` (solo el reloj, con
+  rastro: al cambiar de ciudad se intercalan las dos) · **4b** `useClimaQueLlegaTarde` (solo la
+  petición: Santiago llega tarde y pisa) · **4c** `useClimaQueSeCruza` (las dos, y la limpieza
+  solo para el reloj). El 4 es el 4c con la otra mitad rota.
+- Antes del 5, el hook entero con una pieza rota: **5a** `useClimaConAvisoQueNoSeVa` (el
+  aviso pegado del 08, con el reloj como reintento) · **5b** `useClimaConFalsaAlarma` (sin
+  guardia: la cancelada deja aviso) · **5c** `useClimaConMandoPorVuelta` (el controller
+  dentro de `cargar`, como tu `useWeather`).
+- `ClimaAlDia` se movió a la escalera del 5, con un 📌 junto al drill 5.
+
+### Verificación
+
+- Soluciones en una copia (borrada): los seis peldaños en verde tres veces seguidas, 0 errores
+  de tipos, lint limpio. Starters: los seis rojos, cada uno con su mensaje. El 4c, con abort
+  EN VEZ de clearInterval, también sale rojo: «suma la otra línea a la limpieza, no la cambies».
+- En el 4c y el 5c el test vuelve a pedir cada 0,4 s, para que la respuesta tardía de
+  Santiago (0,2 s) se vea antes de la vuelta siguiente.
+- Banco: tarjetas 4a–4c y 5a–5c (`ConRelojDeCiudad` nuevo; `ConCiudades` y `ConPolling`
+  reutilizados), probadas en jsdom con los starters: el 4a mezcla las dos ciudades en el
+  rastro, el 4c enseña 24 °C a los 2,5 s y el 5b, el aviso al cambiar de ciudad. No probadas
+  en Chrome.
+- Skill `verificar-ejercicio`: sin problemas salvo el largo (453 líneas, como todo archivo con
+  escalera).
+
+### Pendiente
+
+- Los peldaños 4a–4c, el 4, los peldaños 5a–5c y el 5. Después, el 10 (0/5).
+- En el catch del 4 hay un `setGrados((prev) => prev)` tuyo: no hace nada (devuelve el mismo
+  valor). Sin tocar.
+- Nada del 09 ni del 10 está subido.

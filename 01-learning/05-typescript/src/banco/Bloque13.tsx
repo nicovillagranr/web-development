@@ -112,6 +112,28 @@ import {
   useClimaSinEspera,
   TarjetaClimaConReintento,
 } from "../exercises/13-fetch-tipado/exercise-08";
+import {
+  useTicQueNoPara,
+  useTicQueNoArranca,
+  useSegundos,
+  useRelojQueSeQueda,
+  useClimaQueLlegaTarde,
+  useClimaQueSeCruza,
+  useClimaQueSigue,
+  useClimaConAvisoQueNoSeVa,
+  useClimaConFalsaAlarma,
+  useClimaConMandoPorVuelta,
+  TarjetaClimaQueSeRefresca,
+  type ClimaAlDia,
+} from "../exercises/13-fetch-tipado/exercise-09";
+import {
+  API_AIRE,
+  HorasSchema,
+  temperaturaDe,
+  armarPronostico,
+  esDeDia,
+  TarjetaWeather,
+} from "../exercises/13-fetch-tipado/exercise-10";
 import { Seccion, Tarjeta } from "./piezas";
 
 /* BLOQUE 13 — `13-fetch-tipado`. Cada archivo nuevo de la carpeta se AÑADE aquí, en el
@@ -146,7 +168,14 @@ import { Seccion, Tarjeta } from "./piezas";
  * Desde el exercise-07 responde además a Open-Meteo (API_CLIMA), con la temperatura de la
  * ciudad que diga la latitud: Santiago tarda 2,5 s a propósito, y Valparaíso 0,4 s. Todas
  * sus peticiones cuentan en el contador de la tarjeta. Las tarjetas del 07 pueden tumbarlo
- * entero, y las del 08, hacer que falle las primeras veces que contesta. */
+ * entero, y las del 08, hacer que falle las primeras veces que contesta.
+ *
+ * Desde el exercise-09, las tarjetas del polling hacen que cada respuesta buena de una ciudad
+ * traiga 1 °C más que la anterior, y cuentan las llamadas a fetch de cada ciudad, también las
+ * que nacen canceladas.
+ *
+ * Desde el exercise-10, el clima trae además los días del pronóstico, y responde a la API del
+ * aire (API_AIRE), con su propio contador. */
 
 type Respuesta =
   | "bien"
@@ -325,15 +354,66 @@ const VALPARAISO: Ciudad = { lat: -33.05, lon: -71.62, temperatura: 16.8, retras
  * como la respuesta de la API. */
 let climaCaido = false;
 let climaFallos = 0;
+/* Desde el 09: con sube, cada respuesta buena de una ciudad trae 1 °C más que la anterior,
+ * para que se vea el polling. */
+let climaSube = false;
+const buenasPorCiudad = new Map<Ciudad, number>();
 
-function elegirClima({ caido = false, fallos = 0 }: { caido?: boolean; fallos?: number } = {}) {
+function elegirClima({
+  caido = false,
+  fallos = 0,
+  sube = false,
+}: { caido?: boolean; fallos?: number; sube?: boolean } = {}) {
   climaCaido = caido;
   climaFallos = fallos;
+  climaSube = sube;
+  buenasPorCiudad.clear();
+}
+
+/* Para la tarjeta 5 del 09: que falle la próxima que llegue a contestar. */
+function fallarLaProxima() {
+  climaFallos += 1;
+}
+
+function temperaturaDeMentira(ciudad: Ciudad): number {
+  const buenas = buenasPorCiudad.get(ciudad) ?? 0;
+  buenasPorCiudad.set(ciudad, buenas + 1);
+  return climaSube ? ciudad.temperatura + buenas : ciudad.temperatura;
+}
+
+/* Desde el 09: cuántas veces se llamó a fetch para cada ciudad, contando las que nacen ya
+ * canceladas (el contador de arriba no las ve: nunca llegan a enviarse). */
+type PedidasPorCiudad = { santiago: number; valparaiso: number };
+const PEDIDAS_VACIAS: PedidasPorCiudad = { santiago: 0, valparaiso: 0 };
+let pedidas = PEDIDAS_VACIAS;
+const oyentesDePedidas = new Set<() => void>();
+
+function cambiarPedidas(nuevas: PedidasPorCiudad) {
+  pedidas = nuevas;
+  oyentesDePedidas.forEach((avisar) => avisar());
+}
+
+function usePedidas() {
+  return useSyncExternalStore(
+    (avisar) => {
+      oyentesDePedidas.add(avisar);
+      return () => {
+        oyentesDePedidas.delete(avisar);
+      };
+    },
+    () => pedidas,
+  );
+}
+
+function apuntarPedida(ciudad: Ciudad | undefined) {
+  if (ciudad === SANTIAGO) cambiarPedidas({ ...pedidas, santiago: pedidas.santiago + 1 });
+  if (ciudad === VALPARAISO) cambiarPedidas({ ...pedidas, valparaiso: pedidas.valparaiso + 1 });
 }
 
 function responderClima(url: string, signal: AbortSignal | null | undefined): Promise<Response> {
   const latitud = new URL(url).searchParams.get("latitude");
   const ciudad = [SANTIAGO, VALPARAISO].find((c) => String(c.lat) === latitud);
+  apuntarPedida(ciudad);
 
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
@@ -351,13 +431,83 @@ function responderClima(url: string, signal: AbortSignal | null | undefined): Pr
         resolve(comoJson({ error: true, reason: "Internal error" }, 500));
         return;
       }
-      resolve(comoJson({ current_weather: { temperature: ciudad.temperatura, weathercode: 1 } }, 200));
+      resolve(
+        comoJson(
+          { current_weather: { temperature: temperaturaDeMentira(ciudad), weathercode: 1 }, daily: DIAS_DE_MENTIRA },
+          200,
+        ),
+      );
     }, ciudad?.retrasoMs ?? 400);
 
     signal?.addEventListener("abort", () => {
       if (terminada) return;
       clearTimeout(reloj);
       cambiarCuenta({ ...cuenta, canceladas: cuenta.canceladas + 1 });
+      reject(signal.reason);
+    });
+  });
+}
+
+/* Desde el 10: los días del pronóstico (los 07–09 no los leen: su schema los ignora) y la
+ * API del aire, que tarda 1,5 s en Santiago y 0,3 s en Valparaíso. Sus peticiones van en su
+ * propio contador. */
+const DIAS_DE_MENTIRA = {
+  time: ["2026-11-23", "2026-11-24", "2026-11-25"],
+  temperature_2m_min: [11.6, 12.4, 10.9],
+  temperature_2m_max: [24.2, 26.8, 23.5],
+};
+const AIRE_POR_CIUDAD = new Map<Ciudad, { aqi: number; retrasoMs: number }>([
+  [SANTIAGO, { aqi: 85, retrasoMs: 1500 }],
+  [VALPARAISO, { aqi: 32, retrasoMs: 300 }],
+]);
+
+let cuentaAire = CUENTA_VACIA;
+const oyentesDelAire = new Set<() => void>();
+
+function cambiarCuentaAire(nueva: Cuenta) {
+  cuentaAire = nueva;
+  oyentesDelAire.forEach((avisar) => avisar());
+}
+
+function useCuentaAire() {
+  return useSyncExternalStore(
+    (avisar) => {
+      oyentesDelAire.add(avisar);
+      return () => {
+        oyentesDelAire.delete(avisar);
+      };
+    },
+    () => cuentaAire,
+  );
+}
+
+function responderAire(url: string, signal: AbortSignal | null | undefined): Promise<Response> {
+  const latitud = new URL(url).searchParams.get("latitude");
+  const ciudad = [SANTIAGO, VALPARAISO].find((c) => String(c.lat) === latitud);
+  const aire = ciudad ? AIRE_POR_CIUDAD.get(ciudad) : undefined;
+
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason);
+      return;
+    }
+    cambiarCuentaAire({ ...cuentaAire, enviadas: cuentaAire.enviadas + 1 });
+    let terminada = false;
+
+    const reloj = setTimeout(() => {
+      terminada = true;
+      cambiarCuentaAire({ ...cuentaAire, respondidas: cuentaAire.respondidas + 1 });
+      if (!aire) {
+        resolve(comoJson({ error: true, reason: "Internal error" }, 500));
+        return;
+      }
+      resolve(comoJson({ current: { us_aqi: aire.aqi } }, 200));
+    }, aire?.retrasoMs ?? 300);
+
+    signal?.addEventListener("abort", () => {
+      if (terminada) return;
+      clearTimeout(reloj);
+      cambiarCuentaAire({ ...cuentaAire, canceladas: cuentaAire.canceladas + 1 });
       reject(signal.reason);
     });
   });
@@ -381,6 +531,7 @@ function useFetchDeMentira() {
     window.fetch = (input, init) => {
       const url = urlDe(input);
       if (url.startsWith(API_CLIMA)) return responderClima(url, init?.signal);
+      if (url.startsWith(API_AIRE)) return responderAire(url, init?.signal);
       const ruta = rutaDe(input);
       if (!ruta.startsWith("/api/") && ruta !== RUTA_SNAPSHOT) return original.call(window, input, init);
       const signal: unknown = init?.signal;
@@ -1167,6 +1318,291 @@ function ClimaSinEspera() {
 
 function ClimaConReintentoEnValparaiso() {
   return <TarjetaClimaConReintento lat={VALPARAISO.lat} lon={VALPARAISO.lon} />;
+}
+
+/* Para los drills 1 y 2 del 09: el componente no pinta nada propio, y su intervalo suma un
+ * «tic» al rastro de la tarjeta. Desmontar lo quita; si el intervalo sigue vivo, el rastro
+ * sigue sumando. */
+function TicQueNoPara({ apuntar }: ConApuntar) {
+  useTicQueNoPara(apuntar);
+  return <p>Montado</p>;
+}
+
+function TicQueNoArranca({ apuntar }: ConApuntar) {
+  useTicQueNoArranca(apuntar);
+  return <p>Montado</p>;
+}
+
+function ConTics({ Drill }: { Drill: ComponentType<ConApuntar> }) {
+  const [vez, setVez] = useState(0);
+  const [montado, setMontado] = useState(false);
+  const [tics, setTics] = useState(0);
+  const apuntar = useCallback(() => {
+    setTics((antes) => antes + 1);
+  }, []);
+
+  function montar() {
+    setTics(0);
+    setVez(vez + 1);
+    setMontado(true);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={montar}>
+          Montar
+        </button>
+        <button type="button" onClick={() => setMontado(false)} disabled={!montado}>
+          Desmontar
+        </button>
+      </div>
+      {montado && (
+        <Atrapa key={vez}>
+          <Drill apuntar={apuntar} />
+        </Atrapa>
+      )}
+      <p className="mt-3 font-mono text-[13px] text-[#86868b]">Rastro: {tics} «tic»</p>
+    </div>
+  );
+}
+
+/* Para el drill 3 del 09: la cuenta de useSegundos, con Montar y Desmontar. */
+function Segundos() {
+  return <p>{useSegundos()} s</p>;
+}
+
+function ConMontaje({ Drill }: { Drill: ComponentType }) {
+  const [vez, setVez] = useState(0);
+  const [montado, setMontado] = useState(false);
+
+  function montar() {
+    setVez(vez + 1);
+    setMontado(true);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={montar}>
+          Montar
+        </button>
+        <button type="button" onClick={() => setMontado(false)} disabled={!montado}>
+          Desmontar
+        </button>
+      </div>
+      {montado && (
+        <Atrapa key={vez}>
+          <Drill />
+        </Atrapa>
+      )}
+    </div>
+  );
+}
+
+/* Para los drills 4 y 5 del 09: el polling del banco vuelve a pedir cada 3 s. */
+const CADA_MS_BANCO = 3000;
+
+function LineaDePedidas() {
+  const { santiago, valparaiso } = usePedidas();
+  return (
+    <p className="font-mono text-[13px] text-[#86868b]">
+      Llamadas a fetch: Santiago {santiago} · Valparaíso {valparaiso}
+    </p>
+  );
+}
+
+function GradosQueSiguen({ lat, lon }: Coordenadas) {
+  const grados = useClimaQueSigue(lat, lon, CADA_MS_BANCO);
+  return <p>{grados === null ? "Cargando…" : `${grados} °C`}</p>;
+}
+
+/* Para el peldaño 4a del 09: el reloj recibe el nombre de la ciudad y apunta en el rastro
+ * de la tarjeta. Se ven las últimas ocho líneas. Al abrir de cero, el rastro empieza vacío. */
+type ConCiudadYApuntar = { ciudad: string } & ConApuntar;
+
+function RelojQueSeQueda({ ciudad, apuntar }: ConCiudadYApuntar) {
+  useRelojQueSeQueda(ciudad, apuntar);
+  return <p>Montado con {ciudad}</p>;
+}
+
+function ConRelojDeCiudad({ Drill }: { Drill: ComponentType<ConCiudadYApuntar> }) {
+  const [ciudad, setCiudad] = useState<string | null>(null);
+  const [rastro, setRastro] = useState<string[]>([]);
+  const apuntar = useCallback((linea: string) => {
+    setRastro((antes) => [...antes, linea].slice(-8));
+  }, []);
+
+  function elegir(nueva: string) {
+    if (ciudad === null) setRastro([]);
+    setCiudad(nueva);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => elegir("Santiago")}>
+          Santiago
+        </button>
+        <button type="button" onClick={() => elegir("Valparaíso")}>
+          Valparaíso
+        </button>
+        <button type="button" onClick={() => setCiudad(null)} disabled={ciudad === null}>
+          Cerrar
+        </button>
+      </div>
+      {ciudad !== null && (
+        <Atrapa>
+          <Drill ciudad={ciudad} apuntar={apuntar} />
+        </Atrapa>
+      )}
+      {rastro.length > 0 && (
+        <p className="mt-3 font-mono text-[13px] text-[#86868b]">Rastro: {rastro.join(" · ")}</p>
+      )}
+    </div>
+  );
+}
+
+/* Para los peldaños 4b y 4c del 09: la temperatura, como en el 4. */
+function TemperaturaQueLlegaTarde({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useClimaQueLlegaTarde(lat, lon)} />;
+}
+
+function GradosQueSeCruzan({ lat, lon }: Coordenadas) {
+  return <Temperatura grados={useClimaQueSeCruza(lat, lon, CADA_MS_BANCO)} />;
+}
+
+/* Para los peldaños 5a–5c del 09: pintan lo mismo que TarjetaClimaQueSeRefresca. */
+function PintarClima({ grados, error }: ClimaAlDia) {
+  if (error) return <p role="alert">{error}</p>;
+  if (grados === null) return <p>Cargando…</p>;
+  return <p>{grados} °C</p>;
+}
+
+function ClimaConAvisoQueNoSeVa({ lat, lon }: Coordenadas) {
+  const clima = useClimaConAvisoQueNoSeVa(lat, lon, CADA_MS_BANCO);
+  return <PintarClima {...clima} />;
+}
+
+function ClimaConFalsaAlarma({ lat, lon }: Coordenadas) {
+  const clima = useClimaConFalsaAlarma(lat, lon, CADA_MS_BANCO);
+  return <PintarClima {...clima} />;
+}
+
+function ClimaConMandoPorVuelta({ lat, lon }: Coordenadas) {
+  const clima = useClimaConMandoPorVuelta(lat, lon, CADA_MS_BANCO);
+  return <PintarClima {...clima} />;
+}
+
+function ClimaQueSeRefresca({ lat, lon }: Coordenadas) {
+  return <TarjetaClimaQueSeRefresca lat={lat} lon={lon} cadaMs={CADA_MS_BANCO} />;
+}
+
+function WeatherAlDia({ lat, lon }: Coordenadas) {
+  return <TarjetaWeather lat={lat} lon={lon} cadaMs={CADA_MS_BANCO} />;
+}
+
+function LineaDeCuentaAire() {
+  const { enviadas, canceladas, respondidas } = useCuentaAire();
+  return (
+    <p className="font-mono text-[13px] text-[#86868b]">
+      Peticiones al aire: {enviadas} {enviadas === 1 ? "enviada" : "enviadas"} · {canceladas}{" "}
+      {canceladas === 1 ? "cancelada" : "canceladas"} · {respondidas}{" "}
+      {respondidas === 1 ? "respondida" : "respondidas"}
+    </p>
+  );
+}
+
+/* Para los drills 1–4 del 10: un botón por caso. Cada uno llama a la función del drill con
+ * esos datos y enseña lo que devuelve, o el error que lanza. */
+type Caso = { etiqueta: string; probar: () => unknown };
+
+function ProbarCasos({ casos }: { casos: Caso[] }) {
+  const [linea, setLinea] = useState<string | null>(null);
+
+  return (
+    <div>
+      <div>
+        {casos.map((caso) => (
+          <button
+            key={caso.etiqueta}
+            type="button"
+            onClick={() => setLinea(`${caso.etiqueta} → ${mostrar(intentar(caso.probar))}`)}
+          >
+            {caso.etiqueta}
+          </button>
+        ))}
+      </div>
+      {linea !== null && <p>{linea}</p>}
+    </div>
+  );
+}
+
+const HORAS_CON_IS_DAY = {
+  time: ["2026-11-23T14:00", "2026-11-23T23:00"],
+  temperature_2m: [24.1, 15.3],
+  is_day: [1, 0],
+};
+
+/* is_day solo trae las dos primeras horas: las dos últimas las decide time. */
+const HORAS_CORTAS = {
+  time: ["2026-11-23T14:00", "2026-11-23T13:00", "2026-11-24T10:00", "2026-11-24T22:00"],
+  temperature_2m: [24, 23, 18, 15],
+  is_day: [1, 0],
+};
+
+/* La tarjeta se queda montada y solo cambian lat y lon, como en el 07. Cada respuesta buena
+ * trae 1 °C más que la anterior, para que se vea cada vuelta. Con conFallo, un botón hace que
+ * falle la próxima que llegue a contestar. */
+function ConPolling({
+  Drill,
+  conFallo = false,
+  conAire = false,
+}: {
+  Drill: ComponentType<Coordenadas>;
+  conFallo?: boolean;
+  conAire?: boolean;
+}) {
+  const [ciudad, setCiudad] = useState<Coordenadas | null>(null);
+
+  function elegir(nueva: Coordenadas) {
+    if (ciudad === null) {
+      elegirClima({ sube: true });
+      cambiarCuenta(CUENTA_VACIA);
+      cambiarCuentaAire(CUENTA_VACIA);
+      cambiarPedidas(PEDIDAS_VACIAS);
+    }
+    setCiudad(nueva);
+  }
+
+  return (
+    <div>
+      <div>
+        <button type="button" onClick={() => elegir(SANTIAGO)}>
+          Santiago (tarda 2,5 s)
+        </button>
+        <button type="button" onClick={() => elegir(VALPARAISO)}>
+          Valparaíso (tarda 0,4 s)
+        </button>
+        {conFallo && (
+          <button type="button" onClick={fallarLaProxima} disabled={ciudad === null}>
+            Que falle la próxima
+          </button>
+        )}
+        <button type="button" onClick={() => setCiudad(null)} disabled={ciudad === null}>
+          Cerrar
+        </button>
+      </div>
+      {ciudad !== null && (
+        <Atrapa>
+          <Drill lat={ciudad.lat} lon={ciudad.lon} />
+        </Atrapa>
+      )}
+      <LineaDeCuenta />
+      {conAire && <LineaDeCuentaAire />}
+      <LineaDePedidas />
+    </div>
+  );
 }
 
 export function Bloque13() {
@@ -2177,6 +2613,186 @@ export function Bloque13() {
         campos="botones Open-Meteo: falla 1 vez y falla 2 veces · TarjetaClimaConReintento · las peticiones a Open-Meteo"
       >
         <ConFallos Drill={ClimaConReintentoEnValparaiso} fallos={[1, 2]} />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-09" titulo="El polling: volver a pedir solo." />
+
+      <Tarjeta
+        n={1}
+        estado="resuelto"
+        nombre="useTicQueNoPara"
+        mirar="Pulsa Montar: el rastro suma un «tic» por segundo, y Desmontar lo para. Con el starter, en pnpm dev suma dos por segundo (el ensayo dejó un intervalo vivo), y al desmontar sigue sumando."
+        campos="botones Montar y Desmontar · el rastro"
+      >
+        <ConTics Drill={TicQueNoPara} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        estado="resuelto"
+        nombre="useTicQueNoArranca"
+        mirar="Lo mismo que el 1: un «tic» por segundo hasta que pulsas Desmontar. Con el starter, el rastro se queda en 0."
+        campos="botones Montar y Desmontar · el rastro"
+      >
+        <ConTics Drill={TicQueNoArranca} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        estado="resuelto"
+        nombre="useSegundos"
+        mirar="Pulsa Montar: 0 s, 1 s, 2 s, 3 s… Con el starter se queda en 1 s."
+        campos="botones Montar y Desmontar · la cuenta"
+      >
+        <ConMontaje Drill={Segundos} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4a"
+        nombre="useRelojQueSeQueda"
+        mirar="Pulsa Santiago: «pido Santiago» cada segundo. Pulsa Valparaíso: desde ahí, solo «pido Valparaíso». Con el starter, el rastro intercala las dos ciudades (y en pnpm dev, cada una dos veces: el ensayo dejó otro reloj vivo)."
+        campos="botones Santiago, Valparaíso y Cerrar · el rastro, con las últimas ocho líneas"
+      >
+        <ConRelojDeCiudad Drill={RelojQueSeQueda} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4b"
+        nombre="useClimaQueLlegaTarde"
+        mirar="Pide una sola vez, sin reloj. Pulsa Santiago y, antes de 2,5 s, Valparaíso: 17 °C, y ahí se queda. Con el starter, sale 17 °C y a los 2,5 s lo pisa Santiago con 24 °C."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
+      >
+        <ConCiudades Drill={TemperaturaQueLlegaTarde} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="4c"
+        nombre="useClimaQueSeCruza"
+        mirar="Vuelve a pedir cada 3 s, y cada respuesta trae 1 °C más. Pulsa Santiago y, antes de 2,5 s, Valparaíso: solo Valparaíso. Con el starter, sale Valparaíso, a los 2,5 s lo pisa Santiago con 24 °C, y a la vuelta siguiente vuelve Valparaíso."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={GradosQueSeCruzan} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="useClimaQueSigue"
+        mirar="Vuelve a pedir cada 3 s, y cada respuesta trae 1 °C más. Pulsa Santiago y luego Valparaíso: las llamadas a Santiago dejan de subir. Con el starter siguen subiendo cada 3 s (de dos en dos en pnpm dev), aunque nacen canceladas."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={GradosQueSiguen} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5a"
+        nombre="useClimaConAvisoQueNoSeVa"
+        mirar="Pulsa Valparaíso y, cuando salga la temperatura, «Que falle la próxima»: el aviso, y a la vuelta siguiente vuelve la temperatura. Con el starter, el aviso se queda para siempre."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s), Que falle la próxima y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaConAvisoQueNoSeVa} conFallo />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5b"
+        nombre="useClimaConFalsaAlarma"
+        mirar="Pulsa Santiago y, antes de 2,5 s, Valparaíso: «Cargando…» y después Valparaíso, sin aviso. Con el starter sale el aviso aunque nada falló: al cambiar de ciudad, hasta que llega Valparaíso (y en pnpm dev, también nada más montar, por el ensayo)."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaConFalsaAlarma} />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5c"
+        nombre="useClimaConMandoPorVuelta"
+        mirar="Pulsa Santiago y, antes de 2,5 s, Valparaíso: solo Valparaíso. Con el starter, como en el 4c: a los 2,5 s lo pisa Santiago con 24 °C."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaConMandoPorVuelta} />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="useClimaQueSeRefresca"
+        mirar="Como el 4: «Cargando…», la temperatura y 1 °C más cada 3 s. «Que falle la próxima»: el aviso, y a la vuelta siguiente vuelve la temperatura. Cerrar: las llamadas dejan de subir. Con el starter, «Cargando…» para siempre."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s), Que falle la próxima y Cerrar · TarjetaClimaQueSeRefresca · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaQueSeRefresca} conFallo />
+      </Tarjeta>
+
+      <Seccion archivo="exercise-10" titulo="Tu useWeather, tipado." />
+
+      <Tarjeta
+        n={1}
+        nombre="HorasSchema"
+        mirar="«Con is_day» y «Sin is_day» devuelven las horas tal cual. «is_day con textos» falla y dice en qué campo. Con el starter, «Sin is_day» también falla, en is_day."
+        campos="un botón por caso · lo que devuelve el parse, o su error"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Con is_day", probar: () => HorasSchema.parse(HORAS_CON_IS_DAY) },
+            {
+              etiqueta: "Sin is_day",
+              probar: () =>
+                HorasSchema.parse({ time: HORAS_CON_IS_DAY.time, temperature_2m: HORAS_CON_IS_DAY.temperature_2m }),
+            },
+            {
+              etiqueta: "is_day con textos",
+              probar: () => HorasSchema.parse({ ...HORAS_CON_IS_DAY, is_day: ["sí", "no"] }),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={2}
+        nombre="temperaturaDe"
+        mirar="Con [21.4, 22.9]: la hora 1 da 23 y la hora 5, null. Con [0, 22.9], la hora 0 da 0. Con el starter, la hora 5 da NaN."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Hora 1 de [21.4, 22.9]", probar: () => temperaturaDe([21.4, 22.9], 1) },
+            { etiqueta: "Hora 5 de [21.4, 22.9]", probar: () => temperaturaDe([21.4, 22.9], 5) },
+            { etiqueta: "Hora 0 de [0, 22.9]", probar: () => temperaturaDe([0, 22.9], 0) },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={3}
+        nombre="armarPronostico"
+        mirar="«Completo»: los tres días, con su mínima y su máxima redondeadas. «Sin la última máxima»: solo los dos primeros. Con el starter salen los tres, y el último con max: NaN."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Completo", probar: () => armarPronostico(DIAS_DE_MENTIRA) },
+            {
+              etiqueta: "Sin la última máxima",
+              probar: () => armarPronostico({ ...DIAS_DE_MENTIRA, temperature_2m_max: [24.2, 26.8] }),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={4}
+        nombre="esDeDia"
+        mirar="is_day solo trae las horas 0 y 1. Hora 0 (is_day 1): true. Hora 1 (is_day 0, a las 13:00): false. Hora 2 (10:00): true. Hora 3 (22:00): false. Con el starter, la hora 2 da false."
+        campos="un botón por hora · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[0, 1, 2, 3].map((i) => ({ etiqueta: `Hora ${i}`, probar: () => esDeDia(HORAS_CORTAS, i) }))}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n={5}
+        nombre="useWeather"
+        mirar="Valparaíso: «Cargando…», la temperatura, el aire y los días, y 1 °C más cada 3 s. Santiago tarda 2,5 s en el clima y 1,5 s más en el aire: pulsa Valparaíso entre medias, y su aire sale cancelado. «Que falle la próxima»: el aviso con «Reintentar». Con el starter, «Cargando…» para siempre."
+        campos="botones Santiago, Valparaíso, Que falle la próxima y Cerrar · TarjetaWeather · las peticiones al clima y al aire · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={WeatherAlDia} conFallo conAire />
       </Tarjeta>
     </>
   );
