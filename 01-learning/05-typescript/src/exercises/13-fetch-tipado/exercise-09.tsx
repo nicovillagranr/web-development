@@ -195,11 +195,15 @@ export function useSegundos(): number {
  * recibe, y al pasar a Valparaíso, «pido Valparaíso». Ahora, al pasar a Valparaíso,
  * el rastro sigue apuntando Santiago, intercalado con Valparaíso.
  * ¿Por qué? En el starter, al pasar a Valparaíso, ¿quién para el reloj de Santiago?
- *
+ * Nadie para el reloj de Santiago: el efecto no devuelve nada, no hay limpieza.
+ * React corre la limpieza de Santiago antes del efecto de Valparaíso, pero no
+ * tiene nada que llamar, así que el intervalo de Santiago sigue apuntando «pido
+ * Santiago» mientras el de Valparaíso apunta «pido Valparaíso».
  */
 export function useRelojQueSeQueda(ciudad: string, apuntar: Apuntar): void {
   useEffect(() => {
-    setInterval(() => apuntar(`pido ${ciudad}`), 1000);
+    const id = setInterval(() => apuntar(`pido ${ciudad}`), 1000);
+    return () => clearInterval(id);
   }, [ciudad, apuntar]);
 }
 
@@ -210,7 +214,9 @@ export function useRelojQueSeQueda(ciudad: string, apuntar: Apuntar): void {
  * Valparaíso y, al rato, Santiago lo pisa.
  * ¿Por qué? En el starter, al pasar a Valparaíso, ¿qué le pasa a la petición de
  * Santiago que venía en camino?
- *
+ * La petición que venía en camino para Santiago sigue ejecutándose, y cuando termina,
+ * actualiza el estado con la temperatura de Santiago, pisando la de Valparaíso.
+ * Sigue porque nadie llamaba a controller.abort(): no había limpieza.
  */
 export function useClimaQueLlegaTarde(lat: number, lon: number): number | null {
   const [grados, setGrados] = useState<number | null>(null);
@@ -222,11 +228,11 @@ export function useClimaQueLlegaTarde(lat: number, lon: number): number | null {
       try {
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
       } catch {
-        // si la cancelan, no hay nada que guardar
+        setGrados(null);
       }
     }
-
     cargar();
+    return () => controller.abort();
   }, [lat, lon]);
 
   return grados;
@@ -239,25 +245,41 @@ export function useClimaQueLlegaTarde(lat: number, lon: number): number | null {
  * Santiago, y a la vuelta siguiente vuelve Valparaíso.
  * ¿Por qué? La limpieza del starter para el reloj de Santiago. ¿Qué otra cosa de
  * Santiago deja viva?
- *
+ * Lo que seguía corriendo era la petición de Santiago que estaba en camino, y al terminar actualizó el estado con la temperatura de Santiago, pisando la de Valparaíso. La limpieza del starter solo paraba el reloj, no abortaba la petición.
  */
+
+// Creamos un hook que recibe como parámetros la latitud, longitud y el intervalo de tiempo en milisegundos.
+// Devuelve la temperatura en grados o null si no se ha podido obtener.
 export function useClimaQueSeCruza(lat: number, lon: number, cadaMs: number): number | null {
+  // Seteamos como null el estado inicial de grados, que será actualizado con la temperatura obtenida.
   const [grados, setGrados] = useState<number | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto que se encargará de obtener la temperatura y actualizar el estado.
   useEffect(() => {
+    // Creamos un AbortController para poder cancelar la petición si el componente se desmonta o cambia de ciudad.
     const controller = new AbortController();
 
     async function cargar() {
       try {
+        // Hacemos la petición a la API y a la vez seteamos el estado de grados con la temperatura obtenida.
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
       } catch {
-        // si falla o la cancelan, se queda la última temperatura
+        // Si la petición falla o es cancelada, seteamos grados como null.
+        setGrados(null);
       }
     }
 
     cargar();
+    // Creamos un intervalo que ejecuta la función cargar cada cadaMs milisegundos.
     const id = setInterval(cargar, cadaMs);
-    return () => clearInterval(id);
+
+    // Cuando el usuario cambia de ciudad o desmonta el componente, React ejecuta la limpieza del efecto.
+    // En esta limpieza, detenemos el intervalo y abortamos cualquier petición en curso.
+    return () => {
+      clearInterval(id);
+      controller.abort();
+    };
+    // Array de dependencias: el efecto se repite si cambian lat, lon o cadaMs.
   }, [lat, lon, cadaMs]);
 
   return grados;
@@ -268,8 +290,13 @@ export function useClimaQueSeCruza(lat: number, lon: number, cadaMs: number): nu
  * Valparaíso, Santiago se sigue pidiendo.
  * ¿Por qué? En el starter, al cambiar de ciudad, ¿qué para la limpieza y qué deja
  * vivo?
- *
+ * La limpieza apaga la petición, pero deja vivo el intervalo: Santiago se sigue
+ * pidiendo cada cadaMs, aunque con el controller ya abortado cada petición nace
+ * cancelada y no pisa a Valparaíso.
  */
+
+// Creamos un hook que recibe como parámetros la latitud, longitud y el intervalo de tiempo en milisegundos.
+// Devuelve la temperatura en grados o null si no se ha podido obtener.
 export function useClimaQueSigue(lat: number, lon: number, cadaMs: number): number | null {
   const [grados, setGrados] = useState<number | null>(null);
 
@@ -281,13 +308,18 @@ export function useClimaQueSigue(lat: number, lon: number, cadaMs: number): numb
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
       } catch {
         // si falla o la cancelan, se queda la última temperatura
-        setGrados((prev) => prev);
       }
     }
 
     cargar();
-    setInterval(cargar, cadaMs);
-    return () => controller.abort();
+    // Explicación de los 2 parámetros que recibe setInterva:
+    // Primer argumento: La función hacia la que va dirigido.
+    // El intervalo de tiempo entre cada ejecución
+    const id = setInterval(cargar, cadaMs);
+    return () => {
+      clearInterval(id);
+      controller.abort();
+    };
   }, [lat, lon, cadaMs]);
 
   return grados;
@@ -316,10 +348,16 @@ export type ClimaAlDia = { grados: number | null; error: string | null };
  * vueltas siguientes salgan bien.
  * ¿Por qué? En el starter, cuando una vuelta sale bien después de un fallo, ¿cuánto
  * vale error?
- *
+ * Error sigue sucio porque no había limpieza de error
+ * En mi arreglo, si la petición sale bien, el try se asegura de dejar limpio con setError(null)
  */
+
+// Creamos un hook que recibe como parámetros la latitud, longitud y el intervalo de tiempo en milisegundos.
+// Devuelve un objeto con la temperatura en grados o null si no se ha podido obtener, y un mensaje de error o null si no hay error.
 export function useClimaConAvisoQueNoSeVa(lat: number, lon: number, cadaMs: number): ClimaAlDia {
+  // Seteamos como null el estado inicial de grados, que será actualizado con la temperatura obtenida.
   const [grados, setGrados] = useState<number | null>(null);
+  // Seteamos como null el estado inicial de error, que será actualizado con un mensaje de error si la petición falla.
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -328,6 +366,7 @@ export function useClimaConAvisoQueNoSeVa(lat: number, lon: number, cadaMs: numb
     async function cargar() {
       try {
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
+        setError(null);
       } catch {
         if (controller.signal.aborted) return;
         setError("No fue posible obtener el clima");
@@ -335,7 +374,12 @@ export function useClimaConAvisoQueNoSeVa(lat: number, lon: number, cadaMs: numb
     }
 
     cargar();
+    // Explicación de los 2 parámetros que recibe setInterva:
+    // Primer argumento: La función hacia la que va dirigido.
+    // El intervalo de tiempo entre cada ejecución
     const id = setInterval(cargar, cadaMs);
+
+    // Función de limpieza: React la ejecuta al desmontar el componente o antes de repetir el efecto. clearInterval detiene el intervalo y controller.abort() cancela cualquier petición en curso.
     return () => {
       clearInterval(id);
       controller.abort();
@@ -352,29 +396,46 @@ export function useClimaConAvisoQueNoSeVa(lat: number, lon: number, cadaMs: numb
  * cambiaste de ciudad.
  * ¿Por qué? En el starter, ¿qué diferencia hace el catch entre una vuelta que falló
  * y una que canceló la limpieza?
- *
+ * El problema con el starter es que el catch no distingue entre un fallo real y una cancelación de la petición.
+ * Supongamos que el usuario pulsa Santiago y luego Valparaíso antes de que la petición de Santiago termine. La petición de Santiago se cancela, pero el catch se ejecuta y establece el error, mostrando el mensaje de fallo aunque no haya habido un fallo real.
+ * Esto se soluciona con un if que verifica si controller.signal.aborted es true, en cuyo caso no se actualiza el estado de error.
  */
+
+// Creamos un hook que recibe como parámetros la latitud, longitud y el intervalo de tiempo en milisegundos.
 export function useClimaConFalsaAlarma(lat: number, lon: number, cadaMs: number): ClimaAlDia {
+  // Seteamos el estado inicial de grados como null, que será actualizado con la temperatura obtenida.
   const [grados, setGrados] = useState<number | null>(null);
+  // Seteamos el estado inicial de error como null, que será actualizado con un mensaje de error si la petición falla.
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto que se encargará de obtener la temperatura y actualizar el estado.
   useEffect(() => {
+    // Creamos un AbortController para poder cancelar la petición si el componente se desmonta o cambia de ciudad.
     const controller = new AbortController();
 
     async function cargar() {
       try {
+        // Hacemos la petición a la API y a la vez seteamos el estado de grados con la temperatura obtenida.
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
+        // En caso de que sea segunda vuelta y la primera haya fallado, limpiamos el error.
         setError(null);
       } catch {
+        // Si la petición falla o es cancelada, verificamos si fue cancelada. Si no fue cancelada, seteamos el estado de error con un mensaje.
+        if (controller.signal.aborted) return;
         setError("No fue posible obtener el clima");
       }
     }
 
     cargar();
+
+    // id es un setInterval con 2 parámetros:
+    // Ejecutará le función cargar
+    // cada cadaMs milisegundos.
     const id = setInterval(cargar, cadaMs);
+    // Si el usuario cambia de ciudad o desmonta el componente, React ejecuta la limpieza del efecto.
     return () => {
-      clearInterval(id);
-      controller.abort();
+      clearInterval(id); // Se limpia el intervalo
+      controller.abort(); // Se aborta cualquier petición en curso
     };
   }, [lat, lon, cadaMs]);
 
@@ -388,15 +449,25 @@ export function useClimaConFalsaAlarma(lat: number, lon: number, cadaMs: number)
  * pisa.
  * ¿Por qué? En el starter, cuando React corre la limpieza, ¿a qué controller puede
  * llegar?
- *
+ * En el starter, cada vuelta creaba su propio controller dentro de cargar, y la
+ * limpieza no llega a ninguno, por lo que no hay manera de abortar la petición en
+ * curso. Al cambiar de ciudad, la petición de Santiago sigue ejecutándose y cuando
+ * termina actualiza el estado con la temperatura de Santiago, pisando la de Valparaíso.
  */
+
+// Creamos un hook que recibe como parámetros la latitud, longitud y el intervalo de tiempo en milisegundos.
+// Devuelve un objeto con la temperatura en grados o null si no se ha podido obtener, y un mensaje de error o null si no hay error.
 export function useClimaConMandoPorVuelta(lat: number, lon: number, cadaMs: number): ClimaAlDia {
+  // Seteamos el estado inicial de grados como null, que será actualizado con la temperatura obtenida.
   const [grados, setGrados] = useState<number | null>(null);
+  // Seteamos el estado inicial de error como null, que será actualizado con un mensaje de error si la petición falla.
   const [error, setError] = useState<string | null>(null);
 
+  // Una vez montado el componente, ejecutamos el efecto que se encargará de obtener la temperatura y actualizar el estado.
   useEffect(() => {
+    const controller = new AbortController();
+
     async function cargar() {
-      const controller = new AbortController();
       try {
         setGrados(await pedirTemperatura(lat, lon, controller.signal));
         setError(null);
@@ -408,7 +479,10 @@ export function useClimaConMandoPorVuelta(lat: number, lon: number, cadaMs: numb
 
     cargar();
     const id = setInterval(cargar, cadaMs);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id); // Se limpia el intervalo
+      controller.abort(); // Se aborta cualquier petición en curso
+    };
   }, [lat, lon, cadaMs]);
 
   return { grados, error };
@@ -429,13 +503,37 @@ export function useClimaConMandoPorVuelta(lat: number, lon: number, cadaMs: numb
  * Al cambiar de ciudad o desmontar, lo viejo deja de pedir. La tarjeta ya está bien.
  * ¿Por qué? Con tu arreglo, si desmontas mientras una vuelta está en camino, ¿qué
  * para cada línea de tu limpieza?
- *
+ * El clearInterval elimina el timer y el controller.abort() hace que se finalice
+ * cualquier petición en curso, para que no quede nada corriendo en segundo plano
+ * consumiendo memoria.
  */
 export function useClimaQueSeRefresca(lat: number, lon: number, cadaMs: number): ClimaAlDia {
-  useEffect(() => {}, [lat, lon, cadaMs]);
-  return { grados: null, error: null };
+  const [grados, setGrados] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function cargar() {
+      try {
+        setGrados(await pedirTemperatura(lat, lon, controller.signal));
+        setError(null);
+      } catch {
+        if (controller.signal.aborted) return;
+        setError("No fue posible obtener el clima");
+      }
+    }
+    cargar();
+    const id = setInterval(cargar, cadaMs);
+    return () => {
+      clearInterval(id);
+      controller.abort();
+    };
+  }, [lat, lon, cadaMs]);
+  return { grados, error };
 }
 
+// Función TSX que consume y renderiza la data obtenida con el hook useClimaQueSeRefresca
 export function TarjetaClimaQueSeRefresca({
   lat,
   lon,
@@ -447,7 +545,11 @@ export function TarjetaClimaQueSeRefresca({
 }) {
   const { grados, error } = useClimaQueSeRefresca(lat, lon, cadaMs);
 
-  if (error) return <p role="alert">{error}</p>;
-  if (grados === null) return <p>Cargando…</p>;
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
+  if (grados === null) {
+    return <p>Cargando…</p>;
+  }
   return <p>{grados} °C</p>;
 }

@@ -3591,3 +3591,53 @@ Lo nuevo es puro TypeScript: tu `tsconfig` tiene `noUncheckedIndexedAccess`, y c
 - En el catch del 4 hay un `setGrados((prev) => prev)` tuyo: no hace nada (devuelve el mismo
   valor). Sin tocar.
 - Nada del 09 ni del 10 está subido.
+
+## Sesión 24 nov 2026 — `13/09` CERRADO 5/5 + ESCALERAS 6/6: el polling
+
+- **4a** — `const id = setInterval(…)` + `return () => clearInterval(id)`. Porqué: «Nadie» para el
+  reloj de Santiago; en el chat, «Nada, no hay limpieza». Se corrigió el orden: React corre la
+  limpieza de Santiago antes del efecto de Valparaíso, pero no tiene nada que llamar.
+- **4b** — `return () => controller.abort()`. En el chat: «Porque nadie llamaba a
+  controller.abort(), no había limpieza». El controller ya estaba; faltaba apretar el botón.
+- **4c** — la limpieza con las dos líneas. El porqué escrito ya nombraba lo que faltaba: solo
+  paraba el reloj, no abortaba la petición.
+- **4** — la limpieza del 4c. El primer porqué describía el starter del 4c («no había
+  limpieza… pisaba»); con la limpieza del starter delante: «Apaga la petición, pero deja vivo el
+  intervalo». Matiz: las vueltas de Santiago nacen canceladas (mismo controller, ya abortado),
+  así que se siguen pidiendo pero no pisan. El `catch` volvió al comentario del starter: ver
+  «Lo que el test no ve».
+- **5a** — `setError(null)` después de `setGrados`. Matiz de vocabulario: «limpieza» es el
+  `return` del efecto; el aviso lo borra el `try`.
+- **5b** — la guardia `if (controller.signal.aborted) return;`. En el chat: «abort() hace que
+  la petición falle y cae al catch». Para el `catch`, cancelar y fallar se ven igual.
+- **5c** — primero un controller en el efecto, pero con el de `cargar` todavía dentro: dos con
+  el mismo nombre, y `cargar` usaba el suyo (test rojo, typecheck y lint callados). Al quitar el
+  de dentro, verde. Es la TRAMPA de tu `useWeather`.
+- **5** — tu hook, con todo lo de la escalera junto. El porqué pegado venía en markdown y borró
+  la última línea de la pregunta; se cambió por tu respuesta del chat. Matiz: más que la
+  memoria, lo que importa es que la vuelta en camino ya no escribe en el estado.
+
+**Abierto, decisión tuya** (sin tocar):
+- 4b y 4c: `setGrados(null)` en el `catch`. Una cancelada o una vuelta fallida vuelve a
+  «Cargando…» aunque ya hubiera temperatura.
+- Tus comentarios «null si no se ha podido obtener» (4, 5a, 5b, 5c): en estos hooks, `null` es
+  «todavía no llega ninguna»; el fallo va en `error`. Y en el 4c, «a la vez seteamos»: primero
+  espera, después escribe.
+
+**Lo que el test no ve.** «Si una vuelta falla, se queda la última» (4, y por herencia el 4c):
+ni el test ni el banco hacen fallar una vuelta. `setGrados(null)` pasaba en verde.
+
+**Incidencia.** Otra vez el autocompletado: `import { set, z } from "zod"` al escribir
+`setError` en el 5a (TS6133 + lint). Igual que en el 08.
+
+### Verificación
+
+- Tests 11/11, 0 errores de tipos en el 09 (los 3 del starter del 10, aparte), lint limpio.
+  Chips 4a–4c, 4, 5a–5c y 5 en «resuelto».
+- Skill `verificar-ejercicio`: sin TS6133, enunciados dentro del techo, sin trace lines. 561
+  líneas con tus comentarios.
+
+### Pendiente
+
+- El 10 (0/5): tu `useWeather` tipado.
+- Nada del 09 de hoy está subido.

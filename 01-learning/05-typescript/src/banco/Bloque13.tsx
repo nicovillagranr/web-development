@@ -2649,6 +2649,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="4a"
+        estado="resuelto"
         nombre="useRelojQueSeQueda"
         mirar="Pulsa Santiago: «pido Santiago» cada segundo. Pulsa Valparaíso: desde ahí, solo «pido Valparaíso». Con el starter, el rastro intercala las dos ciudades (y en pnpm dev, cada una dos veces: el ensayo dejó otro reloj vivo)."
         campos="botones Santiago, Valparaíso y Cerrar · el rastro, con las últimas ocho líneas"
@@ -2658,6 +2659,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="4b"
+        estado="resuelto"
         nombre="useClimaQueLlegaTarde"
         mirar="Pide una sola vez, sin reloj. Pulsa Santiago y, antes de 2,5 s, Valparaíso: 17 °C, y ahí se queda. Con el starter, sale 17 °C y a los 2,5 s lo pisa Santiago con 24 °C."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo"
@@ -2667,6 +2669,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="4c"
+        estado="resuelto"
         nombre="useClimaQueSeCruza"
         mirar="Vuelve a pedir cada 3 s, y cada respuesta trae 1 °C más. Pulsa Santiago y, antes de 2,5 s, Valparaíso: solo Valparaíso. Con el starter, sale Valparaíso, a los 2,5 s lo pisa Santiago con 24 °C, y a la vuelta siguiente vuelve Valparaíso."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
@@ -2676,6 +2679,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="useClimaQueSigue"
         mirar="Vuelve a pedir cada 3 s, y cada respuesta trae 1 °C más. Pulsa Santiago y luego Valparaíso: las llamadas a Santiago dejan de subir. Con el starter siguen subiendo cada 3 s (de dos en dos en pnpm dev), aunque nacen canceladas."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
@@ -2685,6 +2689,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5a"
+        estado="resuelto"
         nombre="useClimaConAvisoQueNoSeVa"
         mirar="Pulsa Valparaíso y, cuando salga la temperatura, «Que falle la próxima»: el aviso, y a la vuelta siguiente vuelve la temperatura. Con el starter, el aviso se queda para siempre."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s), Que falle la próxima y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
@@ -2694,6 +2699,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5b"
+        estado="resuelto"
         nombre="useClimaConFalsaAlarma"
         mirar="Pulsa Santiago y, antes de 2,5 s, Valparaíso: «Cargando…» y después Valparaíso, sin aviso. Con el starter sale el aviso aunque nada falló: al cambiar de ciudad, hasta que llega Valparaíso (y en pnpm dev, también nada más montar, por el ensayo)."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
@@ -2703,6 +2709,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="5c"
+        estado="resuelto"
         nombre="useClimaConMandoPorVuelta"
         mirar="Pulsa Santiago y, antes de 2,5 s, Valparaíso: solo Valparaíso. Con el starter, como en el 4c: a los 2,5 s lo pisa Santiago con 24 °C."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · el aviso o la temperatura · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
@@ -2712,6 +2719,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="useClimaQueSeRefresca"
         mirar="Como el 4: «Cargando…», la temperatura y 1 °C más cada 3 s. «Que falle la próxima»: el aviso, y a la vuelta siguiente vuelve la temperatura. Cerrar: las llamadas dejan de subir. Con el starter, «Cargando…» para siempre."
         campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s), Que falle la próxima y Cerrar · TarjetaClimaQueSeRefresca · las peticiones a Open-Meteo · las llamadas a fetch por ciudad"
