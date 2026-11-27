@@ -4,6 +4,10 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
   HorasSchema,
   temperaturaDe,
+  maximasPorDia,
+  rangoDelDia,
+  fechasConMaxima,
+  diasConMaxima,
   armarPronostico,
   esDeDia,
   TarjetaWeather,
@@ -145,6 +149,50 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
     expect(temperaturaDe([21.4, 22.9], 5), "La hora 5 no está en el array: null").toBeNull();
     expect(temperaturaDe([21.4, 22.9], -1), "La hora -1 no está en el array: null").toBeNull();
     expect(temperaturaDe([0, 22.9], 0), "0 °C es un dato, no un hueco").toBe(0);
+  });
+
+  it("3a) maximasPorDia — cada fecha con la máxima de su misma posición", () => {
+    expect(maximasPorDia(DIAS), "Cada fecha va con la máxima de su misma posición").toEqual([
+      { fecha: "2026-11-23", max: 24 },
+      { fecha: "2026-11-24", max: 27 },
+      { fecha: "2026-11-25", max: 24 },
+    ]);
+    expect(
+      maximasPorDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }),
+      "Al último día le falta la máxima: sale con null",
+    ).toEqual([
+      { fecha: "2026-11-23", max: 24 },
+      { fecha: "2026-11-24", max: 27 },
+      { fecha: "2026-11-25", max: null },
+    ]);
+  });
+
+  it("3b) rangoDelDia — sin la mínima o sin la máxima, «sin dato»", () => {
+    expect(rangoDelDia(DIAS, 1)).toBe("12–27 °C");
+    expect(
+      rangoDelDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }, 2),
+      "Al día 2 le falta la máxima: «sin dato»",
+    ).toBe("sin dato");
+    expect(
+      rangoDelDia({ ...DIAS, temperature_2m_min: [11.6] }, 1),
+      "Al día 1 le falta la mínima: «sin dato»",
+    ).toBe("sin dato");
+    expect(rangoDelDia(DIAS, 5), "El día 5 no existe: «sin dato»").toBe("sin dato");
+  });
+
+  it("3c) fechasConMaxima — el día sin máxima no sale", () => {
+    expect(fechasConMaxima(DIAS)).toEqual(["2026-11-23", "2026-11-24", "2026-11-25"]);
+    expect(
+      fechasConMaxima({ ...DIAS, temperature_2m_max: [24.2, 26.8] }),
+      "Al último día le falta la máxima: su fecha no sale",
+    ).toEqual(["2026-11-23", "2026-11-24"]);
+  });
+
+  it("3d) diasConMaxima — los días con su máxima, sin los que les falta", () => {
+    expect(diasConMaxima({ ...DIAS, temperature_2m_max: [24.2, 26.8] })).toEqual([
+      { fecha: "2026-11-23", max: 24 },
+      { fecha: "2026-11-24", max: 27 },
+    ]);
   });
 
   it("3) armarPronostico — los días completos, sin los que tienen huecos", () => {

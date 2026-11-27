@@ -130,6 +130,10 @@ import {
   API_AIRE,
   HorasSchema,
   temperaturaDe,
+  maximasPorDia,
+  rangoDelDia,
+  fechasConMaxima,
+  diasConMaxima,
   armarPronostico,
   esDeDia,
   TarjetaWeather,
@@ -2731,6 +2735,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={1}
+        estado="resuelto"
         nombre="HorasSchema"
         mirar="«Con is_day» y «Sin is_day» devuelven las horas tal cual. «is_day con textos» falla y dice en qué campo. Con el starter, «Sin is_day» también falla, en is_day."
         campos="un botón por caso · lo que devuelve el parse, o su error"
@@ -2762,6 +2767,83 @@ export function Bloque13() {
             { etiqueta: "Hora 1 de [21.4, 22.9]", probar: () => temperaturaDe([21.4, 22.9], 1) },
             { etiqueta: "Hora 5 de [21.4, 22.9]", probar: () => temperaturaDe([21.4, 22.9], 5) },
             { etiqueta: "Hora 0 de [0, 22.9]", probar: () => temperaturaDe([0, 22.9], 0) },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="3a"
+        estado="resuelto"
+        nombre="maximasPorDia"
+        mirar="«Completo»: 24, 27 y 24. «Sin la última máxima»: el último día con null. Con el starter, el 24 de noviembre sale con 24, la máxima del 23."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Completo", probar: () => maximasPorDia(DIAS_DE_MENTIRA) },
+            {
+              etiqueta: "Sin la última máxima",
+              probar: () => maximasPorDia({ ...DIAS_DE_MENTIRA, temperature_2m_max: [24.2, 26.8] }),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="3b"
+        estado="resuelto"
+        nombre="rangoDelDia"
+        mirar="Día 1: «12–27 °C». Sin la máxima o sin la mínima: «sin dato». Con el starter, el día 2 sin máxima da «11–NaN °C»."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Día 1", probar: () => rangoDelDia(DIAS_DE_MENTIRA, 1) },
+            {
+              etiqueta: "Día 2 sin máxima",
+              probar: () =>
+                rangoDelDia({ ...DIAS_DE_MENTIRA, temperature_2m_max: [24.2, 26.8] }, 2),
+            },
+            {
+              etiqueta: "Día 1 sin mínima",
+              probar: () => rangoDelDia({ ...DIAS_DE_MENTIRA, temperature_2m_min: [11.6] }, 1),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="3c"
+        estado="resuelto"
+        nombre="fechasConMaxima"
+        mirar="«Completo»: las tres fechas. «Sin la última máxima»: solo las dos primeras. Con el starter, la tercera sale como null."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Completo", probar: () => fechasConMaxima(DIAS_DE_MENTIRA) },
+            {
+              etiqueta: "Sin la última máxima",
+              probar: () =>
+                fechasConMaxima({ ...DIAS_DE_MENTIRA, temperature_2m_max: [24.2, 26.8] }),
+            },
+          ]}
+        />
+      </Tarjeta>
+
+      <Tarjeta
+        n="3d"
+        nombre="diasConMaxima"
+        mirar="«Sin la última máxima»: los dos primeros días, con su máxima. El starter ya pinta lo mismo: su fallo solo lo ve pnpm typecheck."
+        campos="un botón por caso · lo que devuelve"
+      >
+        <ProbarCasos
+          casos={[
+            { etiqueta: "Completo", probar: () => diasConMaxima(DIAS_DE_MENTIRA) },
+            {
+              etiqueta: "Sin la última máxima",
+              probar: () => diasConMaxima({ ...DIAS_DE_MENTIRA, temperature_2m_max: [24.2, 26.8] }),
+            },
           ]}
         />
       </Tarjeta>

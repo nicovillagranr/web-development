@@ -3641,3 +3641,53 @@ ni el test ni el banco hacen fallar una vuelta. `setGrados(null)` pasaba en verd
 
 - El 10 (0/5): tu `useWeather` tipado.
 - Nada del 09 de hoy está subido.
+
+## Sesión 25 nov 2026 — `13/10`: drill 1 CERRADO y ESCALERA 3a–3d MONTADA (3/4)
+
+- **1** (24 nov, por la noche) — `is_day: z.array(z.number()).optional()`. Primero con
+  `z.boolean()`, por tu comentario del `useWeather`: test rojo. En el chat: «Que is_day venga sí
+  o sí, es obligatorio».
+- **2** — `temperaturas[i] === undefined ? null : Math.round(temperaturas[i])`. Verde y sin
+  errores de tipos: TypeScript recuerda la comprobación de `temperaturas[i]` mientras ni el array
+  ni `i` cambien (con `i + 1` ya no). Porqué vacío.
+- **`Dia`** — se ensanchó a `min: number | null; max: number | null`, en una línea que decía «ya
+  están bien»: los tipos callaron, pero el test del 3 seguía rojo. Devuelto a su forma.
+- **3** — `map` → `null` → `.filter((dia): dia is Dia => dia !== null)`. Verde, pero «toda esa
+  lógica junta me cuesta entenderla» → escalera, una pieza de tu 3 por peldaño:
+  - **3a** `maximasPorDia` — `(fecha, i)`. En el chat: en la vuelta del 2026-11-24, «i vale 1 y
+    lee 26.8, que redondea a 27».
+  - **3b** `rangoDelDia` — `|| max === undefined`. En el chat: «Hasta la tercera»: el `return`
+    sale y a la cuarta solo llega `number`. Porqué ajustado pegado.
+  - **3c** `fechasConMaxima` — `null` en el map + `filter` con predicado. «El map no filtra nada,
+    solo transforma».
+  - **3d** `diasConMaxima` — `dia is Maxima` en lugar de `: boolean`. Sin errores de tipos;
+    porqué vacío, sin revisar.
+- **4** — resuelto (test verde), sin revisar.
+- **Moldes de `Dias`** — un 📌 con los datos del test en columnas encima del 3a–3d y del 3, a
+  petición tuya.
+- **Trazas** — `rangoDelDia(…, 0)` estaba anotada «14–24 °C» y daba «12–10 °C»: las llamadas se
+  ejecutan, pero nada comprueba el comentario. Corregida por ti, con una máxima por encima de la
+  mínima. `[15, undefined]` → `[15]`: un día sin máxima es un array más corto, no un `undefined`
+  dentro. Fechas de 2024 a 2026.
+
+**Prettier** — «no me gusta que las funciones se reseteen solas al guardar»: `printWidth` de 100
+a 120. Solo cambia el formato, nunca la lógica. La firma de `pedirClima` (123) sigue partida, y
+un objeto ya desplegado se queda desplegado. Hay 125 archivos de `src` que juntarían líneas al
+guardarlos.
+
+**Abierto, decisión tuya:** los comentarios con tono de autocompletado encima del 2, del 3 y del
+3a («Utilizamos un operador ternario…», «Primero, usamos .map…»). Ofrecido quitarlos al cerrar.
+
+### Verificación
+
+- Tests 8/9 (falta el 5, en starter), 0 errores de tipos, lint limpio. Chips 1 y 3a–3c en
+  «resuelto».
+- Escalera probada en una copia: solución y alternativas en verde. Señal de los starters: el 3a
+  en el test, el 3b y el 3c en los dos, y el 3d solo en el compilador (el «uno pasa el test con el
+  fallo dentro» de la cabecera). Skill `verificar-ejercicio`: sin TS6133, enunciados de 3–4
+  líneas. 550 líneas con tus trazas y los moldes.
+
+### Pendiente
+
+- Los porqués del 2, del 3 y del 3d; revisar el 3d y el 4.
+- El 5: tu hook.

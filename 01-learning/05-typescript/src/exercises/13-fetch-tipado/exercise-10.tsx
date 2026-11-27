@@ -22,6 +22,7 @@ import { z } from "zod";
  * 🗺️ MAPA
  * TEORÍA 1 · el campo que puede faltar → drill 1
  * TEORÍA 2 · arrays paralelos por índice → drills 2–4
+ * ESCALERA · tu drill 3, pieza a pieza → peldaños 3a–3d, antes del 3
  * TU HOOK → drill 5
  *
  * ▸ 5 drills en orden. Prohibidos el tipo any, as, el ! de «confía en mí» (x!) y
@@ -29,9 +30,9 @@ import { z } from "zod";
  * pnpm test:run src/exercises/13-fetch-tipado/exercise-10.test.tsx
  * pnpm typecheck · pnpm lint
  *
- * Los starters están rotos a propósito: ejecuta los tres comandos. Contesta cada
- * ¿Por qué? en la línea libre de debajo.
- * Pistas: exercise-10.pistas.md. Drills 1–5: banco, pestaña 13.
+ * Los starters están rotos a propósito, y uno pasa el test con el fallo dentro:
+ * ejecuta los tres comandos. Contesta cada ¿Por qué? en la línea libre de debajo.
+ * Pistas: exercise-10.pistas.md. Drills 1–5 y peldaños: banco, pestaña 13.
  * ============================================================================= */
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -65,12 +66,14 @@ import { z } from "zod";
  * array por dato. is_day puede no venir (tu comentario de la l.15). Ahora, una
  * respuesta sin is_day revienta el parse.
  * ¿Por qué? En el starter, ¿qué le exige el schema a is_day?
- *
+ * En el starter, is_day tenía que venir sí o sí: era obligatorio, y una respuesta
+ * sin is_day reventaba el parse. Con mi arreglo sigue siendo number (0 o 1), pero
+ * opcional.
  */
 export const HorasSchema = z.object({
   time: z.array(z.string()),
   temperature_2m: z.array(z.number()),
-  is_day: z.array(z.number()),
+  is_day: z.array(z.number()).optional(),
 });
 
 export type Horas = z.infer<typeof HorasSchema>;
@@ -108,8 +111,11 @@ export type Horas = z.infer<typeof HorasSchema>;
  * ¿Por qué? En el starter, ¿qué le llega a Math.round cuando i no existe?
  *
  */
+
+// Una función que recibe un array de temperaturas y un índice i, y devuelve la temperatura redondeada en ese índice o null si no existe.
 export function temperaturaDe(temperaturas: number[], i: number): number | null {
-  return Math.round(temperaturas[i]);
+  // Utilizamos un operador ternario para cubrir ambos casos
+  return temperaturas[i] === undefined ? null : Math.round(temperaturas[i]);
 }
 
 /* El bloque daily de Open-Meteo, un array por dato, y un día como lo pinta la
@@ -123,19 +129,274 @@ export const DiasSchema = z.object({
 export type Dias = z.infer<typeof DiasSchema>;
 export type Dia = { fecha: string; min: number; max: number };
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ▸ ESCALERA — tu drill 3, pieza a pieza (antes del 3)
+ *
+ * Tu drill 3 hace cuatro cosas a la vez. Cada peldaño trae una sola, con una pieza
+ * rota: A · el i que cruza los arrays (3a) · B · los dos huecos (3b) · C · el día que
+ * no sale (3c) · D · lo que TypeScript sabe de lo que queda (3d). Al terminar, vuelve
+ * a tu 3 y búscale cada pieza.
+ *
+ * 🧠 ANALOGÍA — map es una fotocopiadora: por cada hoja que entra, sale una. filter es
+ * la mano que aparta las que salieron en blanco.
+ *
+ * 📌 Del bloque 05 (ejercicios 07 y 08): en .filter((x): x is string => x !== null),
+ * x is string es un predicado. Le promete a TypeScript que, si la flecha devuelve
+ * true, x es string.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* ▸ A — el i que cruza los arrays */
+/* 📌 Dias, el molde: un array por dato, y la columna i es el día i. Con los datos del test:
+ * {
+ *   time:               ["2026-11-23", "2026-11-24", "2026-11-25"], // string[]
+ *   temperature_2m_min: [11.6,         12.4,         10.9],         // number[]
+ *   temperature_2m_max: [24.2,         26.8,         23.5],         // number[]
+ * }
+ */
+/* 3a) maximasPorDia — cada fecha de time con su máxima redondeada, o null si a ese día
+ * le falta. temperaturaDe es la tuya del 2: no se toca. Ahora todos los días salen con
+ * la misma máxima.
+ * ¿Por qué? ¿Qué une una fecha de time con su máxima, si están en arrays distintos?
+ * El .map crea un array de la misma longitud que time, y el i del map es el índice que cruza los arrays.
+ */
+
+// Primero, usamos .map sobre la propiedad time del objeto días.
+// Por cada fecha, obtenemos su índice i y usamos la función temperaturaDe para obtener la máxima correspondiente.
+// Si la máxima no existe, temperaturaDe devuelve null.
+export function maximasPorDia(dias: Dias): { fecha: string; max: number | null }[] {
+  return dias.time.map((fecha, i) => ({ fecha, max: temperaturaDe(dias.temperature_2m_max, i) }));
+}
+maximasPorDia({
+  time: ["2026-06-01", "2026-06-02"],
+  temperature_2m_min: [12, 14],
+  temperature_2m_max: [24],
+});
+// { fecha: "2026-06-01", max: 24 },
+
+maximasPorDia({
+  time: ["2026-06-01", "2026-06-02"],
+  temperature_2m_min: [12, 14],
+  temperature_2m_max: [24],
+});
+// { fecha: "2026-06-02", max: null },
+
+maximasPorDia({
+  time: ["2026-06-01", "2026-06-02"],
+  temperature_2m_min: [12, 14],
+  temperature_2m_max: [24, 26],
+});
+// { fecha: "2026-06-01", max: 24 },
+// { fecha: "2026-06-02", max: 26}
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* ▸ B — los dos huecos */
+/* 📌 Dias, el molde: un array por dato, y la columna i es el día i. Con los datos del test:
+ * {
+ *   time:               ["2026-11-23", "2026-11-24", "2026-11-25"], // string[]
+ *   temperature_2m_min: [11.6,         12.4,         10.9],         // number[]
+ *   temperature_2m_max: [24.2,         26.8,         23.5],         // number[]
+ * }
+ */
+/* 3b) rangoDelDia — la mínima y la máxima del día i, redondeadas, como «12–24 °C». Si le
+ * falta cualquiera de las dos, «sin dato».
+ * ¿Por qué? Debajo de tu if, ¿por qué TypeScript ya deja pasar max a Math.round?
+ * No lo dejaba pasar, porque max podía ser undefined. Si lo es, la función llega
+ * hasta la tercera línea: el if lo cubre y el return sale. A la cuarta solo llega
+ * max como number, y TypeScript lo entiende.
+ */
+export function rangoDelDia(dias: Dias, i: number): string {
+  const min = dias.temperature_2m_min[i]; // Sacamos la temperatura mínima del día i
+  const max = dias.temperature_2m_max[i]; // Sacamos la temperatura máxima del día i
+  if (min === undefined || max === undefined) return "sin dato"; // Si cualquiera de las dos es undefined, devolvemos "sin dato"
+  return `${Math.round(min)}–${Math.round(max)} °C`; // Una vez que sabemos que min y max existen, los redondeamos y formateamos la cadena de salida
+}
+rangoDelDia(
+  {
+    time: ["2026-06-01", "2026-06-02"],
+    temperature_2m_min: [12, 14],
+    temperature_2m_max: [15, 24],
+  },
+  0,
+);
+// "12–15 °C"
+
+rangoDelDia(
+  {
+    time: ["2026-06-01", "2026-06-02"],
+    temperature_2m_min: [12, 14],
+    temperature_2m_max: [15, 24],
+  },
+  1,
+);
+// "14–24 °C"
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* ▸ C — el día que no sale */
+
+/* 📌 Dias, el molde: un array por dato, y la columna i es el día i. Con los datos del test:
+ * {
+ *   time:               ["2026-11-23", "2026-11-24", "2026-11-25"], // string[]
+ *   temperature_2m_min: [11.6,         12.4,         10.9],         // number[]
+ *   temperature_2m_max: [24.2,         26.8,         23.5],         // number[]
+ * }
+ */
+/* 3c) fechasConMaxima — las fechas de los días que traen la máxima. Si a un día le
+ * falta, su fecha no sale.
+ * ¿Por qué? Si time trae tres fechas y a una le falta la máxima, ¿cuántos elementos
+ * devuelve un map de time?
+ * Devuelve tres elementos, uno por cada fecha. El map no filtra nada, solo transforma. Por eso necesitamos un filter después para eliminar los días que no tienen máxima.
+ */
+
+// Función que recibe como parámetro un objeto Dias y devuelve un array de strings con las fechas que tienen máxima definida.
+export function fechasConMaxima(dias: Dias): string[] {
+  return (
+    dias.time
+      // Recorremos todas las fechas.
+      // "fecha" contiene la fecha actual e "i" su posición en el array.
+      .map((fecha, i) => {
+        // Buscamos la temperatura máxima que corresponde a esa fecha.
+        // Usamos el mismo índice porque ambos arrays están relacionados
+        // por posición.
+        const max = dias.temperature_2m_max[i];
+
+        // Si no existe una temperatura máxima para ese día,
+        // devolvemos null como señal de que debemos descartarlo después.
+        if (max === undefined) return null;
+
+        // Si sí existe una temperatura máxima, conservamos la fecha.
+        return fecha;
+      })
+
+      // Ahora revisamos los resultados del map.
+      // Conservamos únicamente los elementos que no sean null.
+      .filter((fecha): fecha is string => fecha !== null)
+  );
+
+  // "fecha is string" es una indicación para TypeScript:
+  // después de comprobar que fecha no es null,
+  // puede tratarla como un string.
+  // Así entiende que el resultado final es string[] y no
+  // un array que podría contener null.
+}
+
+// fechasConMaxima({
+// time: ["2026-06-01", "2026-06-02"],
+// temperature_2m_min: [12, 14],
+// temperature_2m_max: [15],
+// });
+// ["2026-06-01"]
+
+// fechasConMaxima({
+// time: ["2026-06-01", "2026-06-02"],
+// temperature_2m_min: [12, 14],
+// temperature_2m_max: [15, 24],
+// });
+// ["2026-06-01", "2026-06-02"]
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/* ▸ D — lo que TypeScript sabe de lo que queda */
+
+/* Lo que devuelve el 3d: una fecha con su máxima, que aquí ya no puede faltar. */
+export type Maxima = { fecha: string; max: number };
+
+/* 📌 Dias, el molde: un array por dato, y la columna i es el día i. Con los datos del test:
+ * {
+ *   time:               ["2026-11-23", "2026-11-24", "2026-11-25"], // string[]
+ *   temperature_2m_min: [11.6,         12.4,         10.9],         // number[]
+ *   temperature_2m_max: [24.2,         26.8,         23.5],         // number[]
+ * }
+ */
+/* 3d) diasConMaxima — cada fecha con su máxima redondeada, sin los días a los que les
+ * falta.
+ * ¿Por qué? El filter del starter ya quitaba los null al ejecutar. ¿Qué no sabía
+ * TypeScript?
+ *
+ */
+export function diasConMaxima(dias: Dias): Maxima[] {
+  return dias.time
+    .map((fecha, i) => {
+      const max = dias.temperature_2m_max[i];
+      if (max === undefined) return null;
+      return { fecha, max: Math.round(max) };
+    })
+    .filter((dia): dia is Maxima => dia !== null);
+}
+// diasConMaxima({
+// time: ["2026-06-01", "2026-06-02"],
+// temperature_2m_min: [12, 14],
+// temperature_2m_max: [15],
+// });
+// [{ fecha: "2026-06-01", max: 15 }]
+
+// diasConMaxima({
+// time: ["2026-06-01", "2026-06-02"],
+// temperature_2m_min: [12, 14],
+// temperature_2m_max: [15, 24],
+// });
+// [{ fecha: "2026-06-01", max: 15 }, { fecha: "2026-06-02", max: 24 }]
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* 📌 Dias, el molde: un array por dato, y la columna i es el día i. Con los datos del test:
+ * {
+ *   time:               ["2026-11-23", "2026-11-24", "2026-11-25"], // string[]
+ *   temperature_2m_min: [11.6,         12.4,         10.9],         // number[]
+ *   temperature_2m_max: [24.2,         26.8,         23.5],         // number[]
+ * }
+ */
 /* 3) armarPronostico — de los arrays de daily, la lista de días con su mínima y su
  * máxima redondeadas. Si a un día le falta la mínima o la máxima, ese día no sale.
  * ¿Por qué? En el starter, si a temperature_2m_max le falta el último día, ¿qué sale
  * en ese día?
- *
+ * Sale undefined, y al hacer Math.round(undefined) revienta. Con mi arreglo, ese día no sale en el pronóstico.
  */
+
+// Función que recibe un objeto Dias y devuelve un array de objetos Dia, filtrando aquellos días que no tienen temperatura mínima o máxima.
 export function armarPronostico(dias: Dias): Dia[] {
-  return dias.time.map((fecha, i) => ({
-    fecha,
-    min: Math.round(dias.temperature_2m_min[i]),
-    max: Math.round(dias.temperature_2m_max[i]),
-  }));
+  // Recorremos el array de días y accedemos a time, el nombre del día
+  return dias.time
+    .map((fecha, i) => {
+      const min = dias.temperature_2m_min[i];
+      const max = dias.temperature_2m_max[i];
+      if (min === undefined || max === undefined) {
+        return null;
+      }
+      return { fecha, min: Math.round(min), max: Math.round(max) };
+    })
+    .filter((dia): dia is Dia => dia !== null);
 }
+
+armarPronostico({
+  time: ["2026-06-01", "2026-06-02"],
+  temperature_2m_min: [12, 14],
+  temperature_2m_max: [15],
+});
+// [{ fecha: "2026-06-01", min: 12, max: 15 }]
+
+armarPronostico({
+  time: ["2026-06-01", "2026-06-02"],
+  temperature_2m_min: [12, 14],
+  temperature_2m_max: [15, 24],
+});
+// [{ fecha: "2026-06-01", min: 12, max: 15 }, { fecha: "2026-06-02", min: 14, max: 24 }]
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /* 4) esDeDia — si la hora i es de día, para elegir el icono. is_day dice 1 (día) o 0
  * (noche). Si no trae la hora i, decide la hora de time: de día desde las 7 y antes
@@ -145,7 +406,33 @@ export function armarPronostico(dias: Dias): Dia[] {
  *
  */
 export function esDeDia(horas: Horas, i: number): boolean {
-  return horas.is_day?.[i] === 1;
+  // Buscamos el valor de is_day que corresponde a la posición i.
+  // Usamos ?. porque is_day es opcional y podría no existir.
+  // Si no existe, valor será undefined.
+  const valor = horas.is_day?.[i];
+
+  // Si el valor es 1, sabemos que es de día.
+  if (valor === 1) return true;
+
+  // Si el valor es 0, sabemos que es de noche.
+  if (valor === 0) return false;
+
+  // Si no encontramos el dato en is_day, buscamos la hora
+  // correspondiente en el array time, usando la misma posición i.
+  const tiempo = horas.time[i];
+
+  // Si tampoco existe esa posición en time, no tenemos información
+  // suficiente para determinar si es de día. Por eso devolvemos false.
+  if (tiempo === undefined) return false;
+
+  // Convertimos el texto de tiempo en un objeto Date
+  // Obtenemos la hora exacta accediendo a la propiedad getHours() del objeto Date.
+  // Ejemplo: "2026-06-01T14:00" → 14
+  const hora = new Date(tiempo).getHours();
+
+  // Consideramos que es de día desde las 07:00 hasta antes de las 20:00.
+  // Ejemplo: 07:00 → true, 19:59 → true, 20:00 → false.
+  return hora >= 7 && hora < 20;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -167,8 +454,8 @@ const PronosticoSchema = z.object({
 
 const AireSchema = z.object({ current: z.object({ us_aqi: z.number() }) });
 
-/* Pide la temperatura de ahora y los días de lat y lon, validados. Si algo falla,
- * lanza. */
+// Hook que recibe como parámetros la latitud, longitud y un signal de abort para cancelar las solicitudes si es necesario.
+// Este hook retorna una promesa que devuelve un objeto con la temperatura actual y un array de días con sus temperaturas mínimas y máximas.
 export async function pedirClima(
   lat: number,
   lon: number,
@@ -178,16 +465,26 @@ export async function pedirClima(
     `${API_CLIMA}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_min,temperature_2m_max&timezone=auto`,
     { signal },
   );
-  if (!res.ok) throw new Error(`Weather API error: ${res.status}`);
+  if (!res.ok) {
+    throw new Error(`Weather API error: ${res.status}`);
+  }
   const data = PronosticoSchema.parse(await res.json());
-  return { grados: Math.round(data.current_weather.temperature), dias: armarPronostico(data.daily) };
+  return {
+    grados: Math.round(data.current_weather.temperature),
+    dias: armarPronostico(data.daily),
+  };
 }
+// Santiago de Chile
+pedirClima(-33.45, -70.66, new AbortController().signal).then(console.log).catch(console.error);
+// { grados: 15, dias: [ { fecha: '2026-06-01', min: 12, max: 15 }, { fecha: '2026-06-02', min: 14, max: 24 } ] }
 
 /* Pide la calidad del aire de lat y lon. Es complementaria: si falla, devuelve null y
  * el clima sigue. Si la cancelan, lanza, como las demás. */
 export async function pedirAire(lat: number, lon: number, signal: AbortSignal): Promise<number | null> {
   try {
-    const res = await fetch(`${API_AIRE}?latitude=${lat}&longitude=${lon}&current=us_aqi`, { signal });
+    const res = await fetch(`${API_AIRE}?latitude=${lat}&longitude=${lon}&current=us_aqi`, {
+      signal,
+    });
     if (!res.ok) return null;
     return Math.round(AireSchema.parse(await res.json()).current.us_aqi);
   } catch (error) {
@@ -204,6 +501,10 @@ export type EstadoDelClima = {
   error: string | null;
   reintentar: () => void;
 };
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /* 5) useWeather — TarjetaWeather enseña la temperatura, el aire y los días de lat y
  * lon, con «Cargando…» al empezar y al reintentar. Cada cadaMs vuelve a pedir; si una
