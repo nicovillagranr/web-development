@@ -30,7 +30,9 @@ function buildForecast(data) {
 
     return data.daily.time
         .map((date, i) => {
-            const forecastDate = new Date(date);
+            // "YYYY-MM-DD" sin hora se lee en UTC (en Chile seria el dia anterior a las 21:00).
+            // Con "T00:00" se lee en hora local, igual que "today".
+            const forecastDate = new Date(`${date}T00:00`);
             forecastDate.setHours(0, 0, 0, 0);
 
             return {
@@ -114,14 +116,18 @@ function buildCurrentMetrics(data, airData) {
     const uvRaw = data.hourly?.uv_index?.[index];
     const humidityRaw = data.hourly?.relative_humidity_2m?.[index];
     const feelsLikeRaw = data.hourly?.apparent_temperature?.[index];
-    const pressureRaw = data.hourly?.surface_pressure?.[index];
+    // pressure_msl: presion a nivel del mar, la escala de los umbrales (980-1040 hPa).
+    // surface_pressure es la del suelo y en Santiago (~570 m) siempre marcaria "Baja".
+    const pressureRaw = data.hourly?.pressure_msl?.[index];
 
     const aqiTimes = airData?.hourly?.time || [];
     const aqiSeries = airData?.hourly?.us_aqi || [];
     const aqiIndex = resolveHourlyIndex(aqiTimes, data.current_weather?.time);
     const aqiRaw = aqiIndex >= 0 ? aqiSeries[aqiIndex] : null;
 
-    const currentDate = new Date(times[index]).toISOString().slice(0, 10);
+    // La API ya manda la hora local ("YYYY-MM-DDTHH:MM"): su fecha son los 10 primeros caracteres.
+    // toISOString() la pasaba a UTC, y desde las 21:00 en Chile ya era "manana": la suma daba 0.
+    const currentDate = times[index].slice(0, 10);
     const uvDayScore = times.reduce((acc, timeValue, i) => {
         if (timeValue.slice(0, 10) !== currentDate) return acc;
         if (i > index) return acc;
@@ -199,7 +205,7 @@ export function useWeather({
                 setError(null);
 
                 const res = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode,is_day,windspeed_10m,relative_humidity_2m,apparent_temperature,uv_index,surface_pressure&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`,
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode,is_day,windspeed_10m,relative_humidity_2m,apparent_temperature,uv_index,pressure_msl&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`,
                     { signal: controller.signal }
                 );
 
