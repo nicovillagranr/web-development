@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, type ComponentType } from "react";
 import { describe, it, expect, vi, afterEach, type Mock } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
@@ -10,9 +10,15 @@ import {
   diasConMaxima,
   armarPronostico,
   esDeDia,
+  useClimaQueOlvidaElAire,
+  useAireConMandoPropio,
+  useClimaQueSigueEnSantiago,
+  useReintentoQueEspera,
   TarjetaWeather,
   API_AIRE,
   type Horas,
+  type ClimaConAviso,
+  type EstadoDelClima,
 } from "./exercise-10";
 
 type Ciudad = { lat: number; lon: number };
@@ -77,10 +83,7 @@ function responder({ santiago = {}, valparaiso = {} }: { santiago?: Plan; valpar
           resolve(new Response(JSON.stringify({ error: true, reason: "Internal error" }), { status: 500 }));
           return;
         }
-        const cuerpo =
-          api === "aire"
-            ? { current: { us_aqi: respuesta } }
-            : { current_weather: { temperature: respuesta }, daily: DIAS };
+        const cuerpo = api === "aire" ? { current: { us_aqi: respuesta } } : { current_weather: { temperature: respuesta }, daily: DIAS };
         resolve(new Response(JSON.stringify(cuerpo), { status: 200 }));
       }, RETRASO_MS[latitud]?.[api] ?? 30);
       signal?.addEventListener("abort", () => {
@@ -95,9 +98,8 @@ function responder({ santiago = {}, valparaiso = {} }: { santiago?: Plan; valpar
 
 /* Cuántas veces se llamó a fetch para esa ciudad (en una API, o en las dos). */
 function pedidasA(fetchFalso: FetchFalso, ciudad: Ciudad, api?: "clima" | "aire"): number {
-  return fetchFalso.mock.calls.filter(
-    ([input]) => latitudDe(input) === String(ciudad.lat) && (api === undefined || apiDe(input) === api),
-  ).length;
+  return fetchFalso.mock.calls.filter(([input]) => latitudDe(input) === String(ciudad.lat) && (api === undefined || apiDe(input) === api))
+    .length;
 }
 
 /* Si cada petición que se hizo a esa ciudad, en las dos APIs, tiene su signal abortado. */
@@ -119,6 +121,78 @@ function Tarjeta({ lat, lon }: Ciudad) {
       <TarjetaWeather lat={lat} lon={lon} cadaMs={CADA_MS} />
     </StrictMode>
   );
+}
+
+/* Los peldaños 5a–5d pintan lo mismo que TarjetaWeather. Del 5a al 5c, sin cargando ni
+ * «Reintentar». */
+function PintarClima({ clima, error }: ClimaConAviso) {
+  if (error) return <p role="alert">{error}</p>;
+  if (clima === null) return <p>Cargando…</p>;
+  return (
+    <div>
+      <p>{clima.grados} °C</p>
+      <p>Aire: {clima.aire ?? "sin dato"}</p>
+      <ul>
+        {clima.dias.map((dia) => (
+          <li key={dia.fecha}>
+            {dia.fecha}: {dia.min}–{dia.max} °C
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PintarTarjeta({ clima, cargando, error, reintentar }: EstadoDelClima) {
+  if (cargando) return <p>Cargando…</p>;
+  if (error) {
+    return (
+      <div>
+        <p role="alert">{error}</p>
+        <button type="button" onClick={reintentar}>
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+  return <PintarClima clima={clima} error={null} />;
+}
+
+function ClimaQueOlvidaElAire({ lat, lon }: Ciudad) {
+  const clima = useClimaQueOlvidaElAire(lat, lon);
+  return <PintarClima {...clima} />;
+}
+
+function AireConMandoPropio({ lat, lon }: Ciudad) {
+  const clima = useAireConMandoPropio(lat, lon);
+  return <PintarClima {...clima} />;
+}
+
+function ClimaQueSigueEnSantiago({ lat, lon }: Ciudad) {
+  const clima = useClimaQueSigueEnSantiago(lat, lon, CADA_MS);
+  return <PintarClima {...clima} />;
+}
+
+function ReintentoQueEspera({ lat, lon }: Ciudad) {
+  const estado = useReintentoQueEspera(lat, lon, CADA_MS);
+  return <PintarTarjeta {...estado} />;
+}
+
+/* Monta el peldaño en StrictMode con una ciudad, y cambiarA le pasa otra sin desmontarlo. */
+function montar(Componente: ComponentType<Ciudad>, ciudad: Ciudad) {
+  const vista = render(
+    <StrictMode>
+      <Componente {...ciudad} />
+    </StrictMode>,
+  );
+  function cambiarA(otra: Ciudad) {
+    vista.rerender(
+      <StrictMode>
+        <Componente {...otra} />
+      </StrictMode>,
+    );
+  }
+  return { cambiarA, unmount: vista.unmount };
 }
 
 afterEach(() => {
@@ -157,10 +231,7 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
       { fecha: "2026-11-24", max: 27 },
       { fecha: "2026-11-25", max: 24 },
     ]);
-    expect(
-      maximasPorDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }),
-      "Al último día le falta la máxima: sale con null",
-    ).toEqual([
+    expect(maximasPorDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }), "Al último día le falta la máxima: sale con null").toEqual([
       { fecha: "2026-11-23", max: 24 },
       { fecha: "2026-11-24", max: 27 },
       { fecha: "2026-11-25", max: null },
@@ -169,23 +240,17 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
 
   it("3b) rangoDelDia — sin la mínima o sin la máxima, «sin dato»", () => {
     expect(rangoDelDia(DIAS, 1)).toBe("12–27 °C");
-    expect(
-      rangoDelDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }, 2),
-      "Al día 2 le falta la máxima: «sin dato»",
-    ).toBe("sin dato");
-    expect(
-      rangoDelDia({ ...DIAS, temperature_2m_min: [11.6] }, 1),
-      "Al día 1 le falta la mínima: «sin dato»",
-    ).toBe("sin dato");
+    expect(rangoDelDia({ ...DIAS, temperature_2m_max: [24.2, 26.8] }, 2), "Al día 2 le falta la máxima: «sin dato»").toBe("sin dato");
+    expect(rangoDelDia({ ...DIAS, temperature_2m_min: [11.6] }, 1), "Al día 1 le falta la mínima: «sin dato»").toBe("sin dato");
     expect(rangoDelDia(DIAS, 5), "El día 5 no existe: «sin dato»").toBe("sin dato");
   });
 
   it("3c) fechasConMaxima — el día sin máxima no sale", () => {
     expect(fechasConMaxima(DIAS)).toEqual(["2026-11-23", "2026-11-24", "2026-11-25"]);
-    expect(
-      fechasConMaxima({ ...DIAS, temperature_2m_max: [24.2, 26.8] }),
-      "Al último día le falta la máxima: su fecha no sale",
-    ).toEqual(["2026-11-23", "2026-11-24"]);
+    expect(fechasConMaxima({ ...DIAS, temperature_2m_max: [24.2, 26.8] }), "Al último día le falta la máxima: su fecha no sale").toEqual([
+      "2026-11-23",
+      "2026-11-24",
+    ]);
   });
 
   it("3d) diasConMaxima — los días con su máxima, sin los que les falta", () => {
@@ -201,10 +266,7 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
       { fecha: "2026-11-24", min: 12, max: 27 },
       { fecha: "2026-11-25", min: 11, max: 24 },
     ]);
-    expect(
-      armarPronostico({ ...DIAS, temperature_2m_max: [24.2, 26.8] }),
-      "Al último día le falta la máxima: ese día no sale",
-    ).toEqual([
+    expect(armarPronostico({ ...DIAS, temperature_2m_max: [24.2, 26.8] }), "Al último día le falta la máxima: ese día no sale").toEqual([
       { fecha: "2026-11-23", min: 12, max: 24 },
       { fecha: "2026-11-24", min: 12, max: 27 },
     ]);
@@ -216,14 +278,7 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
 
   it("4) esDeDia — is_day manda; si no trae la hora, decide time", () => {
     const horas: Horas = {
-      time: [
-        "2026-11-23T14:00",
-        "2026-11-23T13:00",
-        "2026-11-24T10:00",
-        "2026-11-24T22:00",
-        "2026-11-24T07:00",
-        "2026-11-24T20:00",
-      ],
+      time: ["2026-11-23T14:00", "2026-11-23T13:00", "2026-11-24T10:00", "2026-11-24T22:00", "2026-11-24T07:00", "2026-11-24T20:00"],
       temperature_2m: [24, 23, 18, 15, 12, 17],
       is_day: [1, 0],
     };
@@ -235,6 +290,62 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
     expect(esDeDia(horas, 4), "Las 7:00 ya son de día").toBe(true);
     expect(esDeDia(horas, 5), "Las 20:00 ya son de noche").toBe(false);
     expect(esDeDia(horas, 9), "La hora 9 no está ni en is_day ni en time: false").toBe(false);
+  });
+
+  it("5a) useClimaQueOlvidaElAire — la tarjeta lleva los grados, el aire y los días", async () => {
+    responder();
+    montar(ClimaQueOlvidaElAire, VALPARAISO);
+    expect(await screen.findByText("17 °C")).toBeInTheDocument();
+    expect(screen.getByText(/^Aire:/), "La API del aire contesta 32: alguien tiene que pedírselo").toHaveTextContent("Aire: 32");
+    expect(screen.getByText("2026-11-23: 12–24 °C")).toBeInTheDocument();
+  });
+
+  it("5b) useAireConMandoPropio — la limpieza corta también el aire", async () => {
+    const fetchFalso = responder();
+    const { cambiarA } = montar(AireConMandoPropio, SANTIAGO);
+    await esperar(150);
+    expect(pedidasA(fetchFalso, SANTIAGO, "aire"), "El clima de Santiago ya llegó: su aire tiene que estar en camino").toBeGreaterThan(0);
+    cambiarA(VALPARAISO);
+    await esperar(300);
+    expect(
+      screen.queryByText("24 °C"),
+      "Ya estás en Valparaíso: el aire de Santiago, que venía en camino, no puede pisarlo",
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("17 °C")).toBeInTheDocument();
+    expect(
+      cancelacionesDe(fetchFalso, SANTIAGO),
+      "Al pasar a Valparaíso, cada petición de Santiago, la del clima y la del aire, tiene que quedar cancelada",
+    ).not.toContain(false);
+  });
+
+  it("5c) useClimaQueSigueEnSantiago — la ciudad vieja deja de pedirse", async () => {
+    const fetchFalso = responder();
+    const { cambiarA, unmount } = montar(ClimaQueSigueEnSantiago, SANTIAGO);
+    cambiarA(VALPARAISO);
+    expect(await screen.findByText("17 °C")).toBeInTheDocument();
+    const santiago = pedidasA(fetchFalso, SANTIAGO);
+    await esperar(CADA_MS * 1.5);
+    expect(pedidasA(fetchFalso, SANTIAGO), "Ya estás en Valparaíso: nadie tiene que volver a pedir Santiago").toBe(santiago);
+
+    unmount();
+    const total = fetchFalso.mock.calls.length;
+    await esperar(CADA_MS * 1.5);
+    expect(fetchFalso.mock.calls.length, "Desmontado el peldaño, nadie tiene que seguir pidiendo").toBe(total);
+  });
+
+  it("5d) useReintentoQueEspera — «Reintentar» pide al momento", async () => {
+    responder({ valparaiso: { clima: [500, 16.8] } });
+    montar(ReintentoQueEspera, VALPARAISO);
+    expect(await screen.findByRole("alert")).toHaveTextContent(AVISO);
+    fireEvent.click(screen.getByRole("button", { name: "Reintentar" }));
+    expect(screen.getByText("Cargando…")).toBeInTheDocument();
+    await esperar(100);
+    expect(
+      screen.queryByText("Cargando…"),
+      "«Reintentar» tiene que pedir ya, sin esperar a la vuelta siguiente del polling",
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("17 °C")).toBeInTheDocument();
+    expect(screen.queryByRole("alert"), "El reintento salió bien: el aviso tiene que irse").not.toBeInTheDocument();
   });
 
   it("5) useWeather — pide, se pone al día, reintenta y cancela la ciudad vieja", async () => {
@@ -273,10 +384,7 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
     const fetchFalso = responder();
     const { rerender, unmount } = render(<Tarjeta {...SANTIAGO} />);
     await esperar(150);
-    expect(
-      pedidasA(fetchFalso, SANTIAGO, "aire"),
-      "El clima de Santiago ya llegó: su aire tiene que estar en camino",
-    ).toBeGreaterThan(0);
+    expect(pedidasA(fetchFalso, SANTIAGO, "aire"), "El clima de Santiago ya llegó: su aire tiene que estar en camino").toBeGreaterThan(0);
     rerender(<Tarjeta {...VALPARAISO} />);
     await esperar(5);
     expect(screen.queryByRole("alert"), "Cambiar de ciudad no es un fallo: la cancelada no deja aviso").not.toBeInTheDocument();
@@ -287,9 +395,7 @@ describe("13-fetch-tipado / exercise-10 — tu useWeather, tipado", () => {
     ).not.toContain(false);
     const santiago = pedidasA(fetchFalso, SANTIAGO);
     await esperar(CADA_MS * 1.5);
-    expect(pedidasA(fetchFalso, SANTIAGO), "Ya estás en Valparaíso: nadie tiene que volver a pedir Santiago").toBe(
-      santiago,
-    );
+    expect(pedidasA(fetchFalso, SANTIAGO), "Ya estás en Valparaíso: nadie tiene que volver a pedir Santiago").toBe(santiago);
 
     unmount();
     const total = fetchFalso.mock.calls.length;

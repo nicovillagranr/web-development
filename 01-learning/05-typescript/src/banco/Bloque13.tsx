@@ -136,7 +136,13 @@ import {
   diasConMaxima,
   armarPronostico,
   esDeDia,
+  useClimaQueOlvidaElAire,
+  useAireConMandoPropio,
+  useClimaQueSigueEnSantiago,
+  useReintentoQueEspera,
   TarjetaWeather,
+  type ClimaConAviso,
+  type EstadoDelClima,
 } from "../exercises/13-fetch-tipado/exercise-10";
 import { Seccion, Tarjeta } from "./piezas";
 
@@ -1506,6 +1512,61 @@ function WeatherAlDia({ lat, lon }: Coordenadas) {
   return <TarjetaWeather lat={lat} lon={lon} cadaMs={CADA_MS_BANCO} />;
 }
 
+/* Para los peldaños 5a–5d del 10: pintan lo mismo que TarjetaWeather. Del 5a al 5c, sin
+ * cargando ni «Reintentar». */
+function PintarClimaConAire({ clima, error }: ClimaConAviso) {
+  if (error) return <p role="alert">{error}</p>;
+  if (clima === null) return <p>Cargando…</p>;
+  return (
+    <div>
+      <p>{clima.grados} °C</p>
+      <p>Aire: {clima.aire ?? "sin dato"}</p>
+      <ul>
+        {clima.dias.map((dia) => (
+          <li key={dia.fecha}>
+            {dia.fecha}: {dia.min}–{dia.max} °C
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PintarTarjetaWeather({ clima, cargando, error, reintentar }: EstadoDelClima) {
+  if (cargando) return <p>Cargando…</p>;
+  if (error) {
+    return (
+      <div>
+        <p role="alert">{error}</p>
+        <button type="button" onClick={reintentar}>
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+  return <PintarClimaConAire clima={clima} error={null} />;
+}
+
+function ClimaQueOlvidaElAire({ lat, lon }: Coordenadas) {
+  const clima = useClimaQueOlvidaElAire(lat, lon);
+  return <PintarClimaConAire {...clima} />;
+}
+
+function AireConMandoPropio({ lat, lon }: Coordenadas) {
+  const clima = useAireConMandoPropio(lat, lon);
+  return <PintarClimaConAire {...clima} />;
+}
+
+function ClimaQueSigueEnSantiago({ lat, lon }: Coordenadas) {
+  const clima = useClimaQueSigueEnSantiago(lat, lon, CADA_MS_BANCO);
+  return <PintarClimaConAire {...clima} />;
+}
+
+function ReintentoQueEspera({ lat, lon }: Coordenadas) {
+  const estado = useReintentoQueEspera(lat, lon, CADA_MS_BANCO);
+  return <PintarTarjetaWeather {...estado} />;
+}
+
 function LineaDeCuentaAire() {
   const { enviadas, canceladas, respondidas } = useCuentaAire();
   return (
@@ -2758,6 +2819,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={2}
+        estado="resuelto"
         nombre="temperaturaDe"
         mirar="Con [21.4, 22.9]: la hora 1 da 23 y la hora 5, null. Con [0, 22.9], la hora 0 da 0. Con el starter, la hora 5 da NaN."
         campos="un botón por caso · lo que devuelve"
@@ -2833,6 +2895,7 @@ export function Bloque13() {
 
       <Tarjeta
         n="3d"
+        estado="resuelto"
         nombre="diasConMaxima"
         mirar="«Sin la última máxima»: los dos primeros días, con su máxima. El starter ya pinta lo mismo: su fallo solo lo ve pnpm typecheck."
         campos="un botón por caso · lo que devuelve"
@@ -2850,6 +2913,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={3}
+        estado="resuelto"
         nombre="armarPronostico"
         mirar="«Completo»: los tres días, con su mínima y su máxima redondeadas. «Sin la última máxima»: solo los dos primeros. Con el starter salen los tres, y el último con max: NaN."
         campos="un botón por caso · lo que devuelve"
@@ -2867,6 +2931,7 @@ export function Bloque13() {
 
       <Tarjeta
         n={4}
+        estado="resuelto"
         nombre="esDeDia"
         mirar="is_day solo trae las horas 0 y 1. Hora 0 (is_day 1): true. Hora 1 (is_day 0, a las 13:00): false. Hora 2 (10:00): true. Hora 3 (22:00): false. Con el starter, la hora 2 da false."
         campos="un botón por hora · lo que devuelve"
@@ -2877,7 +2942,48 @@ export function Bloque13() {
       </Tarjeta>
 
       <Tarjeta
+        n="5a"
+        estado="resuelto"
+        nombre="useClimaQueOlvidaElAire"
+        mirar="Pulsa Valparaíso: a los 0,7 s, la temperatura, el aire (32) y los días. Con el starter sale «Aire: sin dato», y en las peticiones al aire no se envía ninguna."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura, el aire y los días · las peticiones al clima y al aire · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaQueOlvidaElAire} conAire />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5b"
+        estado="resuelto"
+        nombre="useAireConMandoPropio"
+        mirar="Pulsa Santiago y, cuando las peticiones al aire digan «1 enviada» (a los 2,5 s), Valparaíso: sale Valparaíso y se queda, y el aire de Santiago sale cancelado. Con el starter sale respondido, y a los 4 s de pulsar Santiago lo pisa Santiago."
+        campos="botones Santiago (tarda 2,5 s y 1,5 s más en el aire), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura, el aire y los días · las peticiones al clima y al aire · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={AireConMandoPropio} conAire />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5c"
+        estado="resuelto"
+        nombre="useClimaQueSigueEnSantiago"
+        mirar="Vuelve a pedir cada 3 s, y cada respuesta trae 1 °C más. Pulsa Santiago y luego Valparaíso: las llamadas a Santiago dejan de subir. Con el starter siguen subiendo cada 3 s (de dos en dos en pnpm dev), aunque nacen canceladas."
+        campos="botones Santiago (tarda 2,5 s), Valparaíso (tarda 0,4 s) y Cerrar · la temperatura, el aire y los días · las peticiones al clima y al aire · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ClimaQueSigueEnSantiago} conAire />
+      </Tarjeta>
+
+      <Tarjeta
+        n="5d"
+        estado="resuelto"
+        nombre="useReintentoQueEspera"
+        mirar="Pulsa Valparaíso y, cuando salga la temperatura, «Que falle la próxima»: a la vuelta siguiente, el aviso con «Reintentar». Púlsalo: «Cargando…» y, a los 0,7 s, la temperatura. Con el starter, «Cargando…» hasta que el polling vuelve a pedir, que puede tardar hasta 3 s."
+        campos="botones Santiago, Valparaíso, Que falle la próxima y Cerrar · lo que pinta TarjetaWeather · las peticiones al clima y al aire · las llamadas a fetch por ciudad"
+      >
+        <ConPolling Drill={ReintentoQueEspera} conFallo conAire />
+      </Tarjeta>
+
+      <Tarjeta
         n={5}
+        estado="resuelto"
         nombre="useWeather"
         mirar="Valparaíso: «Cargando…», la temperatura, el aire y los días, y 1 °C más cada 3 s. Santiago tarda 2,5 s en el clima y 1,5 s más en el aire: pulsa Valparaíso entre medias, y su aire sale cancelado. «Que falle la próxima»: el aviso con «Reintentar». Con el starter, «Cargando…» para siempre."
         campos="botones Santiago, Valparaíso, Que falle la próxima y Cerrar · TarjetaWeather · las peticiones al clima y al aire · las llamadas a fetch por ciudad"

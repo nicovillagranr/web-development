@@ -5,9 +5,11 @@ siguiente.
 
 Los cinco salen rojos en el test. El 2 y el 3, además, en el compilador: son los que leen
 arrays por índice. De los peldaños del 3, el 3a sale rojo en el test, el 3b y el 3c en los
-dos, y el 3d solo en el compilador.
+dos, y el 3d solo en el compilador. De los del 5, el 5a sale rojo en los dos, y del 5b al 5d,
+en el test.
 
-Los drills 1–4 y los peldaños 3a–3d son funciones sueltas, sin red. En el 5, el test vuelve a pedir cada 0,3 s.
+Los drills 1–4 y los peldaños 3a–3d son funciones sueltas, sin red. Los peldaños 5a–5d y el
+5 usan una red de mentira. Con polling (5c, 5d y 5), el test vuelve a pedir cada 0,3 s.
 Valparaíso contesta el clima en 0,03 s y el aire en 0,02 s; Santiago, el clima en 0,08 s y
 el aire en 0,2 s, para que dé tiempo a cambiar de ciudad con su aire en camino.
 
@@ -384,6 +386,198 @@ return enPunto >= 7 && enPunto < 20;
 
 Es tu resolveIsDayValue (l.17-23) tipado: allí el hueco también se resolvía mirando la hora.
 La diferencia es que aquí TypeScript te obliga a decidir qué pasa si tampoco está time[i].
+
+</details>
+
+---
+
+## Peldaño 5a — `useClimaQueOlvidaElAire`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+La tarjeta pinta tres cosas, y salen de dos sitios distintos. En el starter, cargar solo va
+a uno de los dos.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Pide también el aire con pedirAire, con el mismo signal. Después, guarda en setClima un
+objeto nuevo que junte lo de las dos: los grados y los días de pedirClima, y el aire.
+
+</details>
+
+<details><summary>Pista 3 — lo que dicen el compilador y el test</summary>
+
+```
+error TS2345: Argument of type '{ grados: number; dias: Dia[]; }' is not assignable to parameter of type 'SetStateAction<Clima | null>'.
+  Property 'aire' is missing in type '{ grados: number; dias: Dia[]; }' but required in type 'Clima'.
+```
+
+```
+Error: La API del aire contesta 32: alguien tiene que pedírselo: expect(element).toHaveTextContent()
+Expected element to have text content:
+  Aire: 32
+Received:
+  Aire: sin dato
+```
+
+Sale «sin dato» porque al ejecutar clima.aire es undefined, y la tarjeta pinta
+clima.aire ?? "sin dato".
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const { grados, dias } = await pedirClima(lat, lon, controller.signal);
+const aire = await pedirAire(lat, lon, controller.signal);
+setClima({ grados, aire, dias });
+```
+
+pedirClima devuelve un objeto con grados y dias. Las llaves de const { grados, dias } los
+sacan a dos variables, igual que hace TarjetaWeather con lo que devuelve useWeather. Con
+Promise.all también vale: las dos salen a la vez.
+
+Poner aire: null a mano compila, pero miente: la API del aire sí contesta.
+
+</details>
+
+---
+
+## Peldaño 5b — `useAireConMandoPropio`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Al cambiar de ciudad, React corre la limpieza del efecto de Santiago. Mira qué controller
+alcanza esa limpieza, y cuál lleva el aire.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+mandoDelAire nace dentro de cargar, y la limpieza solo ve el controller del efecto. Haz que
+el aire escuche el mismo signal que el clima.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+Error: Ya estás en Valparaíso: el aire de Santiago, que venía en camino, no puede pisarlo: expect(element).not.toBeInTheDocument()
+expected document not to contain element, found <p>
+  24
+   °C
+</p> instead
+```
+
+El clima de Santiago ya había llegado al cambiar, así que ahí la limpieza no tenía nada que
+cortar. El aire seguía en camino con su propio mando y, al llegar, guarda Santiago encima de
+Valparaíso. El compilador calla.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const aire = await pedirAire(lat, lon, controller.signal);
+```
+
+Y fuera la línea de mandoDelAire. Un solo controller por ejecución del efecto, y las dos
+peticiones escuchan su signal: la limpieza corta las dos. Es tu 5c del 09 con dos peticiones,
+y el bug que cazaste en tu useWeather en el 07.
+
+</details>
+
+---
+
+## Peldaño 5c — `useClimaQueSigueEnSantiago`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Es tu 4 del 09. Al pasar a Valparaíso, la limpieza apaga una cosa y deja otra viva.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+El intervalo de Santiago sigue llamando a cargar. Guarda su id y páralo en la limpieza, junto
+al abort.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+AssertionError: Ya estás en Valparaíso: nadie tiene que volver a pedir Santiago: expected 4 to be 2 // Object.is equality
+```
+
+Las nuevas de Santiago nacen canceladas, porque su controller ya está abortado: no pisan
+nada, pero se siguen haciendo. Van de dos en dos por el ensayo de StrictMode.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+cargar();
+const id = setInterval(cargar, cadaMs);
+return () => {
+  clearInterval(id);
+  controller.abort();
+};
+```
+
+La limpieza tiene que deshacer todo lo que montó el efecto: el intervalo y el controller.
+
+</details>
+
+---
+
+## Peldaño 5d — `useReintentoQueEspera`
+
+<details><summary>Pista 1 — conceptual</summary>
+
+Con el polling, el starter acaba pidiendo otra vez, pero cuando le toca al intervalo.
+reintentar enciende «Cargando…» y nada más.
+
+</details>
+
+<details><summary>Pista 2 — más concreta</summary>
+
+Es el reintento de tu 5 del 08: un contador intento que reintentar sube y que va en las deps
+del efecto, para que el efecto corra otra vez al momento.
+
+</details>
+
+<details><summary>Pista 3 — lo que dice el test</summary>
+
+```
+Error: «Reintentar» tiene que pedir ya, sin esperar a la vuelta siguiente del polling: expect(element).not.toBeInTheDocument()
+expected document not to contain element, found <p>
+  Cargando…
+</p> instead
+```
+
+El test mira a los 0,1 s del clic, y el intervalo vuelve a pedir cada 0,3 s.
+
+</details>
+
+<details><summary>Solución</summary>
+
+```ts
+const [intento, setIntento] = useState(0);
+// …
+}, [lat, lon, cadaMs, intento]);
+
+function reintentar() {
+  setCargando(true);
+  setIntento((anterior) => anterior + 1);
+}
+```
+
+Al subir intento cambia una dep: React corre la limpieza (para el intervalo y aborta) y el
+efecto otra vez. Pide ya, y arranca un intervalo nuevo.
 
 </details>
 

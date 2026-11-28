@@ -3691,3 +3691,59 @@ guardarlos.
 
 - Los porqués del 2, del 3 y del 3d; revisar el 3d y el 4.
 - El 5: tu hook.
+
+## Sesión 27 nov 2026 — `13/10` CERRADO 13/13: los porqués, la ESCALERA 5a–5d y tu useWeather
+
+**Prettier** — `printWidth` de 120 a 140, cambio tuyo, para que la firma de `pedirClima` quepa en
+una línea. El cuaderno sigue formateado a 120: al guardar otros archivos, se juntarán líneas.
+
+**Calentamiento: los porqués pendientes, en el chat y de uno en uno.**
+
+- **2** — «undefined»: lo que recibe `Math.round` con una `i` fuera del array.
+- **3** — `Math.round(undefined)` en la consola. Primero salió 0.3 (el autocompletado la cambió
+  por `Math.random`), luego NaN. «Sale el día, pero con max NaN. Por eso es importante el embudo
+  que hacemos con los ifs». Tu porqué escrito decía «revienta»: reemplazado.
+- **3d** — primero «TypeScript no conocía el molde de Maxima», pero sí lo conocía: es el tipo de
+  retorno. Con el error partido en dos (lo que cree tener / lo que prometiste): «Un null».
+- **4** — «Debería devolver un false» y, con la tabla 1 / 0 / hueco, «Ahí tenemos que entrar
+  nosotros… a validar mediante la hora». Matiz: con el starter nunca sale un `undefined`, porque
+  `=== 1` siempre da un booleano. El hueco se convierte en «de noche» sin hacer ruido.
+
+**ESCALERA 5a–5d** — «Es demasiado». El 5 era tu 5 del 08 más la limpieza de tu 5 del 09; solo era
+nuevo pedir dos cosas y juntarlas. Cada peldaño traía el anterior arreglado más una capa rota:
+
+- **5a** `useClimaQueOlvidaElAire` — `Promise.all` + `{ ...climaData, aire: aireData }`. En el
+  chat: la tarjeta leía `undefined` en `clima.aire`, no `null`.
+- **5b** `useAireConMandoPropio` — sacaste `mandoDelAire` al efecto y lo abortas en la limpieza
+  (dos controllers que se abortan juntos). Tu porqué decía «al desmontar el componente». En el
+  chat: «Porque cambiaron lat y lon». Comentarios ajustados a lo que hace el código.
+- **5c** `useClimaQueSigueEnSantiago` — `id` + `clearInterval`. Tu porqué decía que Santiago
+  «podía sobrescribir». En el chat: el controller «Ya está abortado», así que las peticiones nuevas
+  nacen canceladas: no pisan, pero se siguen haciendo.
+- **5d** `useReintentoQueEspera` — lo resolviste solo con `contador`. En el chat: «Nada
+  realmente, el efecto no escucha cargando» → «El re-montaje» → con el glosario de cuatro filas
+  (montar · desmontar · el efecto vuelve a correr · una vuelta del intervalo), «La vuelta del
+  intervalo».
+
+**5** `useWeather` — tu 5d entero, con `Promise.all`. Porqué escrito: el mismo controller corta el
+clima y el aire, y lo aborta la limpieza al desmontar o al cambiar las dependencias.
+
+**Lo que se te cruzó hoy fue vocabulario, no mecanismo:** cuatro veces «desmontar» o «re-montaje»
+por «cambiaron las dependencias». Las cuatro veces lo contestaste bien en cuanto se separaron.
+
+**Con esto, la carpeta 13 queda cerrada entera: 110 de 110** (60 drills y 50 peldaños, del 3 al 27
+de noviembre).
+
+### Verificación
+
+- Tests 13/13, 0 errores de tipos, lint limpio. Chips 2, 3, 3d, 4, 5a–5d y 5 en «resuelto».
+- Escalera probada en una copia, ya borrada, con dos `await` seguidos y con `Promise.all`. Señal de
+  los starters: el 5a en los dos (TS2345 + test), y del 5b al 5d en el test. Skill
+  `verificar-ejercicio`: sin TS6133, enunciados de 3–6 líneas, 902 líneas con tus comentarios
+  (deuda, como el 09).
+- Trazas vivas comentadas al cerrar, a petición tuya: `maximasPorDia` ×3, `rangoDelDia` ×2,
+  `armarPronostico` ×2 y `esDeDia`.
+
+### Abierto, decisión tuya
+
+- Los comentarios con tono de autocompletado, y en el 5a la línea del 500 sin el matiz del aire.
