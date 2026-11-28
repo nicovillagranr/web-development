@@ -3695,7 +3695,8 @@ guardarlos.
 ## Sesión 27 nov 2026 — `13/10` CERRADO 13/13: los porqués, la ESCALERA 5a–5d y tu useWeather
 
 **Prettier** — `printWidth` de 120 a 140, cambio tuyo, para que la firma de `pedirClima` quepa en
-una línea. El cuaderno sigue formateado a 120: al guardar otros archivos, se juntarán líneas.
+una línea; antes del commit lo dejaste en **110**. (El mensaje del commit `0b600` dice 140 por
+error: lo que se subió es 110.) Con 110, al guardar, Prettier parte líneas que a 120 cabían.
 
 **Calentamiento: los porqués pendientes, en el chat y de uno en uno.**
 
@@ -3747,3 +3748,45 @@ de noviembre).
 ### Abierto, decisión tuya
 
 - Los comentarios con tono de autocompletado, y en el 5a la línea del 500 sin el matiz del aire.
+
+## Carpeta `14-context-refs` — el temario (27 nov 2026)
+
+Como la 13, aterriza en tu código: el contexto de **Store Pulse** (`datasetContext.ts` +
+`DatasetProvider.tsx`, ya en TS) y el de **Sport Mindset** (`CartContext.jsx` + `useCart.js`, en
+JS), y los refs de Sport Mindset (`HeaderSearch`, `Carousel`) y de Smart-Cooler (`handleNextRef`
+del `WizardModal`). Diez archivos de cinco drills, montados de uno en uno.
+
+| Archivo | Concepto | Dónde lo reconoces |
+|---|---|---|
+| 14/01 | el contexto: crear, proveer y leer | `<DatasetContext value>`; tu CartContext usa `.Provider` |
+| 14/02 | el contexto que puede faltar: `null` y un hook que lanza | `useDatasetState`; tu `useCart` no tiene guardia |
+| 14/03 | un valor con estado y funciones, y el Provider propio con `children` | tu `CartProvider` |
+| 14/04 | el estado de carga en el contexto (`loading / error / ready`) | `DatasetProvider` |
+| 14/05 | ref como caja: un valor que sobrevive a los renders sin repintar | `handleNextRef` de Smart-Cooler; el id de un intervalo que paras desde un botón |
+| 14/06 | callback ref: React avisa cuando el elemento aparece y cuando desaparece | el `setTimeout(…, 0)` de tu `HeaderSearch` |
+| 14/07 | ref como prop: React 19 sin `forwardRef`, y el componente tipado con `ComponentProps<"input">` | un `<Input>` tuyo que pasa el ref al `<input>` |
+| 14/08 | contexto + `useReducer` | el carrito como reducer |
+| 14/09 | el `value` que cambia en cada render: `useMemo` y `useCallback` | tu `CartProvider` |
+| 14/10 | tu carrito, tipado: el cierre | `CartContext` + `useCart` + `HeaderSearch` |
+
+**Corrección antes de montar:** el primer temario tenía un 14/05 de ref al DOM
+(`useRef<HTMLInputElement>(null)`, `.current` en `null`), y eso ya lo hiciste del 12/03 al 12/06 y
+en el repaso del 12/10. El 05–07 quedó replanteado como en la tabla, con tu ok, para no repetir la 12.
+
+## Sesión 27 nov 2026 (noche) — `14/01` MONTADO (0/5): el contexto
+
+- **TEORÍA 1** · createContext y su tipo → **1** `TemaContext`: `createContext("claro")` saca
+  `string`, y `FONDO[tema]` da TS7053. Solo en el compilador: es el «uno pasa el test con el fallo
+  dentro» de la cabecera.
+- **TEORÍA 2** · proveer y leer → **2** `AppConUsuario` (el Provider envuelve solo el menú: la
+  cabecera saluda a «Invitado») · **3** `AppDeAdmin` (value sin rol: TS2741 + test; el valor por
+  defecto no rellena huecos) · **4** `AppConTema` (value escrito a mano en vez del estado).
+- **ARMARLO TÚ** · **5** `Pagina`: del idioma de mano en mano a `IdiomaContext`, sin props en
+  `Menu` ni en `Enlace`.
+
+### Verificación
+
+- Starters: 1/5 en el test (el 1), TS7053 en el 1 y TS2741 en el 3, lint limpio. Soluciones en una
+  copia, ya borrada: 5/5, 0 errores de tipos, 0 de lint.
+- Pistas en 4 niveles con los literales de tsc y de vitest. Banco: pestaña 14 nueva (`Bloque14.tsx`
+  + `App.tsx`, que ahora abre en la 14), probada en jsdom, no en Chrome.

@@ -3,6 +3,7 @@ import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { Bloque11 } from "./banco/Bloque11";
 import { Bloque12 } from "./banco/Bloque12";
 import { Bloque13 } from "./banco/Bloque13";
+import { Bloque14 } from "./banco/Bloque14";
 
 /* BANCO DE PRUEBAS — para ver vivos los componentes de los bloques del cuaderno.
  *   `pnpm dev`, abre la URL que te diga y elige el bloque en las pestañas de arriba.
@@ -19,20 +20,21 @@ import { Bloque13 } from "./banco/Bloque13";
  * Para añadir un bloque: crear `src/banco/BloqueNN.tsx`, importarlo aquí, y sumar una
  * línea a `BLOQUES` y otra a `ORDEN`. */
 
-type IdBloque = "11" | "12" | "13";
+type IdBloque = "11" | "12" | "13" | "14";
 
 const BLOQUES: Record<IdBloque, { titulo: string; Banco: () => ReactNode }> = {
   "11": { titulo: "useState y useReducer", Banco: Bloque11 },
   "12": { titulo: "Custom hooks", Banco: Bloque12 },
   "13": { titulo: "Fetch tipado", Banco: Bloque13 },
+  "14": { titulo: "Contexto y refs", Banco: Bloque14 },
 };
 
 // En qué orden salen las pestañas. Va en un array aparte porque `Object.keys(BLOQUES)`
 // devuelve `string[]`, no `IdBloque[]`, y para usarlo haría falta un `as`.
-const ORDEN: IdBloque[] = ["11", "12", "13"];
+const ORDEN: IdBloque[] = ["11", "12", "13", "14"];
 
 function App() {
-  const [activo, setActivo] = useState<IdBloque>("13");
+  const [activo, setActivo] = useState<IdBloque>("14");
 
   // Con mayúscula a propósito: en JSX, `<banco />` en minúscula sería una etiqueta HTML.
   const { Banco } = BLOQUES[activo];
